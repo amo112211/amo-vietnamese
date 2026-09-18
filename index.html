@@ -1571,6 +1571,20 @@ body.theme-night,body.theme-eye{background-image:none !important;background-blen
   #quiz #quizResult .quiz-correct-details{min-height:3.8em !important;padding-top:.9em !important;}
 }
 </style>
+<style id="amoDesktopQuizPinyinBlueV1">
+/* 电脑版答题：正确答案拼音使用鲜艳蓝色；手机保持原样 */
+@media(min-width:701px){
+  #quiz .quiz-inline-meaning .quiz-pinyin{
+    color:#1683ff !important;
+    font-weight:800 !important;
+    opacity:1 !important;
+  }
+  body.theme-night #quiz .quiz-inline-meaning .quiz-pinyin,
+  body.theme-eye #quiz .quiz-inline-meaning .quiz-pinyin{
+    color:#45a3ff !important;
+  }
+}
+</style>
 </head>
 <body>
 <div class="app">
