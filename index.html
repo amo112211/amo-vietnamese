@@ -4084,17 +4084,23 @@ function isMobileQuizViewport(){
 }
 function keepStudyFocusInView(kind){
     if(!isMobileQuizViewport()) return;
+    // 等历史记录、答案、字体缩放完成布局后，再把当前题目固定到屏幕可见位置。
     requestAnimationFrame(()=>requestAnimationFrame(()=>{
-        const target = kind==="sentence"
-            ? (document.querySelector("#sentenceReading .quiz-question") || document.querySelector("#sentenceReading .quiz-box"))
-            : (document.querySelector("#quiz .quiz-question") || document.querySelector("#quiz .quiz-box"));
-        if(!target) return;
-        const sticky=document.querySelector(".display-toolbar");
-        const stickyH=sticky ? sticky.getBoundingClientRect().height : 0;
-        const rect=target.getBoundingClientRect();
-        // 历史记录展开或答题内容增高后，始终把“当前问题”放回可视区域顶部。
-        const top=Math.max(0,window.scrollY+rect.top-stickyH-12);
-        window.scrollTo({top,left:0,behavior:"smooth"});
+        setTimeout(()=>{
+            const target = kind==="sentence"
+                ? (document.querySelector("#sentenceReading .quiz-word") || document.querySelector("#sentenceReading .quiz-question"))
+                : (document.getElementById("quizWord") || document.querySelector("#quiz .quiz-question"));
+            if(!target) return;
+            const sticky=document.querySelector(".display-toolbar");
+            const stickyH=sticky ? sticky.getBoundingClientRect().height : 0;
+            // 题目固定在设置栏下方约 70px，特大/超大字体也能完整看到。
+            const desiredTop=stickyH+70;
+            const rect=target.getBoundingClientRect();
+            const delta=rect.top-desiredTop;
+            if(Math.abs(delta)>4){
+                window.scrollTo({top:Math.max(0,window.scrollY+delta),left:0,behavior:"auto"});
+            }
+        },90);
     }));
 }
 function runWithQuizGrowthScroll(updateFn){
@@ -4748,13 +4754,13 @@ function checkAnswer(btn, correct, item){
         if(quizCurrent) quizCurrent.answered = true;
         markQuizBatchCorrect();
         addQuizHistoryEntry(item,quizCurrent ? quizCurrent.mode : document.getElementById("quizMode").value,historyAnswer,"correct");
-        keepStudyFocusInView("quiz");
         setQuizInlineMeaning(item,true);
         resultEl.innerHTML = quizCorrectDetailsHTML(item) + `<div class="quiz-answer-status">✅ 回答正确</div>`;
         resultEl.style.color = "var(--primary-dark)";
         if(btn.classList.contains("quiz-option")) btn.classList.add("correct");
         quizCorrectHidden.add(quizItemKey(item));
         showPermanentRememberQuizButton();
+        keepStudyFocusInView("quiz");
 
         // 答对后禁用本题按钮，避免重复提交。
         document.querySelectorAll("#quizOptions .quiz-option").forEach(b=>b.disabled = true);
@@ -4765,7 +4771,6 @@ function checkAnswer(btn, correct, item){
         resultEl.innerHTML = `<div class="quiz-answer-status">❌ 回答错误，请继续尝试</div>`;
         markQuizBatchWrong();
         addQuizHistoryEntry(item,quizCurrent ? quizCurrent.mode : document.getElementById("quizMode").value,historyAnswer,"wrong");
-        keepStudyFocusInView("quiz");
         resultEl.style.color = "var(--danger)";
 
         // 选择题：只禁用刚刚选错的选项，仍可选择其他答案。
@@ -4787,6 +4792,7 @@ function checkAnswer(btn, correct, item){
             wrongWords.push({vi:item.vi,zh:item.zh});
             saveJSON(KEY_WRONG, wrongWords);
         }
+        keepStudyFocusInView("quiz");
     }
 
     // 每次提交都计为一次答题尝试。
