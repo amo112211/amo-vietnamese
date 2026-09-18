@@ -1535,6 +1535,42 @@ body.theme-night,body.theme-eye{background-image:none !important;background-blen
   #quiz .quiz-main-actions{margin-top:10px !important;}
 }
 </style>
+<style id="amoQuizProportionalSpacingV3">
+/* 手机和电脑使用同一套比例关系：轮次 -> 两行间距 -> 正误同排 */
+#quiz #quizBatchCounter.quiz-batch-counter{
+  margin-bottom:1.8em !important;
+}
+#quiz .quiz-live-score{
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  justify-content:flex-end !important;
+  gap:.8em !important;
+  white-space:nowrap !important;
+}
+/* 大答案与例句按字体比例留白，避免不同屏幕上过挤或过松 */
+#quiz .quiz-inline-meaning.show{
+  margin-top:.55em !important;
+  margin-bottom:1em !important;
+}
+#quiz #quizResult .quiz-correct-details{
+  min-height:4em !important;
+  padding-top:1em !important;
+  box-sizing:border-box !important;
+}
+#quiz #quizResult .quiz-correct-example{
+  line-height:1.5 !important;
+}
+#quiz #quizResult .quiz-answer-status{
+  margin-top:.6em !important;
+}
+#quiz #quizResult .quiz-completed-answer{display:none !important;}
+@media(max-width:700px){
+  #quiz #quizBatchCounter.quiz-batch-counter{margin-bottom:1.7em !important;}
+  #quiz .quiz-inline-meaning.show{margin-bottom:.9em !important;}
+  #quiz #quizResult .quiz-correct-details{min-height:3.8em !important;padding-top:.9em !important;}
+}
+</style>
 </head>
 <body>
 <div class="app">
@@ -1553,8 +1589,8 @@ body.theme-night,body.theme-eye{background-image:none !important;background-blen
         <button onclick="showPage('words',this)">词汇</button>
         <button onclick="showPage('sentences',this)">短句</button>
         <button onclick="showPage('sentenceReading',this)">练习短句</button>
-        <button onclick="showPage('grammar',this)">语法</button>
         <button onclick="showPage('quiz',this)">答题</button>
+        <button onclick="showPage('grammar',this)">语法</button>
         <button onclick="showPage('wrong',this)">错题</button>
         <button onclick="showPage('add',this)">批量添加</button>
         <button onclick="showPage('backup',this)">设置</button>
