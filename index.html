@@ -6003,7 +6003,10 @@ body:not(.speech-enabled) .answered-answer-row .answer-speech-btn{display:none!i
      const tts=await window.__amoPiperReady();
      const exists=await detect(lang);
      if(exists){
-       await tts.remove(MODELS[lang]);
+       // Safari 的 OPFS remove() 偶尔会失败/卡住。清理失败时不阻塞用户，
+       // 直接重新下载会覆盖同名模型文件，因此把按钮恢复为“下载模型”即可。
+       try{ await tts.remove(MODELS[lang]); }
+       catch(removeErr){ console.warn("Piper remove failed; allow overwrite download:",removeErr); }
        states[lang]=false;
        showToast(tr("模型已清理"));
      }else{
