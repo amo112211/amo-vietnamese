@@ -6038,7 +6038,7 @@ const VOICE={vi:"vi_VN-vais1000-medium",zh:"zh_CN-huayan-medium"};
 
 async function loadPiper(){
   if(!piperModulePromise){
-    piperModulePromise=import("https://esm.sh/@mintplex-labs/piper-tts-web?bundle");
+    piperModulePromise=import("https://esm.sh/@realtimex/piper-tts-web@1.1.1?bundle");
   }
   return piperModulePromise;
 }
@@ -6061,7 +6061,15 @@ window.playPiperStudySpeech=async function(event,lang,text){
       return;
     }
     if(btn)btn.classList.add("speaking");
-    const wav=await tts.predict({text,voiceId});
+    // Safari/iPhone：使用新版 Piper Session + ONNX Runtime 1.22，避免旧 Mintplex 运行时问题。
+    // 模型仍由 download()/stored() 保存在当前 HTTPS 站点的 OPFS 中。
+    const session=await tts.TtsSession.create({
+      voiceId,
+      allowLocalModels:true,
+      fallbackStrategy:"cdn",
+      logger:(msg)=>console.debug("[Piper]",msg)
+    });
+    const wav=await session.predict(text);
     if(!(wav instanceof Blob) || wav.size<44) throw new Error("Piper returned invalid WAV");
     if(window.__amoPiperAudio){
       try{window.__amoPiperAudio.pause();}catch(e){}
