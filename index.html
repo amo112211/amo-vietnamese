@@ -1657,7 +1657,7 @@ Hôm nay bạn có bận không?=你今天忙吗？"></textarea>
     <div class="backup-grid">
         <div class="card backup-card mobile-speech-settings" id="mobileSpeechSettingsCard">
             <h3>🔊 <span>手机语音设置</span></h3>
-            <p>苹果手机 Safari 使用系统 Web Speech 朗读词汇和短句。</p>
+            <p>手机和电脑都可以使用在线 AI 语音或系统 Web Speech 朗读词汇和短句。</p>
             <label class="speech-setting-label">语音功能</label>
             <select class="select" id="speechEnabledSetting" onchange="setMobileSpeechSetting('enabled',this.value)" style="width:100%;">
                 <option value="on">打开</option>
@@ -5479,6 +5479,7 @@ const UI_ZH_VI={
 "显示历史记录":"Hiện lịch sử","重新答题":"Làm lại lượt cũ","新一轮答题":"Lượt mới","本轮答题记录":"Lịch sử lượt này","清除记录":"Xóa lịch sử","还没有答题记录":"Chưa có lịch sử trả lời","已答":"Đã trả lời",
 "手机语音设置":"Cài đặt giọng đọc trên điện thoại",
 "苹果手机 Safari 使用系统 Web Speech 朗读词汇和短句。":"Safari trên iPhone sử dụng Web Speech của hệ thống để đọc từ vựng và câu ngắn.",
+"手机和电脑都可以使用在线 AI 语音或系统 Web Speech 朗读词汇和短句。":"Điện thoại và máy tính đều có thể dùng giọng AI trực tuyến hoặc Web Speech của hệ thống để đọc từ vựng và câu ngắn.",
 "语音功能":"Chức năng giọng đọc","打开":"Bật","关闭":"Tắt","朗读语言":"Ngôn ngữ đọc","普通话":"Tiếng Trung phổ thông","播放速度":"Tốc độ đọc","播放语音":"Phát giọng đọc","删除短句":"Xóa câu ngắn","确定删除":"Xác nhận xóa","语音模型":"Mô hình giọng đọc","苹果 Web Speech（默认）":"Apple Web Speech (mặc định)",
 "在线 AI 语音（SpeechSter）":"Giọng AI trực tuyến (SpeechSter)",
 "在线语音需要联网；失败时会提示并自动使用苹果语音。":"Giọng trực tuyến cần Internet; nếu lỗi sẽ thông báo và tự động dùng giọng Apple.","Piper 离线模型":"Mô hình Piper ngoại tuyến","Piper 正在生成语音…":"Piper đang tạo giọng đọc…","Piper 引擎加载失败":"Không thể tải công cụ Piper","Piper 语音生成失败":"Không thể tạo giọng đọc Piper","当前语音模型":"Mô hình giọng đọc hiện tại","模型清理失败":"Không thể xóa mô hình","越南语语音模型":"Mô hình giọng đọc tiếng Việt","中文语音模型":"Mô hình giọng đọc tiếng Trung","正在检测…":"Đang kiểm tra…","下载模型":"Tải mô hình","清理模型":"Xóa mô hình","下载中…":"Đang tải…","已下载":"Đã tải","未下载":"Chưa tải","模型已清理":"Đã xóa mô hình","模型下载完成":"Đã tải xong mô hình","模型下载失败":"Tải mô hình thất bại","模型保存在浏览器本地存储中。清除 Safari 网站数据后需要重新下载。":"Mô hình được lưu trong bộ nhớ cục bộ của trình duyệt. Nếu xóa dữ liệu trang web Safari, em cần tải lại mô hình.","需要先下载越南语语音模型":"Cần tải mô hình giọng đọc tiếng Việt trước","需要先下载中文语音模型":"Cần tải mô hình giọng đọc tiếng Trung trước","语音已关闭":"Giọng đọc đã tắt",
@@ -5750,7 +5751,7 @@ body:not(.speech-enabled) .mini-speech-btn{display:none!important;}
 <script id="mobileStudySpeechFeature">
 (function(){
  const isiOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
- if(isiOS)document.body.classList.add("ios-device");
+ document.body.classList.add("ios-device");
  const BASE="https://ahm7xmakki.com";
  let timer=null,utter=null,token=0,audio=null,audioURL=null,voices=null,first=false;
  if(settings.speechEnabled===undefined)settings.speechEnabled=true;
@@ -5768,7 +5769,7 @@ body:not(.speech-enabled) .mini-speech-btn{display:none!important;}
  }
  function sync(){
   const enabled=!!settings.speechEnabled;
-  document.body.classList.toggle("speech-enabled",isiOS&&enabled);
+  document.body.classList.toggle("speech-enabled",enabled);
   const en=document.getElementById("speechEnabledSetting"),lang=document.getElementById("speechLanguageSetting"),rate=document.getElementById("speechRateSetting"),extra=document.getElementById("speechExtraSettings"),engine=document.getElementById("speechEngineSetting");
   if(en)en.value=enabled?"on":"off";if(lang)lang.value=settings.speechLanguage||"vi";if(rate)rate.value=String(Number(settings.speechRate)||1);if(extra)extra.style.display=enabled?"block":"none";if(engine)engine.value=settings.speechEngine||"webspeech";
  }
@@ -5780,26 +5781,50 @@ body:not(.speech-enabled) .mini-speech-btn{display:none!important;}
   if(!("speechSynthesis" in window))return;const t=++token;if(timer)clearTimeout(timer);try{speechSynthesis.cancel()}catch(e){}utter=null;
   timer=setTimeout(()=>{if(t!==token)return;const u=new SpeechSynthesisUtterance(text);utter=u;u.lang=lang==="zh"?"zh-CN":"vi-VN";u.rate=Number(settings.speechRate)||0.9;u.pitch=1;const v=pickSystem(lang);if(v)u.voice=v;btn?.classList.add("speaking");const done=()=>{if(t===token)utter=null;btn?.classList.remove("speaking")};u.onend=done;u.onerror=done;try{speechSynthesis.speak(u)}catch(e){done()}},120);
  }
- async function onlineVoice(lang){
-  if(!voices){const r=await fetch(BASE+"/api/voices",{cache:"no-store"});if(!r.ok)throw new Error("voices "+r.status);const j=await r.json();voices=Array.isArray(j.voices)?j.voices:[]}
+ async function fetchAudioResponse(lang,text){
+  const locale=lang==="zh"?"zh-CN":"vi-VN";
+  // 官方开发文档公开的是 GET /api/tts?text=...&voice=...
+  const getUrl=BASE+"/api/tts?text="+encodeURIComponent(text.slice(0,1900))+"&voice="+encodeURIComponent(locale);
+  let response=await fetch(getUrl,{method:"GET",mode:"cors",cache:"no-store"});
+  if(response.ok)return response;
+  // SpeechSter 工具页另有新版 POST voiceIndex 接口；GET 不可用时再尝试。
+  if(!voices){
+   const vr=await fetch(BASE+"/api/voices",{mode:"cors",cache:"no-store"});
+   if(!vr.ok)throw new Error("voices "+vr.status);
+   const j=await vr.json();voices=Array.isArray(j.voices)?j.voices:[];
+  }
   const re=lang==="zh"?/chinese|mandarin|china/i:/vietnam/i;
-  const list=voices.filter(v=>re.test((v.language||"")+" "+(v.country||"")+" "+(v.name||"")));
-  if(!list.length)throw new Error("voice unavailable");return list[0];
+  const v=voices.find(x=>re.test((x.language||"")+" "+(x.country||"")+" "+(x.name||"")));
+  if(!v)throw new Error("voice unavailable");
+  const rate=Math.max(-50,Math.min(100,Math.round((Number(settings.speechRate||0.9)-1)*100)));
+  response=await fetch(BASE+"/api/tts",{method:"POST",mode:"cors",headers:{"Content-Type":"application/json"},body:JSON.stringify({voiceIndex:Number(v.index),text:text.slice(0,1950),pitch:0,rate})});
+  return response;
  }
  async function onlineSpeak(lang,text,btn){
   try{
-   stop();btn?.classList.add("speaking");const v=await onlineVoice(lang);
-   const rate=Math.max(-50,Math.min(100,Math.round((Number(settings.speechRate||0.9)-1)*100)));
-   const r=await fetch(BASE+"/api/tts",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({voiceIndex:Number(v.index),text:text.slice(0,1950),pitch:0,rate})});
-   if(!r.ok)throw new Error("tts "+r.status);const blob=await r.blob();if(!blob.size)throw new Error("empty audio");
-   audioURL=URL.createObjectURL(blob);audio=new Audio(audioURL);const done=()=>{btn?.classList.remove("speaking");if(audioURL){URL.revokeObjectURL(audioURL);audioURL=null}audio=null};audio.onended=done;audio.onerror=done;await audio.play();
-  }catch(e){console.error("Online TTS",e);btn?.classList.remove("speaking");showToast(tr("在线语音失败，已切换苹果语音","Giọng trực tuyến lỗi, đã chuyển sang giọng Apple"));systemSpeak(lang,text,btn)}
+   stop();btn?.classList.add("speaking");
+   const r=await fetchAudioResponse(lang,text);
+   if(!r.ok)throw new Error("tts "+r.status);
+   const type=(r.headers.get("content-type")||"").toLowerCase();
+   const blob=await r.blob();
+   if(!blob.size||(!type.includes("audio")&&blob.type&&!blob.type.includes("audio")))throw new Error("invalid audio response");
+   audioURL=URL.createObjectURL(blob);audio=new Audio();audio.preload="auto";audio.src=audioURL;
+   // GET API does not expose speed control, so apply selected speed at playback.
+   audio.playbackRate=Number(settings.speechRate)||0.9;
+   const done=()=>{btn?.classList.remove("speaking");if(audioURL){URL.revokeObjectURL(audioURL);audioURL=null}audio=null};
+   audio.onended=done;audio.onerror=done;
+   await audio.play();
+  }catch(e){
+   console.error("Online TTS",e);btn?.classList.remove("speaking");
+   showToast(tr("在线语音暂时不可用，已切换系统语音","Giọng trực tuyến tạm thời không khả dụng, đã chuyển sang giọng hệ thống"));
+   systemSpeak(lang,text,btn);
+  }
  }
- window.playDirectStudySpeech=function(event,lang,text){if(event){event.preventDefault();event.stopPropagation()}if(!isiOS||!settings.speechEnabled)return;text=String(text||"").replace(/\s+/g," ").trim();if(!text)return;notice();const btn=event?.currentTarget?.classList?.contains("mini-speech-btn")?event.currentTarget:null;return settings.speechEngine==="online"?onlineSpeak(lang,text,btn):systemSpeak(lang,text,btn)};
+ window.playDirectStudySpeech=function(event,lang,text){if(event){event.preventDefault();event.stopPropagation()}if(!settings.speechEnabled)return;text=String(text||"").replace(/\s+/g," ").trim();if(!text)return;notice();const btn=event?.currentTarget?.classList?.contains("mini-speech-btn")?event.currentTarget:null;return settings.speechEngine==="online"?onlineSpeak(lang,text,btn):systemSpeak(lang,text,btn)};
  window.playAnswerSpeech=function(event,btn){playDirectStudySpeech(event,btn?.dataset?.speechLang==="zh"?"zh":"vi",btn?.dataset?.speechText||"")};
  window.playQuizQuestionSpeech=function(event){if(!quizCurrent)return;const m=quizCurrent.mode||"vi-zh",lang=(m==="zh-vi"||m==="free-zh-vi")?"zh":"vi";playDirectStudySpeech(event,lang,lang==="zh"?quizCurrent.item.zh:quizCurrent.item.vi)};
  window.playSentenceReadingQuestionSpeech=function(event){if(!sentenceReadingCurrent)return;const lang=(document.getElementById("sentenceReadingMode")?.value||"zh")==="zh"?"zh":"vi";playDirectStudySpeech(event,lang,lang==="zh"?sentenceReadingCurrent.zh:sentenceReadingCurrent.vi)};
- window.playStudySpeech=function(event,btn){if(event){event.preventDefault();event.stopPropagation()}if(!isiOS||!settings.speechEnabled)return;const lang=settings.speechLanguage==="zh"?"zh":"vi",value=String(btn?.dataset?.[lang]||"").replace(/\s+/g," ").trim();if(value)playDirectStudySpeech(event,lang,value)};
+ window.playStudySpeech=function(event,btn){if(event){event.preventDefault();event.stopPropagation()}if(!settings.speechEnabled)return;const lang=settings.speechLanguage==="zh"?"zh":"vi",value=String(btn?.dataset?.[lang]||"").replace(/\s+/g," ").trim();if(value)playDirectStudySpeech(event,lang,value)};
  sync();if("speechSynthesis" in window){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices()}
 })();
 </script>
