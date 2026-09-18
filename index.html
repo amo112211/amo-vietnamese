@@ -1392,6 +1392,83 @@ body.theme-night,body.theme-eye{background-image:none !important;background-blen
   }
 }
 </style>
+<style id="amoMobileQuizSpacingAnswerV2">
+@media(max-width:700px){
+  /* 03/20 与统计之间留两行；正确/错误同一排 */
+  #quiz .quiz-progress-stack{
+    top:46px !important;
+    gap:0 !important;
+  }
+  #quiz #quizBatchCounter.quiz-batch-counter{
+    display:block !important;
+    margin-bottom:30px !important;
+    line-height:1.2 !important;
+  }
+  #quiz .quiz-live-score{
+    display:flex !important;
+    flex-direction:row !important;
+    align-items:center !important;
+    justify-content:flex-end !important;
+    gap:10px !important;
+    line-height:1.25 !important;
+    white-space:nowrap !important;
+  }
+
+  /* 大的正确答案：拼音在上、汉字在下；与下面内容留一行 */
+  #quiz .quiz-inline-meaning.show{
+    margin-top:8px !important;
+    margin-bottom:16px !important;
+  }
+  #quiz .quiz-inline-meaning .quiz-chinese{
+    display:flex !important;
+    flex-direction:column-reverse !important;
+    align-items:center !important;
+    justify-content:center !important;
+    gap:3px !important;
+  }
+  #quiz .quiz-inline-meaning .quiz-pinyin{
+    display:block !important;
+    order:2 !important;
+    margin:0 0 2px !important;
+    line-height:1.25 !important;
+  }
+
+  /* 例句区域上方留一行；没有例句时也保留同样高度 */
+  #quiz #quizResult.quiz-result{
+    margin-top:0 !important;
+    padding-top:0 !important;
+    min-height:86px !important;
+  }
+  #quiz #quizResult .quiz-correct-details{
+    min-height:58px !important;
+    margin-top:0 !important;
+    padding-top:14px !important;
+    box-sizing:border-box !important;
+  }
+  #quiz #quizResult .quiz-correct-example{
+    margin-top:0 !important;
+    padding-top:0 !important;
+    line-height:1.45 !important;
+  }
+  #quiz #quizResult .quiz-answer-status{
+    margin-top:8px !important;
+    line-height:1.3 !important;
+  }
+
+  /* 旧的小号重复正确答案不显示 */
+  #quiz #quizResult .quiz-completed-answer{
+    display:none !important;
+  }
+
+  /* 保证选项和下一题区域继续正常显示 */
+  #quiz .quiz-options{
+    margin-top:8px !important;
+  }
+  #quiz .quiz-main-actions{
+    margin-top:9px !important;
+  }
+}
+</style>
 </head>
 <body>
 <div class="app">
@@ -4429,7 +4506,7 @@ function restoreCompletedQuizUI(status){
         resultEl.style.color="var(--primary-dark)";
     }else{
         setQuizInlineMeaning(item,true);
-        resultEl.innerHTML=quizCorrectDetailsHTML(item) + `<div class="quiz-answer-status">✅ 回答正确</div><div class="quiz-completed-answer">正确答案：${quizAnsweredAnswerHTML(item,mode)}</div>`;
+        resultEl.innerHTML=quizCorrectDetailsHTML(item) + `<div class="quiz-answer-status">✅ 回答正确</div>`;
         resultEl.style.color="var(--primary-dark)";
     }
 
@@ -4452,7 +4529,7 @@ function checkAnswer(btn, correct, item){
         addQuizHistoryEntry(item,quizCurrent ? quizCurrent.mode : document.getElementById("quizMode").value,historyAnswer,"correct");
         keepStudyFocusInView("quiz");
         setQuizInlineMeaning(item,true);
-        resultEl.innerHTML = quizCorrectDetailsHTML(item) + `<div class="quiz-answer-status">✅ 回答正确</div><div class="quiz-completed-answer">正确答案：${quizAnsweredAnswerHTML(item,quizCurrent ? quizCurrent.mode : document.getElementById("quizMode").value)}</div>`;
+        resultEl.innerHTML = quizCorrectDetailsHTML(item) + `<div class="quiz-answer-status">✅ 回答正确</div>`;
         resultEl.style.color = "var(--primary-dark)";
         if(btn.classList.contains("quiz-option")) btn.classList.add("correct");
         quizCorrectHidden.add(quizItemKey(item));
