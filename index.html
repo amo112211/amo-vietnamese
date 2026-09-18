@@ -1308,6 +1308,90 @@ html,body{background-image:none !important;}
 .amo-page-decor,.amo-decor,.study-decor,.page-decoration,.wallpaper-decor{display:none !important;background-image:none !important;}
 body.theme-night,body.theme-eye{background-image:none !important;background-blend-mode:normal !important;}
 </style>
+<style id="amoMobileQuizCompactRequestedV1">
+@media(max-width:700px){
+  /* 只压缩答对后的例句/答案区域，不压缩选项和底部操作按钮 */
+  #quiz #quizResult.quiz-result{
+    margin-top:-4px !important;
+    padding-top:0 !important;
+    padding-bottom:0 !important;
+    line-height:1.38 !important;
+  }
+  #quiz #quizResult .quiz-correct-details{
+    margin-top:-3px !important;
+    line-height:1.38 !important;
+  }
+  #quiz #quizResult .quiz-correct-example{
+    margin-top:0 !important;
+    padding-top:0 !important;
+    line-height:1.38 !important;
+  }
+  #quiz #quizResult .quiz-correct-details .example-vi,
+  #quiz #quizResult .quiz-correct-details .example-zh{
+    line-height:1.38 !important;
+  }
+  #quiz #quizResult .quiz-answer-status{
+    margin-top:1px !important;
+    line-height:1.28 !important;
+  }
+
+  /* 记录放到右上角“需加强记忆”爱心下面，不再占题目右侧一整列 */
+  #quiz .quiz-progress-stack{
+    position:absolute !important;
+    right:7px !important;
+    top:46px !important;
+    z-index:4 !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:flex-end !important;
+    gap:2px !important;
+    width:auto !important;
+  }
+  #quiz #quizBatchCounter.quiz-batch-counter{
+    margin:0 !important;
+    padding:0 !important;
+    font-size:16px !important;
+    line-height:1.15 !important;
+  }
+  #quiz .quiz-live-score{
+    gap:0 !important;
+    font-size:12px !important;
+    line-height:1.2 !important;
+  }
+
+  /* 题目恢复占满宽度；保证四个答案和“下一题/显示答案/永久记住”完整显示 */
+  #quiz .quiz-question-row{
+    display:block !important;
+    position:relative !important;
+  }
+  #quiz .quiz-question-row #quizWord{
+    width:100% !important;
+    padding-left:44px !important;
+    padding-right:58px !important;
+    box-sizing:border-box !important;
+  }
+  #quiz .quiz-inline-meaning.show{
+    display:block !important;
+    width:100% !important;
+  }
+  #quiz .quiz-options{
+    display:grid !important;
+    visibility:visible !important;
+    margin-top:7px !important;
+    gap:7px !important;
+  }
+  #quiz .quiz-option{
+    min-height:54px !important;
+    padding-top:8px !important;
+    padding-bottom:8px !important;
+  }
+  #quiz .quiz-main-actions{
+    display:grid !important;
+    visibility:visible !important;
+    margin-top:7px !important;
+  }
+}
+</style>
 </head>
 <body>
 <div class="app">
