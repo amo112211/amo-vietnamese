@@ -1695,6 +1695,29 @@ Hôm nay bạn có bận không?=你今天忙吗？"></textarea>
             </select>
         </div>
 
+        <div class="card backup-card" id="cloudSyncCard">
+            <h3>☁️ 账号与同步 / Tài khoản & đồng bộ</h3>
+            <p id="cloudSyncStatus" style="color:var(--muted);">未登录 / Chưa đăng nhập</p>
+            <div id="cloudAuthFields">
+                <input class="select" id="cloudEmail" type="email" autocomplete="email" placeholder="邮箱 / Email" style="width:100%;margin-bottom:8px;">
+                <input class="select" id="cloudPassword" type="password" autocomplete="current-password" placeholder="密码（至少 6 位） / Mật khẩu" style="width:100%;margin-bottom:10px;">
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <button class="btn btn-primary" type="button" onclick="cloudLogin()">登录 / Đăng nhập</button>
+                    <button class="btn" type="button" onclick="cloudRegister()">注册 / Đăng ký</button>
+                </div>
+            </div>
+            <div id="cloudSyncActions" style="display:none;">
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+                    <button class="btn btn-primary" type="button" onclick="cloudSyncNow()">立即同步 / Đồng bộ ngay</button>
+                    <button class="btn" type="button" onclick="cloudUploadLocal()">上传本机 / Tải lên</button>
+                    <button class="btn" type="button" onclick="cloudDownloadToLocal()">下载云端 / Tải xuống</button>
+                    <button class="btn" type="button" onclick="cloudLogout()">退出 / Đăng xuất</button>
+                </div>
+                <p id="cloudSyncTime" style="margin:0;color:var(--muted);font-size:13px;">最后同步：尚未同步 / Lần cuối: chưa đồng bộ</p>
+            </div>
+            <p style="margin:12px 0 0;color:var(--muted);font-size:12px;line-height:1.6;">本地数据始终保留。首次在另一台设备登录时，建议先“下载云端”。/ Dữ liệu cục bộ luôn được giữ lại.</p>
+        </div>
+
         <div class="card backup-card">
             <h3>导出全部数据</h3>
             <p>会完整导出你的学习数据，包括：</p>
@@ -1763,6 +1786,7 @@ Hôm nay bạn có bận không?=你今天忙吗？"></textarea>
 </div>
 <div class="toast" id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 /* ====================== 内置数据 ====================== */
 const builtInWords = [
@@ -5742,6 +5766,123 @@ body:not(.speech-enabled) .mini-speech-btn{display:none!important;}
   .mini-speech-btn{width:29px;height:29px;min-width:29px;}
 }
 </style>
+<script id="amoCloudSyncFeature">
+(function(){
+ const SUPABASE_URL="https://vkrgtfdqijbvpaefkrfj.supabase.co";
+ const SUPABASE_KEY="sb_publishable_aFiaIuL8UbH4YRTp8HK2bA_KBI-_aX2";
+ let client=null,currentUser=null,busy=false;
+ const tr=(zh,vi)=>settings?.uiLanguage==="vi"?vi:zh;
+
+ function getClient(){
+  if(client)return client;
+  if(!window.supabase?.createClient)throw new Error("Supabase library unavailable");
+  client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+  return client;
+ }
+ function syncKeys(){
+  return [KEY_WORDS,KEY_SENTENCES,KEY_FAVORITES,KEY_PROGRESS,KEY_WRONG,KEY_EXAMPLES,KEY_REMEMBERED,
+   KEY_CATEGORIES,KEY_WORD_CATEGORY_MAP,HIDE_WORDS_KEY,HIDE_SENT_KEY,KEY_DELETED_WORDS,KEY_DELETED_SENTENCES,
+   KEY_REMEMBERED_SENTENCES,KEY_SENTENCE_CATEGORIES,KEY_SENTENCE_CATEGORY_MAP,KEY_REINFORCE_WORDS,
+   KEY_PERMANENT_REMEMBERED_WORDS,KEY_QUIZ_ROUNDS,"vn_deleted_categories_v1"];
+ }
+ function snapshot(){
+  const values={};
+  syncKeys().forEach(k=>{const v=localStorage.getItem(k);if(v!==null)values[k]=v});
+  return {version:1,values,deviceUpdatedAt:new Date().toISOString()};
+ }
+ function applySnapshot(data){
+  if(!data||typeof data!=="object"||!data.values||typeof data.values!=="object")throw new Error("invalid cloud data");
+  syncKeys().forEach(k=>{if(Object.prototype.hasOwnProperty.call(data.values,k))localStorage.setItem(k,String(data.values[k]))});
+  // 云端不覆盖设备显示/语音设置 KEY_SETTINGS；刷新后从原有 localStorage 初始化全部学习状态。
+  location.reload();
+ }
+ function setBusy(v){busy=v;document.querySelectorAll("#cloudSyncCard button").forEach(b=>b.disabled=v)}
+ function updateUI(){
+  const status=document.getElementById("cloudSyncStatus"),auth=document.getElementById("cloudAuthFields"),actions=document.getElementById("cloudSyncActions");
+  if(!status)return;
+  if(currentUser){
+   status.textContent=tr("已登录："+(currentUser.email||""),"Đã đăng nhập: "+(currentUser.email||""));
+   if(auth)auth.style.display="none";if(actions)actions.style.display="block";
+  }else{
+   status.textContent=tr("未登录","Chưa đăng nhập");
+   if(auth)auth.style.display="block";if(actions)actions.style.display="none";
+  }
+ }
+ function stamp(){
+  const el=document.getElementById("cloudSyncTime");if(!el)return;
+  const now=new Date().toLocaleString();
+  el.textContent=tr("最后同步："+now,"Lần cuối: "+now);
+  localStorage.setItem("vn_cloud_last_sync_v1",now);
+ }
+ async function requireUser(){
+  const c=getClient(),r=await c.auth.getUser();
+  if(r.error||!r.data.user)throw new Error(tr("请先登录","Vui lòng đăng nhập"));
+  currentUser=r.data.user;updateUI();return currentUser;
+ }
+ window.cloudRegister=async function(){
+  if(busy)return;setBusy(true);
+  try{
+   const email=document.getElementById("cloudEmail")?.value.trim(),password=document.getElementById("cloudPassword")?.value||"";
+   if(!email||password.length<6)throw new Error(tr("请输入邮箱和至少 6 位密码","Nhập email và mật khẩu ít nhất 6 ký tự"));
+   const r=await getClient().auth.signUp({email,password});if(r.error)throw r.error;
+   currentUser=r.data.user||null;updateUI();
+   showToast(r.data.session?tr("注册并登录成功","Đăng ký và đăng nhập thành công"):tr("注册成功，请到邮箱确认后再登录","Đăng ký thành công, hãy xác nhận email rồi đăng nhập"));
+  }catch(e){console.error(e);showToast(tr("注册失败：","Đăng ký lỗi: ")+(e.message||e))}finally{setBusy(false)}
+ };
+ window.cloudLogin=async function(){
+  if(busy)return;setBusy(true);
+  try{
+   const email=document.getElementById("cloudEmail")?.value.trim(),password=document.getElementById("cloudPassword")?.value||"";
+   if(!email||!password)throw new Error(tr("请输入邮箱和密码","Nhập email và mật khẩu"));
+   const r=await getClient().auth.signInWithPassword({email,password});if(r.error)throw r.error;
+   currentUser=r.data.user;updateUI();showToast(tr("登录成功，本地数据未改变","Đăng nhập thành công, dữ liệu cục bộ không đổi"));
+  }catch(e){console.error(e);showToast(tr("登录失败：","Đăng nhập lỗi: ")+(e.message||e))}finally{setBusy(false)}
+ };
+ window.cloudLogout=async function(){
+  if(busy)return;setBusy(true);try{await getClient().auth.signOut();currentUser=null;updateUI();showToast(tr("已退出，本地数据保留","Đã đăng xuất, dữ liệu cục bộ được giữ"))}finally{setBusy(false)}
+ };
+ window.cloudUploadLocal=async function(){
+  if(busy)return;if(!confirm(tr("确定用本机学习数据覆盖云端数据吗？","Dùng dữ liệu trên thiết bị này để ghi đè dữ liệu đám mây?")))return;
+  setBusy(true);try{
+   const u=await requireUser(),payload=snapshot();
+   const r=await getClient().from("amo_sync").upsert({user_id:u.id,data:payload,updated_at:new Date().toISOString()},{onConflict:"user_id"});
+   if(r.error)throw r.error;stamp();showToast(tr("本机数据已上传云端","Đã tải dữ liệu lên đám mây"));
+  }catch(e){console.error(e);showToast(tr("上传失败：","Tải lên lỗi: ")+(e.message||e))}finally{setBusy(false)}
+ };
+ window.cloudDownloadToLocal=async function(){
+  if(busy)return;if(!confirm(tr("确定用云端学习数据覆盖本机学习数据吗？本机显示和语音设置不会改变。","Dùng dữ liệu đám mây để ghi đè dữ liệu học trên thiết bị này?")))return;
+  setBusy(true);try{
+   const u=await requireUser(),r=await getClient().from("amo_sync").select("data,updated_at").eq("user_id",u.id).maybeSingle();
+   if(r.error)throw r.error;if(!r.data)throw new Error(tr("云端还没有数据","Chưa có dữ liệu trên đám mây"));
+   localStorage.setItem("vn_cloud_last_sync_v1",new Date().toLocaleString());applySnapshot(r.data.data);
+  }catch(e){console.error(e);showToast(tr("下载失败：","Tải xuống lỗi: ")+(e.message||e));setBusy(false)}
+ };
+ window.cloudSyncNow=async function(){
+  if(busy)return;setBusy(true);
+  try{
+   const u=await requireUser(),c=getClient();
+   const r=await c.from("amo_sync").select("data,updated_at").eq("user_id",u.id).maybeSingle();if(r.error)throw r.error;
+   if(!r.data){
+    const w=await c.from("amo_sync").insert({user_id:u.id,data:snapshot(),updated_at:new Date().toISOString()});if(w.error)throw w.error;
+    stamp();showToast(tr("首次同步完成：已上传本机数据","Đồng bộ lần đầu: đã tải dữ liệu lên"));
+   }else{
+    // 为避免静默覆盖，已有云端数据时“立即同步”采用安全下载；明确上传需点击“上传本机”。
+    localStorage.setItem("vn_cloud_last_sync_v1",new Date().toLocaleString());applySnapshot(r.data.data);
+   }
+  }catch(e){console.error(e);showToast(tr("同步失败：","Đồng bộ lỗi: ")+(e.message||e));setBusy(false)}
+ };
+ async function initCloud(){
+  try{
+   const c=getClient(),r=await c.auth.getSession();currentUser=r.data.session?.user||null;updateUI();
+   const last=localStorage.getItem("vn_cloud_last_sync_v1"),el=document.getElementById("cloudSyncTime");
+   if(last&&el)el.textContent=tr("最后同步："+last,"Lần cuối: "+last);
+   c.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null;setTimeout(updateUI,0)});
+  }catch(e){console.error("Cloud sync init",e)}
+ }
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",initCloud);else initCloud();
+})();
+</script>
+
 <script id="mobileStudySpeechFeature">
 (function(){
   const isiOS=/iPad|iPhone|iPod/.test(navigator.userAgent) ||
