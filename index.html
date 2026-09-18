@@ -1677,12 +1677,12 @@ Hôm nay bạn có bận không?=你今天忙吗？"></textarea>
                 <div class="piper-model-manager" id="piperModelManager">
                     <div class="piper-model-row">
                         <div class="piper-model-info"><strong>越南语语音模型</strong><small>vi_VN-vais1000-medium · 约 63 MB</small><span id="piperViStatus">正在检测…</span></div>
-                        <button type="button" class="btn btn-primary piper-model-btn" id="piperViBtn" onclick="togglePiperModel('vi')">下载模型</button>
+                        <button type="button" class="btn btn-primary piper-model-btn" id="piperViBtn" onclick="window.togglePiperModel&&window.togglePiperModel('vi')">下载模型</button>
                     </div>
                     <div class="piper-model-progress" id="piperViProgress" hidden><div></div></div>
                     <div class="piper-model-row">
                         <div class="piper-model-info"><strong>中文语音模型</strong><small>zh_CN-huayan-medium · 约 63 MB</small><span id="piperZhStatus">正在检测…</span></div>
-                        <button type="button" class="btn btn-primary piper-model-btn" id="piperZhBtn" onclick="togglePiperModel('zh')">下载模型</button>
+                        <button type="button" class="btn btn-primary piper-model-btn" id="piperZhBtn" onclick="window.togglePiperModel&&window.togglePiperModel('zh')">下载模型</button>
                     </div>
                     <div class="piper-model-progress" id="piperZhProgress" hidden><div></div></div>
                     <p class="piper-storage-note">模型保存在浏览器本地存储中。清除 Safari 网站数据后需要重新下载。</p>
@@ -5969,6 +5969,24 @@ body:not(.speech-enabled) .answered-answer-row .answer-speech-btn{display:none!i
 </style>
 
 
+<script id="piperButtonRescue">
+(function(){
+  function bind(){
+    [["piperViBtn","vi"],["piperZhBtn","zh"]].forEach(([id,lang])=>{
+      const b=document.getElementById(id); if(!b||b.dataset.piperBound)return;
+      b.dataset.piperBound="1";
+      b.addEventListener("click",function(ev){
+        ev.preventDefault(); ev.stopPropagation();
+        if(typeof window.togglePiperModel==="function") return window.togglePiperModel(lang);
+        const msg=(window.settings&&settings.uiLanguage==="vi")?"Piper chưa tải xong, vui lòng tải lại trang.":"Piper 尚未加载完成，请重新打开页面。";
+        if(typeof window.showToast==="function")showToast(msg); else alert(msg);
+      },{passive:false});
+    });
+  }
+  document.addEventListener("DOMContentLoaded",bind);
+  window.addEventListener("pageshow",bind);
+})();
+</script>
 <script id="piperModelDownloadManager">
 (function(){
  const MODELS={vi:"vi_VN-vais1000-medium",zh:"zh_CN-huayan-medium"};
