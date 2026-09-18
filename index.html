@@ -1585,6 +1585,44 @@ body.theme-night,body.theme-eye{background-image:none !important;background-blen
   }
 }
 </style>
+<style id="amoUnifiedLearningTextColorsV1">
+:root{
+  --amo-vi-color:#16835d;
+  --amo-zh-color:#202b28;
+  --amo-py-color:#1683ff;
+}
+.display-toolbar input[type="color"]{
+  width:34px;height:30px;padding:1px;border:1px solid var(--border);border-radius:8px;background:var(--card);cursor:pointer;
+}
+/* 全站学习内容颜色：手机、电脑完全共用 */
+.word-vi,.sentence-vi,.example-vi,
+.question.vi-question,.vi-question,
+#quiz .quiz-word.vi-question,
+#quiz .example-vi,
+.answered-answer-row .example-vi{
+  color:var(--amo-vi-color) !important;
+}
+.word-zh,.sentence-zh,.example-zh,
+.question.zh-question,.zh-question,
+.quiz-chinese,
+#quiz .example-zh,
+.quiz-inline-meaning .quiz-chinese{
+  color:var(--amo-zh-color) !important;
+}
+.word-zh-pinyin,.sentence-zh-pinyin,.quiz-pinyin,
+.quiz-inline-meaning .quiz-pinyin,
+[class*="pinyin"]{
+  color:var(--amo-py-color) !important;
+  opacity:1 !important;
+}
+/* 拼音默认鲜艳蓝色，并覆盖旧的行内灰色 */
+.word-zh-pinyin[style],.sentence-zh-pinyin[style],.quiz-pinyin[style]{
+  color:var(--amo-py-color) !important;
+}
+@media(max-width:700px){
+  .display-toolbar input[type="color"]{width:36px;height:34px;}
+}
+</style>
 </head>
 <body>
 <div class="app">
@@ -1633,6 +1671,9 @@ body.theme-night,body.theme-eye{background-image:none !important;background-blen
         <option value="90">小</option><option value="100">标准</option><option value="115">大</option><option value="130">特大</option><option value="150">超大</option>
       </select>
     </label>
+    <label>越南语颜色 <input id="viTextColorSetting" type="color" value="#16835d" onchange="setTextColorSetting('viTextColor',this.value)" title="设置全部越南语文字颜色"></label>
+    <label>汉字颜色 <input id="zhTextColorSetting" type="color" value="#202b28" onchange="setTextColorSetting('zhTextColor',this.value)" title="设置全部中文汉字颜色"></label>
+    <label>拼音颜色 <input id="pyTextColorSetting" type="color" value="#1683ff" onchange="setTextColorSetting('pyTextColor',this.value)" title="设置全部中文拼音颜色"></label>
     <button type="button" class="display-toggle" id="nightModeBtn" onclick="toggleThemeMode('night')">🌙 夜晚</button>
     <button type="button" class="display-toggle" id="eyeModeBtn" onclick="toggleThemeMode('eye')">👁 护眼</button>
   </div>
@@ -2541,6 +2582,9 @@ if(!settings.zhFontSize) settings.zhFontSize = "100";
 if(!settings.pyFontSize) settings.pyFontSize = "100";
 if(!settings.themeMode) settings.themeMode = "normal";
 if(!settings.uiLanguage) settings.uiLanguage = "zh";
+if(!settings.viTextColor) settings.viTextColor = "#16835d";
+if(!settings.zhTextColor) settings.zhTextColor = "#202b28";
+if(!settings.pyTextColor) settings.pyTextColor = "#1683ff";
 
 
 let hideBuiltInWords = loadJSON(HIDE_WORDS_KEY, false);
@@ -2559,16 +2603,27 @@ function applyDisplaySettings(){
     root.style.setProperty("--vi-font-scale", String(Number(settings.viFontSize||100)/100));
     root.style.setProperty("--zh-font-scale", String(Number(settings.zhFontSize||100)/100));
     root.style.setProperty("--py-font-scale", String(Number(settings.pyFontSize||100)/100));
+    root.style.setProperty("--amo-vi-color", settings.viTextColor || "#16835d");
+    root.style.setProperty("--amo-zh-color", settings.zhTextColor || "#202b28");
+    root.style.setProperty("--amo-py-color", settings.pyTextColor || "#1683ff");
     document.body.classList.toggle("theme-night", settings.themeMode==="night");
     document.body.classList.toggle("theme-eye", settings.themeMode==="eye");
     ["ui","vi","zh","py"].forEach(k=>{
         const el=document.getElementById(k+"FontSizeSetting");
         if(el) el.value=settings[k+"FontSize"]||"100";
     });
+    [["viTextColorSetting","viTextColor"],["zhTextColorSetting","zhTextColor"],["pyTextColorSetting","pyTextColor"]].forEach(([id,key])=>{
+        const el=document.getElementById(id); if(el) el.value=settings[key];
+    });
     document.getElementById("nightModeBtn")?.classList.toggle("active",settings.themeMode==="night");
     document.getElementById("eyeModeBtn")?.classList.toggle("active",settings.themeMode==="eye");
 }
 function setFontSetting(key,value){
+    settings[key]=String(value);
+    saveJSON(KEY_SETTINGS,settings);
+    applyDisplaySettings();
+}
+function setTextColorSetting(key,value){
     settings[key]=String(value);
     saveJSON(KEY_SETTINGS,settings);
     applyDisplaySettings();
