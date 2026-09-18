@@ -1657,24 +1657,18 @@ Hôm nay bạn có bận không?=你今天忙吗？"></textarea>
     <div class="backup-grid">
         <div class="card backup-card mobile-speech-settings" id="mobileSpeechSettingsCard">
             <h3>🔊 <span>手机语音设置</span></h3>
-            <p>手机和电脑都可以使用在线 AI 语音或系统 Web Speech 朗读词汇和短句。</p>
+            <p>苹果手机 Safari 使用系统 Web Speech 朗读词汇和短句。</p>
             <label class="speech-setting-label">语音功能</label>
             <select class="select" id="speechEnabledSetting" onchange="setMobileSpeechSetting('enabled',this.value)" style="width:100%;">
                 <option value="on">打开</option>
                 <option value="off">关闭</option>
             </select>
             <div id="speechExtraSettings">
-                <label class="speech-setting-label">语音模型</label>
-                <select class="select" id="speechEngineSetting" onchange="setSpeechEngine(this.value)" style="width:100%;">
-                    <option value="webspeech">苹果 Web Speech（默认）</option>
-                    <option value="online">在线 AI 语音（SpeechSter）</option>
-                </select>
                 <label class="speech-setting-label">朗读语言</label>
                 <select class="select" id="speechLanguageSetting" onchange="setMobileSpeechSetting('language',this.value)" style="width:100%;">
                     <option value="vi">越南语</option>
                     <option value="zh">普通话</option>
                 </select>
-                <p id="onlineSpeechNote" style="margin:8px 0 0;color:var(--muted);font-size:13px;">在线语音需要联网；失败时会提示并自动使用苹果语音。</p>
                 <label class="speech-setting-label">播放速度</label>
                 <select class="select" id="speechRateSetting" onchange="setMobileSpeechSetting('rate',this.value)" style="width:100%;">
                     <option value="0.6">0.6×</option>
@@ -5750,82 +5744,108 @@ body:not(.speech-enabled) .mini-speech-btn{display:none!important;}
 </style>
 <script id="mobileStudySpeechFeature">
 (function(){
- const isiOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
- document.body.classList.add("ios-device");
- const BASE="https://ahm7xmakki.com";
- let timer=null,utter=null,token=0,audio=null,audioURL=null,voices=null,first=false;
- if(settings.speechEnabled===undefined)settings.speechEnabled=true;
- if(settings.speechEngine==="piper")settings.speechEngine="online";
- if(!["webspeech","online"].includes(settings.speechEngine))settings.speechEngine="webspeech";
- if(!["vi","zh"].includes(settings.speechLanguage))settings.speechLanguage="vi";
- if(![0.6,0.75,0.9,1,1.25].includes(Number(settings.speechRate)))settings.speechRate=0.9;
- saveJSON(KEY_SETTINGS,settings);
- const tr=(zh,vi)=>settings.uiLanguage==="vi"?vi:zh;
- function stop(){
-  try{speechSynthesis.cancel()}catch(e){}
-  if(audio){try{audio.pause()}catch(e){}audio=null}
-  if(audioURL){try{URL.revokeObjectURL(audioURL)}catch(e){}audioURL=null}
-  document.querySelectorAll(".mini-speech-btn.speaking").forEach(x=>x.classList.remove("speaking"));
- }
- function sync(){
-  const enabled=!!settings.speechEnabled;
-  document.body.classList.toggle("speech-enabled",enabled);
-  const en=document.getElementById("speechEnabledSetting"),lang=document.getElementById("speechLanguageSetting"),rate=document.getElementById("speechRateSetting"),extra=document.getElementById("speechExtraSettings"),engine=document.getElementById("speechEngineSetting");
-  if(en)en.value=enabled?"on":"off";if(lang)lang.value=settings.speechLanguage||"vi";if(rate)rate.value=String(Number(settings.speechRate)||1);if(extra)extra.style.display=enabled?"block":"none";if(engine)engine.value=settings.speechEngine||"webspeech";
- }
- window.setSpeechEngine=function(v){settings.speechEngine=v==="online"?"online":"webspeech";first=false;stop();saveJSON(KEY_SETTINGS,settings);sync();applyUILanguage()};
- window.setMobileSpeechSetting=function(t,v){if(t==="enabled")settings.speechEnabled=v==="on";if(t==="language")settings.speechLanguage=v==="zh"?"zh":"vi";if(t==="rate")settings.speechRate=[0.6,0.75,0.9,1,1.25].includes(Number(v))?Number(v):0.9;stop();saveJSON(KEY_SETTINGS,settings);sync();applyUILanguage()};
- function notice(){if(first)return;first=true;showToast(settings.speechEngine==="online"?tr("当前语音：在线 AI 语音","Giọng hiện tại: AI trực tuyến"):tr("当前语音：苹果 Web Speech","Giọng hiện tại: Apple Web Speech"))}
- function pickSystem(lang){const vs=speechSynthesis.getVoices(),p=lang==="zh"?"zh":"vi";return vs.find(v=>String(v.lang||"").toLowerCase().startsWith(p+"-"))||vs.find(v=>String(v.lang||"").toLowerCase().startsWith(p))||null}
- function systemSpeak(lang,text,btn){
-  if(!("speechSynthesis" in window))return;const t=++token;if(timer)clearTimeout(timer);try{speechSynthesis.cancel()}catch(e){}utter=null;
-  timer=setTimeout(()=>{if(t!==token)return;const u=new SpeechSynthesisUtterance(text);utter=u;u.lang=lang==="zh"?"zh-CN":"vi-VN";u.rate=Number(settings.speechRate)||0.9;u.pitch=1;const v=pickSystem(lang);if(v)u.voice=v;btn?.classList.add("speaking");const done=()=>{if(t===token)utter=null;btn?.classList.remove("speaking")};u.onend=done;u.onerror=done;try{speechSynthesis.speak(u)}catch(e){done()}},120);
- }
- async function fetchAudioResponse(lang,text){
-  const locale=lang==="zh"?"zh-CN":"vi-VN";
-  // 官方开发文档公开的是 GET /api/tts?text=...&voice=...
-  const getUrl=BASE+"/api/tts?text="+encodeURIComponent(text.slice(0,1900))+"&voice="+encodeURIComponent(locale);
-  let response=await fetch(getUrl,{method:"GET",mode:"cors",cache:"no-store"});
-  if(response.ok)return response;
-  // SpeechSter 工具页另有新版 POST voiceIndex 接口；GET 不可用时再尝试。
-  if(!voices){
-   const vr=await fetch(BASE+"/api/voices",{mode:"cors",cache:"no-store"});
-   if(!vr.ok)throw new Error("voices "+vr.status);
-   const j=await vr.json();voices=Array.isArray(j.voices)?j.voices:[];
+  const isiOS=/iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1);
+  if(isiOS) document.body.classList.add("ios-device");
+
+  let iosSpeechTimer=null;
+  let iosCurrentUtterance=null;
+  let iosSpeechToken=0;
+
+  if(settings.speechEnabled===undefined) settings.speechEnabled=true;
+  // 旧 Piper/在线语音设置统一迁移回苹果 Web Speech。
+  settings.speechEngine="webspeech";
+  if(!["vi","zh"].includes(settings.speechLanguage)) settings.speechLanguage="vi";
+  if(![0.6,0.75,0.9,1,1.25].includes(Number(settings.speechRate))) settings.speechRate=0.9;
+  saveJSON(KEY_SETTINGS,settings);
+
+  function syncSpeechSettingsUI(){
+    const enabled=!!settings.speechEnabled;
+    document.body.classList.toggle("speech-enabled",isiOS && enabled);
+    const en=document.getElementById("speechEnabledSetting");
+    const lang=document.getElementById("speechLanguageSetting");
+    const rate=document.getElementById("speechRateSetting");
+    const extra=document.getElementById("speechExtraSettings");
+    if(en) en.value=enabled?"on":"off";
+    if(lang) lang.value=settings.speechLanguage||"vi";
+    if(rate) rate.value=String(Number(settings.speechRate)||1);
+    if(extra) extra.style.display=enabled?"block":"none";
   }
-  const re=lang==="zh"?/chinese|mandarin|china/i:/vietnam/i;
-  const v=voices.find(x=>re.test((x.language||"")+" "+(x.country||"")+" "+(x.name||"")));
-  if(!v)throw new Error("voice unavailable");
-  const rate=Math.max(-50,Math.min(100,Math.round((Number(settings.speechRate||0.9)-1)*100)));
-  response=await fetch(BASE+"/api/tts",{method:"POST",mode:"cors",headers:{"Content-Type":"application/json"},body:JSON.stringify({voiceIndex:Number(v.index),text:text.slice(0,1950),pitch:0,rate})});
-  return response;
- }
- async function onlineSpeak(lang,text,btn){
-  try{
-   stop();btn?.classList.add("speaking");
-   const r=await fetchAudioResponse(lang,text);
-   if(!r.ok)throw new Error("tts "+r.status);
-   const type=(r.headers.get("content-type")||"").toLowerCase();
-   const blob=await r.blob();
-   if(!blob.size||(!type.includes("audio")&&blob.type&&!blob.type.includes("audio")))throw new Error("invalid audio response");
-   audioURL=URL.createObjectURL(blob);audio=new Audio();audio.preload="auto";audio.src=audioURL;
-   // GET API does not expose speed control, so apply selected speed at playback.
-   audio.playbackRate=Number(settings.speechRate)||0.9;
-   const done=()=>{btn?.classList.remove("speaking");if(audioURL){URL.revokeObjectURL(audioURL);audioURL=null}audio=null};
-   audio.onended=done;audio.onerror=done;
-   await audio.play();
-  }catch(e){
-   console.error("Online TTS",e);btn?.classList.remove("speaking");
-   showToast(tr("在线语音暂时不可用，已切换系统语音","Giọng trực tuyến tạm thời không khả dụng, đã chuyển sang giọng hệ thống"));
-   systemSpeak(lang,text,btn);
+
+  window.setMobileSpeechSetting=function(type,value){
+    if(type==="enabled") settings.speechEnabled=value==="on";
+    if(type==="language") settings.speechLanguage=value==="zh"?"zh":"vi";
+    if(type==="rate") settings.speechRate=[0.6,0.75,0.9,1,1.25].includes(Number(value))?Number(value):0.9;
+    saveJSON(KEY_SETTINGS,settings);
+    try{speechSynthesis.cancel()}catch(e){}
+    syncSpeechSettingsUI();
+    applyUILanguage();
+  };
+
+  function chooseVoice(lang){
+    const voices=speechSynthesis.getVoices();
+    const prefix=lang==="zh"?"zh":"vi";
+    return voices.find(v=>String(v.lang||"").toLowerCase().startsWith(prefix+"-")) ||
+           voices.find(v=>String(v.lang||"").toLowerCase().startsWith(prefix)) || null;
   }
- }
- window.playDirectStudySpeech=function(event,lang,text){if(event){event.preventDefault();event.stopPropagation()}if(!settings.speechEnabled)return;text=String(text||"").replace(/\s+/g," ").trim();if(!text)return;notice();const btn=event?.currentTarget?.classList?.contains("mini-speech-btn")?event.currentTarget:null;return settings.speechEngine==="online"?onlineSpeak(lang,text,btn):systemSpeak(lang,text,btn)};
- window.playAnswerSpeech=function(event,btn){playDirectStudySpeech(event,btn?.dataset?.speechLang==="zh"?"zh":"vi",btn?.dataset?.speechText||"")};
- window.playQuizQuestionSpeech=function(event){if(!quizCurrent)return;const m=quizCurrent.mode||"vi-zh",lang=(m==="zh-vi"||m==="free-zh-vi")?"zh":"vi";playDirectStudySpeech(event,lang,lang==="zh"?quizCurrent.item.zh:quizCurrent.item.vi)};
- window.playSentenceReadingQuestionSpeech=function(event){if(!sentenceReadingCurrent)return;const lang=(document.getElementById("sentenceReadingMode")?.value||"zh")==="zh"?"zh":"vi";playDirectStudySpeech(event,lang,lang==="zh"?sentenceReadingCurrent.zh:sentenceReadingCurrent.vi)};
- window.playStudySpeech=function(event,btn){if(event){event.preventDefault();event.stopPropagation()}if(!settings.speechEnabled)return;const lang=settings.speechLanguage==="zh"?"zh":"vi",value=String(btn?.dataset?.[lang]||"").replace(/\s+/g," ").trim();if(value)playDirectStudySpeech(event,lang,value)};
- sync();if("speechSynthesis" in window){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices()}
+
+  function speak(lang,text,btn){
+    if(!("speechSynthesis" in window)) return;
+    const token=++iosSpeechToken;
+    if(iosSpeechTimer){clearTimeout(iosSpeechTimer);iosSpeechTimer=null}
+    try{speechSynthesis.cancel()}catch(e){}
+    iosCurrentUtterance=null;
+    document.querySelectorAll(".mini-speech-btn.speaking").forEach(x=>x.classList.remove("speaking"));
+    iosSpeechTimer=setTimeout(()=>{
+      if(token!==iosSpeechToken)return;
+      const u=new SpeechSynthesisUtterance(text);
+      iosCurrentUtterance=u;
+      u.lang=lang==="zh"?"zh-CN":"vi-VN";
+      u.rate=Number(settings.speechRate)||0.9;
+      u.pitch=1;
+      const voice=chooseVoice(lang);
+      if(voice)u.voice=voice;
+      if(btn)btn.classList.add("speaking");
+      const done=()=>{if(token===iosSpeechToken)iosCurrentUtterance=null;btn?.classList.remove("speaking")};
+      u.onend=done;u.onerror=done;
+      try{speechSynthesis.speak(u)}catch(e){done()}
+    },120);
+  }
+
+  window.playDirectStudySpeech=function(event,lang,text){
+    if(event){event.preventDefault();event.stopPropagation()}
+    if(!isiOS || !settings.speechEnabled)return;
+    text=String(text||"").replace(/\s+/g," ").trim();
+    if(!text)return;
+    const btn=event?.currentTarget?.classList?.contains("mini-speech-btn")?event.currentTarget:null;
+    speak(lang,text,btn);
+  };
+  window.playAnswerSpeech=function(event,btn){
+    playDirectStudySpeech(event,btn?.dataset?.speechLang==="zh"?"zh":"vi",btn?.dataset?.speechText||"");
+  };
+  window.playQuizQuestionSpeech=function(event){
+    if(!quizCurrent)return;
+    const m=quizCurrent.mode||"vi-zh",lang=(m==="zh-vi"||m==="free-zh-vi")?"zh":"vi";
+    playDirectStudySpeech(event,lang,lang==="zh"?quizCurrent.item.zh:quizCurrent.item.vi);
+  };
+  window.playSentenceReadingQuestionSpeech=function(event){
+    if(!sentenceReadingCurrent)return;
+    const lang=(document.getElementById("sentenceReadingMode")?.value||"zh")==="zh"?"zh":"vi";
+    playDirectStudySpeech(event,lang,lang==="zh"?sentenceReadingCurrent.zh:sentenceReadingCurrent.vi);
+  };
+  window.playStudySpeech=function(event,btn){
+    if(event){event.preventDefault();event.stopPropagation()}
+    if(!isiOS || !settings.speechEnabled)return;
+    const lang=settings.speechLanguage==="zh"?"zh":"vi";
+    const value=String(btn?.dataset?.[lang]||"").replace(/\s+/g," ").trim();
+    if(value)playDirectStudySpeech(event,lang,value);
+  };
+
+  syncSpeechSettingsUI();
+  if("speechSynthesis" in window){
+    speechSynthesis.getVoices();
+    speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();
+  }
 })();
 </script>
 
