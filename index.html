@@ -1667,26 +1667,14 @@ Hôm nay bạn có bận không?=你今天忙吗？"></textarea>
                 <label class="speech-setting-label">语音模型</label>
                 <select class="select" id="speechEngineSetting" onchange="setSpeechEngine(this.value)" style="width:100%;">
                     <option value="webspeech">苹果 Web Speech（默认）</option>
-                    <option value="piper">Piper 离线模型</option>
+                    <option value="online">在线 AI 语音（SpeechSter）</option>
                 </select>
                 <label class="speech-setting-label">朗读语言</label>
                 <select class="select" id="speechLanguageSetting" onchange="setMobileSpeechSetting('language',this.value)" style="width:100%;">
                     <option value="vi">越南语</option>
                     <option value="zh">普通话</option>
                 </select>
-                <div class="piper-model-manager" id="piperModelManager">
-                    <div class="piper-model-row">
-                        <div class="piper-model-info"><strong>越南语语音模型</strong><small>vi_VN-vais1000-medium · 约 63 MB</small><span id="piperViStatus">正在检测…</span></div>
-                        <button type="button" class="btn btn-primary piper-model-btn" id="piperViBtn" onclick="window.togglePiperModel&&window.togglePiperModel('vi')">下载模型</button>
-                    </div>
-                    <div class="piper-model-progress" id="piperViProgress" hidden><div></div></div>
-                    <div class="piper-model-row">
-                        <div class="piper-model-info"><strong>中文语音模型</strong><small>zh_CN-huayan-medium · 约 63 MB</small><span id="piperZhStatus">正在检测…</span></div>
-                        <button type="button" class="btn btn-primary piper-model-btn" id="piperZhBtn" onclick="window.togglePiperModel&&window.togglePiperModel('zh')">下载模型</button>
-                    </div>
-                    <div class="piper-model-progress" id="piperZhProgress" hidden><div></div></div>
-                    <p class="piper-storage-note">模型保存在浏览器本地存储中。清除 Safari 网站数据后需要重新下载。</p>
-                </div>
+                <p id="onlineSpeechNote" style="margin:8px 0 0;color:var(--muted);font-size:13px;">在线语音需要联网；失败时会提示并自动使用苹果语音。</p>
                 <label class="speech-setting-label">播放速度</label>
                 <select class="select" id="speechRateSetting" onchange="setMobileSpeechSetting('rate',this.value)" style="width:100%;">
                     <option value="0.6">0.6×</option>
@@ -5491,7 +5479,9 @@ const UI_ZH_VI={
 "显示历史记录":"Hiện lịch sử","重新答题":"Làm lại lượt cũ","新一轮答题":"Lượt mới","本轮答题记录":"Lịch sử lượt này","清除记录":"Xóa lịch sử","还没有答题记录":"Chưa có lịch sử trả lời","已答":"Đã trả lời",
 "手机语音设置":"Cài đặt giọng đọc trên điện thoại",
 "苹果手机 Safari 使用系统 Web Speech 朗读词汇和短句。":"Safari trên iPhone sử dụng Web Speech của hệ thống để đọc từ vựng và câu ngắn.",
-"语音功能":"Chức năng giọng đọc","打开":"Bật","关闭":"Tắt","朗读语言":"Ngôn ngữ đọc","普通话":"Tiếng Trung phổ thông","播放速度":"Tốc độ đọc","播放语音":"Phát giọng đọc","删除短句":"Xóa câu ngắn","确定删除":"Xác nhận xóa","语音模型":"Mô hình giọng đọc","苹果 Web Speech（默认）":"Apple Web Speech (mặc định)","Piper 离线模型":"Mô hình Piper ngoại tuyến","Piper 正在生成语音…":"Piper đang tạo giọng đọc…","Piper 引擎加载失败":"Không thể tải công cụ Piper","Piper 语音生成失败":"Không thể tạo giọng đọc Piper","当前语音模型":"Mô hình giọng đọc hiện tại","模型清理失败":"Không thể xóa mô hình","越南语语音模型":"Mô hình giọng đọc tiếng Việt","中文语音模型":"Mô hình giọng đọc tiếng Trung","正在检测…":"Đang kiểm tra…","下载模型":"Tải mô hình","清理模型":"Xóa mô hình","下载中…":"Đang tải…","已下载":"Đã tải","未下载":"Chưa tải","模型已清理":"Đã xóa mô hình","模型下载完成":"Đã tải xong mô hình","模型下载失败":"Tải mô hình thất bại","模型保存在浏览器本地存储中。清除 Safari 网站数据后需要重新下载。":"Mô hình được lưu trong bộ nhớ cục bộ của trình duyệt. Nếu xóa dữ liệu trang web Safari, em cần tải lại mô hình.","需要先下载越南语语音模型":"Cần tải mô hình giọng đọc tiếng Việt trước","需要先下载中文语音模型":"Cần tải mô hình giọng đọc tiếng Trung trước","语音已关闭":"Giọng đọc đã tắt",
+"语音功能":"Chức năng giọng đọc","打开":"Bật","关闭":"Tắt","朗读语言":"Ngôn ngữ đọc","普通话":"Tiếng Trung phổ thông","播放速度":"Tốc độ đọc","播放语音":"Phát giọng đọc","删除短句":"Xóa câu ngắn","确定删除":"Xác nhận xóa","语音模型":"Mô hình giọng đọc","苹果 Web Speech（默认）":"Apple Web Speech (mặc định)",
+"在线 AI 语音（SpeechSter）":"Giọng AI trực tuyến (SpeechSter)",
+"在线语音需要联网；失败时会提示并自动使用苹果语音。":"Giọng trực tuyến cần Internet; nếu lỗi sẽ thông báo và tự động dùng giọng Apple.","Piper 离线模型":"Mô hình Piper ngoại tuyến","Piper 正在生成语音…":"Piper đang tạo giọng đọc…","Piper 引擎加载失败":"Không thể tải công cụ Piper","Piper 语音生成失败":"Không thể tạo giọng đọc Piper","当前语音模型":"Mô hình giọng đọc hiện tại","模型清理失败":"Không thể xóa mô hình","越南语语音模型":"Mô hình giọng đọc tiếng Việt","中文语音模型":"Mô hình giọng đọc tiếng Trung","正在检测…":"Đang kiểm tra…","下载模型":"Tải mô hình","清理模型":"Xóa mô hình","下载中…":"Đang tải…","已下载":"Đã tải","未下载":"Chưa tải","模型已清理":"Đã xóa mô hình","模型下载完成":"Đã tải xong mô hình","模型下载失败":"Tải mô hình thất bại","模型保存在浏览器本地存储中。清除 Safari 网站数据后需要重新下载。":"Mô hình được lưu trong bộ nhớ cục bộ của trình duyệt. Nếu xóa dữ liệu trang web Safari, em cần tải lại mô hình.","需要先下载越南语语音模型":"Cần tải mô hình giọng đọc tiếng Việt trước","需要先下载中文语音模型":"Cần tải mô hình giọng đọc tiếng Trung trước","语音已关闭":"Giọng đọc đã tắt",
 "加入需加强记忆":"Thêm vào cần ôn kỹ hơn","取消需加强记忆":"Bỏ khỏi cần ôn kỹ hơn","全部删除":"Xóa tất cả","已全部删除需加强记忆标记":"Đã xóa toàn bộ dấu cần ôn kỹ hơn"
 };
 const UI_ORIGINAL=new WeakMap();
@@ -5759,167 +5749,58 @@ body:not(.speech-enabled) .mini-speech-btn{display:none!important;}
 </style>
 <script id="mobileStudySpeechFeature">
 (function(){
-  const isiOS=/iPad|iPhone|iPod/.test(navigator.userAgent) ||
-    (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1);
-  if(isiOS) document.body.classList.add("ios-device");
-  let iosSpeechTimer=null;
-  let iosCurrentUtterance=null;
-  let iosSpeechToken=0;
-  let speechEngineFirstNoticeShown=false;
-  function showFirstSpeechEngineNotice(lang){
-    if(speechEngineFirstNoticeShown) return;
-    speechEngineFirstNoticeShown=true;
-    const isVi=settings.uiLanguage==="vi";
-    if((settings.speechEngine||"webspeech")==="piper"){
-      const model=lang==="zh"?"zh_CN-huayan-medium":"vi_VN-vais1000-medium";
-      showToast(isVi ? ("Mô hình đang dùng: Piper · "+model) : ("当前语音模型：Piper · "+model));
-    }else{
-      showToast(isVi ? "Mô hình đang dùng: Apple Web Speech" : "当前语音模型：苹果 Web Speech");
-    }
-  }
-
-  if(settings.speechEnabled===undefined) settings.speechEnabled=true;
-  if(!["webspeech","piper"].includes(settings.speechEngine)) settings.speechEngine="webspeech";
-  // Web Speech 为默认引擎；用户选择会持久保存。
-  if(!settings.speechEngine) settings.speechEngine="webspeech";
-  if(!["vi","zh"].includes(settings.speechLanguage)) settings.speechLanguage="vi";
-  if(![0.6,0.75,0.9,1,1.25].includes(Number(settings.speechRate))) settings.speechRate=0.9;
-
-  function syncSpeechSettingsUI(){
-    const enabled=!!settings.speechEnabled;
-    document.body.classList.toggle("speech-enabled",isiOS && enabled);
-    const en=document.getElementById("speechEnabledSetting");
-    const lang=document.getElementById("speechLanguageSetting");
-    const rate=document.getElementById("speechRateSetting");
-    const extra=document.getElementById("speechExtraSettings");
-    const engine=document.getElementById("speechEngineSetting");
-    const piperBox=document.getElementById("piperModelManager");
-    if(en) en.value=enabled?"on":"off";
-    if(lang) lang.value=settings.speechLanguage||"vi";
-    if(rate) rate.value=String(Number(settings.speechRate)||1);
-    if(extra) extra.style.display=enabled?"block":"none";
-    if(engine) engine.value=settings.speechEngine||"webspeech";
-    if(piperBox) piperBox.style.display=(enabled && settings.speechEngine==="piper")?"block":"none";
-  }
-
-  window.setSpeechEngine=function(value){
-    settings.speechEngine=value==="piper"?"piper":"webspeech";
-    speechEngineFirstNoticeShown=false;
-    saveJSON(KEY_SETTINGS,settings);
-    try{speechSynthesis.cancel();}catch(e){}
-    if(window.__amoPiperAudio){try{window.__amoPiperAudio.pause();}catch(e){}}
-    syncSpeechSettingsUI();
-    applyUILanguage();
-    if(typeof refreshPiperModelUI==="function") refreshPiperModelUI();
-  };
-
-  window.setMobileSpeechSetting=function(type,value){
-    if(type==="enabled") settings.speechEnabled=value==="on";
-    if(type==="language") settings.speechLanguage=value==="zh"?"zh":"vi";
-    if(type==="rate") settings.speechRate=[0.6,0.75,0.9,1,1.25].includes(Number(value))?Number(value):0.9;
-    saveJSON(KEY_SETTINGS,settings);
-    if("speechSynthesis" in window) speechSynthesis.cancel();
-    syncSpeechSettingsUI();
-    applyUILanguage();
-    if(typeof refreshPiperModelUI==="function") refreshPiperModelUI();
-  };
-
-  function chooseVoice(lang){
-    const voices=speechSynthesis.getVoices();
-    const prefix=lang==="zh"?"zh":"vi";
-    return voices.find(v=>String(v.lang||"").toLowerCase().startsWith(prefix+"-")) ||
-           voices.find(v=>String(v.lang||"").toLowerCase().startsWith(prefix)) || null;
-  }
-
-  window.playAnswerSpeech=function(event,btn){
-    const lang=btn?.dataset?.speechLang==="zh"?"zh":"vi";
-    const value=btn?.dataset?.speechText||"";
-    playDirectStudySpeech(event,lang,value);
-  };
-
-  window.playDirectStudySpeech=async function(event,lang,text){
-    if(event){event.preventDefault();event.stopPropagation();}
-    if(!isiOS || !settings.speechEnabled) return;
-    showFirstSpeechEngineNotice(lang);
-    if((settings.speechEngine||"webspeech")==="piper"){
-      if(typeof hasPiperModel==="function" && !(await hasPiperModel(lang))){
-        showToast((settings.uiLanguage==="vi")
-          ? (lang==="vi"?"Cần tải mô hình giọng đọc tiếng Việt trước":"Cần tải mô hình giọng đọc tiếng Trung trước")
-          : (lang==="vi"?"需要先下载越南语语音模型":"需要先下载中文语音模型"));
-        return;
-      }
-      return window.playPiperStudySpeech(event,lang,text);
-    }
-    if(!("speechSynthesis" in window)) return;
-    text=String(text||"").replace(/\s+/g," ").trim();
-    if(!text) return;
-
-    const token=++iosSpeechToken;
-    if(iosSpeechTimer){ clearTimeout(iosSpeechTimer); iosSpeechTimer=null; }
-    try{ speechSynthesis.cancel(); }catch(e){}
-    iosCurrentUtterance=null;
-    document.querySelectorAll(".mini-speech-btn.speaking").forEach(x=>x.classList.remove("speaking"));
-    const btn=event && event.currentTarget && event.currentTarget.classList?.contains("mini-speech-btn") ? event.currentTarget : null;
-
-    // iOS Safari 在 cancel() 后立刻 speak() 容易卡住，留出释放队列的时间。
-    iosSpeechTimer=setTimeout(()=>{
-      if(token!==iosSpeechToken) return;
-      const u=new SpeechSynthesisUtterance(text);
-      iosCurrentUtterance=u; // 保持强引用，避免 iOS 提前回收
-      u.lang=lang==="zh"?"zh-CN":"vi-VN";
-      u.rate=Number(settings.speechRate)||0.9;
-      u.pitch=1;
-      const voice=chooseVoice(lang);
-      if(voice) u.voice=voice;
-      if(btn) btn.classList.add("speaking");
-      const cleanup=()=>{
-        if(token===iosSpeechToken) iosCurrentUtterance=null;
-        btn?.classList.remove("speaking");
-      };
-      u.onend=cleanup;
-      u.onerror=cleanup;
-      try{ speechSynthesis.speak(u); }catch(e){ cleanup(); }
-    },120);
-  };
-
-  window.playQuizQuestionSpeech=function(event){
-    if(!quizCurrent) return;
-    const mode=quizCurrent.mode||"vi-zh";
-    const lang=(mode==="zh-vi" || mode==="free-zh-vi")?"zh":"vi";
-    const value=lang==="zh"?quizCurrent.item.zh:quizCurrent.item.vi;
-    playDirectStudySpeech(event,lang,value);
-  };
-
-  window.playSentenceReadingQuestionSpeech=function(event){
-    if(!sentenceReadingCurrent) return;
-    const mode=document.getElementById("sentenceReadingMode")?.value||"zh";
-    const lang=mode==="zh"?"zh":"vi";
-    const value=lang==="zh"?sentenceReadingCurrent.zh:sentenceReadingCurrent.vi;
-    playDirectStudySpeech(event,lang,value);
-  };
-
-  window.playStudySpeech=function(event,btn){
-    if(event){event.preventDefault();event.stopPropagation();}
-    if(!isiOS || !settings.speechEnabled) return;
-    const lang=settings.speechLanguage==="zh"?"zh":"vi";
-    const value=String(btn?.dataset?.[lang]||"").replace(/\s+/g," ").trim();
-    if(!value) return;
-    // 统一走同一个入口：Piper 模式绝不再直接调用 speechSynthesis。
-    return window.playDirectStudySpeech(event,lang,value);
-  };
-
-  document.addEventListener("visibilitychange",()=>{
-    if(document.visibilityState==="visible"){
-      iosSpeechToken++;
-      if(iosSpeechTimer){clearTimeout(iosSpeechTimer);iosSpeechTimer=null;}
-      try{speechSynthesis.cancel();}catch(e){}
-      iosCurrentUtterance=null;
-      document.querySelectorAll(".mini-speech-btn.speaking").forEach(x=>x.classList.remove("speaking"));
-    }
-  });
-  window.addEventListener("load",syncSpeechSettingsUI);
-  document.addEventListener("DOMContentLoaded",syncSpeechSettingsUI);
-  if("speechSynthesis" in window) speechSynthesis.onvoiceschanged=()=>{};
+ const isiOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+ if(isiOS)document.body.classList.add("ios-device");
+ const BASE="https://ahm7xmakki.com";
+ let timer=null,utter=null,token=0,audio=null,audioURL=null,voices=null,first=false;
+ if(settings.speechEnabled===undefined)settings.speechEnabled=true;
+ if(settings.speechEngine==="piper")settings.speechEngine="online";
+ if(!["webspeech","online"].includes(settings.speechEngine))settings.speechEngine="webspeech";
+ if(!["vi","zh"].includes(settings.speechLanguage))settings.speechLanguage="vi";
+ if(![0.6,0.75,0.9,1,1.25].includes(Number(settings.speechRate)))settings.speechRate=0.9;
+ saveJSON(KEY_SETTINGS,settings);
+ const tr=(zh,vi)=>settings.uiLanguage==="vi"?vi:zh;
+ function stop(){
+  try{speechSynthesis.cancel()}catch(e){}
+  if(audio){try{audio.pause()}catch(e){}audio=null}
+  if(audioURL){try{URL.revokeObjectURL(audioURL)}catch(e){}audioURL=null}
+  document.querySelectorAll(".mini-speech-btn.speaking").forEach(x=>x.classList.remove("speaking"));
+ }
+ function sync(){
+  const enabled=!!settings.speechEnabled;
+  document.body.classList.toggle("speech-enabled",isiOS&&enabled);
+  const en=document.getElementById("speechEnabledSetting"),lang=document.getElementById("speechLanguageSetting"),rate=document.getElementById("speechRateSetting"),extra=document.getElementById("speechExtraSettings"),engine=document.getElementById("speechEngineSetting");
+  if(en)en.value=enabled?"on":"off";if(lang)lang.value=settings.speechLanguage||"vi";if(rate)rate.value=String(Number(settings.speechRate)||1);if(extra)extra.style.display=enabled?"block":"none";if(engine)engine.value=settings.speechEngine||"webspeech";
+ }
+ window.setSpeechEngine=function(v){settings.speechEngine=v==="online"?"online":"webspeech";first=false;stop();saveJSON(KEY_SETTINGS,settings);sync();applyUILanguage()};
+ window.setMobileSpeechSetting=function(t,v){if(t==="enabled")settings.speechEnabled=v==="on";if(t==="language")settings.speechLanguage=v==="zh"?"zh":"vi";if(t==="rate")settings.speechRate=[0.6,0.75,0.9,1,1.25].includes(Number(v))?Number(v):0.9;stop();saveJSON(KEY_SETTINGS,settings);sync();applyUILanguage()};
+ function notice(){if(first)return;first=true;showToast(settings.speechEngine==="online"?tr("当前语音：在线 AI 语音","Giọng hiện tại: AI trực tuyến"):tr("当前语音：苹果 Web Speech","Giọng hiện tại: Apple Web Speech"))}
+ function pickSystem(lang){const vs=speechSynthesis.getVoices(),p=lang==="zh"?"zh":"vi";return vs.find(v=>String(v.lang||"").toLowerCase().startsWith(p+"-"))||vs.find(v=>String(v.lang||"").toLowerCase().startsWith(p))||null}
+ function systemSpeak(lang,text,btn){
+  if(!("speechSynthesis" in window))return;const t=++token;if(timer)clearTimeout(timer);try{speechSynthesis.cancel()}catch(e){}utter=null;
+  timer=setTimeout(()=>{if(t!==token)return;const u=new SpeechSynthesisUtterance(text);utter=u;u.lang=lang==="zh"?"zh-CN":"vi-VN";u.rate=Number(settings.speechRate)||0.9;u.pitch=1;const v=pickSystem(lang);if(v)u.voice=v;btn?.classList.add("speaking");const done=()=>{if(t===token)utter=null;btn?.classList.remove("speaking")};u.onend=done;u.onerror=done;try{speechSynthesis.speak(u)}catch(e){done()}},120);
+ }
+ async function onlineVoice(lang){
+  if(!voices){const r=await fetch(BASE+"/api/voices",{cache:"no-store"});if(!r.ok)throw new Error("voices "+r.status);const j=await r.json();voices=Array.isArray(j.voices)?j.voices:[]}
+  const re=lang==="zh"?/chinese|mandarin|china/i:/vietnam/i;
+  const list=voices.filter(v=>re.test((v.language||"")+" "+(v.country||"")+" "+(v.name||"")));
+  if(!list.length)throw new Error("voice unavailable");return list[0];
+ }
+ async function onlineSpeak(lang,text,btn){
+  try{
+   stop();btn?.classList.add("speaking");const v=await onlineVoice(lang);
+   const rate=Math.max(-50,Math.min(100,Math.round((Number(settings.speechRate||0.9)-1)*100)));
+   const r=await fetch(BASE+"/api/tts",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({voiceIndex:Number(v.index),text:text.slice(0,1950),pitch:0,rate})});
+   if(!r.ok)throw new Error("tts "+r.status);const blob=await r.blob();if(!blob.size)throw new Error("empty audio");
+   audioURL=URL.createObjectURL(blob);audio=new Audio(audioURL);const done=()=>{btn?.classList.remove("speaking");if(audioURL){URL.revokeObjectURL(audioURL);audioURL=null}audio=null};audio.onended=done;audio.onerror=done;await audio.play();
+  }catch(e){console.error("Online TTS",e);btn?.classList.remove("speaking");showToast(tr("在线语音失败，已切换苹果语音","Giọng trực tuyến lỗi, đã chuyển sang giọng Apple"));systemSpeak(lang,text,btn)}
+ }
+ window.playDirectStudySpeech=function(event,lang,text){if(event){event.preventDefault();event.stopPropagation()}if(!isiOS||!settings.speechEnabled)return;text=String(text||"").replace(/\s+/g," ").trim();if(!text)return;notice();const btn=event?.currentTarget?.classList?.contains("mini-speech-btn")?event.currentTarget:null;return settings.speechEngine==="online"?onlineSpeak(lang,text,btn):systemSpeak(lang,text,btn)};
+ window.playAnswerSpeech=function(event,btn){playDirectStudySpeech(event,btn?.dataset?.speechLang==="zh"?"zh":"vi",btn?.dataset?.speechText||"")};
+ window.playQuizQuestionSpeech=function(event){if(!quizCurrent)return;const m=quizCurrent.mode||"vi-zh",lang=(m==="zh-vi"||m==="free-zh-vi")?"zh":"vi";playDirectStudySpeech(event,lang,lang==="zh"?quizCurrent.item.zh:quizCurrent.item.vi)};
+ window.playSentenceReadingQuestionSpeech=function(event){if(!sentenceReadingCurrent)return;const lang=(document.getElementById("sentenceReadingMode")?.value||"zh")==="zh"?"zh":"vi";playDirectStudySpeech(event,lang,lang==="zh"?sentenceReadingCurrent.zh:sentenceReadingCurrent.vi)};
+ window.playStudySpeech=function(event,btn){if(event){event.preventDefault();event.stopPropagation()}if(!isiOS||!settings.speechEnabled)return;const lang=settings.speechLanguage==="zh"?"zh":"vi",value=String(btn?.dataset?.[lang]||"").replace(/\s+/g," ").trim();if(value)playDirectStudySpeech(event,lang,value)};
+ sync();if("speechSynthesis" in window){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices()}
 })();
 </script>
 
@@ -5969,164 +5850,11 @@ body:not(.speech-enabled) .answered-answer-row .answer-speech-btn{display:none!i
 </style>
 
 
-<script id="piperButtonRescue">
-(function(){
-  function bind(){
-    [["piperViBtn","vi"],["piperZhBtn","zh"]].forEach(([id,lang])=>{
-      const b=document.getElementById(id); if(!b||b.dataset.piperBound)return;
-      b.dataset.piperBound="1";
-      b.addEventListener("click",function(ev){
-        ev.preventDefault(); ev.stopPropagation();
-        if(typeof window.togglePiperModel==="function") return window.togglePiperModel(lang);
-        const msg=(window.settings&&settings.uiLanguage==="vi")?"Piper chưa tải xong, vui lòng tải lại trang.":"Piper 尚未加载完成，请重新打开页面。";
-        if(typeof window.showToast==="function")showToast(msg); else alert(msg);
-      },{passive:false});
-    });
-  }
-  document.addEventListener("DOMContentLoaded",bind);
-  window.addEventListener("pageshow",bind);
-})();
-</script>
-<script id="piperModelDownloadManager">
-(function(){
- const MODELS={vi:"vi_VN-vais1000-medium",zh:"zh_CN-huayan-medium"};
- let states={vi:false,zh:false},busy={vi:false,zh:false};
-
- function tr(s){return (settings && settings.uiLanguage==="vi" && typeof translateUIString==="function")?translateUIString(s):s}
- function ui(lang){
-   const cap=lang==="vi"?"Vi":"Zh";
-   const btn=document.getElementById("piper"+cap+"Btn"),st=document.getElementById("piper"+cap+"Status");
-   if(!btn||!st)return;
-   if(busy[lang]){btn.textContent=tr("下载中…");btn.disabled=true;st.textContent=tr("下载中…");return}
-   btn.disabled=false;
-   btn.textContent=tr(states[lang]?"清理模型":"下载模型");
-   st.textContent=tr(states[lang]?"已下载":"未下载");
- }
- async function detect(lang){
-   try{
-     const tts=await window.__amoPiperReady();
-     const stored=await tts.stored();
-     states[lang]=Array.isArray(stored)&&stored.includes(MODELS[lang]);
-   }catch(e){console.warn("Piper stored() check:",e);states[lang]=false}
-   ui(lang);return states[lang];
- }
- async function hardClear(lang,tts){
-   // 先走库自己的删除；iOS Safari 若失败，再直接删除 OPFS 中对应模型文件。
-   try{await tts.remove(MODELS[lang]);}catch(e){console.warn("Piper remove():",e)}
-   try{
-     const root=await navigator.storage.getDirectory();
-     const dir=await root.getDirectoryHandle("piper",{create:true});
-     const prefix=MODELS[lang]+".";
-     // Safari 支持异步迭代 OPFS directory keys。
-     for await (const name of dir.keys()){
-       if(name===MODELS[lang] || name.startsWith(prefix)){
-         try{await dir.removeEntry(name,{recursive:true})}catch(e){console.warn("removeEntry",name,e)}
-       }
-     }
-   }catch(e){console.warn("Direct OPFS cleanup:",e)}
-   const stored=await tts.stored().catch(()=>[]);
-   if(Array.isArray(stored)&&stored.includes(MODELS[lang])) throw new Error("MODEL_STILL_EXISTS");
- }
- window.togglePiperModel=async function(lang){
-   if(!MODELS[lang]||busy[lang])return;
-   const cap=lang==="vi"?"Vi":"Zh",wrap=document.getElementById("piper"+cap+"Progress"),bar=wrap?.firstElementChild;
-   busy[lang]=true;ui(lang);
-   try{
-     const tts=await window.__amoPiperReady();
-     const exists=await detect(lang);
-     if(exists){
-       await hardClear(lang,tts);
-       states[lang]=false;ui(lang);
-       showToast(tr("模型已清理"));
-     }else{
-       if(wrap)wrap.hidden=false;
-       await tts.download(MODELS[lang],p=>{
-         if(!bar)return;
-         const total=Number(p?.total)||0,loaded=Number(p?.loaded)||0;
-         if(total>0)bar.style.width=Math.min(100,loaded*100/total)+"%";
-       });
-       states[lang]=true;
-       showToast(tr("模型下载完成"));
-     }
-   }catch(e){
-     console.error("Piper model manager:",e);
-     showToast(tr(states[lang]?"模型清理失败":"模型下载失败"));
-   }finally{
-     busy[lang]=false;
-     if(wrap){wrap.hidden=true;if(bar)bar.style.width="0%"}
-     await detect(lang);
-   }
- };
- window.hasPiperModel=async function(lang){return detect(lang)};
- window.refreshPiperModelUI=async function(){await Promise.all([detect("vi"),detect("zh")])};
- document.addEventListener("DOMContentLoaded",()=>setTimeout(()=>window.refreshPiperModelUI(),300));
-})();
-</script>
 
 
-<script type="module" id="amoPiperRuntime">
-let piperModulePromise=null;
-const VOICE={vi:"vi_VN-vais1000-medium",zh:"zh_CN-huayan-medium"};
 
-async function loadPiper(){
-  if(!piperModulePromise){
-    piperModulePromise=import("https://esm.sh/@realtimex/piper-tts-web@1.1.1?bundle");
-  }
-  return piperModulePromise;
-}
-window.__amoPiperReady=loadPiper;
 
-window.playPiperStudySpeech=async function(event,lang,text){
-  text=String(text||"").replace(/\s+/g," ").trim();
-  if(!text)return;
-  const tr=(zh,vi)=>settings.uiLanguage==="vi"?vi:zh;
-  const btn=event?.currentTarget?.classList?.contains("mini-speech-btn")?event.currentTarget:null;
-  const voiceId=VOICE[lang==="zh"?"zh":"vi"];
-  try{
-    const tts=await loadPiper();
-    const stored=await tts.stored();
-    if(!Array.isArray(stored)||!stored.includes(voiceId)){
-      showToast(lang==="vi"
-        ? tr("需要先下载越南语语音模型","Cần tải mô hình giọng đọc tiếng Việt trước")
-        : tr("需要先下载中文语音模型","Cần tải mô hình giọng đọc tiếng Trung trước"));
-      if(typeof refreshPiperModelUI==="function")refreshPiperModelUI();
-      return;
-    }
-    if(btn)btn.classList.add("speaking");
-    // Safari/iPhone：使用新版 Piper Session + ONNX Runtime 1.22，避免旧 Mintplex 运行时问题。
-    // 模型仍由 download()/stored() 保存在当前 HTTPS 站点的 OPFS 中。
-    const session=await tts.TtsSession.create({
-      voiceId,
-      allowLocalModels:true,
-      fallbackStrategy:"cdn",
-      logger:(msg)=>console.debug("[Piper]",msg)
-    });
-    const wav=await session.predict(text);
-    if(!(wav instanceof Blob) || wav.size<44) throw new Error("Piper returned invalid WAV");
-    if(window.__amoPiperAudio){
-      try{window.__amoPiperAudio.pause();}catch(e){}
-      if(window.__amoPiperObjectURL)URL.revokeObjectURL(window.__amoPiperObjectURL);
-    }
-    const url=URL.createObjectURL(wav),audio=new Audio(url);
-    window.__amoPiperAudio=audio;window.__amoPiperObjectURL=url;
-    audio.playbackRate=Number(settings.speechRate)||0.9;
-    const cleanup=()=>{
-      btn?.classList.remove("speaking");
-      if(window.__amoPiperObjectURL===url){
-        URL.revokeObjectURL(url);window.__amoPiperObjectURL=null;
-      }
-    };
-    audio.onended=cleanup;
-    audio.onerror=cleanup;
-    await audio.play();
-  }catch(err){
-    console.error("Piper TTS strict mode:",err);
-    btn?.classList.remove("speaking");
-    showToast(tr("Piper 语音生成失败","Không thể tạo giọng đọc Piper"));
-    // 严格模式：这里故意不调用 speechSynthesis，不偷偷回退苹果语音。
-  }
-};
-</script>
+
 
 </body>
 </html>
