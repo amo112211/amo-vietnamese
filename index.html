@@ -1469,6 +1469,72 @@ body.theme-night,body.theme-eye{background-image:none !important;background-blen
   }
 }
 </style>
+<style id="amoDesktopQuizSpacingAnswerV2">
+@media(min-width:701px){
+  /* 电脑版：轮次与统计分开，正确/错误同一排 */
+  #quiz .quiz-progress-stack{
+    gap:0 !important;
+  }
+  #quiz #quizBatchCounter.quiz-batch-counter{
+    display:block !important;
+    margin-bottom:30px !important;
+    line-height:1.2 !important;
+  }
+  #quiz .quiz-live-score{
+    display:flex !important;
+    flex-direction:row !important;
+    align-items:center !important;
+    justify-content:flex-end !important;
+    gap:12px !important;
+    white-space:nowrap !important;
+  }
+
+  /* 只保留大的正确答案；拼音在上，汉字在下 */
+  #quiz .quiz-inline-meaning.show{
+    margin-top:10px !important;
+    margin-bottom:18px !important;
+  }
+  #quiz .quiz-inline-meaning .quiz-chinese{
+    display:flex !important;
+    flex-direction:column-reverse !important;
+    align-items:center !important;
+    justify-content:center !important;
+    gap:4px !important;
+  }
+  #quiz .quiz-inline-meaning .quiz-pinyin{
+    display:block !important;
+    margin:0 0 3px !important;
+    line-height:1.25 !important;
+  }
+  #quiz #quizResult .quiz-completed-answer{
+    display:none !important;
+  }
+
+  /* 例句上方留一行；没有例句也保留例句位置 */
+  #quiz #quizResult.quiz-result{
+    margin-top:0 !important;
+    padding-top:0 !important;
+    min-height:94px !important;
+  }
+  #quiz #quizResult .quiz-correct-details{
+    min-height:64px !important;
+    margin-top:0 !important;
+    padding-top:16px !important;
+    box-sizing:border-box !important;
+  }
+  #quiz #quizResult .quiz-correct-example{
+    margin-top:0 !important;
+    padding-top:0 !important;
+    line-height:1.5 !important;
+  }
+  #quiz #quizResult .quiz-answer-status{
+    margin-top:9px !important;
+  }
+
+  #quiz .quiz-options{margin-top:10px !important;}
+  #quiz .quiz-main-actions{margin-top:10px !important;}
+}
+</style>
 </head>
 <body>
 <div class="app">
