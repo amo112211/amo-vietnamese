@@ -5989,11 +5989,25 @@ body:not(.speech-enabled) .answered-answer-row .answer-speech-btn{display:none!i
      const tts=await window.__amoPiperReady();
      const stored=await tts.stored();
      states[lang]=Array.isArray(stored)&&stored.includes(MODELS[lang]);
-   }catch(e){
-     console.warn("Piper stored() check:",e);
-     states[lang]=false;
-   }
+   }catch(e){console.warn("Piper stored() check:",e);states[lang]=false}
    ui(lang);return states[lang];
+ }
+ async function hardClear(lang,tts){
+   // 先走库自己的删除；iOS Safari 若失败，再直接删除 OPFS 中对应模型文件。
+   try{await tts.remove(MODELS[lang]);}catch(e){console.warn("Piper remove():",e)}
+   try{
+     const root=await navigator.storage.getDirectory();
+     const dir=await root.getDirectoryHandle("piper",{create:true});
+     const prefix=MODELS[lang]+".";
+     // Safari 支持异步迭代 OPFS directory keys。
+     for await (const name of dir.keys()){
+       if(name===MODELS[lang] || name.startsWith(prefix)){
+         try{await dir.removeEntry(name,{recursive:true})}catch(e){console.warn("removeEntry",name,e)}
+       }
+     }
+   }catch(e){console.warn("Direct OPFS cleanup:",e)}
+   const stored=await tts.stored().catch(()=>[]);
+   if(Array.isArray(stored)&&stored.includes(MODELS[lang])) throw new Error("MODEL_STILL_EXISTS");
  }
  window.togglePiperModel=async function(lang){
    if(!MODELS[lang]||busy[lang])return;
@@ -6003,11 +6017,8 @@ body:not(.speech-enabled) .answered-answer-row .answer-speech-btn{display:none!i
      const tts=await window.__amoPiperReady();
      const exists=await detect(lang);
      if(exists){
-       // Safari 的 OPFS remove() 偶尔会失败/卡住。清理失败时不阻塞用户，
-       // 直接重新下载会覆盖同名模型文件，因此把按钮恢复为“下载模型”即可。
-       try{ await tts.remove(MODELS[lang]); }
-       catch(removeErr){ console.warn("Piper remove failed; allow overwrite download:",removeErr); }
-       states[lang]=false;
+       await hardClear(lang,tts);
+       states[lang]=false;ui(lang);
        showToast(tr("模型已清理"));
      }else{
        if(wrap)wrap.hidden=false;
