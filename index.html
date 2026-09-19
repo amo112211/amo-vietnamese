@@ -1403,6 +1403,78 @@ body.theme-night,body.theme-eye{background-image:none !important;background-blen
   #quiz .quiz-main-actions #quizResetRememberBtn{padding:8px 4px !important;}
 }
 </style>
+
+<style id="amoStudyColorAndQuizLayoutV4">
+/* Global study text colors. The inline colors and legacy dark-theme rules are overridden deliberately. */
+:root{--study-vi-color:#10786d;--study-zh-color:#1769d2;--study-py-color:#1167e8;}
+html:has(body.theme-night),html:has(body.theme-eye){--study-vi-color:#8bcdb2;--study-zh-color:#ffffff;--study-py-color:#8db5ff;}
+.display-toolbar-inner .study-color-picker-label{display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;font-size:12px;white-space:nowrap;}
+.study-color-input{display:inline-block;width:35px;height:32px;min-width:35px;padding:2px;border:1px solid var(--border);border-radius:7px;background:var(--card);cursor:pointer;vertical-align:middle;}
+body :is(.word-vi,.sentence-vi,.example-vi,.quiz-vi-answer,.problem-vi),
+#quiz #quizWord[data-study-lang="vi"],
+#sentenceReadingQuestion[data-study-lang="vi"]{color:var(--study-vi-color) !important;}
+body :is(.word-zh,.sentence-zh,.example-zh,.quiz-chinese,.problem-zh),
+#quiz #quizWord[data-study-lang="zh"],
+#sentenceReadingQuestion[data-study-lang="zh"]{color:var(--study-zh-color) !important;}
+/* Legacy high-specificity night/eye color declarations must also respect user choices. */
+body.theme-night :is(.word-vi,.sentence-vi,.example-vi,.quiz-vi-answer,.problem-vi),
+body.theme-eye :is(.word-vi,.sentence-vi,.example-vi,.quiz-vi-answer,.problem-vi){color:var(--study-vi-color) !important;}
+body.theme-night :is(.word-zh,.sentence-zh,.example-zh,.quiz-chinese,.problem-zh),
+body.theme-eye :is(.word-zh,.sentence-zh,.example-zh,.quiz-chinese,.problem-zh){color:var(--study-zh-color) !important;}
+body.theme-night :is(.word-zh-pinyin,.sentence-zh-pinyin,.quiz-pinyin,.sentence-reading-question-pinyin),
+body.theme-eye :is(.word-zh-pinyin,.sentence-zh-pinyin,.quiz-pinyin,.sentence-reading-question-pinyin){color:var(--study-py-color) !important;}
+/* A Chinese text wrapper contains a nested pinyin line: style the two separately. */
+body :is(.word-zh,.sentence-zh) > div:not(.word-zh-pinyin):not(.sentence-zh-pinyin),
+#sentenceReadingQuestion[data-study-lang="zh"] > div:not(.sentence-reading-question-pinyin){color:var(--study-zh-color) !important;}
+body :is(.word-zh-pinyin,.sentence-zh-pinyin,.quiz-pinyin,.sentence-reading-question-pinyin){color:var(--study-py-color) !important;}
+body :is(.wrong-study-vi,.remembered-sentence-vi,[data-study-lang="vi"].sentence-reading-study-answer,[data-study-lang="vi"].quiz-history-study-text){color:var(--study-vi-color) !important;}
+body :is(.wrong-study-zh,.remembered-sentence-zh,[data-study-lang="zh"].sentence-reading-study-answer,[data-study-lang="zh"].quiz-history-study-text){color:var(--study-zh-color) !important;}
+body :is(.remembered-sentence-zh,.sentence-reading-study-answer) :is(.quiz-pinyin,.sentence-zh-pinyin,.word-zh-pinyin){color:var(--study-py-color) !important;}
+/* Higher specificity also covers existing eye/night-mode answer and example rules. */
+body.theme-night #quiz .quiz-inline-meaning .quiz-chinese,
+body.theme-eye #quiz .quiz-inline-meaning .quiz-chinese,
+body #quiz .quiz-inline-meaning .quiz-chinese,
+body #quiz .quiz-option .quiz-chinese,
+body #quiz #quizWord .quiz-chinese,
+body #quiz .quiz-correct-details .example-zh{color:var(--study-zh-color) !important;}
+body.theme-night #quiz .quiz-inline-meaning .quiz-vi-answer,
+body.theme-eye #quiz .quiz-inline-meaning .quiz-vi-answer,
+body #quiz .quiz-inline-meaning .quiz-vi-answer,
+body #quiz .quiz-correct-details .example-vi{color:var(--study-vi-color) !important;}
+body #quiz .quiz-pinyin,body #quiz .quiz-zh-wrap .quiz-pinyin,
+body #sentenceReading .sentence-reading-question-pinyin{color:var(--study-py-color) !important;}
+@media(max-width:700px){
+  /* Center the actual question; the speech control and score do not reserve its horizontal space. */
+  #quiz .quiz-question-row{position:relative !important;grid-template-columns:minmax(0,1fr) !important;row-gap:0 !important;}
+  #quiz .quiz-question-row #quizWord{
+    grid-column:1 !important;grid-row:1 !important;width:100% !important;
+    padding:0 34px !important;margin:0 !important;text-align:center !important;
+    font-size:clamp(32px,calc(32px * var(--vi-font-scale)),56px) !important;
+    line-height:1.28 !important;min-width:0 !important;overflow-wrap:anywhere !important;
+  }
+  #quiz .quiz-question-row #quizWord[data-study-lang="zh"]{font-size:clamp(32px,calc(32px * var(--zh-font-scale)),56px) !important;}
+  #quiz .quiz-question-row #quizQuestionSpeechBtn{
+    position:absolute !important;right:0 !important;top:0 !important;
+    margin:0 !important;z-index:1 !important;
+  }
+  /* Four line-heights lower than the old score's top-aligned position. */
+  #quiz .quiz-question-row .quiz-progress-stack{
+    grid-column:1 !important;grid-row:2 !important;justify-self:end !important;
+    margin:calc(4 * 1.28em) 0 0 !important;gap:.4em !important;
+    max-width:100% !important;
+  }
+  #quiz .quiz-question-row #quizInlineMeaning.quiz-inline-meaning.show{
+    grid-column:1 !important;grid-row:3 !important;
+    margin:calc(2 * 1.28em) auto 0 !important; /* two additional lines before the answer */
+    padding:0 2px !important;max-width:100% !important;
+  }
+  #quiz .quiz-question-row #quizInlineMeaning.quiz-inline-meaning:not(.show){display:none !important;}
+  #quiz .quiz-live-score{flex-direction:row !important;flex-wrap:nowrap !important;}
+  #quiz .quiz-single-answer{flex-wrap:wrap !important;}
+  .display-toolbar-inner{gap:9px;}
+  .study-color-input{width:36px;height:36px;}
+}
+</style>
 </head>
 <body>
 <div class="app">
@@ -1450,6 +1522,16 @@ body.theme-night,body.theme-eye{background-image:none !important;background-blen
       <select id="pyFontSizeSetting" onchange="setFontSetting('pyFontSize',this.value)">
         <option value="90">小</option><option value="100">标准</option><option value="115">大</option><option value="130">特大</option><option value="150">超大</option>
       </select>
+    </label>
+    <span class="display-label study-color-label">字体颜色</span>
+    <label class="study-color-picker-label" for="viFontColorSetting">越南语颜色
+      <input type="color" class="study-color-input" id="viFontColorSetting" aria-label="越南语字体颜色" value="#10786d" oninput="setStudyFontColor('viFontColor',this.value)" onchange="setStudyFontColor('viFontColor',this.value)">
+    </label>
+    <label class="study-color-picker-label" for="zhFontColorSetting">中文颜色
+      <input type="color" class="study-color-input" id="zhFontColorSetting" aria-label="中文字体颜色" value="#1769d2" oninput="setStudyFontColor('zhFontColor',this.value)" onchange="setStudyFontColor('zhFontColor',this.value)">
+    </label>
+    <label class="study-color-picker-label" for="pyFontColorSetting">拼音颜色
+      <input type="color" class="study-color-input" id="pyFontColorSetting" aria-label="拼音字体颜色" value="#1167e8" oninput="setStudyFontColor('pyFontColor',this.value)" onchange="setStudyFontColor('pyFontColor',this.value)">
     </label>
     <button type="button" class="display-toggle" id="nightModeBtn" onclick="toggleThemeMode('night')">🌙 夜晚</button>
     <button type="button" class="display-toggle" id="eyeModeBtn" onclick="toggleThemeMode('eye')">👁 护眼</button>
@@ -1633,7 +1715,7 @@ body.theme-night,body.theme-eye{background-image:none !important;background-blen
         </select>
     </div>
     <div class="quiz-history-top-control">
-        <label class="quiz-history-toggle" style="gap:5px;"><input type="checkbox" id="quizRandomToggle" onchange="setQuizRandomMode(this.checked)"> <span>随机出题</span></label>
+        <label class="quiz-history-toggle" style="gap:5px;" title="本轮随机出题，不重复"><input type="checkbox" id="quizRandomToggle" onchange="setQuizRandomMode(this.checked)"> <span id="quizRandomCaption">🎲 随机出题（本轮不重复）</span></label>
         <label class="quiz-history-toggle"><input type="checkbox" id="quizHistoryToggle" onchange="toggleQuizHistoryPanel(this.checked)"> <span>显示历史记录</span></label>
         <div class="quiz-round-picker" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
             <span style="font-weight:700;">重新答题</span>
@@ -2382,6 +2464,15 @@ function applyDisplaySettings(){
     root.style.setProperty("--vi-font-scale", String(Number(settings.viFontSize||100)/100));
     root.style.setProperty("--zh-font-scale", String(Number(settings.zhFontSize||100)/100));
     root.style.setProperty("--py-font-scale", String(Number(settings.pyFontSize||100)/100));
+    const themeDark=settings.themeMode==="night" || settings.themeMode==="eye";
+    const defaultColors={viFontColor:themeDark?"#8bcdb2":"#10786d",zhFontColor:themeDark?"#ffffff":"#1769d2",pyFontColor:themeDark?"#8db5ff":"#1167e8"};
+    for(const [key,cssVar] of Object.entries({viFontColor:"--study-vi-color",zhFontColor:"--study-zh-color",pyFontColor:"--study-py-color"})){
+        const saved=settings[key];
+        if(typeof saved==="string" && /^#[0-9a-f]{6}$/i.test(saved)) root.style.setProperty(cssVar,saved);
+        else root.style.removeProperty(cssVar);
+        const picker=document.getElementById(key+"Setting");
+        if(picker) picker.value=(typeof saved==="string" && /^#[0-9a-f]{6}$/i.test(saved))?saved:defaultColors[key];
+    }
     document.body.classList.toggle("theme-night", settings.themeMode==="night");
     document.body.classList.toggle("theme-eye", settings.themeMode==="eye");
     ["ui","vi","zh","py"].forEach(k=>{
@@ -2393,6 +2484,12 @@ function applyDisplaySettings(){
 }
 function setFontSetting(key,value){
     settings[key]=String(value);
+    saveJSON(KEY_SETTINGS,settings);
+    applyDisplaySettings();
+}
+function setStudyFontColor(key,value){
+    if(!["viFontColor","zhFontColor","pyFontColor"].includes(key) || !/^#[0-9a-f]{6}$/i.test(value)) return;
+    settings[key]=value;
     saveJSON(KEY_SETTINGS,settings);
     applyDisplaySettings();
 }
@@ -3375,8 +3472,8 @@ function renderWrong(){
     list.innerHTML = wrongWords.map(w=>`
         <div class="wrong-item">
             <div class="wrong-main">
-                <strong>${escapeHTML(w.vi)}</strong>
-                <span>${escapeHTML(w.zh)}</span>
+                <strong class="wrong-study-vi">${escapeHTML(w.vi)}</strong>
+                <span class="wrong-study-zh">${escapeHTML(w.zh)}</span>
             </div>
             <button class="btn btn-small btn-danger" onclick="removeWrong('${escapeHTML(w.vi)}')">移除</button>
         </div>
@@ -4049,7 +4146,7 @@ function quizAnsweredAnswerHTML(item,mode){
     return `<div class="answered-answer-row"><span><strong>${shown}</strong></span>${speechAnswerButtonHTML(answerLang,answerText)}</div>`;
 }
 function sentenceReadingAnswerRowHTML(lang,text,shownHTML){
-    return `<div class="answered-answer-row"><span>${shownHTML}</span>${speechAnswerButtonHTML(lang,text)}</div>`;
+    return `<div class="answered-answer-row"><span class="sentence-reading-study-answer" data-study-lang="${lang}">${shownHTML}</span>${speechAnswerButtonHTML(lang,text)}</div>`;
 }
 
 function quizCorrectDetailsHTML(item){
@@ -4392,7 +4489,7 @@ function renderQuizHistory(){
     if(!list || !count) return;
     const isVi=settings.uiLanguage==="vi";
     count.textContent=(isVi?"Đã trả lời ":"已答 ")+quizHistoryEntries.length+" / 20";
-    const toggleText=document.querySelector("#quiz .quiz-history-toggle span");
+    const toggleText=document.getElementById("quizHistoryToggle")?.parentElement?.querySelector("span");
     if(toggleText) toggleText.textContent=isVi?"Hiện lịch sử":"显示历史记录";
     const head=document.querySelector("#quiz .quiz-history-head strong");
     if(head) head.textContent=isVi?"Lịch sử lượt này":"本轮答题记录";
@@ -4406,7 +4503,7 @@ function renderQuizHistory(){
         const statusText=e.status==="correct"?(isVi?"Đúng":"正确"):e.status==="revealed"?(isVi?"Đã xem đáp án":"查看答案"):(isVi?"Sai":"错误");
         const answerLabel=e.status==="revealed"?(isVi?"Đáp án":"答案"):(isVi?"Trả lời":"作答");
         const shown=e.status==="revealed"?e.correct:e.answer;
-        return `<div class="quiz-history-item"><div class="quiz-history-meta"><span>#${String(e.n).padStart(2,"0")}</span><span>${statusText}</span></div><div class="quiz-history-question">${escapeHTML(e.question)}</div><div class="quiz-history-answer ${e.status}">${answerLabel}：${escapeHTML(shown||"—")}</div>${e.status==="wrong"?`<div style="margin-top:2px;color:var(--muted);">${isVi?'Đúng':'正确'}：${escapeHTML(e.correct)}</div>`:""}</div>`;
+        return `<div class="quiz-history-item"><div class="quiz-history-meta"><span>#${String(e.n).padStart(2,"0")}</span><span>${statusText}</span></div><div class="quiz-history-question quiz-history-study-text" data-study-lang="${/[㐀-鿿]/.test(e.question)?'zh':'vi'}">${escapeHTML(e.question)}</div><div class="quiz-history-answer ${e.status}">${answerLabel}：<span class="quiz-history-study-text" data-study-lang="${/[㐀-鿿]/.test(shown)?'zh':'vi'}">${escapeHTML(shown||"—")}</span></div>${e.status==="wrong"?`<div style="margin-top:2px;color:var(--muted);">${isVi?'Đúng':'正确'}：<span class="quiz-history-study-text" data-study-lang="${/[㐀-鿿]/.test(e.correct)?'zh':'vi'}">${escapeHTML(e.correct)}</span></div>`:""}</div>`;
     }).join("");
 }
 
@@ -4462,6 +4559,7 @@ function renderSpecificQuizItem(item, mode){
 
     const label = document.getElementById("quizLabel");
     const wordEl = document.getElementById("quizWord");
+    wordEl.dataset.studyLang=(mode==="zh-vi" || mode==="free-zh-vi")?"zh":"vi";
     const optionsEl = document.getElementById("quizOptions");
     const resultEl = document.getElementById("quizResult");
     resultEl.textContent = "";
@@ -4793,6 +4891,7 @@ function renderSentenceReadingQuestion(clearInput=true){
     if(!sentenceReadingCurrent) return;
     const mode = document.getElementById("sentenceReadingMode").value;
     const q = document.getElementById("sentenceReadingQuestion");
+    q.dataset.studyLang=mode==="zh"?"zh":"vi";
     const label = document.getElementById("sentenceReadingLabel");
     document.getElementById("sentenceReadingAnswer").innerHTML = "";
     resetSentenceReadingAnswerToggle();
@@ -4804,7 +4903,7 @@ function renderSentenceReadingQuestion(clearInput=true){
 
     if(mode === "zh"){
         label.textContent = "中文题目：请阅读后练习写越南语";
-        q.innerHTML = `<div style="font-size:17px;color:var(--muted);font-weight:600;margin-bottom:5px;">${shouldShowChinesePinyin()?escapeHTML(getChinesePinyin(sentenceReadingCurrent.zh)):""}</div>
+        q.innerHTML = `<div class="sentence-reading-question-pinyin" style="font-size:17px;color:var(--muted);font-weight:600;margin-bottom:5px;">${shouldShowChinesePinyin()?escapeHTML(getChinesePinyin(sentenceReadingCurrent.zh)):""}</div>
                        <div>${escapeHTML(sentenceReadingCurrent.zh)}</div>`;
     }else{
         label.textContent = "越南语题目：请阅读后练习写中文";
@@ -4982,8 +5081,8 @@ function renderRememberedSentences(){
     const items=rememberedSentences.map(k=>all.find(s=>sentenceKey(s)===normalize(k))).filter(Boolean);
     if(!items.length){box.innerHTML='<div style="color:var(--muted);">暂无已记住的短句</div>';return;}
     box.innerHTML=items.map(s=>`<div style="padding:10px 0;border-bottom:1px solid var(--border);">
-      <div style="font-weight:700;">${sentenceVietnameseWithWordHints(s.vi)}</div>
-      <div style="margin-top:4px;">${chineseTextWithOptionalPinyin(s.zh,"sentence-zh-pinyin")}</div>
+      <div class="remembered-sentence-vi" style="font-weight:700;">${sentenceVietnameseWithWordHints(s.vi)}</div>
+      <div class="remembered-sentence-zh" style="margin-top:4px;">${chineseTextWithOptionalPinyin(s.zh,"sentence-zh-pinyin")}</div>
       <button class="btn btn-small btn-danger" style="margin-top:7px;" onclick="removeRememberedSentence(decodeURIComponent('${encodeURIComponent(sentenceKey(s))}'))">删除</button>
     </div>`).join("");
 }
@@ -5786,6 +5885,17 @@ const UI_ZH_VI={
 "加入需加强记忆":"Thêm vào cần ôn kỹ hơn","取消需加强记忆":"Bỏ khỏi cần ôn kỹ hơn","全部删除":"Xóa tất cả","已全部删除需加强记忆标记":"Đã xóa toàn bộ dấu cần ôn kỹ hơn"
 };
 Object.assign(UI_ZH_VI,{"显示设置": "Cài đặt hiển thị", "选择是否显示中文拼音。默认显示。": "Chọn hiển thị hoặc ẩn pinyin tiếng Trung. Mặc định là hiển thị.", "显示中文拼音": "Hiển thị pinyin tiếng Trung", "不显示中文拼音": "Ẩn pinyin tiếng Trung", "短句词汇提示": "Gợi ý từ vựng trong câu", "显示短句词汇提示": "Hiển thị gợi ý từ vựng trong câu", "不显示短句词汇提示": "Ẩn gợi ý từ vựng trong câu", "导出全部数据": "Xuất toàn bộ dữ liệu", "会完整导出你的学习数据，包括：": "Bản sao lưu sẽ bao gồm toàn bộ dữ liệu học tập của em:", "全部生词（内置 + 自定义）": "Toàn bộ từ vựng (mặc định và tự thêm)", "全部短句（内置 + 自定义）": "Toàn bộ câu ngắn (mặc định và tự thêm)", "所有生词例句": "Tất cả câu ví dụ của từ vựng", "已记住状态": "Trạng thái đã nhớ", "收藏状态": "Trạng thái yêu thích", "答题进度": "Tiến độ làm bài", "错题记录": "Lịch sử câu trả lời sai", "所有个人设置及自定义拼音、多音字读音": "Toàn bộ cài đặt, pinyin tùy chỉnh và cách đọc chữ đa âm", "导出全部备份": "Xuất bản sao lưu đầy đủ", "选择之前导出的 JSON 备份文件，可以恢复你的全部学习数据。": "Chọn tệp sao lưu JSON đã xuất trước đây để khôi phục toàn bộ dữ liệu học tập.", "永久记住的词不会再出现在答题中。点击清除后，这些词会重新进入答题题库。": "Những từ đã nhớ vĩnh viễn sẽ không xuất hiện trong bài tập. Sau khi xóa trạng thái này, các từ sẽ xuất hiện trở lại.", "清除个人数据": "Xóa dữ liệu cá nhân", "删除本浏览器中保存的自定义词汇、短句、例句、收藏、答题记录、已记住状态和错题。": "Xóa từ vựng, câu ngắn, câu ví dụ, mục yêu thích, lịch sử làm bài, trạng thái đã nhớ và câu trả lời sai lưu trong trình duyệt này.", "清除全部个人数据": "Xóa toàn bộ dữ liệu cá nhân", "约": "khoảng", "随机出题": "Ra câu hỏi ngẫu nhiên", "拼音修改": "Chỉnh sửa pinyin", "每行一条，中文=拼音。支持数字声调、带声调拼音，不要求音节间有空格。保存后匹配的词语及句子优先使用这里的拼音，多音字可按词组分别设置。": "Mỗi dòng một mục: chữ Trung=pinyin. Có thể nhập dấu thanh bằng số hoặc trực tiếp; khoảng trắng giữa các âm tiết không bắt buộc. Sau khi lưu, các từ và câu khớp sẽ ưu tiên dùng pinyin này; có thể đặt cách đọc cho từng cụm từ có chữ đa âm.", "保存拼音修改": "Lưu chỉnh sửa pinyin", "正在检测…": "Đang kiểm tra…"});
+Object.assign(UI_ZH_VI,{
+    "🎲 随机出题（本轮不重复）":"🎲 Câu hỏi ngẫu nhiên (không lặp trong lượt)",
+    "本轮随机出题，不重复":"Ra câu hỏi ngẫu nhiên, không lặp trong lượt",
+    "字体颜色":"Màu chữ",
+    "越南语颜色":"Màu chữ tiếng Việt",
+    "中文颜色":"Màu chữ tiếng Trung",
+    "拼音颜色":"Màu chữ pinyin",
+    "越南语字体颜色":"Màu chữ tiếng Việt",
+    "中文字体颜色":"Màu chữ tiếng Trung",
+    "拼音字体颜色":"Màu chữ pinyin"
+});
 const UI_ORIGINAL=new WeakMap();
 const UI_TRANSLATION_PATTERN=new RegExp(Object.keys(UI_ZH_VI).sort((a,b)=>b.length-a.length).map(x=>x.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|"),"g");
 function translateUIString(s){
