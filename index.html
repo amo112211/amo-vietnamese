@@ -1308,6 +1308,101 @@ html,body{background-image:none !important;}
 .amo-page-decor,.amo-decor,.study-decor,.page-decoration,.wallpaper-decor{display:none !important;background-image:none !important;}
 body.theme-night,body.theme-eye{background-image:none !important;background-blend-mode:normal !important;}
 </style>
+
+<style id="amoQuizFocusAndResponsiveV3">
+/* 本次只调整答题定位、答题内容节奏与按钮；不移动原有页面导航。 */
+#quiz .quiz-question{overflow-anchor:none;}
+#quiz .quiz-history-list{overflow-anchor:none;}
+/* 结束本轮时隐藏操作按钮；覆盖旧样式的 display:grid!important。 */
+#quiz .quiz-main-actions[style*="display: none"]{display:none !important;}
+#quiz .quiz-question-row{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) auto auto !important;
+  align-items:start !important;
+  column-gap:clamp(5px,1.2vw,15px) !important;
+  row-gap:clamp(5px,.5em,11px) !important;
+}
+#quiz .quiz-question-row #quizWord{
+  grid-column:1 !important;grid-row:1 !important;
+  display:block !important;width:auto !important;min-width:0 !important;
+  margin:.22em 0 .2em !important;
+  overflow-wrap:anywhere;
+}
+#quiz .quiz-question-row #quizQuestionSpeechBtn{grid-column:2 !important;grid-row:1 !important;align-self:center !important;}
+#quiz .quiz-question-row .quiz-progress-stack{
+  grid-column:3 !important;grid-row:1 !important;
+  display:flex !important;flex-direction:column !important;align-items:flex-end !important;
+  gap:clamp(4px,.42em,10px) !important;min-width:max-content;
+}
+#quiz #quizBatchCounter.quiz-batch-counter{
+  display:block !important;width:auto !important;min-width:0 !important;
+  margin:0 !important;padding:0 !important;
+  text-align:right !important;line-height:1.2 !important;
+}
+#quiz .quiz-live-score{
+  display:flex !important;flex-direction:row !important;flex-wrap:nowrap !important;
+  align-items:center !important;gap:clamp(5px,.48em,12px) !important;
+  white-space:nowrap !important;line-height:1.25 !important;
+}
+#quiz .quiz-question-row #quizInlineMeaning.quiz-inline-meaning{
+  grid-column:1/-1 !important;grid-row:2 !important;width:100% !important;
+  margin:clamp(3px,.38em,12px) auto 0 !important;
+  min-width:0 !important;text-align:center !important;
+}
+#quiz .quiz-question-row #quizInlineMeaning.quiz-inline-meaning:not(.show){display:none !important;}
+#quiz .quiz-question-row #quizInlineMeaning.quiz-inline-meaning.show{display:block !important;}
+#quiz .quiz-single-answer{display:flex;align-items:center;justify-content:center;gap:.35em;max-width:100%;min-width:0;}
+#quiz .quiz-single-answer>.quiz-zh-wrap,#quiz .quiz-single-answer>.quiz-vi-answer{min-width:0;overflow-wrap:anywhere;}
+#quiz .quiz-single-answer .quiz-chinese,#quiz .quiz-single-answer .quiz-vi-answer{
+  font-size:clamp(1.1em,1.55em,1.65em) !important;line-height:1.25 !important;font-weight:900 !important;
+}
+#quiz .quiz-single-answer .quiz-vi-answer{color:var(--primary-dark);}
+#quiz .quiz-single-answer .quiz-pinyin{margin-top:.15em !important;line-height:1.25 !important;}
+#quiz .quiz-single-answer .answer-speech-btn{flex:0 0 auto;}
+#quiz #quizResult.quiz-result{padding-top:clamp(2px,.35em,10px) !important;padding-bottom:clamp(2px,.35em,9px) !important;}
+#quiz #quizResult .quiz-correct-details{margin:0 auto !important;line-height:1.35 !important;}
+#quiz #quizResult .quiz-correct-details.quiz-no-example{min-height:clamp(1em,1.4em,1.8em) !important;}
+#quiz #quizResult .quiz-correct-example{padding-top:.18em !important;margin-top:.12em !important;}
+#quiz #quizResult .quiz-correct-example .example-vi,#quiz #quizResult .quiz-correct-example .example-zh{
+  line-height:1.4 !important;margin-top:.22em !important;
+}
+#quiz #quizResult .quiz-answer-status{margin-top:clamp(2px,.24em,9px) !important;line-height:1.3 !important;}
+@media(max-width:700px){
+  #quiz .quiz-question-row{grid-template-columns:minmax(0,1fr) auto auto !important;column-gap:5px !important;}
+  #quiz .quiz-question-row .quiz-progress-stack{gap:clamp(3px,.32em,8px) !important;}
+  #quiz .quiz-live-score{font-size:clamp(10px,2.8vw,14px) !important;gap:clamp(4px,.5em,9px) !important;}
+  #quiz #quizBatchCounter.quiz-batch-counter{font-size:clamp(13px,3.7vw,20px) !important;}
+  #quiz .quiz-single-answer .quiz-chinese,#quiz .quiz-single-answer .quiz-vi-answer{font-size:1.35em !important;}
+  #quiz .quiz-main-actions{
+    display:grid !important;grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
+    width:100% !important;gap:8px !important;align-items:stretch !important;
+  }
+  #quiz .quiz-main-actions .quiz-next-btn,#quiz .quiz-main-actions .quiz-show-answer-btn{
+    grid-row:1 !important;width:100% !important;min-width:0 !important;
+    max-width:none !important;justify-self:stretch !important;
+    white-space:normal !important;overflow-wrap:anywhere !important;
+    padding:9px 5px !important;margin:0 !important;
+    font-size:inherit !important;line-height:1.35 !important;min-height:44px !important;
+  }
+  #quiz .quiz-main-actions .quiz-next-btn{grid-column:1 !important;}
+  #quiz .quiz-main-actions .quiz-show-answer-btn{grid-column:2 !important;}
+  #quiz .quiz-main-actions #quizResetRememberBtn{
+    grid-column:1/-1 !important;grid-row:2 !important;
+    width:100% !important;min-width:0 !important;max-width:none !important;
+    justify-self:stretch !important;white-space:normal !important;
+    overflow-wrap:anywhere !important;padding:9px 8px !important;margin:0 !important;
+    font-size:inherit !important;line-height:1.35 !important;min-height:44px !important;
+  }
+}
+@media(max-width:390px){
+  #quiz .quiz-question-row{column-gap:3px !important;}
+  #quiz .quiz-live-score{font-size:clamp(9px,2.65vw,12px) !important;gap:3px !important;}
+  #quiz #quizBatchCounter.quiz-batch-counter{font-size:clamp(12px,3.5vw,18px) !important;}
+  #quiz .quiz-main-actions{gap:6px !important;}
+  #quiz .quiz-main-actions .quiz-next-btn,#quiz .quiz-main-actions .quiz-show-answer-btn,
+  #quiz .quiz-main-actions #quizResetRememberBtn{padding:8px 4px !important;}
+}
+</style>
 </head>
 <body>
 <div class="app">
@@ -1571,7 +1666,7 @@ body.theme-night,body.theme-eye{background-image:none !important;background-blen
             <div class="quiz-main-actions" style="margin-top:20px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
                 <button class="btn btn-primary quiz-next-btn" onclick="goNextQuizBatchItem()">开始 / 下一题</button>
                 <button class="btn quiz-show-answer-btn" id="quizShowAnswerBtn" onclick="showQuizAnswer()">显示答案</button>
-                <button id="quizResetRememberBtn" class="btn btn-danger quiz-reset-remember-btn" onclick="handleQuizResetRemember()">重置</button>
+                <button id="quizResetRememberBtn" class="btn btn-danger quiz-reset-remember-btn" onclick="handleQuizResetRemember()">重置当轮问题</button>
             </div>
         </div>
         </div>
@@ -3733,6 +3828,7 @@ function resetQuizRound(){
     saveQuizSession();
     showToast("当前20题已重置");
     showCurrentQuizBatchItem();
+    keepStudyFocusInView("quiz");
 }
 
 
@@ -3763,24 +3859,37 @@ function isAcceptedQuizAnswer(input, answer){
 function isMobileQuizViewport(){
     return window.matchMedia("(max-width: 700px)").matches;
 }
+let studyFocusRequest=0;
 function keepStudyFocusInView(kind){
     if(!isMobileQuizViewport()) return;
-    requestAnimationFrame(()=>requestAnimationFrame(()=>{
-        const target = kind==="sentence"
-            ? document.querySelector("#sentenceReading .quiz-box")
-            : document.querySelector("#quiz .quiz-box");
+    const seq=++studyFocusRequest;
+    // 等待答案、例句、答题记录、界面语言变化完成，再对真正的题目定位一次。
+    // 语言观察器会在 DOM 更新后的 30ms 内重新布局，因此稍后再测量。
+    setTimeout(()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{
+        if(seq!==studyFocusRequest) return;
+        const pageId=kind==="sentence" ? "sentenceReading" : "quiz";
+        if(!document.getElementById(pageId)?.classList.contains("active")) return;
+        const target=document.getElementById(kind==="sentence" ? "sentenceReadingQuestion" : "quizWord");
         if(!target) return;
-        const rect=target.getBoundingClientRect();
-        // 顶部预留导航空间；快速平滑回到题目+答案区域，而不是跟着历史记录向下走。
-        const top=Math.max(0,window.scrollY+rect.top-72);
-        window.scrollTo({top,left:0,behavior:"smooth"});
-    }));
+        let stickyBottom=0;
+        [".header",".display-toolbar"].forEach(selector=>{
+            const bar=document.querySelector(selector);
+            if(!bar || getComputedStyle(bar).display==="none") return;
+            const r=bar.getBoundingClientRect();
+            if(r.top<=1 && r.bottom>0) stickyBottom=Math.max(stickyBottom,r.bottom);
+        });
+        // 固定标题栏下留约 70px；不要滚动到高大的答题卡顶端。
+        const desiredViewportTop=stickyBottom+70;
+        const absoluteTop=window.scrollY+target.getBoundingClientRect().top;
+        const destination=Math.max(0,absoluteTop-desiredViewportTop);
+        // instant 不做平滑动画，避免先跳到旧位置后再次跑偏。
+        window.scrollTo({top:destination,left:0,behavior:"auto"});
+    })),55);
 }
 function runWithQuizGrowthScroll(updateFn){
     updateFn();
     keepStudyFocusInView("quiz");
 }
-
 
 
 function setQuizResetRememberMode(mode){
@@ -3793,7 +3902,7 @@ function setQuizResetRememberMode(mode){
         btn.classList.add("permanent-remember-btn");
     }else{
         btn.dataset.action="reset";
-        btn.textContent="重置";
+        btn.textContent=settings.uiLanguage==="vi" ? "Đặt lại câu hỏi của lượt này" : "重置当轮问题";
         btn.classList.remove("permanent-remember-btn");
         btn.classList.add("btn-danger");
     }
@@ -3955,16 +4064,24 @@ function quizCorrectDetailsHTML(item){
         if(String(ex.zh || "").trim()) html += `<div class="example-zh">${escapeHTML(ex.zh)}</div>`;
         html += `</div>`;
     }
+    if(!ex || (!String(ex.vi || "").trim() && !String(ex.zh || "").trim())){
+        html=html.replace('class="quiz-correct-details"','class="quiz-correct-details quiz-no-example"');
+    }
     return html + `</div>`;
 }
 
 function setQuizInlineMeaning(item, show){
     const el=document.getElementById("quizInlineMeaning");
     if(!el) return;
-    if(!show || !item){ el.innerHTML=""; el.classList.remove("show"); return; }
-    el.innerHTML=chineseQuizHTML(item.zh || "");
+    if(!show || !item){el.innerHTML="";el.classList.remove("show");return;}
+    const mode=quizCurrent?.mode || document.getElementById("quizMode")?.value || "vi-zh";
+    const zhAnswer=(mode==="vi-zh" || mode==="free-vi-zh");
+    const value=zhAnswer ? item.zh : item.vi;
+    const visual=zhAnswer ? chineseQuizHTML(value) : `<span class="quiz-vi-answer">${escapeHTML(value)}</span>`;
+    el.innerHTML=`<div class="quiz-single-answer">${visual}${speechAnswerButtonHTML(zhAnswer?"zh":"vi",value)}</div>`;
     el.classList.add("show");
 }
+
 function quizExampleHTML(item){
     const ex = examples[normalize(item.vi)];
     if(!ex || (!String(ex.vi || "").trim() && !String(ex.zh || "").trim())) return "";
@@ -4148,6 +4265,7 @@ function goNextQuizBatchItem(){
 
     if(quizBatchIndex>=quizBatchKeys.length) finishQuizBatch();
     else showCurrentQuizBatchItem();
+    keepStudyFocusInView("quiz");
 }
 
 function finishQuizBatch(){
@@ -4240,6 +4358,7 @@ function toggleQuizHistoryPanel(checked){
     const panel=document.getElementById("quizHistoryPanel");
     if(panel) panel.style.display=checked ? "block" : "none";
     renderQuizHistory();
+    keepStudyFocusInView("quiz");
 }
 function clearQuizHistoryView(){
     quizHistoryEntries=[];
@@ -4425,19 +4544,13 @@ function restoreCompletedQuizUI(status){
     quizCurrent.answered=true;
 
     if(status==="revealed"){
-        let answerHTML="";
-        const viRow=sentenceReadingAnswerRowHTML("vi",item.vi,`越南语：<strong>${escapeHTML(item.vi)}</strong>`);
-        const zhRow=sentenceReadingAnswerRowHTML("zh",item.zh,`中文：<strong>${chineseQuizHTML(item.zh)}</strong>`);
-        if(mode==="vi-zh" || mode==="free-vi-zh"){
-            answerHTML=`<div style="font-size:16px;line-height:1.8;">${viRow}${zhRow}</div>`;
-        }else{
-            answerHTML=`<div style="font-size:16px;line-height:1.8;">${zhRow}${viRow}</div>`;
-        }
-        resultEl.innerHTML=`正确答案：<br>${answerHTML}`;
+        setQuizInlineMeaning(item,true);
+        resultEl.classList.add("quiz-revealed-answer");
+        resultEl.innerHTML=quizCorrectDetailsHTML(item)+`<div class="quiz-answer-status">${settings.uiLanguage==="vi"?"Đã xem đáp án":"已显示答案"}</div>`;
         resultEl.style.color="var(--primary-dark)";
     }else{
         setQuizInlineMeaning(item,true);
-        resultEl.innerHTML=quizCorrectDetailsHTML(item) + `<div class="quiz-answer-status">✅ 回答正确</div><div class="quiz-completed-answer">正确答案：${quizAnsweredAnswerHTML(item,mode)}</div>`;
+        resultEl.innerHTML=quizCorrectDetailsHTML(item) + `<div class="quiz-answer-status">✅ 回答正确</div>`;
         resultEl.style.color="var(--primary-dark)";
     }
 
@@ -4458,9 +4571,8 @@ function checkAnswer(btn, correct, item){
         if(quizCurrent) quizCurrent.answered = true;
         markQuizBatchCorrect();
         addQuizHistoryEntry(item,quizCurrent ? quizCurrent.mode : document.getElementById("quizMode").value,historyAnswer,"correct");
-        keepStudyFocusInView("quiz");
         setQuizInlineMeaning(item,true);
-        resultEl.innerHTML = quizCorrectDetailsHTML(item) + `<div class="quiz-answer-status">✅ 回答正确</div><div class="quiz-completed-answer">正确答案：${quizAnsweredAnswerHTML(item,quizCurrent ? quizCurrent.mode : document.getElementById("quizMode").value)}</div>`;
+        resultEl.innerHTML = quizCorrectDetailsHTML(item) + `<div class="quiz-answer-status">✅ 回答正确</div>`;
         resultEl.style.color = "var(--primary-dark)";
         if(btn.classList.contains("quiz-option")) btn.classList.add("correct");
         quizCorrectHidden.add(quizItemKey(item));
@@ -4475,7 +4587,6 @@ function checkAnswer(btn, correct, item){
         resultEl.innerHTML = `<div class="quiz-answer-status">❌ 回答错误，请继续尝试</div>`;
         markQuizBatchWrong();
         addQuizHistoryEntry(item,quizCurrent ? quizCurrent.mode : document.getElementById("quizMode").value,historyAnswer,"wrong");
-        keepStudyFocusInView("quiz");
         resultEl.style.color = "var(--danger)";
 
         // 选择题：只禁用刚刚选错的选项，仍可选择其他答案。
@@ -4503,6 +4614,7 @@ function checkAnswer(btn, correct, item){
     progress.answered = (progress.answered || 0) + 1;
     saveJSON(KEY_PROGRESS, progress);
     updateStats();
+    keepStudyFocusInView("quiz");
 }
 function uiAnswerButtonText(shown){
     if(settings.uiLanguage === "vi") return shown ? "Ẩn đáp án" : "Hiện đáp án";
@@ -4535,7 +4647,9 @@ function showQuizAnswer(){
     if(quizCurrent.answerVisible){
         quizCurrent.answerVisible=false;
         resultEl.innerHTML="";
+        setQuizInlineMeaning(null,false);
         resultEl.classList.remove("quiz-revealed-answer");
+        keepStudyFocusInView("quiz");
         if(toggleBtn) toggleBtn.textContent=uiAnswerButtonText(false);
         optionsEl.querySelectorAll(".quiz-option[data-reveal-correct='1']").forEach(b=>{
             b.classList.remove("correct");
@@ -4550,13 +4664,9 @@ function showQuizAnswer(){
     quizCurrent.answerVisible=true;
     if(toggleBtn) toggleBtn.textContent=uiAnswerButtonText(true);
 
-    // 正确答案展示：中文、越南语答案都带独立播放按钮
-    const viAnswerRow=sentenceReadingAnswerRowHTML("vi",item.vi,`越南语：<strong>${escapeHTML(item.vi)}</strong>`);
-    const zhAnswerRow=sentenceReadingAnswerRowHTML("zh",item.zh,`中文：<strong>${chineseQuizHTML(item.zh)}</strong>`);
-    const answerHTML=(mode === "vi-zh" || mode === "free-vi-zh")
-        ? `<div style="font-size:16px;line-height:1.8;">${viAnswerRow}${zhAnswerRow}</div>`
-        : `<div style="font-size:16px;line-height:1.8;">${zhAnswerRow}${viAnswerRow}</div>`;
-    resultEl.innerHTML = `正确答案：<br>${answerHTML}`;
+    // 当前模式只有一个大正确答案；例句在下方，不重复显示另一行答案。
+    setQuizInlineMeaning(item,true);
+    resultEl.innerHTML=quizCorrectDetailsHTML(item)+`<div class="quiz-answer-status">${settings.uiLanguage==="vi"?"Đã xem đáp án":"已显示答案"}</div>`;
     resultEl.classList.add("quiz-revealed-answer");
     resultEl.style.color = "var(--primary-dark)";
 
@@ -5637,12 +5747,12 @@ document.addEventListener("keydown",handleQuizEnterKey);
 const UI_ZH_VI={
 "首页":"Trang chủ","词汇":"Từ vựng","短句":"Câu ngắn","练习短句":"Luyện câu ngắn","答题":"Làm bài","语法":"Ngữ pháp","备份":"Sao lưu",
 "阿莫学习越南语":"A Mô học tiếng Việt","开始学习越南语":"Bắt đầu học tiếng Việt",
-"开始 / 下一题":"Bắt đầu / Câu tiếp","下一题":"Câu tiếp","显示答案":"Hiện đáp án","隐藏答案":"Ẩn đáp án","重置":"Đặt lại",
+"开始 / 下一题":"Bắt đầu / Câu tiếp","下一题":"Câu tiếp","显示答案":"Hiện đáp án","隐藏答案":"Ẩn đáp án","重置当轮问题":"Đặt lại câu hỏi của lượt này","重置":"Đặt lại",
 "我已经永久记住":"Tôi đã nhớ vĩnh viễn","永久记住的词":"Từ đã nhớ vĩnh viễn","清除永久记住的词":"Xóa từ đã nhớ vĩnh viễn",
 "换题":"Đổi câu hỏi","再来一遍":"Làm lại","本轮答题完成":"Hoàn thành lượt này","本轮成绩":"Kết quả lượt này",
 "答对":"Đúng","答错":"Sai","未答":"Chưa trả lời","答错或没有答题的题目":"Câu sai hoặc chưa trả lời",
 "这组题全部答对":"Tất cả đều đúng","点击开始答题":"Nhấn bắt đầu để làm bài",
-"回答正确":"Trả lời đúng","回答错误，请继续尝试":"Trả lời sai, hãy thử lại",
+"回答正确":"Trả lời đúng","回答错误，请继续尝试":"Trả lời sai, hãy thử lại","已显示答案":"Đã xem đáp án",
 "界面语言":"Ngôn ngữ giao diện","选择整个应用界面显示中文或越南语，学习词汇、短句和题目内容保持原样。":"Chọn giao diện tiếng Trung hoặc tiếng Việt. Từ vựng, câu ngắn và nội dung câu hỏi vẫn giữ nguyên.",
 "备份与恢复":"Sao lưu và khôi phục","导出备份":"Xuất sao lưu","导入备份":"Nhập sao lưu","清除全部数据":"Xóa toàn bộ dữ liệu",
 "夜晚":"Ban đêm","护眼":"Bảo vệ mắt","普通":"Bình thường","界面":"Giao diện","越南语":"Tiếng Việt","中文":"Tiếng Trung","拼音":"Pinyin",
@@ -5717,6 +5827,7 @@ function setUILanguage(lang){
   settings.uiLanguage=lang==="vi"?"vi":"zh";
   saveJSON(KEY_SETTINGS,settings);
   applyUILanguage();
+  if(document.getElementById("quizResetRememberBtn")?.dataset.action!=="remember") setQuizResetRememberMode("reset");
   showToast(settings.uiLanguage==="vi"?"Đã chuyển sang giao diện tiếng Việt":"界面已切换为中文");
 }
 let uiLangTimer;
