@@ -4014,7 +4014,7 @@ function selectQuizRound(value){
     clearQuizHistoryData();
     quizCorrectHidden.clear();
     const permanentSet=new Set(permanentRememberedWords.map(normalize));
-    quizBatchKeys=round.keys.filter(key=>!permanentSet.has(normalize(key))).slice(0,QUIZ_BATCH_SIZE);
+    quizBatchKeys=shuffleQuizKeys(round.keys.filter(key=>!permanentSet.has(normalize(key))).slice(0,QUIZ_BATCH_SIZE));
     quizBatchIndex=0;
     quizBatchResults=quizBatchKeys.map(key=>({key,status:"unanswered",hadWrong:false}));
     quizBatchFinished=false;
@@ -4026,6 +4026,15 @@ function selectQuizRound(value){
     renderQuizRoundSelect();
     if(!quizBatchKeys.length){ showToast(settings.uiLanguage==="vi"?"Tất cả từ trong lượt này đã được ghi nhớ vĩnh viễn hoặc không còn tồn tại":"这一轮的词汇目前都已永久记住或不存在"); return; }
     showCurrentQuizBatchItem();
+}
+
+function shuffleQuizKeys(keys){
+    const out=keys.slice();
+    for(let i=out.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [out[i],out[j]]=[out[j],out[i]];
+    }
+    return out;
 }
 
 function resetQuizRound(){
@@ -4042,7 +4051,7 @@ function resetQuizRound(){
         return;
     }
     const permanentSet=new Set(permanentRememberedWords.map(normalize));
-    quizBatchKeys=quizBatchKeys.filter(key=>!permanentSet.has(normalize(key)));
+    quizBatchKeys=shuffleQuizKeys(quizBatchKeys.filter(key=>!permanentSet.has(normalize(key))));
     quizBatchIndex=0;
     quizBatchResults=quizBatchKeys.map(key=>({key,status:"unanswered",hadWrong:false}));
     quizBatchFinished=false;
@@ -4318,7 +4327,7 @@ function createNewQuizBatch(){
     quizReplayRoundIndex=null;
     renderQuizRoundSelect();
     clearQuizHistoryData();
-    const pool=getQuizBatchPool().slice().sort(()=>Math.random()-0.5);
+    const pool=shuffleQuizKeys(getQuizBatchPool().map(quizItemKey)).map(key=>allWords().find(w=>quizItemKey(w)===normalize(key))).filter(Boolean);
     quizBatchKeys=pool.slice(0,Math.min(QUIZ_BATCH_SIZE,pool.length)).map(quizItemKey);
     quizBatchIndex=0;
     quizBatchResults=quizBatchKeys.map(key=>({key,status:"unanswered",hadWrong:false}));
