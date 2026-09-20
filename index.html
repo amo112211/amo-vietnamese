@@ -948,6 +948,12 @@ body.theme-eye #quiz #quizBatchCounter.quiz-batch-counter{
 }
 </style>
 
+<style id="wordActionsBilingualProportionsV2">
+/* 缩短第一个“记住”按钮；手机窄屏下四个按钮按比例分配，不挤出卡片。 */
+#words .word-actions{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.65fr) minmax(0,.91fr) minmax(0,.55fr);gap:5px;}
+#words .word-actions>.btn{min-width:0;width:100%;padding:8px 5px;white-space:normal;overflow-wrap:anywhere;line-height:1.25;}
+@media(max-width:430px){#words .word-actions{gap:4px}#words .word-actions>.btn{font-size:12px;padding:7px 2px;}}
+</style>
 <style id="uiLanguageStyles">
 .ui-language-setting-card select{font-size:15px;}
 </style>
@@ -1279,6 +1285,12 @@ body.theme-eye :is(.amo-page-decor,.amo-decor,.study-decor,.page-decoration,.wal
 @media(max-width:700px){#quizReinforceBtn{right:8px;top:8px;width:38px;height:38px;font-size:24px;}}
 </style>
 
+<style id="desktopReinforceIconOffsetV2">
+/* 仅电脑端：远离答题卡内部滚动条与窗口右缘。 */
+@media(min-width:701px){
+  #quiz #quizReinforceBtn{right:calc(14px + 2.5em) !important;}
+}
+</style>
 <style id="reinforceClearAndMobilePermanentFix">
 #clearReinforceWordsBtn{align-items:center;justify-content:center;}
 @media(max-width:700px){
@@ -1475,6 +1487,170 @@ body #sentenceReading .sentence-reading-question-pinyin{color:var(--study-py-col
   .study-color-input{width:36px;height:36px;}
 }
 </style>
+
+<style id="amoQuizSpeakerAndVerticalTuningV5">
+/* Desktop uses the previous three-column grid; the wrapper only provides mobile text-following positioning. */
+#quiz .quiz-question-row .quiz-question-phrase{display:contents;}
+@media(max-width:700px){
+  /* The heading is centered independently of the speaker, which tracks the heading's actual width. */
+  #quiz .quiz-question-row .quiz-question-phrase{
+    display:inline-flex !important;position:relative !important;
+    grid-column:1 !important;grid-row:1 !important;
+    justify-self:center !important;align-items:center !important;
+    justify-content:center !important;
+    width:max-content !important;max-width:calc(100% - 76px) !important;
+    margin-top:1.28em !important;
+    min-width:0 !important;
+  }
+  #quiz .quiz-question-row .quiz-question-phrase #quizWord{
+    display:block !important;flex:0 1 auto !important;
+    width:auto !important;max-width:100% !important;
+    min-width:0 !important;padding:0 !important;margin:0 !important;
+    text-align:center !important;overflow-wrap:anywhere !important;
+  }
+  #quiz .quiz-question-row .quiz-question-phrase #quizQuestionSpeechBtn{
+    position:absolute !important;top:50% !important;
+    left:calc(100% + 6px) !important;right:auto !important;
+    transform:translateY(-50%) !important;
+    margin:0 !important;z-index:2 !important;
+  }
+  /* The heading moves down one line; the counter's margin drops from four lines
+     to one, so its absolute position (and the answer below it) rises by two lines. */
+  #quiz .quiz-question-row .quiz-progress-stack{
+    margin:calc(1 * 1.28em) 0 0 !important;
+  }
+  /* Preserve the preceding answer spacing, which automatically moves with the score. */
+  #quiz .quiz-question-row #quizInlineMeaning.quiz-inline-meaning.show{
+    margin:calc(2 * 1.28em) auto 0 !important;
+  }
+}
+</style>
+
+<style id="amoDesktopScoreAndMobileAnswerV6">
+/* Desktop only: center the actual heading; let the speaker follow the word width.
+   Put the two-line score underneath the heading, on the right, roughly two lines
+   lower than its former top-aligned position. Keep the answer beneath the score. */
+@media(min-width:701px){
+  #quiz .quiz-question-row{
+    grid-template-columns:minmax(0,1fr) !important;
+    align-items:start !important;
+    column-gap:0 !important;
+    row-gap:clamp(4px,.35em,9px) !important;
+  }
+  #quiz .quiz-question-row .quiz-question-phrase{
+    display:inline-flex !important;
+    grid-column:1 !important;grid-row:1 !important;
+    justify-self:center !important;align-items:center !important;
+    justify-content:center !important;position:relative !important;
+    width:max-content !important;max-width:calc(100% - 100px) !important;
+    min-width:0 !important;
+  }
+  #quiz .quiz-question-row .quiz-question-phrase #quizWord{
+    display:block !important;flex:0 1 auto !important;
+    width:auto !important;max-width:100% !important;min-width:0 !important;
+    padding:0 !important;text-align:center !important;overflow-wrap:anywhere !important;
+  }
+  #quiz .quiz-question-row .quiz-question-phrase #quizQuestionSpeechBtn{
+    position:absolute !important;top:50% !important;left:calc(100% + 7px) !important;
+    right:auto !important;transform:translateY(-50%) !important;
+    margin:0 !important;z-index:2 !important;
+  }
+  #quiz .quiz-question-row .quiz-progress-stack{
+    grid-column:1 !important;grid-row:2 !important;justify-self:end !important;
+    margin:0 !important;
+  }
+  #quiz .quiz-question-row #quizInlineMeaning.quiz-inline-meaning{
+    grid-column:1 !important;grid-row:3 !important;
+  }
+}
+/* Mobile only: lift the shown answer by 1.3 of the existing 1.28em line rhythm.
+   Previous answer top margin: 2 * 1.28em; new: (2 - 1.3) * 1.28em.
+   No changes to mobile heading, score, audio button, or action buttons. */
+@media(max-width:700px){
+  #quiz .quiz-question-row #quizInlineMeaning.quiz-inline-meaning.show{
+    margin:calc(.7 * 1.28em) auto 0 !important;
+  }
+}
+</style>
+
+<style id="amoDesktopQuizNoOverlapV8">
+/* 电脑端答题卡分为独立滚动的题目/答案区域、始终可见的底部操作栏。
+   选择题、例句和正确答案只在上方区域内滚动，永远不会位于按钮背后。
+   窄屏（<=700px）的结构由 display:contents 还原，不改变手机排版。 */
+@media(min-width:701px){
+  #quiz.active{padding-bottom:0 !important;}
+  #quiz .quiz-desktop-layout .quiz-box{overflow:hidden !important;}
+  #quiz .quiz-question{
+    display:flex !important;flex-direction:column !important;
+    height:clamp(255px,calc(100dvh - var(--amo-quiz-viewport-top,260px) - 12px),820px) !important;
+    min-height:0 !important;overflow:hidden !important;
+    padding-bottom:12px !important;
+  }
+  #quiz .quiz-scroll-content{
+    flex:1 1 auto !important;min-height:0 !important;
+    width:100% !important;overflow-y:auto !important;overflow-x:hidden !important;
+    padding:0 7px 10px !important;overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+  }
+  #quiz .quiz-main-actions:not([style*="display: none"]){
+    position:static !important;inset:auto !important;left:auto !important;right:auto !important;
+    bottom:auto !important;transform:none !important;flex:0 0 auto !important;
+    display:flex !important;justify-content:center !important;align-items:center !important;
+    flex-wrap:wrap !important;gap:10px !important;
+    width:100% !important;max-width:none !important;margin:0 !important;
+    padding:11px 2px 0 !important;border:0 !important;
+    border-top:1px solid var(--border) !important;border-radius:0 !important;
+    background:var(--card) !important;box-shadow:none !important;
+  }
+  #quiz .quiz-main-actions[style*="display: none"]{display:none !important;}
+  #quiz .quiz-main-actions .btn{min-height:42px;white-space:normal;}
+  /* 保留上一版电脑端答案上移约一行的效果。 */
+  /* 统计保留在网格正常文档流中：避免上一版 absolute 造成统计覆盖四个选项。
+     从上版以题目为基准的 2 行下移调整至约 1.5 行下移（上提约 0.5 行）。 */
+  #quiz .quiz-question-row{position:relative !important;grid-template-columns:minmax(0,1fr) !important;}
+  #quiz .quiz-question-row .quiz-progress-stack{
+    position:relative !important;right:auto !important;top:auto !important;
+    grid-column:1 !important;grid-row:2 !important;justify-self:end !important;
+    margin:.45em 0 0 !important;z-index:auto !important;
+  }
+  /* 让正确答案接在统计的下面，确保单选选项不会与统计或正确答案互相覆盖。
+     统计新增的独立网格行会让四个选项自然下移约一行以上。 */
+  #quiz .quiz-question-row #quizInlineMeaning.quiz-inline-meaning{
+    grid-column:1 !important;grid-row:3 !important;
+    margin:.20em auto 0 !important;padding:0 112px !important;box-sizing:border-box !important;
+  }
+  #quiz .quiz-question-row #quizInlineMeaning.quiz-inline-meaning:not(.show){display:none !important;}
+  #quiz .quiz-question-row #quizInlineMeaning.quiz-inline-meaning.show{display:block !important;}
+}
+@media(max-width:700px){
+  #quiz .quiz-scroll-content{display:contents !important;}
+}
+</style>
+
+<style id="amoQuizFinishCompactAndHeartPositionV9">
+/* 完成 20 题：上题的答案/拼音/语音隐藏，保留成绩与错题复习内容。 */
+#quiz.quiz-batch-complete #quizInlineMeaning.quiz-inline-meaning,
+#quiz.quiz-batch-complete #quizInlineMeaning.quiz-inline-meaning.show,
+#quiz.quiz-batch-complete #quizQuestionSpeechBtn,
+#quiz.quiz-batch-complete #quizReinforceBtn,
+#quiz.quiz-batch-complete #quizResult,
+#quiz.quiz-batch-complete #quizOptions{display:none !important;}
+#quiz.quiz-batch-complete .quiz-batch-summary{margin-top:8px !important;}
+#quiz.quiz-batch-complete .quiz-summary-actions{
+  display:flex !important;gap:10px !important;flex-wrap:wrap !important;
+  justify-content:center !important;margin:10px 0 12px !important;
+}
+/* 桌面端比上一版向右约 1em，向下约一行；保留右边滚动条空间。 */
+@media(min-width:701px){
+  #quiz #quizReinforceBtn{right:calc(14px + 1.5em) !important;top:calc(12px + 1.2em) !important;}
+}
+/* 手机端向右约 8px、向下约一行；成绩页取消上一题为答案留出的间距。 */
+@media(max-width:700px){
+  #quiz #quizReinforceBtn{right:0 !important;top:calc(8px + 1.2em) !important;}
+  #quiz.quiz-batch-complete .quiz-question-row .quiz-question-phrase{margin-top:0 !important;}
+  #quiz.quiz-batch-complete .quiz-question-row .quiz-progress-stack{margin-top:0 !important;}
+}
+</style>
 </head>
 <body>
 <div class="app">
@@ -1492,9 +1668,9 @@ body #sentenceReading .sentence-reading-question-pinyin{color:var(--study-py-col
         <button class="active" onclick="showPage('home',this)">首页</button>
         <button onclick="showPage('words',this)">词汇</button>
         <button onclick="showPage('sentences',this)">短句</button>
+        <button onclick="showPage('quiz',this)">答题</button>
         <button onclick="showPage('sentenceReading',this)">练习短句</button>
         <button onclick="showPage('grammar',this)">语法</button>
-        <button onclick="showPage('quiz',this)">答题</button>
         <button onclick="showPage('wrong',this)">错题</button>
         <button onclick="showPage('add',this)">批量添加</button>
         <button onclick="showPage('backup',this)">设置</button>
@@ -1729,10 +1905,13 @@ body #sentenceReading .sentence-reading-question-pinyin{color:var(--study-py-col
         <div class="quiz-box card">
         <div class="quiz-question">
             <button type="button" id="quizReinforceBtn" onclick="toggleCurrentQuizReinforce()" title="加入需加强记忆" aria-label="加入需加强记忆">💗</button>
+            <div class="quiz-scroll-content" id="quizScrollContent">
             <div class="quiz-label" id="quizLabel">越南语是什么意思？</div>
             <div class="quiz-question-row">
-                <div class="quiz-word" id="quizWord">点击开始答题</div>
-                <button type="button" id="quizQuestionSpeechBtn" class="mini-speech-btn question-speech-btn" onclick="playQuizQuestionSpeech(event)" aria-label="播放语音" title="播放语音">🔊</button>
+                <div class="quiz-question-phrase">
+                    <div class="quiz-word" id="quizWord">点击开始答题</div>
+                    <button type="button" id="quizQuestionSpeechBtn" class="mini-speech-btn question-speech-btn" onclick="playQuizQuestionSpeech(event)" aria-label="播放语音" title="播放语音">🔊</button>
+                </div>
                 <div class="quiz-inline-meaning" id="quizInlineMeaning" aria-live="polite"></div>
                 <div class="quiz-progress-stack">
                     <span id="quizBatchCounter" class="quiz-batch-counter">01 / 20</span>
@@ -1745,6 +1924,7 @@ body #sentenceReading .sentence-reading-question-pinyin{color:var(--study-py-col
             <div id="quizResult" class="quiz-result"></div>
             <div id="quizOptions" class="quiz-options"></div>
             <div id="quizBatchSummary" class="quiz-batch-summary" style="display:none;"></div>
+            </div>
             <div class="quiz-main-actions" style="margin-top:20px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
                 <button class="btn btn-primary quiz-next-btn" onclick="goNextQuizBatchItem()">开始 / 下一题</button>
                 <button class="btn quiz-show-answer-btn" id="quizShowAnswerBtn" onclick="showQuizAnswer()">显示答案</button>
@@ -1794,10 +1974,11 @@ body #sentenceReading .sentence-reading-question-pinyin{color:var(--study-py-col
             <code>"xin chào"="你好"</code><br>
             <code>"cảm ơn"="谢谢"</code>
             <br><br>
-            等号 <strong>=</strong> 左边是越南语，右边是中文。<br><br>
+            等号 <strong>=</strong> 两边可使用「越南语=中文」或「中文=越南语」，系统按文字自动识别。<br>
+            <code>位置=vị trí</code><br><code>ngân hàng=银行</code><br><br>
             <strong>批量添加分类：</strong>
             <select id="batchWordCategory" class="select" style="margin-left:8px;"></select><br>
-            高级格式：<code>越南语=中文=分类=越南语例句=中文例句</code>
+            高级格式：<code>越南语=中文=分类=越南语例句=中文例句</code>（也支持中文在等号左边；例句仍按越南语、中文顺序填写）
         </div>
         <textarea id="batchWords" placeholder="xin chào=你好
 cảm ơn=谢谢
@@ -2789,6 +2970,10 @@ function renderWords(){
     }
 
     const allCats = getAllCategories().sort((a,b)=>a.localeCompare(b,'zh'));
+    const wordUILangVi=settings.uiLanguage==="vi";
+    const wordUILabels=wordUILangVi
+      ? {remember:"Ghi nhớ",remembered:"Đã nhớ",example:"Ví dụ",edit:"Sửa nghĩa",remove:"Xóa",emptyExample:"Chưa có ví dụ",uncategorized:"Chưa phân loại"}
+      : {remember:"标记已记住",remembered:"已记住",example:"例句",edit:"编辑答案",remove:"删除",emptyExample:"暂无例句",uncategorized:"无分类"};
 
     list.innerHTML = pageWords.map((w,idx)=>{
         const key = normalize(w.vi);
@@ -2797,7 +2982,7 @@ function renderWords(){
         const exVi = ex.vi || "";
         const exZh = ex.zh || "";
         const currentCat = w.category || "";
-        const catOptions = ['<option value="">无分类</option>']
+        const catOptions = [`<option value="">${wordUILabels.uncategorized}</option>`]
             .concat(allCats.map(c=>`<option value="${escapeHTML(c)}" ${c===currentCat?"selected":""}>${escapeHTML(c)}</option>`))
             .join("");
         return `
@@ -2818,16 +3003,16 @@ function renderWords(){
                 </select>
             </div>
             <div class="word-example">
-                ${exVi ? `<div class="speech-line example-speech-line"><div class="example-vi">${escapeHTML(exVi)}</div><button type="button" class="mini-speech-btn" data-vi="${escapeHTML(exVi)}" data-zh="${escapeHTML(exZh)}" onclick="playStudySpeech(event,this)" aria-label="播放语音" title="播放语音">🔊</button></div>` : '<div class="no-example">暂无例句</div>'}
+                ${exVi ? `<div class="speech-line example-speech-line"><div class="example-vi">${escapeHTML(exVi)}</div><button type="button" class="mini-speech-btn" data-vi="${escapeHTML(exVi)}" data-zh="${escapeHTML(exZh)}" onclick="playStudySpeech(event,this)" aria-label="播放语音" title="播放语音">🔊</button></div>` : `<div class="no-example">${wordUILabels.emptyExample}</div>`}
                 ${exZh ? `<div class="example-zh">${escapeHTML(exZh)}</div>` : ""}
             </div>
             <div class="word-actions">
                 <button type="button" class="btn btn-small remember-btn word-remember-action ${isRemembered?"remembered":""}" data-word-index="${start + idx}">
-                    ${isRemembered ? "已记住" : "标记已记住"}
+                    ${isRemembered ? wordUILabels.remembered : wordUILabels.remember}
                 </button>
-                <button type="button" class="btn btn-small word-example-action mobile-action-btn" data-word-key="${encodeURIComponent(w.vi)}">例句</button>
-                <button type="button" class="btn btn-small word-edit-action mobile-action-btn" data-word-key="${encodeURIComponent(w.vi)}">编辑答案</button>
-                <button type="button" class="btn btn-small btn-danger word-delete-action mobile-action-btn" data-word-key="${encodeURIComponent(w.vi)}">删除</button>
+                <button type="button" class="btn btn-small word-example-action mobile-action-btn" data-word-key="${encodeURIComponent(w.vi)}">${wordUILabels.example}</button>
+                <button type="button" class="btn btn-small word-edit-action mobile-action-btn" data-word-key="${encodeURIComponent(w.vi)}">${wordUILabels.edit}</button>
+                <button type="button" class="btn btn-small btn-danger word-delete-action mobile-action-btn" data-word-key="${encodeURIComponent(w.vi)}">${wordUILabels.remove}</button>
             </div>
         </div>`;
     }).join("");
@@ -3265,12 +3450,19 @@ function batchAddWords(){
 
     const seenBatch = new Set();
     const duplicates = [];
+    const invalidLines = [];
     let added = 0;
 
     lines.forEach(line=>{
         const parts = line.split("=").map(x=>x.trim().replace(/^["']|["']$/g,""));
-        const vi = parts[0] || "";
-        const zh = parts[1] || "";
+        let vi = parts[0] || "";
+        let zh = parts[1] || "";
+        // 同时兼容「越南语=中文」和「中文=越南语」，存储始终统一为 {vi,zh}。
+        // 遇到两边都没有汉字或两边都有汉字时，不猜测方向，跳过并提示。
+        const firstChinese=/[\u3400-\u9fff]/.test(vi);
+        const secondChinese=/[\u3400-\u9fff]/.test(zh);
+        if(firstChinese && !secondChinese) [vi,zh]=[zh,vi];
+        else if(firstChinese===secondChinese){invalidLines.push(line);return;}
         const category = parts[2] || defaultCategory || "";
         const exampleVi = parts[3] || "";
         const exampleZh = parts[4] || "";
@@ -3316,6 +3508,9 @@ function batchAddWords(){
         html += `<div style="margin-bottom:10px;color:var(--primary-dark);font-weight:700;">✅ 已新增 ${added} 个词汇</div>`;
     }
 
+    if(invalidLines.length){
+        html += `<div style="margin-bottom:10px;color:var(--danger);font-weight:700;">⚠️ ${invalidLines.length} 行无法区分中文和越南语，已跳过：${invalidLines.slice(0,3).map(escapeHTML).join("；")}</div>`;
+    }
     if(duplicates.length){
         html += `<div style="padding:14px;border:1px solid #f0cf8b;background:#fff9ec;border-radius:12px;">
             <div style="font-weight:800;margin-bottom:8px;">⚠️ 发现 ${duplicates.length} 个已经存在的词汇</div>
@@ -3328,7 +3523,7 @@ function batchAddWords(){
             <button class="btn btn-primary" type="button" onclick="overwriteExistingWords()">是，覆盖已经存在的答案</button>
             <button class="btn" type="button" onclick="cancelWordOverwrite()">否，保留原答案</button>
         </div>`;
-    }else if(!added){
+    }else if(!added && !invalidLines.length){
         html = `<div style="color:var(--muted);">没有可添加的有效词汇。</div>`;
     }
 
@@ -4272,6 +4467,7 @@ function updateQuizLiveScore(){
 }
 
 function showCurrentQuizBatchItem(){
+    document.getElementById("quiz")?.classList.remove("quiz-batch-complete");
     const summary=document.getElementById("quizBatchSummary");
     if(summary) summary.style.display="none";
     const actions=document.querySelector("#quiz .quiz-main-actions");
@@ -4374,6 +4570,12 @@ function finishQuizBatch(){
 }
 
 function showQuizBatchSummary(){
+    // 20 题结束时，清除上一题保留的巨大正确答案（包括拼音/朗读按钮）。
+    // 在手机和电脑端均生效；成绩单中答错/未答的词汇仍可正常查看。
+    setQuizInlineMeaning(null,false);
+    document.getElementById("quiz")?.classList.add("quiz-batch-complete");
+    const scrollRegion=document.getElementById("quizScrollContent");
+    if(scrollRegion) scrollRegion.scrollTop=0;
     const permanentSet=new Set(permanentRememberedWords.map(normalize));
     const active=quizBatchResults.filter(r=>r && r.status!=="skipped" && !permanentSet.has(normalize(r.key)));
     const correct=active.filter(r=>r.status==="correct").length;
@@ -4395,6 +4597,10 @@ function showQuizBatchSummary(){
         <span class="score-correct">答对 <b>${correct}</b></span>
         <span class="score-wrong">答错 <b>${wrong}</b></span>
         <span>未答 <b>${unanswered}</b></span>
+      </div>
+      <div class="quiz-summary-actions">
+        <button class="btn btn-primary" onclick="changeQuizBatch()">换题</button>
+        <button class="btn" onclick="repeatQuizBatch()">再来一遍</button>
       </div>`;
 
     if(problem.length){
@@ -4414,10 +4620,6 @@ function showQuizBatchSummary(){
         html+=`<div class="quiz-all-correct">🎉 这组题全部答对</div>`;
     }
 
-    html+=`<div class="quiz-summary-actions">
-        <button class="btn btn-primary" onclick="changeQuizBatch()">换题</button>
-        <button class="btn" onclick="repeatQuizBatch()">再来一遍</button>
-    </div>`;
     box.innerHTML=html;
     box.style.display="block";
 
@@ -4549,6 +4751,12 @@ function toggleCurrentQuizReinforce(){
 function renderSpecificQuizItem(item, mode){
     setQuizResetRememberMode("reset");
     quizCurrent = {item, mode, answered:false};
+
+    // 电脑端切换下一题时，内容滚动区回到题目顶部。
+    if(window.matchMedia('(min-width:701px)').matches){
+        const scrollRegion=document.getElementById('quizScrollContent');
+        if(scrollRegion) scrollRegion.scrollTop=0;
+    }
 
     const words = allWords().filter(w=>!new Set(permanentRememberedWords.map(normalize)).has(quizItemKey(w)));
     const category = document.getElementById("quizCategory").value;
@@ -5510,7 +5718,8 @@ async function exportBackup(){
         saveCurrentPageScroll();
         const customPinyin=getBackupPinyin();
         const data={
-            backupVersion:3,backupType:"full",appName:"越南语自学助手",
+            backupVersion:4,backupType:"full",appName:"越南语自学助手",
+            wordEntryFormats:["vi=zh","zh=vi"],
             allWordsSnapshot:allWords().map(w=>({...w})),
             allSentencesSnapshot:allSentences().map(w=>({...w})),
             customWords,customSentences,favorites,progress,wrongWords,examples,remembered,
@@ -5582,8 +5791,14 @@ function prepareBackupRestore(data){
     };
     const items=(raw,label)=>{
         if(!Array.isArray(raw))throw new Error(label+" 必须为列表");
-        return raw.filter(x=>isPlainBackupObject(x)&&typeof x.vi==="string"&&x.vi.trim()&&typeof x.zh==="string")
-            .map(x=>({...x,vi:x.vi.trim()}));
+        const isWords=label==="customWords"||label==="words"||label==="allWordsSnapshot";
+        return raw.filter(x=>isPlainBackupObject(x)).map(x=>{
+            let vi=typeof x.vi==="string"?x.vi:(typeof x.vietnamese==="string"?x.vietnamese:"");
+            let zh=typeof x.zh==="string"?x.zh:(typeof x.chinese==="string"?x.chinese:"");
+            // 兼容早期反向存储的字词对象：汉字误存 vi、越南语误存 zh。
+            if(isWords && /[\u3400-\u9fff]/.test(vi) && !/[\u3400-\u9fff]/.test(zh)) [vi,zh]=[zh,vi];
+            return {...x,vi:vi.trim(),zh:zh.trim()};
+        }).filter(x=>x.vi && x.zh);
     };
     const firstList=(current,...names)=>{
         const k=names.find(has);
@@ -5695,6 +5910,7 @@ function refreshAfterBackupRestore(){
     if(sentenceCheck)sentenceCheck.checked=hideBuiltInSentences;
     syncPinyinSettingUI();syncSentenceWordHintSettingUI();syncQuizRandomUI();loadCustomPinyinInput();
     applyDisplaySettings();applyUILanguage();
+    if(typeof window.syncSpeechSettingsUI==="function")window.syncSpeechSettingsUI();
     renderSentenceCategoryControls();renderCategoryControls();renderQuizRoundSelect();
     // 不再刷新全部隐藏页面：渲染异常不能被误认为备份格式错误。
     if(currentPageId==="words")renderWords();
@@ -5894,7 +6110,12 @@ Object.assign(UI_ZH_VI,{
     "拼音颜色":"Màu chữ pinyin",
     "越南语字体颜色":"Màu chữ tiếng Việt",
     "中文字体颜色":"Màu chữ tiếng Trung",
-    "拼音字体颜色":"Màu chữ pinyin"
+    "拼音字体颜色":"Màu chữ pinyin",
+    "等号 ":"Dấu bằng ",
+    " 两边可使用「越南语=中文」或「中文=越南语」，系统按文字自动识别。":" có thể viết ‘Tiếng Việt=Tiếng Trung’ hoặc ‘Tiếng Trung=Tiếng Việt’; hệ thống tự nhận diện.",
+    "（也支持中文在等号左边；例句仍按越南语、中文顺序填写）":"(cũng có thể viết tiếng Trung bên trái dấu bằng; câu ví dụ vẫn theo thứ tự tiếng Việt rồi tiếng Trung)",
+    "词汇":"Từ vựng","标记已记住":"Ghi nhớ","编辑答案":"Sửa nghĩa",
+    "无分类":"Chưa phân loại","暂无例句":"Chưa có ví dụ","例句":"Ví dụ"
 });
 const UI_ORIGINAL=new WeakMap();
 const UI_TRANSLATION_PATTERN=new RegExp(Object.keys(UI_ZH_VI).sort((a,b)=>b.length-a.length).map(x=>x.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|"),"g");
@@ -5935,8 +6156,12 @@ function applyUILanguage(){
 }
 function setUILanguage(lang){
   settings.uiLanguage=lang==="vi"?"vi":"zh";
+  // 跟随界面语言调整手机朗读默认语种，避免出现中文界面选择越南语、越南语界面选择中文的反向状态。
+  settings.speechLanguage=settings.uiLanguage;
   saveJSON(KEY_SETTINGS,settings);
+  if(typeof window.syncSpeechSettingsUI==="function") window.syncSpeechSettingsUI();
   applyUILanguage();
+  if(currentPageId==="words") renderWords();
   if(document.getElementById("quizResetRememberBtn")?.dataset.action!=="remember") setQuizResetRememberMode("reset");
   showToast(settings.uiLanguage==="vi"?"Đã chuyển sang giao diện tiếng Việt":"界面已切换为中文");
 }
@@ -6204,6 +6429,7 @@ body:not(.speech-enabled) .mini-speech-btn{display:none!important;}
     if(piperBox) piperBox.style.display=(enabled && settings.speechEngine==="piper")?"block":"none";
   }
 
+  window.syncSpeechSettingsUI=syncSpeechSettingsUI;
   window.setSpeechEngine=function(value){
     settings.speechEngine=value==="piper"?"piper":"webspeech";
     speechEngineFirstNoticeShown=false;
@@ -6490,5 +6716,36 @@ window.playPiperStudySpeech=async function(event,lang,text){
 };
 </script>
 
+<script id="amoQuizDesktopViewportHeightV8">
+(function(){
+  const quiz=document.getElementById('quiz');
+  const box=quiz?.querySelector('.quiz-box');
+  if(!quiz||!box) return;
+  let frame=0;
+  function sync(){
+    frame=0;
+    if(!quiz.classList.contains('active') || matchMedia('(max-width:700px)').matches) return;
+    let top=Math.round(box.getBoundingClientRect().top);
+    // 顶部筛选栏较高时，答题卡可能从屏幕下半部开始；先把整张卡移到
+    // 固定标题栏下，之后再计算内部可滚动高度，确保下方按钮也在窗口内。
+    if(top+310>innerHeight){
+      const header=document.querySelector('.header');
+      const toolbar=document.querySelector('.display-toolbar');
+      const safeTop=Math.max(0,header?.getBoundingClientRect().bottom||0,
+        toolbar?.getBoundingClientRect().bottom||0)+12;
+      const target=Math.max(0,scrollY+top-safeTop);
+      window.scrollTo({top:target,left:0,behavior:'instant'});
+      top=Math.round(box.getBoundingClientRect().top);
+    }
+    box.style.setProperty('--amo-quiz-viewport-top',Math.max(0,top)+'px');
+  }
+  function schedule(){if(!frame) frame=requestAnimationFrame(sync);}
+  new MutationObserver(()=>{schedule();setTimeout(schedule,160);}).observe(quiz,{attributes:true,attributeFilter:['class']});
+  window.addEventListener('resize',schedule,{passive:true});
+  window.addEventListener('orientationchange',schedule,{passive:true});
+  document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>requestAnimationFrame(schedule)));
+  schedule();
+})();
+</script>
 </body>
 </html>
