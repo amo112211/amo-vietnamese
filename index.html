@@ -6047,12 +6047,43 @@ function getBackupPinyin(){
     }
     return {...parsed.map};
 }
+function normalizeBackupPinyin(raw){
+    if(typeof raw==="string"){
+        const parsed=parseCustomPinyin(raw);
+        if(parsed.errors.length)throw new Error("备份中的拼音修改格式错误，行号："+parsed.errors.join("、"));
+        return {...parsed.map};
+    }
+    let entries;
+    if(Array.isArray(raw)){
+        entries=raw.map((item,index)=>{
+            if(Array.isArray(item) && item.length>=2)return [item[0],item[1]];
+            if(isPlainBackupObject(item)){
+                const key=item.zh??item.chinese??item.word??item.text;
+                const value=item.pinyin??item.py??item.reading??item.pronunciation;
+                return [key,value];
+            }
+            throw new Error("备份中的第 "+(index+1)+" 条拼音修改格式无效");
+        });
+    }else if(isPlainBackupObject(raw)){
+        entries=Object.entries(raw);
+    }else{
+        throw new Error("拼音修改必须为对象、条目列表或“中文=拼音”文本");
+    }
+    const result=Object.create(null);
+    for(const [key,value] of entries){
+        const zh=String(key??"").replace(/\s+/g,"");
+        if(!/^[\u3400-\u9fff]+$/.test(zh)||typeof value!=="string"||!value.trim())
+            throw new Error("备份中的拼音修改无效："+(key??""));
+        try{result[zh]=formatCustomPinyin(value);}catch(e){throw new Error("备份中的拼音修改无效："+key);}
+    }
+    return {...result};
+}
 async function exportBackup(){
     try{
         saveCurrentPageScroll();
         const customPinyin=getBackupPinyin();
         const data={
-            backupVersion:4,backupType:"full",appName:"越南语自学助手",
+            backupVersion:5,backupType:"full",appName:"越南语自学助手",
             wordEntryFormats:["vi=zh","zh=vi"],
             allWordsSnapshot:allWords().map(w=>({...w})),
             allSentencesSnapshot:allSentences().map(w=>({...w})),
@@ -6063,6 +6094,8 @@ async function exportBackup(){
             sentenceCategories,sentenceCategoryMap,deletedWords,deletedSentences,
             hideBuiltInWords,hideBuiltInSentences,
             customPinyin,polyphonicPinyin:customPinyin,
+            customPinyinEntries:Object.entries(customPinyin),
+            customPinyinText:Object.entries(customPinyin).map(([zh,py])=>zh+"="+py).join("\n"),
             quizBankLanguage:settings.quizBankLanguage,
             sentenceBankLanguage:settings.sentenceBankLanguage,
             settings:{...settings,customPinyin},pageScrollPositions,
@@ -6101,7 +6134,8 @@ function readBackupDocument(text){
     }
     const known=["customWords","customSentences","allWordsSnapshot","allSentencesSnapshot",
         "words","sentences","favorites","progress","wrongWords","examples","remembered",
-        "settings","customPinyin","polyphonicPinyin","pinyinCorrections","quizSavedRounds"];
+        "settings","customPinyin","polyphonicPinyin","pinyinCorrections",
+        "customPinyinEntries","customPinyinText","quizSavedRounds"];
     for(let i=0;i<2;i++){
         if(!isPlainBackupObject(data)) break;
         if(known.some(k=>Object.prototype.hasOwnProperty.call(data,k))) break;
@@ -6170,16 +6204,9 @@ function prepareBackupRestore(data){
     if(!["vi-zh","zh-vi","free-zh-vi","free-vi-zh"].includes(next.settings.quizAnswerMode))
         next.settings.quizAnswerMode=next.settings.quizBankLanguage==="zh"?"zh-vi":"vi-zh";
     const pySource=[data.customPinyin,data.polyphonicPinyin,data.pinyinCorrections,
+        data.customPinyinEntries,data.customPinyinText,
         restoredSettings.customPinyin,settings.customPinyin].find(x=>x!==undefined && x!==null);
-    if(!isPlainBackupObject(pySource))throw new Error("拼音修改必须为“中文: 拼音”对象");
-    const pinyin=Object.create(null);
-    for(const [key,value] of Object.entries(pySource)){
-        const zh=String(key).replace(/\s+/g,"");
-        if(!/^[\u3400-\u9fff]+$/.test(zh)||typeof value!=="string"||!value.trim())
-            throw new Error("备份中的拼音修改无效："+key);
-        try{pinyin[zh]=formatCustomPinyin(value);}catch(e){throw new Error("备份中的拼音修改无效："+key);}
-    }
-    next.settings.customPinyin={...pinyin};
+    next.settings.customPinyin=normalizeBackupPinyin(pySource);
     if(typeof next.settings.quizRandomMode!=="boolean")next.settings.quizRandomMode=false;
     if(typeof next.settings.showChinesePinyin!=="boolean")next.settings.showChinesePinyin=true;
     if(typeof next.settings.showSentenceWordHints!=="boolean")next.settings.showSentenceWordHints=true;
