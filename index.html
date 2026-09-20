@@ -1830,6 +1830,59 @@ body #sentenceReading .sentence-reading-question-pinyin{color:var(--study-py-col
   }
 }
 </style>
+
+<style id="quizAnswerCompactUltimateFix">
+/* 答题完成后自动压缩答案区域：避免答案撑开页面导致下一题按钮被推到底部 */
+#quiz.quiz-answer-complete .quiz-question{
+    padding-top:18px !important;
+    padding-bottom:12px !important;
+}
+#quiz.quiz-answer-complete #quizResult.quiz-result{
+    max-height:150px !important;
+    overflow:auto !important;
+    padding-top:4px !important;
+    padding-bottom:4px !important;
+    margin:0 !important;
+}
+#quiz.quiz-answer-complete #quizResult .quiz-correct-details{
+    max-height:105px !important;
+    overflow:auto !important;
+}
+#quiz.quiz-answer-complete #quizOptions{
+    margin-top:8px !important;
+}
+#quiz.quiz-answer-complete .quiz-main-actions{
+    margin-top:8px !important;
+}
+
+/* 手机端：答案出现后保持题目、答案、按钮完整可见 */
+@media(max-width:700px){
+    #quiz.quiz-answer-complete .quiz-scroll-content{
+        max-height:48vh !important;
+        overflow-y:auto !important;
+        -webkit-overflow-scrolling:touch;
+    }
+    #quiz.quiz-answer-complete .quiz-word{
+        font-size:26px !important;
+        line-height:1.25 !important;
+        margin:8px 0 !important;
+    }
+    #quiz.quiz-answer-complete .quiz-inline-meaning .quiz-chinese{
+        font-size:21px !important;
+    }
+    #quiz.quiz-answer-complete #quizResult .quiz-answer-status{
+        font-size:16px !important;
+        margin-top:2px !important;
+    }
+    #quiz.quiz-answer-complete .quiz-main-actions{
+        position:sticky !important;
+        bottom:0 !important;
+        z-index:20 !important;
+        background:var(--card) !important;
+        padding:8px 0 !important;
+    }
+}
+</style>
 </head>
 <body>
 <div class="app">
@@ -4381,7 +4434,20 @@ function isMobileQuizViewport(){
 function setMobileQuizCompletedLayout(completed){
     const quiz=document.getElementById("quiz");
     if(!quiz) return;
+    const showBtn=document.getElementById("quizShowAnswerBtn");
+    const nextBtn=document.querySelector("#quiz .quiz-next-btn");
     quiz.classList.toggle("quiz-answer-complete",!!completed);
+
+    // 答题完成后：手机端不再同时显示“显示答案”和“下一题”。
+    // 用下一题替换显示答案，避免三个按钮区域重叠。
+    if(showBtn && nextBtn){
+        if(completed && isMobileQuizViewport()) {
+            showBtn.style.display="none";
+            nextBtn.textContent="开始 / 下一题";
+        }else{
+            showBtn.style.display="";
+        }
+    }
 }
 let studyFocusRequest=0;
 function keepStudyFocusInView(kind){
@@ -7128,5 +7194,34 @@ window.playPiperStudySpeech=async function(event,lang,text){
   schedule();
 })();
 </script>
+
+<style id="quizMobileAnswerNextReplaceFix">
+/* 手机答题完成：隐藏显示答案，释放空间给下一题按钮 */
+@media(max-width:700px){
+  #quiz.quiz-answer-complete .quiz-show-answer-btn{
+      display:none !important;
+  }
+  #quiz.quiz-answer-complete .quiz-main-actions{
+      grid-template-columns:1fr !important;
+      display:grid !important;
+      gap:6px !important;
+      width:100% !important;
+  }
+  #quiz.quiz-answer-complete .quiz-main-actions .quiz-next-btn{
+      grid-column:1 !important;
+      grid-row:1 !important;
+      position:static !important;
+      width:100% !important;
+      margin:0 !important;
+      min-height:48px !important;
+  }
+  #quiz.quiz-answer-complete .quiz-main-actions #quizResetRememberBtn{
+      grid-column:1 !important;
+      grid-row:2 !important;
+      width:100% !important;
+      margin:0 !important;
+  }
+}
+</style>
 </body>
 </html>
