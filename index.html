@@ -2127,6 +2127,7 @@ body #sentenceReading .sentence-reading-question-pinyin{color:var(--study-py-col
             <option value="vi-zh">越南语 → 中文</option>
             <option value="zh-vi">中文 → 越南语</option>
             <option value="free-zh-vi">中文 → 自己写越南语</option>
+            <option value="zh-pinyin">中文 → 写拼音</option>
             <option value="free-vi-zh">越南语 → 自己写中文</option>
         </select>
     </div>
@@ -4421,6 +4422,29 @@ function splitAcceptedAnswers(answer){
     const full = normalize(raw);
     return Array.from(new Set(full ? [full, ...parts] : parts));
 }
+function normalizePinyinAnswer(v, keepTone){
+    let s=String(v||"").trim().toLowerCase();
+    // 忽略空格和常见分隔符
+    s=s.replace(/[\s\/／、，,.;；。_\-()（）\[\]【】]/g,"");
+    if(!keepTone){
+        // 去除越南语声调符号，只比较基础字母顺序
+        s=s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/đ/g,"d");
+    }
+    return s;
+}
+function hasVietnameseToneMark(v){
+    return /[áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ]/i.test(String(v||""));
+}
+function isAcceptedPinyinAnswer(input, answer){
+    const typed=normalizePinyinAnswer(input,hasVietnameseToneMark(input));
+    if(!typed) return false;
+    const candidates=splitAcceptedAnswers(answer);
+    return candidates.some(a=>{
+        const withTone=hasVietnameseToneMark(input);
+        return normalizePinyinAnswer(a,withTone)===typed;
+    });
+}
+
 function isAcceptedQuizAnswer(input, answer){
     const typed = normalize(input);
     return typed !== "" && splitAcceptedAnswers(answer).includes(typed);
@@ -4437,6 +4461,11 @@ function setMobileQuizCompletedLayout(completed){
     const showBtn=document.getElementById("quizShowAnswerBtn");
     const nextBtn=document.querySelector("#quiz .quiz-next-btn");
     quiz.classList.toggle("quiz-answer-complete",!!completed);
+
+    // 填空题答对后隐藏输入框和提交按钮，释放手机/电脑空间。下一题时由 resetQuizAnswerToggle 恢复。
+    document.querySelectorAll("#quizOptions .quiz-answer-input, #quizOptions .quiz-submit-btn").forEach(el=>{
+        el.style.display = completed ? "none" : "";
+    });
 
     // 答题完成后：手机端不再同时显示“显示答案”和“下一题”。
     // 用下一题替换显示答案，避免三个按钮区域重叠。
@@ -5194,6 +5223,24 @@ function renderSpecificQuizItem(item, mode){
         };
         optionsEl.appendChild(btn);
         setTimeout(()=>input.focus(),0);
+    }else if(mode === "zh-pinyin"){
+        label.textContent = "中文对应的越南语拼音？";
+        wordEl.innerHTML = chineseQuizHTML(item.zh);
+        const input = document.createElement("input");
+        input.className = "input quiz-answer-input";
+        input.placeholder = "输入越南语拼音（可带/不带声调）";
+        input.style.marginTop = "10px";
+        optionsEl.appendChild(input);
+        const btn = document.createElement("button");
+        btn.className = "btn btn-primary quiz-submit-btn";
+        btn.textContent = "提交";
+        btn.style.marginTop = "10px";
+        btn.onclick = ()=>{
+            const val=input.value;
+            checkAnswer(btn, isAcceptedPinyinAnswer(val,item.vi), item);
+        };
+        optionsEl.appendChild(btn);
+        setTimeout(()=>input.focus(),0);
     }else if(mode === "free-vi-zh"){
         label.textContent = "请写出对应的中文";
         wordEl.textContent = item.vi;
@@ -5306,6 +5353,9 @@ function uiAnswerButtonText(shown){
 }
 function resetQuizAnswerToggle(){
     if(quizCurrent) quizCurrent.answerVisible=false;
+    document.querySelectorAll("#quizOptions .quiz-answer-input, #quizOptions .quiz-submit-btn").forEach(el=>{
+        el.style.display="";
+    });
     const resultEl=document.getElementById("quizResult");
     if(resultEl) resultEl.classList.remove("quiz-revealed-answer");
     const btn=document.getElementById("quizShowAnswerBtn");
@@ -7223,5 +7273,33 @@ window.playPiperStudySpeech=async function(event,lang,text){
   }
 }
 </style>
+
+<style id="quizBottomDockAndPinyinV4">
+#quiz .quiz-box{display:flex;flex-direction:column;min-height:520px;}
+#quiz .quiz-question{flex:0 0 auto;}
+#quiz #quizResult{max-height:130px;overflow:auto;}
+#quiz .quiz-main-actions{margin-top:auto;position:sticky;bottom:0;z-index:20;padding-top:8px;background:var(--card);}
+#quiz.quiz-answer-complete .quiz-options,
+#quiz.quiz-answer-complete #quizOptions{max-height:220px;overflow:auto;}
+@media(max-width:700px){
+ #quiz .quiz-box{min-height:calc(100vh - 250px);}
+ #quiz #quizResult{max-height:110px;}
+ #quiz .quiz-main-actions{position:sticky;bottom:0;}
+}
+</style>
+<script id="quizPinyinModeV4">
+// 中文写拼音模式说明：不带声调比较字母顺序，带声调精确比较声调。
+</script>
 </body>
+
+<style id="quizInputHideAfterCorrectFix">
+/* 填空题答对后隐藏输入框和提交按钮，手机/电脑一致 */
+#quiz.quiz-answer-complete .quiz-answer-input,
+#quiz.quiz-answer-complete .quiz-submit-btn{
+    display:none !important;
+}
+#quiz.quiz-answer-complete #quizOptions .quiz-submit-btn + *{
+    display:none;
+}
+</style>
 </html>
