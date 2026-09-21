@@ -2037,6 +2037,7 @@ body #sentenceReading .sentence-reading-question-pinyin{color:var(--study-py-col
     <div class="card" style="margin-bottom:14px;padding:14px;">
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
         <select class="select" id="sentenceCategoryFilter" onchange="renderSentences()"><option value="">全部短句分类</option></select>
+        <input class="search" id="sentenceSearch" placeholder="搜索短句/中文" oninput="window.sentenceCurrentPage=1;renderSentences();">
         <input class="search" id="newSentenceCategoryName" style="max-width:220px;" placeholder="自定义短句分类">
         <button class="btn btn-small" onclick="addSentenceCategory()">增加分类</button>
         <button class="btn btn-small btn-danger" onclick="deleteSelectedSentenceCategory()">删除当前分类</button>
@@ -2262,6 +2263,7 @@ Hôm nay bạn có bận không?=你今天忙吗？"></textarea>
         <textarea id="customPinyinInput" spellcheck="false" autocomplete="off" placeholder="银行=yin2 hang2&#10;行走=xing2zou3"></textarea>
         <div id="customPinyinError" role="alert" style="color:var(--danger);font-weight:700;margin-top:8px;"></div>
         <button type="button" class="btn btn-primary" onclick="saveCustomPinyin()" style="margin-top:12px;">保存拼音修改</button>
+        
     </div>
 </section>
 
@@ -3479,6 +3481,17 @@ function renderSentences(){
         );
     }
 
+    // 短句搜索：支持越南语、中文、拼音关键词
+    const sentenceKeyword = document.getElementById("sentenceSearch")?.value?.trim().toLowerCase() || "";
+    if(sentenceKeyword){
+        sentences = sentences.filter(s => {
+            const vi = String(s.vi || "").toLowerCase();
+            const zh = String(s.zh || "").toLowerCase();
+            const py = getChinesePinyin(String(s.zh || "")).toLowerCase();
+            return vi.includes(sentenceKeyword) || zh.includes(sentenceKeyword) || py.includes(sentenceKeyword);
+        });
+    }
+
     const pageSize = parseInt(pageSizeVal,10) || 20;
     const total = sentences.length;
     const totalPages = Math.max(1, Math.ceil(total / pageSize));
@@ -3740,7 +3753,7 @@ function batchAddWords(){
         // If this word had previously been deleted, re-adding it restores it.
         deletedWords = deletedWords.filter(x=>normalize(x)!==key);
 
-        customWords.push({vi, zh, category});
+        customWords.push({vi, zh, category, createdAt: Date.now()});
         if(category) wordCategoryMap[key] = category;
         if(exampleVi || exampleZh) examples[key] = {vi:exampleVi, zh:exampleZh};
         currentMap.set(key, {vi,zh,category});
@@ -3886,7 +3899,7 @@ function batchAddSentences(){
         // Re-adding a deleted built-in sentence must restore it.
         deletedSentences=deletedSentences.filter(x=>normalize(typeof x==="string"?x:(x&&x.vi)||"")!==key);
         customSentences = customSentences.filter(s=>normalize(s.vi)!==key);
-        customSentences.push({vi,zh,category:selectedSentenceCategory});
+        customSentences.push({vi,zh,category:selectedSentenceCategory, createdAt: Date.now()});
         added++;
     }
     customSentences.forEach(s=>{
@@ -4151,17 +4164,13 @@ function loadCustomPinyinInput(){
     if(input && document.activeElement!==input)
         input.value=Object.entries(settings.customPinyin||{}).map(([zh,py])=>zh+"="+py).join("\n");
 }
-function refreshCustomPinyin(){
-    // 只刷新当前可见学习区，不重置用户正在作答的题目。
-    if(currentPageId==="words") renderWords();
-    if(currentPageId==="sentences") renderSentences();
-    if(currentPageId==="grammar") renderGrammar();
-    if(currentPageId==="sentenceReading" && sentenceReadingCurrent) renderSentenceReadingQuestion(false);
-    document.querySelectorAll("#quiz .quiz-zh-wrap[data-zh-source]").forEach(el=>{
-        const holder=document.createElement("div");holder.innerHTML=chineseQuizHTML(el.dataset.zhSource);
-        if(holder.firstElementChild) el.replaceWith(holder.firstElementChild);
-    });
+function renderCustomPinyinManager(){
+    // 已移除多音字查看/删除面板，保留空函数兼容旧调用。
 }
+function deleteCustomPinyin(key){
+    // 已移除单独删除功能。
+}
+
 function saveCustomPinyin(){
     const field=document.getElementById("customPinyinInput");
     const result=parseCustomPinyin(field?.value||"");
@@ -4173,39 +4182,64 @@ function saveCustomPinyin(){
     if(error) error.textContent="";
     settings.customPinyin={...result.map};
     saveJSON(KEY_SETTINGS,settings);
+    const input=document.getElementById("customPinyinInput");
+    if(input) input.value=Object.entries(settings.customPinyin).map(([k,v])=>`${k}=${v}`).join("\n");
+    renderCustomPinyinManager();
     refreshCustomPinyin();
     showToast(settings.uiLanguage==="vi"?"Đã lưu cách đọc pinyin tùy chỉnh":"已保存自定义拼音");
 }
 function getChinesePinyin(text){
-    const raw=String(text||"");
+    const raw=String(text||"").trim();
+    if(!raw) return "";
     const corrections=settings.customPinyin||{};
-    // 兼容词语中意外出现的空格，例如“银 行”；保留标点和其他空白的原有分隔作用。
-    const normalized=raw.replace(/([\u3400-\u9fff])\s+(?=[\u3400-\u9fff])/g,"$1");
-    if(Object.prototype.hasOwnProperty.call(corrections,normalized)) return corrections[normalized];
-    const customKeys=Object.keys(corrections).filter(Boolean).sort((a,b)=>b.length-a.length);
-    // 完全无自定义命中时，继续使用原词库里的整句拼音，避免丢失原来的连读/多音字修正。
-    if(OFFLINE_PINYIN_PHRASES[raw] && !customKeys.some(k=>normalized.includes(k))) return OFFLINE_PINYIN_PHRASES[raw];
-    if(PINYIN_PHRASE_OVERRIDES[normalized] && !customKeys.some(k=>normalized.includes(k))) return PINYIN_PHRASE_OVERRIDES[normalized];
-    const overrideKeys=Object.keys(PINYIN_PHRASE_OVERRIDES).sort((a,b)=>b.length-a.length);
-    const parts=[];let i=0;
-    while(i<normalized.length){
-        // 最长的用户自定义词组优先，包括句子里的同一词组。
-        const custom=customKeys.find(k=>normalized.startsWith(k,i));
-        if(custom){parts.push(corrections[custom]);i+=custom.length;continue;}
-        // 旧版会让“银行”等内置词组吞掉用户设置的“行=...”，导致部分页面看似修改无效。
-        // 如果词组内部有用户自定义词语，从自定义位置拆分并优先应用用户读音。
-        const built=overrideKeys.find(k=>normalized.startsWith(k,i) &&
-            !customKeys.some(userKey=>{
-                const next=normalized.indexOf(userKey,i+1);
-                return next!==-1 && next<i+k.length;
-            }));
-        if(built){parts.push(PINYIN_PHRASE_OVERRIDES[built]);i+=built.length;continue;}
-        const ch=normalized[i];
-        parts.push(ch==="哦"?"o":(OFFLINE_PINYIN_CHARS[ch]||ch));i++;
-    }
-    return parts.join(" ").replace(/\s+/g," ").trim();
-}
+    const normalized=raw.replace(/[\s]/g,"");
 
+    // 拼音优先级：
+    // 1. 用户添加的完整词组(两个字以上)；
+    // 2. 用户添加的单字多音字；
+    // 3. 内置词库。
+    // 所有词汇、答题、短句练习统一调用此函数。
+
+    if(Object.prototype.hasOwnProperty.call(corrections, raw)){
+        return corrections[raw];
+    }
+    if(Object.prototype.hasOwnProperty.call(corrections, normalized)){
+        return corrections[normalized];
+    }
+
+    const keys=Object.keys(corrections)
+        .filter(Boolean)
+        .sort((a,b)=>b.replace(/\s/g,"").length-a.replace(/\s/g,"").length);
+
+    // 先匹配句子中的用户词组，最长优先
+    let result=[];
+    let i=0;
+    while(i<normalized.length){
+        let matched="";
+        for(const k of keys){
+            const key=k.replace(/\s/g,"");
+            if(key.length>=2 && normalized.startsWith(key,i)){
+                matched=k;
+                break;
+            }
+        }
+        if(matched){
+            result.push(corrections[matched]);
+            i+=matched.replace(/\s/g,"").length;
+            continue;
+        }
+
+        const ch=normalized[i];
+        if(Object.prototype.hasOwnProperty.call(corrections,ch)){
+            result.push(corrections[ch]);
+        }else{
+            result.push(ch==="哦"?"o":(OFFLINE_PINYIN_CHARS[ch]||ch));
+        }
+        i++;
+    }
+
+    return result.join(" ").replace(/\s+/g," ").trim();
+}
 function chineseQuizHTML(zh){
     const raw = String(zh || "");
     const py = shouldShowChinesePinyin() ? getChinesePinyin(raw) : "";
@@ -4436,6 +4470,20 @@ function normalizePinyinAnswer(v, keepTone){
 function hasVietnameseToneMark(v){
     return /[áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ]/i.test(String(v||""));
 }
+function getChinesePinyinCandidates(text){
+    const raw=String(text||"").trim();
+    const list=[];
+    const corrections=settings.customPinyin||{};
+    // 所有答题模式统一读取用户保存的拼音修改表，多音字不只用于“中文写拼音”。
+    const custom=getChinesePinyin(raw);
+    if(custom) list.push(custom);
+    const normalized=raw.replace(/\s+/g,"").trim();
+    Object.keys(corrections).forEach(k=>{
+        if(k.replace(/\s+/g,"")===normalized && corrections[k]) list.push(corrections[k]);
+    });
+    return [...new Set(list.filter(Boolean))];
+}
+
 function isAcceptedPinyinAnswer(input, answer){
     const typed=normalizePinyinAnswer(input,hasVietnameseToneMark(input));
     if(!typed) return false;
@@ -5239,11 +5287,13 @@ function renderSpecificQuizItem(item, mode){
         optionsEl.appendChild(btn);
         setTimeout(()=>input.focus(),0);
     }else if(mode === "zh-pinyin"){
-        label.textContent = "请根据中文写出越南语拼音";
+        // 中文写拼音：题目是中文，答案应该匹配中文拼音，不是越南语单词。
+        // 支持多音字：优先使用用户设置的多音字读音，其次使用内置拼音。
+        label.textContent = "请根据中文写出拼音";
         wordEl.innerHTML = chineseQuizHTML(item.zh);
         const input = document.createElement("input");
         input.className = "input quiz-answer-input";
-        input.placeholder = "请输入越南语拼音（可带声调或不带声调）";
+        input.placeholder = "请输入拼音（可带声调或不带声调）";
         input.style.marginTop = "10px";
         optionsEl.appendChild(input);
         const btn = document.createElement("button");
@@ -5252,7 +5302,8 @@ function renderSpecificQuizItem(item, mode){
         btn.style.marginTop = "10px";
         btn.onclick = ()=>{
             const val=input.value;
-            checkAnswer(btn, isAcceptedPinyinAnswer(val,item.vi), item);
+            const pyCandidates=getChinesePinyinCandidates(item.zh);
+            checkAnswer(btn, isAcceptedPinyinAnswer(val,pyCandidates.join("/")), item);
         };
         optionsEl.appendChild(btn);
         setTimeout(()=>input.focus(),0);
@@ -6550,6 +6601,7 @@ function handleQuizEnterKey(e){
 }
 document.addEventListener("keydown",handleQuizEnterKey);
 
+document.addEventListener("DOMContentLoaded",()=>{try{renderCustomPinyinManager();const i=document.getElementById("customPinyinInput");if(i&&settings.customPinyin)i.value=Object.entries(settings.customPinyin).map(([k,v])=>`${k}=${v}`).join("\n");}catch(e){}});
 </script>
 
 <div id="wordHintPopover" class="word-hint-popover" role="dialog" aria-live="polite">
@@ -7326,6 +7378,26 @@ window.playPiperStudySpeech=async function(event,lang,text){
 }
 </style>
 
+
+<script id="amo-v12-sort-patch">
+// V12: 新增内容默认置顶（词汇/短句）
+(function(){
+  const oldAllWords = window.allWords;
+  if(typeof oldAllWords === 'function'){
+    window.allWords = function(){
+      const arr = oldAllWords.apply(this, arguments) || [];
+      return arr.slice().sort((a,b)=>(Number(b.createdAt)||0)-(Number(a.createdAt)||0));
+    };
+  }
+  const oldAllSentences = window.allSentences;
+  if(typeof oldAllSentences === 'function'){
+    window.allSentences = function(){
+      const arr = oldAllSentences.apply(this, arguments) || [];
+      return arr.slice().sort((a,b)=>(Number(b.createdAt)||0)-(Number(a.createdAt)||0));
+    };
+  }
+})();
+</script>
 </body>
 
 <style id="quizInputHideAfterCorrectFix">
