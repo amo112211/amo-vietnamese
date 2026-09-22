@@ -2342,7 +2342,7 @@ Hôm nay bạn có bận không?=你今天忙吗？"></textarea>
     <div class="backup-grid">
         <div class="card backup-card mobile-speech-settings" id="mobileSpeechSettingsCard">
             <h3>🔊 <span>语音设置</span></h3>
-            <p>使用浏览器 Web Speech 或已经下载的 Piper 模型朗读词汇和短句。</p>
+            <p>仅在手机上使用 Web Speech 朗读词汇、短句和答题答案。</p>
             <label class="speech-setting-label">语音功能</label>
             <select class="select" id="speechEnabledSetting" onchange="setMobileSpeechSetting('enabled',this.value)" style="width:100%;">
                 <option value="on">打开</option>
@@ -2354,29 +2354,11 @@ Hôm nay bạn có bận không?=你今天忙吗？"></textarea>
             </select>
             <p style="font-size:12px;color:var(--muted);line-height:1.6;">答对时只播放当前题目的正确答案一次，不播放例句。关闭时仍可点击题目或答案旁的扬声器手动播放。语音设置需要先打开语音功能。</p>
             <div id="speechExtraSettings">
-                <label class="speech-setting-label">语音模型</label>
-                <select class="select" id="speechEngineSetting" onchange="setSpeechEngine(this.value)" style="width:100%;">
-                    <option value="webspeech">苹果 Web Speech（默认）</option>
-                    <option value="piper">Piper 离线模型</option>
-                </select>
                 <label class="speech-setting-label">朗读语言</label>
                 <select class="select" id="speechLanguageSetting" onchange="setMobileSpeechSetting('language',this.value)" style="width:100%;">
                     <option value="vi">越南语</option>
                     <option value="zh">普通话</option>
                 </select>
-                <div class="piper-model-manager" id="piperModelManager">
-                    <div class="piper-model-row">
-                        <div class="piper-model-info"><strong>越南语语音模型</strong><small>vi_VN-vais1000-medium · 约 63 MB</small><span id="piperViStatus">正在检测…</span></div>
-                        <button type="button" class="btn btn-primary piper-model-btn" id="piperViBtn" onclick="togglePiperModel('vi')">下载模型</button>
-                    </div>
-                    <div class="piper-model-progress" id="piperViProgress" hidden><div></div></div>
-                    <div class="piper-model-row">
-                        <div class="piper-model-info"><strong>中文语音模型</strong><small>zh_CN-huayan-medium · 约 63 MB</small><span id="piperZhStatus">正在检测…</span></div>
-                        <button type="button" class="btn btn-primary piper-model-btn" id="piperZhBtn" onclick="togglePiperModel('zh')">下载模型</button>
-                    </div>
-                    <div class="piper-model-progress" id="piperZhProgress" hidden><div></div></div>
-                    <p class="piper-storage-note">模型保存在浏览器本地存储中。清除 Safari 网站数据后需要重新下载。</p>
-                </div>
                 <label class="speech-setting-label">播放速度</label>
                 <select class="select" id="speechRateSetting" onchange="setMobileSpeechSetting('rate',this.value)" style="width:100%;">
                     <option value="0.6">0.6×</option>
@@ -6961,7 +6943,7 @@ const UI_ZH_VI={
 "显示历史记录":"Hiện lịch sử","重新答题":"Làm lại lượt cũ","新一轮答题":"Lượt mới","本轮答题记录":"Lịch sử lượt này","清除记录":"Xóa lịch sử","还没有答题记录":"Chưa có lịch sử trả lời","已答":"Đã trả lời",
 "手机语音设置":"Cài đặt giọng đọc trên điện thoại",
 "苹果手机 Safari 使用系统 Web Speech 朗读词汇和短句。":"Safari trên iPhone sử dụng Web Speech của hệ thống để đọc từ vựng và câu ngắn.",
-"语音功能":"Chức năng giọng đọc","打开":"Bật","关闭语音":"Tắt","关闭自动播放":"Tắt","朗读语言":"Ngôn ngữ đọc","普通话":"Tiếng Trung phổ thông","播放速度":"Tốc độ đọc","播放语音":"Phát giọng đọc","删除短句":"Xóa câu ngắn","确定删除":"Xác nhận xóa","语音模型":"Mô hình giọng đọc","苹果 Web Speech（默认）":"Apple Web Speech (mặc định)","Piper 离线模型":"Mô hình Piper ngoại tuyến","Piper 正在生成语音…":"Piper đang tạo giọng đọc…","Piper 引擎加载失败":"Không thể tải công cụ Piper","Piper 语音生成失败":"Không thể tạo giọng đọc Piper","当前语音模型":"Mô hình giọng đọc hiện tại","模型清理失败":"Không thể xóa mô hình","越南语语音模型":"Mô hình giọng đọc tiếng Việt","中文语音模型":"Mô hình giọng đọc tiếng Trung","正在检测…":"Đang kiểm tra…","下载模型":"Tải mô hình","清理模型":"Xóa mô hình","下载中…":"Đang tải…","已下载":"Đã tải","未下载":"Chưa tải","模型已清理":"Đã xóa mô hình","模型下载完成":"Đã tải xong mô hình","模型下载失败":"Tải mô hình thất bại","模型保存在浏览器本地存储中。清除 Safari 网站数据后需要重新下载。":"Mô hình được lưu trong bộ nhớ cục bộ của trình duyệt. Nếu xóa dữ liệu trang web Safari, em cần tải lại mô hình.","需要先下载越南语语音模型":"Cần tải mô hình giọng đọc tiếng Việt trước","需要先下载中文语音模型":"Cần tải mô hình giọng đọc tiếng Trung trước","语音已关闭":"Giọng đọc đã tắt",
+"语音功能":"Chức năng giọng đọc","打开":"Bật","关闭语音":"Tắt","关闭自动播放":"Tắt","朗读语言":"Ngôn ngữ đọc","普通话":"Tiếng Trung phổ thông","播放速度":"Tốc độ đọc","播放语音":"Phát giọng đọc","删除短句":"Xóa câu ngắn","确定删除":"Xác nhận xóa","当前语音模型":"Mô hình giọng đọc hiện tại","模型清理失败":"Không thể xóa mô hình","越南语语音模型":"Mô hình giọng đọc tiếng Việt","中文语音模型":"Mô hình giọng đọc tiếng Trung","正在检测…":"Đang kiểm tra…","下载模型":"Tải mô hình","清理模型":"Xóa mô hình","下载中…":"Đang tải…","已下载":"Đã tải","未下载":"Chưa tải","模型已清理":"Đã xóa mô hình","模型下载完成":"Đã tải xong mô hình","模型下载失败":"Tải mô hình thất bại","模型保存在浏览器本地存储中。清除 Safari 网站数据后需要重新下载。":"Mô hình được lưu trong bộ nhớ cục bộ của trình duyệt. Nếu xóa dữ liệu trang web Safari, em cần tải lại mô hình.","需要先下载越南语语音模型":"Cần tải mô hình giọng đọc tiếng Việt trước","需要先下载中文语音模型":"Cần tải mô hình giọng đọc tiếng Trung trước","语音已关闭":"Giọng đọc đã tắt",
 "加入需加强记忆":"Thêm vào cần ôn kỹ hơn","取消需加强记忆":"Bỏ khỏi cần ôn kỹ hơn","全部删除":"Xóa tất cả","已全部删除需加强记忆标记":"Đã xóa toàn bộ dấu cần ôn kỹ hơn"
 };
 Object.assign(UI_ZH_VI,{"请根据中文写出越南语拼音":"Hãy viết pinyin tiếng Việt dựa trên tiếng Trung", "请输入越南语拼音（可带声调或不带声调）":"Nhập pinyin tiếng Việt (có hoặc không có dấu thanh)", "阿莫自学助手":"Trợ lý tự học Amo", "显示设置": "Cài đặt hiển thị", "选择是否显示中文拼音。默认显示。": "Chọn hiển thị hoặc ẩn pinyin tiếng Trung. Mặc định là hiển thị.", "显示中文拼音": "Hiển thị pinyin tiếng Trung", "不显示中文拼音": "Ẩn pinyin tiếng Trung", "短句词汇提示": "Gợi ý từ vựng trong câu", "显示短句词汇提示": "Hiển thị gợi ý từ vựng trong câu", "不显示短句词汇提示": "Ẩn gợi ý từ vựng trong câu", "导出全部数据": "Xuất toàn bộ dữ liệu", "会完整导出你的学习数据，包括：": "Bản sao lưu sẽ bao gồm toàn bộ dữ liệu học tập của em:", "全部生词（内置 + 自定义）": "Toàn bộ từ vựng (mặc định và tự thêm)", "全部短句（内置 + 自定义）": "Toàn bộ câu ngắn (mặc định và tự thêm)", "所有生词例句": "Tất cả câu ví dụ của từ vựng", "已记住状态": "Trạng thái đã nhớ", "收藏状态": "Trạng thái yêu thích", "答题进度": "Tiến độ làm bài", "错题记录": "Lịch sử câu trả lời sai", "所有个人设置及自定义拼音、多音字读音": "Toàn bộ cài đặt, pinyin tùy chỉnh và cách đọc chữ đa âm", "导出全部备份": "Xuất bản sao lưu đầy đủ", "选择之前导出的 JSON 备份文件，可以恢复你的全部学习数据。": "Chọn tệp sao lưu JSON đã xuất trước đây để khôi phục toàn bộ dữ liệu học tập.", "永久记住的词不会再出现在答题中。点击清除后，这些词会重新进入答题题库。": "Những từ đã nhớ vĩnh viễn sẽ không xuất hiện trong bài tập. Sau khi xóa trạng thái này, các từ sẽ xuất hiện trở lại.", "清除个人数据": "Xóa dữ liệu cá nhân", "删除本浏览器中保存的自定义词汇、短句、例句、收藏、答题记录、已记住状态和错题。": "Xóa từ vựng, câu ngắn, câu ví dụ, mục yêu thích, lịch sử làm bài, trạng thái đã nhớ và câu trả lời sai lưu trong trình duyệt này.", "清除全部个人数据": "Xóa toàn bộ dữ liệu cá nhân", "约": "khoảng", "随机出题": "Ra câu hỏi ngẫu nhiên", "拼音修改": "Chỉnh sửa pinyin", "每行一条，中文=拼音。支持数字声调、带声调拼音，不要求音节间有空格。保存后匹配的词语及句子优先使用这里的拼音，多音字可按词组分别设置。": "Mỗi dòng một mục: chữ Trung=pinyin. Có thể nhập dấu thanh bằng số hoặc trực tiếp; khoảng trắng giữa các âm tiết không bắt buộc. Sau khi lưu, các từ và câu khớp sẽ ưu tiên dùng pinyin này; có thể đặt cách đọc cho từng cụm từ có chữ đa âm.", "保存拼音修改": "Lưu chỉnh sửa pinyin", "正在检测…": "Đang kiểm tra…"});
@@ -7039,12 +7021,12 @@ Object.assign(UI_ZH_VI,{
  "正在检测…":"Đang kiểm tra…",
  "播放语音":"Phát âm thanh","播放题目":"Nghe câu hỏi","播放答案":"Nghe đáp án",
  "语音设置":"Cài đặt giọng đọc","手机语音设置":"Cài đặt giọng đọc",
- "苹果手机 Safari 使用系统 Web Speech 朗读词汇和短句。":"Dùng Web Speech của trình duyệt hoặc giọng đọc Piper đã tải để phát âm từ và câu.","使用浏览器 Web Speech 或已经下载的 Piper 模型朗读词汇和短句。":"Dùng Web Speech của trình duyệt hoặc mô hình Piper đã tải để phát âm từ và câu.",
+ "仅在手机上使用 Web Speech 朗读词汇、短句和答题答案。":"Chỉ dùng Web Speech để phát âm từ, câu và đáp án trên điện thoại.",
  "答题完成后自动播放答案":"Tự động đọc đáp án sau khi trả lời đúng",
  "答对时只播放当前题目的正确答案一次，不播放例句。":"Chỉ đọc đáp án đúng của câu hiện tại một lần sau khi trả lời đúng; không đọc câu ví dụ.",
  "关闭时仍可点击题目或答案旁的扬声器手动播放。":"Khi tắt, bạn vẫn có thể nhấn biểu tượng loa bên cạnh câu hỏi hoặc đáp án để nghe.",
- "语音播放需要浏览器支持语音合成，或先下载对应语言的 Piper 模型。":"Cần trình duyệt hỗ trợ tổng hợp giọng nói hoặc tải trước mô hình Piper của ngôn ngữ tương ứng.",
- "语音功能":"Chức năng giọng đọc","语音模型":"Mô hình giọng đọc",
+ 
+ "语音功能":"Chức năng giọng đọc",
  "朗读语言":"Ngôn ngữ phát âm","播放速度":"Tốc độ phát",
  "普通话":"Tiếng Trung phổ thông",
  "打开":"Bật","关闭语音":"Tắt","关闭自动播放":"Tắt",
@@ -7361,7 +7343,10 @@ body:not(.speech-enabled) .mini-speech-btn{display:none!important;}
   const isiOS=/iPad|iPhone|iPod/.test(navigator.userAgent) ||
     (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1);
   if(isiOS) document.body.classList.add("ios-device");
+  const isPhone=/iPhone|iPod|Android.*Mobile|Windows Phone|webOS|BlackBerry|BB10|Opera Mini|IEMobile/i.test(navigator.userAgent);
+  document.body.classList.toggle("speech-mobile",isPhone);
   let iosSpeechTimer=null;
+  let iosSlashPauseTimer=null;
   let iosCurrentUtterance=null;
   let iosSpeechToken=0;
   let speechEngineFirstNoticeShown=false;
@@ -7369,52 +7354,32 @@ body:not(.speech-enabled) .mini-speech-btn{display:none!important;}
     if(speechEngineFirstNoticeShown) return;
     speechEngineFirstNoticeShown=true;
     const isVi=settings.uiLanguage==="vi";
-    if((settings.speechEngine||"webspeech")==="piper"){
-      const model=lang==="zh"?"zh_CN-huayan-medium":"vi_VN-vais1000-medium";
-      showToast(isVi ? ("Mô hình đang dùng: Piper · "+model) : ("当前语音模型：Piper · "+model));
-    }else{
-      showToast(isVi ? "Mô hình đang dùng: Apple Web Speech" : "当前语音模型：苹果 Web Speech");
-    }
+    showToast(isVi ? "Đang dùng Web Speech" : "当前使用 Web Speech");
   }
 
   if(settings.speechEnabled===undefined) settings.speechEnabled=true;
    if(settings.quizAutoSpeakAnswer===undefined) settings.quizAutoSpeakAnswer=false;
-  if(!["webspeech","piper"].includes(settings.speechEngine)) settings.speechEngine="webspeech";
-  // Web Speech 为默认引擎；用户选择会持久保存。
-  if(!settings.speechEngine) settings.speechEngine="webspeech";
+  settings.speechEngine="webspeech";
+  // 兼容旧备份：统一改用 Web Speech。
   if(!["vi","zh"].includes(settings.speechLanguage)) settings.speechLanguage="vi";
   if(![0.6,0.75,0.9,1,1.25].includes(Number(settings.speechRate))) settings.speechRate=0.9;
 
   function syncSpeechSettingsUI(){
     const enabled=!!settings.speechEnabled;
-    document.body.classList.toggle("speech-enabled",enabled);
+    document.body.classList.toggle("speech-enabled",enabled && isPhone);
     const en=document.getElementById("speechEnabledSetting");
     const auto=document.getElementById("quizAutoSpeakAnswerSetting");
     if(auto) auto.value=settings.quizAutoSpeakAnswer?"on":"off";
     const lang=document.getElementById("speechLanguageSetting");
     const rate=document.getElementById("speechRateSetting");
     const extra=document.getElementById("speechExtraSettings");
-    const engine=document.getElementById("speechEngineSetting");
-    const piperBox=document.getElementById("piperModelManager");
     if(en) en.value=enabled?"on":"off";
     if(lang) lang.value=settings.speechLanguage||"vi";
     if(rate) rate.value=String(Number(settings.speechRate)||1);
     if(extra) extra.style.display=enabled?"block":"none";
-    if(engine) engine.value=settings.speechEngine||"webspeech";
-    if(piperBox) piperBox.style.display=(enabled && settings.speechEngine==="piper")?"block":"none";
   }
 
   window.syncSpeechSettingsUI=syncSpeechSettingsUI;
-  window.setSpeechEngine=function(value){
-    settings.speechEngine=value==="piper"?"piper":"webspeech";
-    speechEngineFirstNoticeShown=false;
-    saveJSON(KEY_SETTINGS,settings);
-    try{speechSynthesis.cancel();}catch(e){}
-    if(window.__amoPiperAudio){try{window.__amoPiperAudio.pause();}catch(e){}}
-    syncSpeechSettingsUI();
-    applyUILanguage();
-    if(typeof refreshPiperModelUI==="function") refreshPiperModelUI();
-  };
 
   window.setQuizAutoSpeakAnswer=function(value){
      settings.quizAutoSpeakAnswer=value==="on";
@@ -7422,7 +7387,7 @@ body:not(.speech-enabled) .mini-speech-btn{display:none!important;}
      syncSpeechSettingsUI();
    };
    window.maybeAutoSpeakQuizAnswer=function(item,mode){
-     if(!item || !settings.quizAutoSpeakAnswer || !settings.speechEnabled) return;
+     if(!isPhone || !item || !settings.quizAutoSpeakAnswer || !settings.speechEnabled) return;
      const answerLang=(mode==="vi-zh" || mode==="free-vi-zh")?"zh":"vi";
      const answerText=answerLang==="zh"?item.zh:item.vi;
      if(answerText) window.playDirectStudySpeech(null,answerLang,answerText);
@@ -7435,7 +7400,6 @@ body:not(.speech-enabled) .mini-speech-btn{display:none!important;}
     if("speechSynthesis" in window) speechSynthesis.cancel();
     syncSpeechSettingsUI();
     applyUILanguage();
-    if(typeof refreshPiperModelUI==="function") refreshPiperModelUI();
   };
 
   function chooseVoice(lang){
@@ -7451,48 +7415,60 @@ body:not(.speech-enabled) .mini-speech-btn{display:none!important;}
     playDirectStudySpeech(event,lang,value);
   };
 
-  window.playDirectStudySpeech=async function(event,lang,text){
+  window.playDirectStudySpeech=function(event,lang,text){
     if(event){event.preventDefault();event.stopPropagation();}
-    if(!settings.speechEnabled) return;
+    if(!isPhone || !settings.speechEnabled) return;
     showFirstSpeechEngineNotice(lang);
-    if((settings.speechEngine||"webspeech")==="piper"){
-      if(typeof hasPiperModel==="function" && !(await hasPiperModel(lang))){
-        showToast((settings.uiLanguage==="vi")
-          ? (lang==="vi"?"Cần tải mô hình giọng đọc tiếng Việt trước":"Cần tải mô hình giọng đọc tiếng Trung trước")
-          : (lang==="vi"?"需要先下载越南语语音模型":"需要先下载中文语音模型"));
-        return;
-      }
-      return window.playPiperStudySpeech(event,lang,text);
-    }
     if(!("speechSynthesis" in window)) return;
     text=String(text||"").replace(/\s+/g," ").trim();
     if(!text) return;
 
+    // Slash is a separator, not spoken text. Wait 1 second between non-empty segments.
+    // Splitting before creating utterances avoids Web Speech reading '/' as punctuation.
+    const segments=text.split("/").map(x=>x.trim()).filter(Boolean);
+    if(!segments.length) return;
     const token=++iosSpeechToken;
-    if(iosSpeechTimer){ clearTimeout(iosSpeechTimer); iosSpeechTimer=null; }
-    try{ speechSynthesis.cancel(); }catch(e){}
+    if(iosSpeechTimer){clearTimeout(iosSpeechTimer);iosSpeechTimer=null;}
+    if(iosSlashPauseTimer){clearTimeout(iosSlashPauseTimer);iosSlashPauseTimer=null;}
+    try{speechSynthesis.cancel();}catch(e){}
     iosCurrentUtterance=null;
     document.querySelectorAll(".mini-speech-btn.speaking").forEach(x=>x.classList.remove("speaking"));
     const btn=event && event.currentTarget && event.currentTarget.classList?.contains("mini-speech-btn") ? event.currentTarget : null;
+    if(btn) btn.classList.add("speaking");
 
-    // iOS Safari 在 cancel() 后立刻 speak() 容易卡住，留出释放队列的时间。
-    iosSpeechTimer=setTimeout(()=>{
+    function finish(){
       if(token!==iosSpeechToken) return;
-      const u=new SpeechSynthesisUtterance(text);
-      iosCurrentUtterance=u; // 保持强引用，避免 iOS 提前回收
+      iosCurrentUtterance=null;
+      if(iosSpeechTimer){clearTimeout(iosSpeechTimer);iosSpeechTimer=null;}
+      if(iosSlashPauseTimer){clearTimeout(iosSlashPauseTimer);iosSlashPauseTimer=null;}
+      btn?.classList.remove("speaking");
+    }
+    function speakSegment(index){
+      if(token!==iosSpeechToken) return;
+      if(index>=segments.length){finish();return;}
+      const u=new SpeechSynthesisUtterance(segments[index]);
+      iosCurrentUtterance=u; // Keep a strong reference for iOS Safari.
       u.lang=lang==="zh"?"zh-CN":"vi-VN";
       u.rate=Number(settings.speechRate)||0.9;
       u.pitch=1;
       const voice=chooseVoice(lang);
       if(voice) u.voice=voice;
-      if(btn) btn.classList.add("speaking");
-      const cleanup=()=>{
-        if(token===iosSpeechToken) iosCurrentUtterance=null;
-        btn?.classList.remove("speaking");
+      u.onend=()=>{
+        if(token!==iosSpeechToken) return;
+        iosCurrentUtterance=null;
+        if(index+1>=segments.length){finish();return;}
+        iosSlashPauseTimer=setTimeout(()=>{
+          iosSlashPauseTimer=null;
+          if(token===iosSpeechToken) speakSegment(index+1);
+        },1000);
       };
-      u.onend=cleanup;
-      u.onerror=cleanup;
-      try{ speechSynthesis.speak(u); }catch(e){ cleanup(); }
+      u.onerror=finish;
+      try{speechSynthesis.speak(u);}catch(e){finish();}
+    }
+    // iOS Safari can stall if speak() is called immediately after cancel().
+    iosSpeechTimer=setTimeout(()=>{
+      iosSpeechTimer=null;
+      if(token===iosSpeechToken) speakSegment(0);
     },120);
   };
 
@@ -7514,11 +7490,11 @@ body:not(.speech-enabled) .mini-speech-btn{display:none!important;}
 
   window.playStudySpeech=function(event,btn){
     if(event){event.preventDefault();event.stopPropagation();}
-    if(!settings.speechEnabled) return;
+    if(!isPhone || !settings.speechEnabled) return;
     const lang=settings.speechLanguage==="zh"?"zh":"vi";
     const value=String(btn?.dataset?.[lang]||"").replace(/\s+/g," ").trim();
     if(!value) return;
-    // 统一走同一个入口：Piper 模式绝不再直接调用 speechSynthesis。
+    // 所有播放统一使用浏览器内置 Web Speech。
     return window.playDirectStudySpeech(event,lang,value);
   };
 
@@ -7526,6 +7502,7 @@ body:not(.speech-enabled) .mini-speech-btn{display:none!important;}
     if(document.visibilityState==="visible"){
       iosSpeechToken++;
       if(iosSpeechTimer){clearTimeout(iosSpeechTimer);iosSpeechTimer=null;}
+      if(iosSlashPauseTimer){clearTimeout(iosSlashPauseTimer);iosSlashPauseTimer=null;}
       try{speechSynthesis.cancel();}catch(e){}
       iosCurrentUtterance=null;
       document.querySelectorAll(".mini-speech-btn.speaking").forEach(x=>x.classList.remove("speaking"));
@@ -7570,137 +7547,6 @@ body:not(.speech-enabled) .answered-answer-row .answer-speech-btn{display:none!i
 }
 </style>
 
-
-<style id="piperModelManagerStyle">
-.piper-model-manager{margin-top:14px;border-top:1px solid var(--border);padding-top:8px}
-.piper-model-row{display:flex;align-items:center;gap:10px;padding:10px 0}
-.piper-model-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
-.piper-model-info small,.piper-model-info span{color:var(--muted);font-size:12px}
-.piper-model-btn{flex:0 0 auto;min-width:92px}
-.piper-model-progress{height:5px;border-radius:999px;background:var(--border);overflow:hidden;margin:-3px 0 6px}
-.piper-model-progress>div{height:100%;width:0;background:var(--primary);transition:width .15s}
-.piper-storage-note{font-size:12px;color:var(--muted);line-height:1.55;margin:8px 0 2px}
-</style>
-
-
-<script id="piperModelDownloadManager">
-(function(){
- const MODELS={vi:"vi_VN-vais1000-medium",zh:"zh_CN-huayan-medium"};
- let states={vi:false,zh:false},busy={vi:false,zh:false};
-
- function tr(s){return (settings && settings.uiLanguage==="vi" && typeof translateUIString==="function")?translateUIString(s):s}
- function ui(lang){
-   const cap=lang==="vi"?"Vi":"Zh";
-   const btn=document.getElementById("piper"+cap+"Btn"),st=document.getElementById("piper"+cap+"Status");
-   if(!btn||!st)return;
-   if(busy[lang]){btn.textContent=tr("下载中…");btn.disabled=true;st.textContent=tr("下载中…");return}
-   btn.disabled=false;
-   btn.textContent=tr(states[lang]?"清理模型":"下载模型");
-   st.textContent=tr(states[lang]?"已下载":"未下载");
- }
- async function detect(lang){
-   try{
-     const tts=await window.__amoPiperReady();
-     const stored=await tts.stored();
-     states[lang]=Array.isArray(stored)&&stored.includes(MODELS[lang]);
-   }catch(e){
-     console.warn("Piper stored() check:",e);
-     states[lang]=false;
-   }
-   ui(lang);return states[lang];
- }
- window.togglePiperModel=async function(lang){
-   if(!MODELS[lang]||busy[lang])return;
-   const cap=lang==="vi"?"Vi":"Zh",wrap=document.getElementById("piper"+cap+"Progress"),bar=wrap?.firstElementChild;
-   busy[lang]=true;ui(lang);
-   try{
-     const tts=await window.__amoPiperReady();
-     const exists=await detect(lang);
-     if(exists){
-       await tts.remove(MODELS[lang]);
-       states[lang]=false;
-       showToast(tr("模型已清理"));
-     }else{
-       if(wrap)wrap.hidden=false;
-       await tts.download(MODELS[lang],p=>{
-         if(!bar)return;
-         const total=Number(p?.total)||0,loaded=Number(p?.loaded)||0;
-         if(total>0)bar.style.width=Math.min(100,loaded*100/total)+"%";
-       });
-       states[lang]=true;
-       showToast(tr("模型下载完成"));
-     }
-   }catch(e){
-     console.error("Piper model manager:",e);
-     showToast(tr(states[lang]?"模型清理失败":"模型下载失败"));
-   }finally{
-     busy[lang]=false;
-     if(wrap){wrap.hidden=true;if(bar)bar.style.width="0%"}
-     await detect(lang);
-   }
- };
- window.hasPiperModel=async function(lang){return detect(lang)};
- window.refreshPiperModelUI=async function(){await Promise.all([detect("vi"),detect("zh")])};
- document.addEventListener("DOMContentLoaded",()=>setTimeout(()=>window.refreshPiperModelUI(),300));
-})();
-</script>
-
-
-<script type="module" id="amoPiperRuntime">
-let piperModulePromise=null;
-const VOICE={vi:"vi_VN-vais1000-medium",zh:"zh_CN-huayan-medium"};
-
-async function loadPiper(){
-  if(!piperModulePromise){
-    piperModulePromise=import("https://esm.sh/@mintplex-labs/piper-tts-web?bundle");
-  }
-  return piperModulePromise;
-}
-window.__amoPiperReady=loadPiper;
-
-window.playPiperStudySpeech=async function(event,lang,text){
-  text=String(text||"").replace(/\s+/g," ").trim();
-  if(!text)return;
-  const tr=(zh,vi)=>settings.uiLanguage==="vi"?vi:zh;
-  const btn=event?.currentTarget?.classList?.contains("mini-speech-btn")?event.currentTarget:null;
-  const voiceId=VOICE[lang==="zh"?"zh":"vi"];
-  try{
-    const tts=await loadPiper();
-    const stored=await tts.stored();
-    if(!Array.isArray(stored)||!stored.includes(voiceId)){
-      showToast(lang==="vi"
-        ? tr("需要先下载越南语语音模型","Cần tải mô hình giọng đọc tiếng Việt trước")
-        : tr("需要先下载中文语音模型","Cần tải mô hình giọng đọc tiếng Trung trước"));
-      if(typeof refreshPiperModelUI==="function")refreshPiperModelUI();
-      return;
-    }
-    if(btn)btn.classList.add("speaking");
-    const wav=await tts.predict({text,voiceId});
-    if(!(wav instanceof Blob) || wav.size<44) throw new Error("Piper returned invalid WAV");
-    if(window.__amoPiperAudio){
-      try{window.__amoPiperAudio.pause();}catch(e){}
-      if(window.__amoPiperObjectURL)URL.revokeObjectURL(window.__amoPiperObjectURL);
-    }
-    const url=URL.createObjectURL(wav),audio=new Audio(url);
-    window.__amoPiperAudio=audio;window.__amoPiperObjectURL=url;
-    audio.playbackRate=Number(settings.speechRate)||0.9;
-    const cleanup=()=>{
-      btn?.classList.remove("speaking");
-      if(window.__amoPiperObjectURL===url){
-        URL.revokeObjectURL(url);window.__amoPiperObjectURL=null;
-      }
-    };
-    audio.onended=cleanup;
-    audio.onerror=cleanup;
-    await audio.play();
-  }catch(err){
-    console.error("Piper TTS strict mode:",err);
-    btn?.classList.remove("speaking");
-    showToast(tr("Piper 语音生成失败","Không thể tạo giọng đọc Piper"));
-    // 严格模式：这里故意不调用 speechSynthesis，不偷偷回退苹果语音。
-  }
-};
-</script>
 
 <script id="amoQuizDesktopViewportHeightV8">
 (function(){
@@ -7852,6 +7698,35 @@ window.playPiperStudySpeech=async function(event,lang,text){
 #quiz.quiz-answer-complete #quizOptions .quiz-submit-btn + *{
     display:none;
 }
+</style>
+
+<style id="amoV19PerformanceAndMobileSpeech">
+/* Avoid composited translucent/backdrop layers for every vocabulary card while scrolling. */
+#words .word-card,
+body:not(.theme-night):not(.theme-eye) #words .word-card {
+  background:#ffffff !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  filter:none !important;
+  transition:none !important;
+  transform:none !important;
+  box-shadow:0 2px 8px rgba(10,40,30,.045) !important;
+}
+body.theme-night #words .word-card,
+body.theme-eye #words .word-card {
+  background:var(--card) !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  transition:none !important;
+  transform:none !important;
+}
+#words .word-card:hover{transform:none !important;}
+/* No speech controls or speech configuration on desktop/tablets regardless of viewport size. */
+body:not(.speech-mobile) #mobileSpeechSettingsCard,
+body:not(.speech-mobile) .mini-speech-btn,
+body:not(.speech-mobile) .question-speech-btn,
+body:not(.speech-mobile) .answer-speech-btn,
+body:not(.speech-mobile) #quizQuestionSpeechBtn {display:none !important;}
 </style>
 </body>
 </html>
