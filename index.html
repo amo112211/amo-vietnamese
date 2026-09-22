@@ -1945,6 +1945,14 @@ body #sentenceReading .sentence-reading-question-pinyin{color:var(--study-py-col
  .amo-pinyin-modal-box{padding:12px;}
 }
 </style>
+
+<style>
+.amo-cloud-sync{margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+.amo-cloud-sync h4{margin:0 0 8px;font-size:16px}
+.amo-cloud-sync p{line-height:1.6}
+#amoCloudPreview[hidden],#amoCloudConfirmBtn[hidden]{display:none!important}
+#amoCloudDownloadBtn:disabled,#amoCloudConfirmBtn:disabled{opacity:.65;cursor:wait}
+</style>
 </head>
 <body>
 <div class="app">
@@ -2411,6 +2419,13 @@ Hôm nay bạn có bận không?=你今天忙吗？"></textarea>
             <button class="btn btn-primary" type="button" onclick="importBackup()">检查备份文件</button>
             <div id="backupPreview" class="amo-backup-preview" hidden></div>
             <button class="btn btn-primary" type="button" id="backupConfirmBtn" onclick="confirmBackupImport()" hidden>确认导入</button>
+            <div class="amo-cloud-sync" id="amoCloudSync">
+              <h4>GitHub 云词库同步</h4>
+              <p>从 amo112211/amo-vietnamese 下载最新的 JSON 词库，与本机词汇、短句和自定义拼音合并。同名词句以云端内容覆盖，本机已记住状态、答题记录和个人设置保留。</p>
+              <button class="btn btn-primary" type="button" id="amoCloudDownloadBtn" onclick="amoDownloadCloudBank()">下载云存档</button>
+              <div id="amoCloudPreview" class="amo-backup-preview" hidden aria-live="polite"></div>
+              <button class="btn btn-primary" type="button" id="amoCloudConfirmBtn" onclick="amoConfirmCloudBank()" hidden>确认合并云词库</button>
+            </div>
         </div>
 
         <div class="card backup-card">
@@ -7728,5 +7743,185 @@ body:not(.speech-mobile) .question-speech-btn,
 body:not(.speech-mobile) .answer-speech-btn,
 body:not(.speech-mobile) #quizQuestionSpeechBtn {display:none !important;}
 </style>
+<script>
+/* V21：GitHub 云词库。只从固定公共仓库读取 JSON；预览确认前不写本地数据。 */
+const AMO_CLOUD_REPO='amo112211/amo-vietnamese';
+const AMO_CLOUD_API='https://api.github.com/repos/'+AMO_CLOUD_REPO;
+let amoCloudPending=null,amoCloudBusy=false;
+function amoCloudT(zh,vi){return settings.uiLanguage==='vi'?vi:zh;}
+function amoCloudStatus(text,error){
+ const el=document.getElementById('amoCloudPreview');if(!el)return;
+ el.replaceChildren();const p=document.createElement('p');p.textContent=text;
+ if(error)p.style.color='var(--danger)';el.appendChild(p);el.hidden=false;
+}
+function amoCloudReset(){
+ amoCloudPending=null;
+ const el=document.getElementById('amoCloudConfirmBtn');if(el)el.hidden=true;
+}
+async function amoCloudGetJson(url,signal){
+ const response=await fetch(url,{cache:'no-store',mode:'cors',credentials:'omit',signal,headers:{'Accept':'application/vnd.github+json'}});
+ if(!response.ok)throw new Error(amoCloudT('下载失败，HTTP '+response.status,'Tải xuống thất bại, HTTP '+response.status));
+ const contentLength=Number(response.headers.get('content-length')||0);
+ if(contentLength>12*1024*1024)throw new Error(amoCloudT('云存档超过 12 MB','Bản lưu đám mây vượt quá 12 MB'));
+ const text=await response.text();
+ if(text.length>12*1024*1024)throw new Error(amoCloudT('云存档超过 12 MB','Bản lưu đám mây vượt quá 12 MB'));
+ return JSON.parse(text.replace(/^\uFEFF/,''));
+}
+async function amoCloudLatestFile(signal){
+ const entries=await amoCloudGetJson(AMO_CLOUD_API+'/contents/?ref=main',signal);
+ if(!Array.isArray(entries))throw new Error(amoCloudT('无法读取 GitHub 文件目录','Không đọc được danh sách tệp trên GitHub'));
+ const candidates=entries.filter(e=>e.type==='file' && /\.json$/i.test(e.name) && /备份|词库|cloud|backup|từ vựng/i.test(e.name));
+ if(!candidates.length)throw new Error(amoCloudT('仓库中没有找到 JSON 云备份文件','Không tìm thấy tệp sao lưu JSON trong kho GitHub'));
+ // 优先最新上传的版本；无法获取提交时间时，回退到文件名中的日期。
+ if(candidates.length===1)return candidates[0];
+ const fileWithDates=await Promise.all(candidates.slice(0,20).map(async file=>{
+   try{
+     const commits=await amoCloudGetJson(AMO_CLOUD_API+'/commits?path='+encodeURIComponent(file.path)+'&per_page=1',signal);
+     const date=Date.parse(commits?.[0]?.commit?.committer?.date||commits?.[0]?.commit?.author?.date||'')||0;
+     return {file,date};
+   }catch(err){if(signal.aborted)throw err;
+     const match=file.name.match(/20\d{2}[-_.]?\d{2}[-_.]?\d{2}/);
+     return {file,date:match?Date.parse(match[0].replace(/[_\.]/g,'-'))||0:0};}
+ }));
+ fileWithDates.sort((a,b)=>b.date-a.date||b.file.name.localeCompare(a.file.name));
+ return fileWithDates[0].file;
+}
+function amoCloudItems(raw,label){
+ if(!Array.isArray(raw))throw new Error(amoCloudT(label+'格式错误：必须为数组','Định dạng '+label+' không hợp lệ: phải là danh sách'));
+ const data=[];for(const x of raw){
+   if(!x||typeof x!=='object'||Array.isArray(x))continue;
+   let vi=typeof x.vi==='string'?x.vi.trim():'';
+   let zh=typeof x.zh==='string'?x.zh.trim():'';
+   if(/[\u3400-\u9fff]/.test(vi)&&!/[\u3400-\u9fff]/.test(zh))[vi,zh]=[zh,vi];
+   if(vi&&zh)data.push({...x,vi,zh,custom:true});
+ }return data;
+}
+function amoCloudCombine(primary,snapshot,label){
+ const map=new Map();
+ for(const item of snapshot||[]){if(item&&item.custom===true){const w=amoCloudItems([item],label)[0];if(w)map.set(normalize(w.vi),w);}}
+ for(const w of amoCloudItems(primary||[],label))map.set(normalize(w.vi),w);
+ return [...map.values()];
+}
+function amoCloudMergeItems(local,cloud){
+ const map=new Map((local||[]).filter(x=>x&&typeof x.vi==='string').map(x=>[normalize(x.vi),x]));
+ let added=0,overwritten=0;
+ for(const w of cloud){const key=normalize(w.vi);if(!key)continue;
+   if(map.has(key))overwritten++;else added++;
+   map.set(key,{...w,custom:true});
+ }
+ return {items:[...map.values()],added,overwritten};
+}
+function amoCloudPrepare(data){
+ // 校验云端 JSON 是 V20 支持的备份结构，绝不执行云端代码或导入用户隐私状态。
+ readBackupDocument(JSON.stringify(data));
+ const rawWords=Object.prototype.hasOwnProperty.call(data,'customWords')?data.customWords:data.words;
+ const rawSentences=Object.prototype.hasOwnProperty.call(data,'customSentences')?data.customSentences:data.sentences;
+ const words=amoCloudCombine(rawWords,data.allWordsSnapshot,'词汇');
+ const sentences=amoCloudCombine(rawSentences,data.allSentencesSnapshot,'短句');
+ if(!words.length&&!sentences.length)throw new Error(amoCloudT('云存档中没有有效的词汇或短句','Bản lưu đám mây không có từ vựng hoặc câu ngắn hợp lệ'));
+ const mergedWords=amoCloudMergeItems(customWords,words);
+ const mergedSentences=amoCloudMergeItems(customSentences,sentences);
+ // 从当前内存构造完整快照，不拷贝云端的已记住、测验历史或设置。
+ const next=prepareBackupRestore({customWords:mergedWords.items,customSentences:mergedSentences.items});
+ next.quizSession=loadJSON(KEY_QUIZ_SESSION,null);
+ const addCategories=(current,incoming)=>{
+   if(incoming===undefined)return [...current];
+   if(!Array.isArray(incoming))throw new Error(amoCloudT('云端分类格式错误','Định dạng nhóm trên đám mây không hợp lệ'));
+   return backupMergeUnique(current,incoming,x=>normalize(typeof x==='string'?x:(x?.name||x?.label||JSON.stringify(x))));
+ };
+ next.customCategories=addCategories(customCategories,data.customCategories);
+ next.sentenceCategories=addCategories(sentenceCategories,data.sentenceCategories);
+ for(const [name,current] of [['wordCategoryMap',wordCategoryMap],['sentenceCategoryMap',sentenceCategoryMap]]){
+   const incoming=data[name];
+   if(incoming!==undefined&&!isPlainBackupObject(incoming))throw new Error(amoCloudT('云端分类映射格式错误','Định dạng ánh xạ nhóm trên đám mây không hợp lệ'));
+   // 仅同步此次词库中的词条分类，不修改本机其他词条的个人分类。
+   const keys=new Set((name==='wordCategoryMap'?words:sentences).map(w=>normalize(w.vi)));
+   next[name]={...current};
+   for(const [k,v] of Object.entries(incoming||{}))if(keys.has(normalize(k)))next[name][k]=v;
+ }
+ const cloudPinyin=data.customPinyin??data.polyphonicPinyin??data.customPinyinEntries??data.customPinyinText??data.settings?.customPinyin;
+ const py=cloudPinyin===undefined?{}:normalizeBackupPinyin(cloudPinyin);
+ next.settings={...settings,customPinyin:{...(settings.customPinyin||{}),...py}};
+ // 本机主动删除的词句不再被删除标记遮挡云端对应词条。
+ const wordKeys=new Set(words.map(w=>normalize(w.vi)));
+ const sentenceKeys=new Set(sentences.map(w=>normalize(w.vi)));
+ next.deletedWords=deletedWords.filter(x=>!wordKeys.has(normalize(typeof x==='string'?x:x?.vi)));
+ next.deletedSentences=deletedSentences.filter(x=>!sentenceKeys.has(normalize(typeof x==='string'?x:x?.vi)));
+ return {next,summary:{wordNew:mergedWords.added,wordUpdated:mergedWords.overwritten,
+ sentenceNew:mergedSentences.added,sentenceUpdated:mergedSentences.overwritten,pinyin:Object.keys(py).length}};
+}
+async function amoDownloadCloudBank(){
+ if(amoCloudBusy)return;
+ amoCloudBusy=true;amoCloudReset();
+ const btn=document.getElementById('amoCloudDownloadBtn');if(btn)btn.disabled=true;
+ amoCloudStatus(amoCloudT('正在检查 GitHub 上的最新词库…','Đang kiểm tra kho từ mới nhất trên GitHub…'));
+ const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),25000);
+ try{
+   const file=await amoCloudLatestFile(ctrl.signal);
+   if(!file.download_url||!file.download_url.startsWith('https://raw.githubusercontent.com/amo112211/amo-vietnamese/'))
+     throw new Error(amoCloudT('词库下载地址不安全','Địa chỉ tải từ vựng không an toàn'));
+   const data=await amoCloudGetJson(file.download_url,ctrl.signal);
+   const {next,summary}=amoCloudPrepare(data);
+   amoCloudPending={next,summary,file:file.name};
+   const preview=document.getElementById('amoCloudPreview');preview.replaceChildren();
+   const vi=settings.uiLanguage==='vi';
+   const lines=vi?[
+     'Tệp GitHub: '+file.name,
+     'Từ vựng mới: '+summary.wordNew+' · Ghi đè: '+summary.wordUpdated,
+     'Câu ngắn mới: '+summary.sentenceNew+' · Ghi đè: '+summary.sentenceUpdated,
+     'Phiên âm đồng bộ: '+summary.pinyin,
+     'Giữ nguyên tiến độ học, trạng thái đã nhớ và cài đặt cá nhân.'
+   ]:[
+     'GitHub 文件：'+file.name,
+     '词汇：新增 '+summary.wordNew+' 条，覆盖 '+summary.wordUpdated+' 条',
+     '短句：新增 '+summary.sentenceNew+' 条，覆盖 '+summary.sentenceUpdated+' 条',
+     '同步自定义拼音：'+summary.pinyin+' 条',
+     '保留本机记忆状态、答题记录与个人设置。'
+   ];
+   for(const line of lines){const p=document.createElement('p');p.textContent=line;preview.appendChild(p);}preview.hidden=false;
+   document.getElementById('amoCloudConfirmBtn').hidden=false;
+ }catch(err){amoCloudReset();console.error('GitHub 云词库下载失败：',err);
+   amoCloudStatus(amoCloudT('云词库下载失败：','Tải từ vựng đám mây thất bại: ')+(err.name==='AbortError'?amoCloudT('连接超时','Hết thời gian kết nối'):err.message),true);
+ }finally{clearTimeout(timer);amoCloudBusy=false;if(btn)btn.disabled=false;}
+}
+function amoConfirmCloudBank(){
+ if(!amoCloudPending)return;
+ const {next,summary}=amoCloudPending;
+ if(!confirm(amoCloudT('确认合并云词库吗？重复词句将以云端版本覆盖，但保留本机学习记录。建议先导出本机备份。','Xác nhận gộp từ vựng đám mây? Mục trùng sẽ dùng bản trên GitHub, tiến độ học trên máy vẫn được giữ. Nên sao lưu dữ liệu hiện tại trước.')))return;
+ const btn=document.getElementById('amoCloudConfirmBtn');if(btn)btn.disabled=true;
+ try{
+   persistBackupRestore(next);
+   amoCloudReset();refreshAfterBackupRestore();
+   amoCloudStatus(amoCloudT('云词库合并完成：新增 '+(summary.wordNew+summary.sentenceNew)+' 条，覆盖 '+(summary.wordUpdated+summary.sentenceUpdated)+' 条。','Đã gộp xong: thêm '+(summary.wordNew+summary.sentenceNew)+' mục, ghi đè '+(summary.wordUpdated+summary.sentenceUpdated)+' mục.'));
+ }catch(err){console.error('云词库合并失败：',err);
+   amoCloudStatus(amoCloudT('云词库合并失败：','Gộp từ vựng đám mây thất bại: ')+err.message,true);
+ }finally{if(btn)btn.disabled=false;}
+}
+// 继承原有中越界面翻译系统。
+Object.assign(UI_ZH_VI,{
+ 'GitHub 云词库同步':'Đồng bộ từ vựng GitHub',
+ '从 amo112211/amo-vietnamese 下载最新的 JSON 词库，与本机词汇、短句和自定义拼音合并。同名词句以云端内容覆盖，本机已记住状态、答题记录和个人设置保留。':'Tải tệp JSON mới nhất từ amo112211/amo-vietnamese và gộp từ vựng, câu ngắn, phiên âm tùy chỉnh. Các mục trùng được thay bằng bản trên GitHub; giữ nguyên trạng thái đã nhớ, kết quả làm bài và cài đặt cá nhân.',
+ '下载云存档':'Tải bản lưu đám mây','确认合并云词库':'Xác nhận gộp từ vựng đám mây'
+});
+// 原页面的翻译正则在本模块加载前编译，因此新增区域独立同步文案。
+function amoCloudApplyLabels(){
+ const root=document.getElementById('amoCloudSync');if(!root)return;
+ const vi=settings.uiLanguage==='vi';
+ const entries=[
+  ['h4','GitHub 云词库同步','Đồng bộ từ vựng GitHub'],
+  ['p','从 amo112211/amo-vietnamese 下载最新的 JSON 词库，与本机词汇、短句和自定义拼音合并。同名词句以云端内容覆盖，本机已记住状态、答题记录和个人设置保留。','Tải bản JSON mới nhất từ amo112211/amo-vietnamese để gộp từ vựng, câu ngắn và phiên âm tùy chỉnh. Mục trùng được thay bằng bản trên GitHub; tiến độ học và cài đặt cá nhân vẫn được giữ nguyên.'],
+  ['#amoCloudDownloadBtn','下载云存档','Tải bản lưu đám mây'],
+  ['#amoCloudConfirmBtn','确认合并云词库','Xác nhận gộp từ vựng đám mây']
+ ];
+ for(const [selector,zh,vn] of entries){const node=root.querySelector(selector);if(!node)continue;
+   const text=node.firstChild&&node.firstChild.nodeType===Node.TEXT_NODE?node.firstChild:node;
+   text.textContent=vi?vn:zh;
+ }
+}
+const amoOldApplyUILanguage=applyUILanguage;
+applyUILanguage=function(){amoOldApplyUILanguage();amoCloudApplyLabels();};
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',amoCloudApplyLabels);
+else amoCloudApplyLabels();
+</script>
 </body>
 </html>
