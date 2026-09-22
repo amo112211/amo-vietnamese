@@ -133,7 +133,11 @@ textarea:focus{border-color:var(--primary);}
     background:#18312e;color:#fff;padding:12px 18px;border-radius:12px;opacity:0;
     pointer-events:none;transition:.25s;z-index:500;max-width:90%;text-align:center;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-.backup-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+.backup-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start;}
+.backup-column{display:flex;flex-direction:column;gap:16px;min-width:0;}
+.backup-column>.backup-card{height:auto;min-height:0;align-self:stretch;}
+.backup-right{display:flex;flex-direction:column;gap:16px;min-width:0;}
+.backup-right>.backup-card{height:auto;min-height:0;align-self:stretch;}
 .backup-card{padding:22px;}
 .backup-card h3{margin-top:0;}
 .backup-card p{color:var(--muted);line-height:1.6;}
@@ -1953,6 +1957,22 @@ body #sentenceReading .sentence-reading-question-pinyin{color:var(--study-py-col
 #amoCloudPreview[hidden],#amoCloudConfirmBtn[hidden]{display:none!important}
 #amoCloudDownloadBtn:disabled,#amoCloudConfirmBtn:disabled{opacity:.65;cursor:wait}
 </style>
+<style id="amoBackupPortraitResponsiveV25">
+/* V25: Prevent the settings cards from being cropped in desktop portrait/narrow windows.
+   Both columns flow into one column before either column becomes too narrow. */
+#backup{min-width:0;max-width:100%;}
+#backup .backup-grid{width:100%;max-width:100%;min-width:0;align-items:start;}
+#backup .backup-column{width:100%;max-width:100%;min-width:0;}
+#backup .backup-column>.backup-card{width:100%;max-width:100%;min-width:0;box-sizing:border-box;overflow-wrap:anywhere;}
+#backup .backup-card input:not([type="radio"]):not([type="checkbox"]),
+#backup .backup-card select,#backup .backup-card textarea{max-width:100%;min-width:0;box-sizing:border-box;}
+#backup .backup-card button{max-width:100%;white-space:normal;overflow-wrap:anywhere;}
+@media (max-width:1100px), (orientation:portrait){
+  #backup .backup-grid{grid-template-columns:minmax(0,1fr) !important;}
+  #backup .backup-column{min-width:0;}
+  #backup .backup-card{padding:clamp(12px,3vw,22px);}
+}
+</style>
 </head>
 <body>
 <div class="app">
@@ -2346,117 +2366,111 @@ Hôm nay bạn có bận không?=你今天忙吗？"></textarea>
     </div>
 </section>
 
-<section id="backup" class="page">
-    <div class="backup-grid">
-        <div class="card backup-card mobile-speech-settings" id="mobileSpeechSettingsCard">
-            <h3>🔊 <span>语音设置</span></h3>
-            <p>仅在手机上使用 Web Speech 朗读词汇、短句和答题答案。</p>
-            <label class="speech-setting-label">语音功能</label>
-            <select class="select" id="speechEnabledSetting" onchange="setMobileSpeechSetting('enabled',this.value)" style="width:100%;">
-                <option value="on">打开</option>
-                <option value="off">关闭语音</option>
-            </select>
-            <label class="speech-setting-label" for="quizAutoSpeakAnswerSetting">答题完成后自动播放答案</label>
-            <select class="select" id="quizAutoSpeakAnswerSetting" onchange="setQuizAutoSpeakAnswer(this.value)" style="width:100%;">
-                <option value="off">关闭自动播放</option><option value="on">打开</option>
-            </select>
-            <p style="font-size:12px;color:var(--muted);line-height:1.6;">答对时只播放当前题目的正确答案一次，不播放例句。关闭时仍可点击题目或答案旁的扬声器手动播放。语音设置需要先打开语音功能。</p>
-            <div id="speechExtraSettings">
-                <label class="speech-setting-label">朗读语言</label>
-                <select class="select" id="speechLanguageSetting" onchange="setMobileSpeechSetting('language',this.value)" style="width:100%;">
-                    <option value="vi">越南语</option>
-                    <option value="zh">普通话</option>
-                </select>
-                <label class="speech-setting-label">播放速度</label>
-                <select class="select" id="speechRateSetting" onchange="setMobileSpeechSetting('rate',this.value)" style="width:100%;">
-                    <option value="0.6">0.6×</option>
-                    <option value="0.75">0.75×</option>
-                    <option value="0.9">0.9×</option>
-                    <option value="1">1.0×</option>
-                    <option value="1.25">1.25×</option>
-                </select>
-            </div>
-        </div>
+<section class="page" id="backup">
+<div class="backup-grid">
 
-        <div class="card backup-card">
-            <h3>显示设置</h3>
-            <p>选择是否显示中文拼音。默认显示。</p>
-            <label style="display:block;font-weight:700;margin-bottom:8px;">拼音</label>
-            <select class="select" id="pinyinDisplaySetting" style="width:100%;" onchange="setPinyinDisplay(this.value)">
-                <option value="show">显示中文拼音</option>
-                <option value="hide">不显示中文拼音</option>
-            </select>
-            <label style="display:block;font-weight:700;margin:16px 0 8px;">短句词汇提示</label>
-            <select class="select" id="sentenceWordHintSetting" style="width:100%;" onchange="setSentenceWordHints(this.value)">
-                <option value="show">显示短句词汇提示</option>
-                <option value="hide">不显示短句词汇提示</option>
-            </select>
-        </div>
 
-        <div class="card backup-card">
-            <h3>导出全部数据</h3>
-            <p>会完整导出你的学习数据，包括：</p>
-            <ul style="line-height:1.9;color:var(--muted);">
-                <li>全部生词（内置 + 自定义）</li>
-                <li>全部短句（内置 + 自定义）</li>
-                <li>所有生词例句</li>
-                <li>已记住状态</li>
-                <li>收藏状态</li>
-                <li>答题进度</li>
-                <li>错题记录</li>
-                <li>所有个人设置及自定义拼音、多音字读音</li>
-            </ul>
-            <button class="btn btn-primary" onclick="exportBackup()">导出全部备份</button>
-        </div>
-        <div class="card backup-card">
-            <h3>导入备份</h3>
-            <p>选择之前导出的 JSON 备份文件，可以恢复你的全部学习数据。</p>
-            <input type="file" id="backupFile" accept=".json,application/json" style="margin-bottom:12px;width:100%;" onchange="resetBackupPreview()">
-            <div class="amo-backup-mode">
-              <label><input type="radio" name="backupImportMode" value="merge" checked onchange="resetBackupPreview()"> 合并现有数据（保留本机已有记录）</label>
-              <label><input type="radio" name="backupImportMode" value="replace" onchange="resetBackupPreview()"> 替换现有数据（将覆盖本机记录）</label>
-            </div>
-            <button class="btn btn-primary" type="button" onclick="importBackup()">检查备份文件</button>
-            <div id="backupPreview" class="amo-backup-preview" hidden></div>
-            <button class="btn btn-primary" type="button" id="backupConfirmBtn" onclick="confirmBackupImport()" hidden>确认导入</button>
-            <div class="amo-cloud-sync" id="amoCloudSync">
-              <h4>GitHub 云词库同步</h4>
-              <p>从 amo112211/amo-vietnamese 下载最新的 JSON 词库，与本机词汇、短句和自定义拼音合并。同名词句以云端内容覆盖，本机已记住状态、答题记录和个人设置保留。</p>
-              <button class="btn btn-primary" type="button" id="amoCloudDownloadBtn" onclick="amoDownloadCloudBank()">下载云存档</button>
-              <div id="amoCloudPreview" class="amo-backup-preview" hidden aria-live="polite"></div>
-              <button class="btn btn-primary" type="button" id="amoCloudConfirmBtn" onclick="amoConfirmCloudBank()" hidden>确认合并云词库</button>
-            </div>
 
-            <div class="amo-admin-box" id="amoAdminBox">
-              <h4 id="amoAdminTitle">管理员导出公共词库</h4>
-              <p id="amoAdminDesc">登录后可以生成供手动上传 GitHub 的公共词库 JSON。不包含学习记录、个人设置或管理员账号密码。</p>
-              <form id="amoAdminLoginForm" onsubmit="amoAdminLogin(event)" autocomplete="off">
-                <input id="amoAdminUsername" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="管理员账号" aria-label="管理员账号" required>
-                <input id="amoAdminPassword" type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="管理员密码" aria-label="管理员密码" required>
-                <button class="btn btn-primary" type="submit" id="amoAdminLoginBtn">管理员登录</button>
-              </form>
-              <div id="amoAdminAuthed" hidden>
-                <p id="amoAdminSuccess">已登录。导出前请检查下方公共词库数据数量。</p>
-                <div id="amoAdminExportPreview" class="amo-backup-preview" aria-live="polite"></div>
-                <button class="btn btn-primary" type="button" id="amoAdminExportBtn" onclick="amoAdminExport()">导出公共词库</button>
-                <button class="btn" type="button" id="amoAdminLogoutBtn" onclick="amoAdminLogout()">退出管理员</button>
-              </div>
-              <p id="amoAdminNotice" style="font-size:12px;color:var(--muted)">离线 HTML 中的账号验证仅用于防误操作，不能防止他人查看源码或绕过界面；上传 GitHub 仍须自行登录 GitHub。</p>
-            </div>
 
-        </div>
 
-        <div class="card backup-card">
-            <h3>🧠 永久记住的词</h3>
-            <p>永久记住的词不会再出现在答题中。点击清除后，这些词会重新进入答题题库。</p>
-            <button type="button" class="btn btn-danger" onclick="clearPermanentRememberedWords()">清除永久记住的词</button>
-        </div>
-        <div class="card backup-card">
-            <h3>清除个人数据</h3>
-            <p>删除本浏览器中保存的自定义词汇、短句、例句、收藏、答题记录、已记住状态和错题。</p>
-            <button class="btn btn-danger" onclick="clearAllData()">清除全部个人数据</button>
-        </div>
-    </div>
+<div class="backup-column backup-column-left"><div class="card backup-card mobile-speech-settings" id="mobileSpeechSettingsCard">
+<h3>🔊 <span>语音设置</span></h3>
+<p>仅在手机上使用 Web Speech 朗读词汇、短句和答题答案。</p>
+<label class="speech-setting-label">语音功能</label>
+<select class="select" id="speechEnabledSetting" onchange="setMobileSpeechSetting('enabled',this.value)" style="width:100%;">
+<option value="on">打开</option>
+<option value="off">关闭语音</option>
+</select>
+<label class="speech-setting-label" for="quizAutoSpeakAnswerSetting">答题完成后自动播放答案</label>
+<select class="select" id="quizAutoSpeakAnswerSetting" onchange="setQuizAutoSpeakAnswer(this.value)" style="width:100%;">
+<option value="off">关闭自动播放</option><option value="on">打开</option>
+</select>
+<p style="font-size:12px;color:var(--muted);line-height:1.6;">答对时只播放当前题目的正确答案一次，不播放例句。关闭时仍可点击题目或答案旁的扬声器手动播放。语音设置需要先打开语音功能。</p>
+<div id="speechExtraSettings">
+<label class="speech-setting-label">朗读语言</label>
+<select class="select" id="speechLanguageSetting" onchange="setMobileSpeechSetting('language',this.value)" style="width:100%;">
+<option value="vi">越南语</option>
+<option value="zh">普通话</option>
+</select>
+<label class="speech-setting-label">播放速度</label>
+<select class="select" id="speechRateSetting" onchange="setMobileSpeechSetting('rate',this.value)" style="width:100%;">
+<option value="0.6">0.6×</option>
+<option value="0.75">0.75×</option>
+<option value="0.9">0.9×</option>
+<option value="1">1.0×</option>
+<option value="1.25">1.25×</option>
+</select>
+</div>
+</div><div class="card backup-card">
+<h3>显示设置</h3>
+<p>选择是否显示中文拼音。默认显示。</p>
+<label style="display:block;font-weight:700;margin-bottom:8px;">拼音</label>
+<select class="select" id="pinyinDisplaySetting" onchange="setPinyinDisplay(this.value)" style="width:100%;">
+<option value="show">显示中文拼音</option>
+<option value="hide">不显示中文拼音</option>
+</select>
+<label style="display:block;font-weight:700;margin:16px 0 8px;">短句词汇提示</label>
+<select class="select" id="sentenceWordHintSetting" onchange="setSentenceWordHints(this.value)" style="width:100%;">
+<option value="show">显示短句词汇提示</option>
+<option value="hide">不显示短句词汇提示</option>
+</select>
+</div><div class="card backup-card">
+<h3>导入备份</h3>
+<p>选择之前导出的 JSON 备份文件，可以恢复你的全部学习数据。</p>
+<input accept=".json,application/json" id="backupFile" onchange="resetBackupPreview()" style="margin-bottom:12px;width:100%;" type="file"/>
+<div class="amo-backup-mode">
+<label><input checked="" name="backupImportMode" onchange="resetBackupPreview()" type="radio" value="merge"/> 合并现有数据（保留本机已有记录）</label>
+<label><input name="backupImportMode" onchange="resetBackupPreview()" type="radio" value="replace"/> 替换现有数据（将覆盖本机记录）</label>
+</div>
+<button class="btn btn-primary" onclick="importBackup()" type="button">检查备份文件</button>
+<div class="amo-backup-preview" hidden="" id="backupPreview"></div>
+<button class="btn btn-primary" hidden="" id="backupConfirmBtn" onclick="confirmBackupImport()" type="button">确认导入</button>
+<div class="amo-cloud-sync" id="amoCloudSync">
+<h4>GitHub 云词库同步</h4>
+<p>从 amo112211/amo-vietnamese 下载最新的 JSON 词库，与本机词汇、短句和自定义拼音合并。同名词句以云端内容覆盖，本机已记住状态、答题记录和个人设置保留。</p>
+<button class="btn btn-primary" id="amoCloudDownloadBtn" onclick="amoDownloadCloudBank()" type="button">下载云存档</button>
+<div aria-live="polite" class="amo-backup-preview" hidden="" id="amoCloudPreview"></div>
+<button class="btn btn-primary" hidden="" id="amoCloudConfirmBtn" onclick="amoConfirmCloudBank()" type="button">确认合并云词库</button>
+</div>
+<div class="amo-admin-box" id="amoAdminBox">
+<h4 id="amoAdminTitle">管理员导出公共词库</h4>
+<p id="amoAdminDesc">登录后可以生成供手动上传 GitHub 的公共词库 JSON。不包含学习记录、个人设置或管理员账号密码。</p>
+<form autocomplete="off" id="amoAdminLoginForm" onsubmit="amoAdminLogin(event)">
+<input aria-label="管理员账号" autocomplete="off" id="amoAdminUsername" inputmode="numeric" pattern="[0-9]*" placeholder="管理员账号" required="" type="text"/>
+<input aria-label="管理员密码" autocomplete="off" id="amoAdminPassword" inputmode="numeric" pattern="[0-9]*" placeholder="管理员密码" required="" type="password"/>
+<button class="btn btn-primary" id="amoAdminLoginBtn" type="submit">管理员登录</button>
+</form>
+<div hidden="" id="amoAdminAuthed">
+<p id="amoAdminSuccess">已登录。导出前请检查下方公共词库数据数量。</p>
+<div aria-live="polite" class="amo-backup-preview" id="amoAdminExportPreview"></div>
+<button class="btn btn-primary" id="amoAdminExportBtn" onclick="amoAdminExport()" type="button">导出公共词库</button>
+<button class="btn" id="amoAdminLogoutBtn" onclick="amoAdminLogout()" type="button">退出管理员</button>
+</div>
+<p id="amoAdminNotice" style="font-size:12px;color:var(--muted)">离线 HTML 中的账号验证仅用于防误操作，不能防止他人查看源码或绕过界面；上传 GitHub 仍须自行登录 GitHub。</p>
+</div>
+</div></div><div class="backup-column backup-column-right"><div class="card backup-card">
+<h3>导出全部数据</h3>
+<p>会完整导出你的学习数据，包括：</p>
+<ul style="line-height:1.9;color:var(--muted);">
+<li>全部生词（内置 + 自定义）</li>
+<li>全部短句（内置 + 自定义）</li>
+<li>所有生词例句</li>
+<li>已记住状态</li>
+<li>收藏状态</li>
+<li>答题进度</li>
+<li>错题记录</li>
+<li>所有个人设置及自定义拼音、多音字读音</li>
+</ul>
+<button class="btn btn-primary" onclick="exportBackup()">导出全部备份</button>
+</div><div class="card backup-card">
+<h3>🧠 永久记住的词</h3>
+<p>永久记住的词不会再出现在答题中。点击清除后，这些词会重新进入答题题库。</p>
+<button class="btn btn-danger" onclick="clearPermanentRememberedWords()" type="button">清除永久记住的词</button>
+</div><div class="card backup-card">
+<h3>清除个人数据</h3>
+<p>删除本浏览器中保存的自定义词汇、短句、例句、收藏、答题记录、已记住状态和错题。</p>
+<button class="btn btn-danger" onclick="clearAllData()">清除全部个人数据</button>
+</div></div></div>
 </section>
 </main>
 </div>
