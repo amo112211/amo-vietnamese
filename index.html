@@ -2426,6 +2426,24 @@ Hôm nay bạn có bận không?=你今天忙吗？"></textarea>
               <div id="amoCloudPreview" class="amo-backup-preview" hidden aria-live="polite"></div>
               <button class="btn btn-primary" type="button" id="amoCloudConfirmBtn" onclick="amoConfirmCloudBank()" hidden>确认合并云词库</button>
             </div>
+
+            <div class="amo-admin-box" id="amoAdminBox">
+              <h4 id="amoAdminTitle">管理员导出公共词库</h4>
+              <p id="amoAdminDesc">登录后可以生成供手动上传 GitHub 的公共词库 JSON。不包含学习记录、个人设置或管理员账号密码。</p>
+              <form id="amoAdminLoginForm" onsubmit="amoAdminLogin(event)" autocomplete="off">
+                <input id="amoAdminUsername" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="管理员账号" aria-label="管理员账号" required>
+                <input id="amoAdminPassword" type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="管理员密码" aria-label="管理员密码" required>
+                <button class="btn btn-primary" type="submit" id="amoAdminLoginBtn">管理员登录</button>
+              </form>
+              <div id="amoAdminAuthed" hidden>
+                <p id="amoAdminSuccess">已登录。导出前请检查下方公共词库数据数量。</p>
+                <div id="amoAdminExportPreview" class="amo-backup-preview" aria-live="polite"></div>
+                <button class="btn btn-primary" type="button" id="amoAdminExportBtn" onclick="amoAdminExport()">导出公共词库</button>
+                <button class="btn" type="button" id="amoAdminLogoutBtn" onclick="amoAdminLogout()">退出管理员</button>
+              </div>
+              <p id="amoAdminNotice" style="font-size:12px;color:var(--muted)">离线 HTML 中的账号验证仅用于防误操作，不能防止他人查看源码或绕过界面；上传 GitHub 仍须自行登录 GitHub。</p>
+            </div>
+
         </div>
 
         <div class="card backup-card">
@@ -7770,6 +7788,8 @@ async function amoCloudGetJson(url,signal){
 async function amoCloudLatestFile(signal){
  const entries=await amoCloudGetJson(AMO_CLOUD_API+'/contents/?ref=main',signal);
  if(!Array.isArray(entries))throw new Error(amoCloudT('无法读取 GitHub 文件目录','Không đọc được danh sách tệp trên GitHub'));
+ const fixed=entries.find(e=>e.type==='file' && e.name==='cloud-dictionary.json');
+ if(fixed)return fixed;
  const candidates=entries.filter(e=>e.type==='file' && /\.json$/i.test(e.name) && /备份|词库|cloud|backup|từ vựng/i.test(e.name));
  if(!candidates.length)throw new Error(amoCloudT('仓库中没有找到 JSON 云备份文件','Không tìm thấy tệp sao lưu JSON trong kho GitHub'));
  // 优先最新上传的版本；无法获取提交时间时，回退到文件名中的日期。
@@ -7923,5 +7943,125 @@ applyUILanguage=function(){amoOldApplyUILanguage();amoCloudApplyLabels();};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',amoCloudApplyLabels);
 else amoCloudApplyLabels();
 </script>
+
+<style>
+.amo-admin-box{margin-top:18px;padding:16px;border:1px solid var(--border);border-radius:14px;background:var(--card)}
+.amo-admin-box h4{margin:0 0 10px}.amo-admin-box p{line-height:1.65}
+#amoAdminLoginForm{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+#amoAdminLoginForm input{min-width:0;flex:1 1 145px;max-width:240px;padding:10px 12px;border:1px solid var(--border);border-radius:9px;background:var(--card);color:var(--text);font-size:16px}
+#amoAdminAuthed[hidden],#amoAdminLoginForm[hidden]{display:none!important}
+#amoAdminExportPreview{margin:10px 0}
+@media(max-width:520px){#amoAdminLoginForm input,#amoAdminLoginForm button{flex:1 1 100%;max-width:100%}}
+</style>
+<script>
+/* V22: offline admin gate (obfuscation only; no GitHub credentials or external authentication). */
+const AMO_ADMIN_OBF={"u":{"salt":["9f44434191c3d2b1f7","f6e9af7c5be2b88005","285659c8923d634847","f586029f6ea9afcfa4","085ec4edb8b7ffd70c","c81e280794b9436421","80026dc51e25e9087c"],"digest":[3299428363,1754018909,1239917177,242315539,4075522313,405980983,4158311296],"total":2842089290},"p":{"salt":["35e7a83a494027a8f7","984f1e0b600505f749","38d9718454ded8fa11","33a39e9054aed74a9e","df07a71b631fa86beb","1984a996b08b8b8a02","55038bc04978e47df3"],"digest":[3001193117,4245973866,415106342,1376700723,741119050,3392654136,526191427],"total":416303575}};
+let amoAdminAuthorized=false,amoAdminErrors=0,amoAdminLastFail=0;
+function amoAdminHash(str){let h=2166136261;for(let i=0;i<str.length;i++)h=Math.imul(h^str.charCodeAt(i),16777619)>>>0;return h>>>0;}
+function amoAdminCheck(value,descriptor){
+ if(typeof value!=='string'||value.length!==descriptor.salt.length)return false;
+ let diff=0;const sequence=[];
+ for(let i=0;i<descriptor.salt.length;i++){
+  const part=descriptor.salt[i]+i+value[i];sequence.push(part);
+  diff|=amoAdminHash(part)^descriptor.digest[i];
+ }
+ return diff===0&&amoAdminHash(sequence.join('::'))===descriptor.total;
+}
+const amoAdminText=(zh,vi)=>settings.uiLanguage==='vi'?vi:zh;
+function amoAdminMessage(zh,vi){showToast(amoAdminText(zh,vi));}
+function amoAdminLogin(event){
+ event.preventDefault();
+ const now=Date.now();
+ if(amoAdminErrors>=5&&now-amoAdminLastFail<30000){amoAdminMessage('登录尝试过多，请稍后重试','Đăng nhập quá nhiều lần. Vui lòng thử lại sau.');return;}
+ const user=document.getElementById('amoAdminUsername');const pass=document.getElementById('amoAdminPassword');
+ const valid=amoAdminCheck(user.value,AMO_ADMIN_OBF.u)&amoAdminCheck(pass.value,AMO_ADMIN_OBF.p);
+ pass.value='';
+ if(!valid){amoAdminErrors++;amoAdminLastFail=now;amoAdminMessage('管理员账号或密码错误','Tên đăng nhập hoặc mật khẩu quản trị không đúng');return;}
+ amoAdminErrors=0;amoAdminAuthorized=true;user.value='';amoAdminRefresh();amoAdminMessage('管理员登录成功','Đăng nhập quản trị thành công');
+}
+function amoAdminLogout(){amoAdminAuthorized=false;document.getElementById('amoAdminLoginForm').reset();amoAdminRefresh();}
+function amoAdminPublicData(){
+ const wordFields=['vi','zh','category','createdAt','custom'];
+ const sentFields=['vi','zh','category','createdAt','custom'];
+ const safeItems=(items,fields)=>items.map(entry=>{
+  const output={};for(const key of fields)if(Object.prototype.hasOwnProperty.call(entry,key))output[key]=entry[key];
+  return output;
+ }).filter(x=>typeof x.vi==='string'&&x.vi.trim()&&typeof x.zh==='string'&&x.zh.trim());
+ const cleanStrings=a=>Array.isArray(a)?a.filter(x=>typeof x==='string'&&x.trim()):[];
+ const words=safeItems(allWords(),wordFields);
+ const sentences=safeItems(allSentences(),sentFields);
+ const onlyKeys=(input,valid)=>{
+  const result={};if(!input||typeof input!=='object')return result;
+  for(const [key,value] of Object.entries(input))if(valid.has(normalize(key))&&typeof value==='string')result[key]=value;
+  return result;
+ };
+ const validWords=new Set(words.map(w=>normalize(w.vi)));
+ const validSentences=new Set(sentences.map(w=>normalize(w.vi)));
+ const pinyin=getBackupPinyin();
+ // Word/category metadata is exported without personal learning records.
+ return {backupVersion:6,backupType:'public-dictionary',appName:'阿莫自学助手',
+   allWordsSnapshot:words,allSentencesSnapshot:sentences,
+   customWords:words,customSentences:sentences,
+   customCategories:cleanStrings(customCategories),sentenceCategories:cleanStrings(sentenceCategories),
+   wordCategoryMap:onlyKeys(wordCategoryMap,validWords),sentenceCategoryMap:onlyKeys(sentenceCategoryMap,validSentences),
+   customPinyin:{...pinyin},exportTime:new Date().toISOString()};
+}
+function amoAdminRefresh(){
+ const form=document.getElementById('amoAdminLoginForm');const panel=document.getElementById('amoAdminAuthed');
+ if(!form||!panel)return;
+ form.hidden=amoAdminAuthorized;panel.hidden=!amoAdminAuthorized;
+ if(amoAdminAuthorized){const data=amoAdminPublicData();const preview=document.getElementById('amoAdminExportPreview');
+ const vi=settings.uiLanguage==='vi';preview.textContent=vi?
+ `Từ vựng: ${data.customWords.length} · Câu ngắn: ${data.customSentences.length} · Phiên âm tùy chỉnh: ${Object.keys(data.customPinyin).length}. Không xuất lịch sử học và cài đặt cá nhân.`:
+ `词汇：${data.customWords.length} 条 · 短句：${data.customSentences.length} 条 · 自定义拼音：${Object.keys(data.customPinyin).length} 条。不导出学习记录和个人设置。`;
+ }
+}
+async function amoAdminExport(){
+ if(!amoAdminAuthorized){amoAdminMessage('请先登录管理员','Vui lòng đăng nhập quản trị trước');return;}
+ try{
+  const data=amoAdminPublicData();
+  if(!data.customWords.length&&!data.customSentences.length)throw new Error(amoAdminText('公共词库为空','Kho từ vựng công khai trống'));
+  const payload=JSON.stringify(data,null,2);
+  // Only these public keys are ever serialised; no credentials or settings are included.
+  if(!confirm(amoAdminText(`确认导出 ${data.customWords.length} 条词汇与 ${data.customSentences.length} 条短句？请手动上传到 GitHub 并替换 cloud-dictionary.json。`,`Xuất ${data.customWords.length} từ vựng và ${data.customSentences.length} câu ngắn? Hãy tải lên GitHub và thay thế cloud-dictionary.json.`)))return;
+  const filename='cloud-dictionary.json';const blob=new Blob([payload],{type:'application/json'});
+  if(navigator.share&&typeof File!=='undefined'){
+   try{const file=new File([blob],filename,{type:'application/json'});
+    if(!navigator.canShare||navigator.canShare({files:[file]})){
+     await navigator.share({files:[file],title:filename});return;
+    }
+   }catch(err){if(err&&err.name==='AbortError')return;}
+  }
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);
+  amoAdminMessage('公共词库文件已生成','Đã tạo tệp từ vựng công khai');
+ }catch(err){console.error('公共词库导出失败',err);amoAdminMessage('公共词库导出失败：'+err.message,'Xuất từ vựng công khai thất bại: '+err.message);}
+}
+Object.assign(UI_ZH_VI,{
+ '管理员导出公共词库':'Xuất kho từ vựng công khai (quản trị)',
+ '登录后可以生成供手动上传 GitHub 的公共词库 JSON。不包含学习记录、个人设置或管理员账号密码。':'Đăng nhập để tạo tệp JSON từ vựng công khai và tự tải lên GitHub. Không gồm tiến độ học, cài đặt cá nhân hay thông tin đăng nhập.',
+ '管理员账号':'Tài khoản quản trị','管理员密码':'Mật khẩu quản trị','管理员登录':'Đăng nhập quản trị',
+ '已登录。导出前请检查下方公共词库数据数量。':'Đã đăng nhập. Hãy kiểm tra số lượng dữ liệu công khai trước khi xuất.',
+ '导出公共词库':'Xuất kho từ vựng công khai','退出管理员':'Đăng xuất quản trị',
+ '离线 HTML 中的账号验证仅用于防误操作，不能防止他人查看源码或绕过界面；上传 GitHub 仍须自行登录 GitHub。':'Đăng nhập trong HTML ngoại tuyến chỉ giúp tránh thao tác nhầm; không ngăn người khác xem mã nguồn hoặc bỏ qua giao diện. Bạn vẫn phải tự đăng nhập GitHub để tải tệp lên.'
+});
+function amoAdminApplyLanguage(){
+ const root=document.getElementById('amoAdminBox');if(!root)return;
+ const vi=settings.uiLanguage==='vi';
+ for(const id of ['amoAdminTitle','amoAdminDesc','amoAdminLoginBtn','amoAdminSuccess','amoAdminExportBtn','amoAdminLogoutBtn','amoAdminNotice']){
+  const el=document.getElementById(id);if(!el)continue;
+  const zh=el.dataset.zh||el.textContent;if(!el.dataset.zh)el.dataset.zh=zh;
+  el.textContent=vi?(UI_ZH_VI[zh]||zh):zh;
+ }
+ for(const [id,zh,vn] of [['amoAdminUsername','管理员账号','Tài khoản quản trị'],['amoAdminPassword','管理员密码','Mật khẩu quản trị']]){
+  const el=document.getElementById(id);if(el){el.placeholder=vi?vn:zh;el.setAttribute('aria-label',vi?vn:zh);}
+ }
+ amoAdminRefresh();
+}
+const amoV22OldApplyUILanguage=applyUILanguage;
+applyUILanguage=function(){amoV22OldApplyUILanguage();amoAdminApplyLanguage();};
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',amoAdminApplyLanguage);
+else amoAdminApplyLanguage();
+</script>
+
 </body>
 </html>
