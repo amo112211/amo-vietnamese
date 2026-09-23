@@ -1957,21 +1957,30 @@ body #sentenceReading .sentence-reading-question-pinyin{color:var(--study-py-col
 #amoCloudPreview[hidden],#amoCloudConfirmBtn[hidden]{display:none!important}
 #amoCloudDownloadBtn:disabled,#amoCloudConfirmBtn:disabled{opacity:.65;cursor:wait}
 </style>
-<style id="amoBackupPortraitResponsiveV25">
-/* V25: Prevent the settings cards from being cropped in desktop portrait/narrow windows.
-   Both columns flow into one column before either column becomes too narrow. */
-#backup{min-width:0;max-width:100%;}
-#backup .backup-grid{width:100%;max-width:100%;min-width:0;align-items:start;}
-#backup .backup-column{width:100%;max-width:100%;min-width:0;}
-#backup .backup-column>.backup-card{width:100%;max-width:100%;min-width:0;box-sizing:border-box;overflow-wrap:anywhere;}
-#backup .backup-card input:not([type="radio"]):not([type="checkbox"]),
-#backup .backup-card select,#backup .backup-card textarea{max-width:100%;min-width:0;box-sizing:border-box;}
-#backup .backup-card button{max-width:100%;white-space:normal;overflow-wrap:anywhere;}
-@media (max-width:1100px), (orientation:portrait){
-  #backup .backup-grid{grid-template-columns:minmax(0,1fr) !important;}
-  #backup .backup-column{min-width:0;}
-  #backup .backup-card{padding:clamp(12px,3vw,22px);}
+<style id="amoV26RubyStyles">
+/* V26: 仅答题/练习短句逐字上标拼音，保持单字与读音不可拆行 */
+#quiz .amo-zh-reading,#sentenceReading .amo-zh-reading{
+ display:inline;white-space:normal;overflow-wrap:normal;line-height:2.05;
 }
+#quiz .amo-zh-ruby,#sentenceReading .amo-zh-ruby{
+ display:inline-ruby;white-space:nowrap;ruby-position:over;
+ margin-inline:0.035em;line-height:1.4;vertical-align:baseline;
+}
+#quiz .amo-zh-ruby rt,#sentenceReading .amo-zh-ruby rt{
+ font-size:calc(12px * var(--py-font-scale,1)) !important;
+ font-weight:600;line-height:1.1;color:var(--study-py-color,var(--muted)) !important;
+ text-align:center;white-space:nowrap;
+}
+#sentenceReading #sentenceReadingQuestion .amo-zh-ruby rt{
+ font-size:calc(14px * var(--py-font-scale,1)) !important;
+}
+#quiz .amo-zh-punctuation,#sentenceReading .amo-zh-punctuation{white-space:normal;}
+#quiz .amo-ruby-fallback-py,#sentenceReading .amo-ruby-fallback-py{display:block;font-size:calc(13px * var(--py-font-scale,1));line-height:1.5;}
+#quiz .amo-ruby-fallback-zh,#sentenceReading .amo-ruby-fallback-zh{display:block;}
+#sentenceReading .amo-diff-note{font-size:.72em;line-height:1.5;margin-top:6px;}
+#sentenceReading .sentence-reading-direction-control{min-width:0;}
+#sentenceReading .sentence-reading-direction-control select{max-width:100%;min-width:0;}
+@media(max-width:700px){#sentenceReading .sentence-reading-direction-control{width:100%;}}
 </style>
 </head>
 <body>
@@ -2156,8 +2165,12 @@ body #sentenceReading .sentence-reading-question-pinyin{color:var(--study-py-col
             <option value="">全部分类</option>
           </select>
         </label>
-        <!-- 题库语言切换已移除；保留不可见的模式值以兼容既有短句判题逻辑和旧设置。 -->
-        <input type="hidden" id="sentenceReadingMode" value="vi">
+        <label class="study-bank-control sentence-reading-direction-control">答题方向
+          <select class="select" id="sentenceReadingMode" onchange="changeSentenceReadingBank(this.value)">
+            <option value="vi">越南语题目 → 自己写中文</option>
+            <option value="zh">中文题目 → 自己写越南语</option>
+          </select>
+        </label>
         <label class="remembered-sentence-visibility">
           <input type="checkbox" id="sentenceReadingIncludeRemembered" onchange="changeSentenceReadingRememberedVisibility(this.checked)">
           显示已记住的短句（加入练习）
@@ -4536,24 +4549,46 @@ function refreshCustomPinyin(){
     if(active==="grammar") renderGrammar();
     if(active==="quiz"){
         document.querySelectorAll("#quiz .quiz-zh-wrap[data-zh-source]").forEach(wrapper=>{
-            const pinyin=wrapper.querySelector(".quiz-pinyin");
-            if(pinyin) pinyin.textContent=getChinesePinyin(wrapper.dataset.zhSource);
+            const shown=wrapper.querySelector(".quiz-chinese");
+            if(shown) shown.innerHTML=amoRubyChineseHTML(wrapper.dataset.zhSource);
         });
     }
     if(active==="sentenceReading" && sentenceReadingCurrent){
-        const q=document.querySelector("#sentenceReadingQuestion .sentence-reading-question-pinyin");
-        if(q) q.textContent=shouldShowChinesePinyin()?getChinesePinyin(sentenceReadingCurrent.zh):"";
+        if(document.getElementById("sentenceReadingMode")?.value==="zh"){
+            document.getElementById("sentenceReadingQuestion").innerHTML=amoRubyChineseHTML(sentenceReadingCurrent.zh,"sentence-reading-question-pinyin");
+        }
     }
 }
-function chineseQuizHTML(zh){
-    const raw = String(zh || "");
-    const py = shouldShowChinesePinyin() ? getChinesePinyin(raw) : "";
-    return `<span class="quiz-zh-wrap" data-zh-source="${escapeHTML(raw)}" style="display:inline;">
-        <span class="quiz-chinese">${escapeHTML(raw)}</span>
-        ${py ? `<span class="quiz-pinyin" style="display:block;font-size:15px;color:var(--muted);font-weight:600;line-height:1.5;margin-top:4px;">${escapeHTML(py)}</span>` : ""}
-    </span>`;
+function amoRubyChineseHTML(zh, pinyinClass="quiz-pinyin"){
+    const raw=String(zh||"");
+    if(!shouldShowChinesePinyin()) return `<span class="amo-zh-reading">${escapeHTML(raw)}</span>`;
+    // 先对整句求音，保留词组和自定义多音字优先级，再将音节逐字对齐。
+    // 遇到不能可靠对齐的自定义词组，回退到普通双行显示，防止错误标音。
+    const all=Array.from(raw);
+    const hanzi=all.filter(ch=>/[\u3400-\u9fff]/u.test(ch));
+    const fullPy=getChinesePinyin(raw).trim();
+    const syllables=fullPy.split(/\s+/u).filter(Boolean);
+    const clean=s=>s.replace(/^[\p{P}\p{S}]+|[\p{P}\p{S}]+$/gu,"");
+    let readings=syllables.map(clean).filter(x=>x && !/^[，。！？；：,.!?;:]$/u.test(x));
+    // 标点被拼音引擎混入时，仅保留每个汉字对应的读音。
+    if(readings.length!==hanzi.length){
+        const withoutPunct=Array.from(raw).filter(ch=>!/[\p{P}\p{S}\s]/u.test(ch)).join("");
+        readings=getChinesePinyin(withoutPunct).trim().split(/\s+/u).filter(Boolean);
+    }
+    if(readings.length!==hanzi.length){
+        return `<span class="amo-zh-reading"><span class="${pinyinClass} amo-ruby-fallback-py">${escapeHTML(fullPy)}</span><span class="amo-ruby-fallback-zh">${escapeHTML(raw)}</span></span>`;
+    }
+    let i=0;
+    return `<span class="amo-zh-reading">${all.map(ch=>{
+        if(!/[\u3400-\u9fff]/u.test(ch)) return `<span class="amo-zh-punctuation">${escapeHTML(ch)}</span>`;
+        const py=readings[i++];
+        return `<ruby class="amo-zh-ruby"><span class="amo-zh-character">${escapeHTML(ch)}</span><rp>(</rp><rt class="${pinyinClass}">${escapeHTML(py)}</rt><rp>)</rp></ruby>`;
+    }).join("")}</span>`;
 }
-
+function chineseQuizHTML(zh){
+    const raw=String(zh||"");
+    return `<span class="quiz-zh-wrap" data-zh-source="${escapeHTML(raw)}"><span class="quiz-chinese">${amoRubyChineseHTML(raw)}</span></span>`;
+}
 
 /* ====================== 答题 ====================== */
 let quizCurrent = null;
@@ -5760,7 +5795,7 @@ function showQuizAnswer(){
     buttons.forEach(btn=>{
         const text = btn.textContent.trim();
         if(
-            (mode === "vi-zh" && text === item.zh) ||
+            (mode === "vi-zh" && (btn.querySelector(".quiz-zh-wrap")?.dataset.zhSource || text) === item.zh) ||
             (mode === "zh-vi" && text === item.vi)
         ){
             btn.classList.add("correct");
@@ -5914,8 +5949,7 @@ function renderSentenceReadingQuestion(clearInput=true){
 
     if(mode === "zh"){
         label.textContent = "中文题目：请阅读后练习写越南语";
-        q.innerHTML = `<div class="sentence-reading-question-pinyin" style="font-size:17px;color:var(--muted);font-weight:600;margin-bottom:5px;">${shouldShowChinesePinyin()?escapeHTML(getChinesePinyin(sentenceReadingCurrent.zh)):""}</div>
-                       <div>${escapeHTML(sentenceReadingCurrent.zh)}</div>`;
+        q.innerHTML = amoRubyChineseHTML(sentenceReadingCurrent.zh,"sentence-reading-question-pinyin");
     }else{
         label.textContent = "越南语题目：请阅读后练习写中文";
         q.innerHTML = sentenceVietnameseWithWordHints(sentenceReadingCurrent.vi);
@@ -6001,7 +6035,7 @@ function sentenceVietnameseDiffWithWordHints(userText, expectedText){
 function sentenceReadingWrongAnswerHTML(userText, expectedText, mode){
     if(mode === "vi"){
         const marked=buildSentenceReadingDiffHTML(userText, expectedText);
-        return `<div class="quiz-pinyin" style="font-size:14px;color:var(--muted);margin-bottom:4px;">${shouldShowChinesePinyin()?escapeHTML(getChinesePinyin(expectedText)):""}</div><div>${marked}</div>`;
+        return `<div class="amo-reading-correction">${amoRubyChineseHTML(expectedText)}<div class="amo-diff-note">${marked}</div></div>`;
     }
     return `<strong>${sentenceVietnameseDiffWithWordHints(userText,expectedText)}</strong>`;
 }
@@ -6027,7 +6061,7 @@ function checkSentenceReadingAnswer(){
             const shown=`<strong>${sentenceVietnameseWithWordHints(sentenceReadingCurrent.vi)}</strong>`;
             ans.innerHTML = `<span style="color:#23845c;font-weight:900;">✓ 回答正确</span><div style="margin-top:8px;">正确答案：${sentenceReadingAnswerRowHTML("vi",sentenceReadingCurrent.vi,shown)}</div>`;
         }else{
-            const shown=chineseTextWithOptionalPinyin(sentenceReadingCurrent.zh, "quiz-pinyin");
+            const shown=amoRubyChineseHTML(sentenceReadingCurrent.zh);
             ans.innerHTML = `<span style="color:#23845c;font-weight:900;">✓ 回答正确</span><div style="margin-top:8px;">正确答案：${sentenceReadingAnswerRowHTML("zh",sentenceReadingCurrent.zh,shown)}</div>`;
         }
     }else if(mode === "zh"){
@@ -6059,7 +6093,7 @@ function showSentenceReadingAnswer(){
     if(mode === "zh"){
         ans.innerHTML = `答案：${sentenceReadingAnswerRowHTML("vi",sentenceReadingCurrent.vi,`<strong>${sentenceVietnameseWithWordHints(sentenceReadingCurrent.vi)}</strong>`)}`;
     }else{
-        ans.innerHTML = `答案：${sentenceReadingAnswerRowHTML("zh",sentenceReadingCurrent.zh,`<div style="margin-top:6px;">${chineseTextWithOptionalPinyin(sentenceReadingCurrent.zh, "quiz-pinyin")}</div>`)}`;
+        ans.innerHTML = `答案：${sentenceReadingAnswerRowHTML("zh",sentenceReadingCurrent.zh,`<div style="margin-top:6px;">${amoRubyChineseHTML(sentenceReadingCurrent.zh)}</div>`)}`;
     }
     keepStudyFocusInView("sentence");
 }
@@ -7107,6 +7141,11 @@ Object.assign(UI_ZH_VI,{
  "暂无错题":"Chưa có câu trả lời sai","移除":"Bỏ khỏi danh sách",
  "暂无已记住的短句":"Chưa có câu ngắn đã nhớ",
  "语音设置需要先打开语音功能。":"Để phát âm tự động, hãy bật chức năng giọng đọc trước."
+});
+Object.assign(UI_ZH_VI,{
+  "答题方向":"Hướng trả lời",
+  "中文题目 → 自己写越南语":"Câu hỏi tiếng Trung → Tự viết tiếng Việt",
+  "越南语题目 → 自己写中文":"Câu hỏi tiếng Việt → Tự viết tiếng Trung"
 });
 const UI_ORIGINAL=new WeakMap();
 const UI_TRANSLATION_PATTERN=new RegExp(Object.keys(UI_ZH_VI).sort((a,b)=>b.length-a.length).map(x=>x.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|"),"g");
