@@ -208,7 +208,7 @@ body{font-size:calc(16px * var(--ui-font-scale));transition:background .2s,color
   font-size:calc(1em * var(--zh-font-scale)) !important;
 }
 .word-zh-pinyin,.sentence-zh-pinyin{
-  font-size:calc(13px * var(--py-font-scale)) !important;
+  font-size:calc(15px * var(--py-font-scale)) !important;
 }
 .display-toolbar{
   position:sticky;top:0;z-index:99;background:var(--card);border-bottom:1px solid var(--border);
@@ -1015,7 +1015,7 @@ body.theme-night .sentence-answer-error-char,body.theme-eye .sentence-answer-err
 .word-zh-pinyin,
 .sentence-zh-pinyin,
 .quiz-pinyin {
-  font-size:calc(13px * var(--py-font-scale)) !important;
+  font-size:calc(15px * var(--py-font-scale)) !important;
 }
 
 /* 答题正确后：只显示正确答案，不显示“意思/答案”标签。亮色蓝字，暗色/护眼白字 */
@@ -1967,20 +1967,29 @@ body #sentenceReading .sentence-reading-question-pinyin{color:var(--study-py-col
  margin-inline:0.035em;line-height:1.4;vertical-align:baseline;
 }
 #quiz .amo-zh-ruby rt,#sentenceReading .amo-zh-ruby rt{
- font-size:calc(12px * var(--py-font-scale,1)) !important;
+ font-size:calc(14px * var(--py-font-scale,1)) !important;
  font-weight:600;line-height:1.1;color:var(--study-py-color,var(--muted)) !important;
  text-align:center;white-space:nowrap;
 }
 #sentenceReading #sentenceReadingQuestion .amo-zh-ruby rt{
- font-size:calc(14px * var(--py-font-scale,1)) !important;
+ font-size:calc(16px * var(--py-font-scale,1)) !important;
 }
 #quiz .amo-zh-punctuation,#sentenceReading .amo-zh-punctuation{white-space:normal;}
-#quiz .amo-ruby-fallback-py,#sentenceReading .amo-ruby-fallback-py{display:block;font-size:calc(13px * var(--py-font-scale,1));line-height:1.5;}
+#quiz .amo-ruby-fallback-py,#sentenceReading .amo-ruby-fallback-py{display:block;font-size:calc(15px * var(--py-font-scale,1));line-height:1.5;}
 #quiz .amo-ruby-fallback-zh,#sentenceReading .amo-ruby-fallback-zh{display:block;}
 #sentenceReading .amo-diff-note{font-size:.72em;line-height:1.5;margin-top:6px;}
 #sentenceReading .sentence-reading-direction-control{min-width:0;}
 #sentenceReading .sentence-reading-direction-control select{max-width:100%;min-width:0;}
 @media(max-width:700px){#sentenceReading .sentence-reading-direction-control{width:100%;}}
+</style>
+<style id="amoV27PinyinAndWordExamples">
+/* V27: Word-list examples 2px smaller than original 14/13px; global language-size options remain effective. */
+#words .word-card .word-example .example-vi{font-size:calc(12px * var(--vi-font-scale,1)) !important;}
+#words .word-card .word-example .example-zh{font-size:calc(11px * var(--zh-font-scale,1)) !important;}
+/* Every standard pinyin line follows the same new 15px baseline. */
+.word-zh-pinyin,.sentence-zh-pinyin,.quiz-pinyin,.sentence-reading-question-pinyin{
+ font-size:calc(15px * var(--py-font-scale,1)) !important;
+}
 </style>
 </head>
 <body>
@@ -3068,7 +3077,7 @@ function shouldShowChinesePinyin(){
 function chineseTextWithOptionalPinyin(zh, pinyinClass="word-zh-pinyin"){
     const raw = String(zh || "");
     const py = shouldShowChinesePinyin()
-        ? `<div class="${pinyinClass}" style="font-size:13px;color:var(--muted);font-weight:600;line-height:1.5;margin-bottom:2px;">${escapeHTML(getChinesePinyin(raw))}</div>`
+        ? `<div class="${pinyinClass}" style="font-size:calc(15px * var(--py-font-scale,1));color:var(--muted);font-weight:600;line-height:1.5;margin-bottom:2px;">${escapeHTML(getChinesePinyin(raw))}</div>`
         : "";
     return `${py}<div>${escapeHTML(raw)}</div>`;
 }
