@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>阿莫自学助手 V31.29</title>
+<title>阿莫自学助手 V31.35</title>
 <meta name="theme-color" content="#f0f4f8" id="amo-browser-theme-color">
 
 
@@ -5364,6 +5364,135 @@ body.theme-wallpaper{
 }
 </style>
 
+
+<style id="amo-v3135-mobile-fixes">
+/* ===== V31.35 手机弹层、答题拼音、短句留白、底色深浅 ===== */
+
+/* 底色深浅：默认 115%，设置范围 50%~200%。只改变弥散光强度，不改变文字/卡片颜色。 */
+:root{
+  --amo-bg-depth:1.15;
+  --page-bg:
+    radial-gradient(circle at 15% 18%,rgba(255,180,200,calc(.30 * var(--amo-bg-depth))),transparent 48%),
+    radial-gradient(circle at 84% 20%,rgba(150,205,255,calc(.32 * var(--amo-bg-depth))),transparent 50%),
+    radial-gradient(circle at 58% 82%,rgba(200,185,255,calc(.22 * var(--amo-bg-depth))),transparent 54%),
+    radial-gradient(circle at 36% 55%,rgba(255,224,214,calc(.22 * var(--amo-bg-depth))),transparent 44%),
+    #f7f3f5;
+}
+body.theme-night{
+  --page-bg:
+    radial-gradient(circle at 16% 18%,rgba(56,84,142,calc(.22 * var(--amo-bg-depth))),transparent 48%),
+    radial-gradient(circle at 82% 22%,rgba(97,72,142,calc(.20 * var(--amo-bg-depth))),transparent 50%),
+    radial-gradient(circle at 72% 82%,rgba(112,48,76,calc(.16 * var(--amo-bg-depth))),transparent 54%),
+    #0d111c;
+}
+
+/* 答题中文统一：整行拼音在上、整行中文在下，不再逐字 ruby 对齐。 */
+#quiz .quiz-zh-line{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:100%;
+  min-width:0;
+  gap:3px;
+  text-align:center;
+}
+#quiz .quiz-pinyin-line{
+  display:block!important;
+  width:100%;
+  margin:0!important;
+  line-height:1.3!important;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  text-align:center!important;
+}
+#quiz .quiz-chinese-line{
+  display:block!important;
+  width:100%;
+  line-height:1.4!important;
+  text-align:center!important;
+  overflow-wrap:anywhere;
+}
+
+/* 短句练习底部安全留白 */
+#sentenceReading{padding-bottom:clamp(72px,11vh,120px)!important}
+
+@media(max-width:700px){
+  /* iOS Safari：任何编辑/关联/添加类输入框都至少 16px，杜绝聚焦时自动放大页面。 */
+  .modal :is(input:not([type="checkbox"]):not([type="radio"]),textarea,select),
+  .amo-word-detail-panel :is(input:not([type="checkbox"]):not([type="radio"]),textarea,select),
+  #words :is(input.search,select),
+  #sentenceReading :is(input,textarea,select),
+  #quiz :is(input,textarea,select){
+    font-size:16px!important;
+  }
+
+  /* 词汇详情改为固定在手机底部的独立滚动面板，不再居中悬浮。 */
+  html:has(body.amo-detail-open){overflow:hidden!important;overscroll-behavior:none}
+  body.amo-detail-open{overflow:hidden!important;overscroll-behavior:none;touch-action:none}
+  .amo-word-detail-overlay{
+    padding:6px!important;
+    align-items:flex-end!important;
+    justify-content:center!important;
+    overscroll-behavior:none!important;
+  }
+  .amo-word-detail-backdrop{touch-action:none}
+  .amo-word-detail-panel{
+    width:100%!important;
+    height:calc(100dvh - 12px)!important;
+    min-height:0!important;
+    max-height:calc(100dvh - 12px)!important;
+    margin:0!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain!important;
+    overflow-anchor:none!important;
+    touch-action:pan-y!important;
+    scroll-behavior:auto!important;
+    padding:16px 16px calc(34px + env(safe-area-inset-bottom))!important;
+    border-radius:20px 20px 14px 14px!important;
+  }
+  .amo-detail-head{
+    position:sticky;
+    top:-16px;
+    z-index:8;
+    margin:-16px -16px 4px;
+    padding:16px 16px 12px;
+    background:color-mix(in srgb,var(--solid-surface,var(--card)) 88%,transparent);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--border-subtle,var(--border));
+  }
+  .amo-detail-actions{padding-bottom:max(8px,env(safe-area-inset-bottom))}
+
+  /* 手机普通答题：四个选择固定从上到下，增大触控高度。 */
+  #quiz #quizOptions.quiz-options,
+  #quiz .quiz-options{
+    grid-template-columns:1fr!important;
+    gap:10px!important;
+    align-items:stretch!important;
+  }
+  #quiz #quizOptions .quiz-option,
+  #quiz .quiz-options .quiz-option{
+    width:100%!important;
+    min-height:68px!important;
+    padding:12px 14px!important;
+    font-size:16px!important;
+    line-height:1.35!important;
+  }
+  /* 答完后也保持纵向，不突然压回两列。 */
+  #quiz.quiz-answer-complete .quiz-options{grid-template-columns:1fr!important;gap:7px!important}
+  #quiz.quiz-answer-complete .quiz-option{min-height:52px!important;padding:8px 12px!important}
+
+  /* 短句练习：底部多留两行+全面屏安全区。 */
+  #sentenceReading{
+    padding-bottom:calc(118px + env(safe-area-inset-bottom))!important;
+    scroll-padding-bottom:calc(118px + env(safe-area-inset-bottom));
+  }
+}
+</style>
+
 </head>
 <body>
 <script id="amo-early-body-theme">
@@ -5393,7 +5522,7 @@ body.theme-wallpaper{
         <div class="logo">
             <div class="logo-icon">🇻🇳</div>
             <div>
-                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="当前版本 V31.34">V31.34</span></div>
+                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="当前版本 V31.35">V31.35</span></div>
                 <div class="logo-sub">中文母语者 · 零基础学习</div>
             </div>
         </div>
@@ -5454,6 +5583,7 @@ body.theme-wallpaper{
         <label class="amo-range-row" for="amoFxBorder"><span>边框强度</span><input id="amoFxBorder" type="range" min="0" max="100" step="5" value="55" oninput="setAmoEffectSetting('glassBorderStrength',this.value)"><output id="amoFxBorderValue" for="amoFxBorder">55%</output></label>
         <label class="amo-range-row" for="amoFxShadow"><span>阴影强度</span><input id="amoFxShadow" type="range" min="0" max="100" step="5" value="55" oninput="setAmoEffectSetting('glassShadowStrength',this.value)"><output id="amoFxShadowValue" for="amoFxShadow">55%</output></label>
         <label class="amo-range-row" for="amoFxAmbient"><span>环境光强度</span><input id="amoFxAmbient" type="range" min="0" max="100" step="5" value="65" oninput="setAmoEffectSetting('glassAmbientStrength',this.value)"><output id="amoFxAmbientValue" for="amoFxAmbient">65%</output></label>
+        <label class="amo-range-row" for="amoFxBackground"><span>底色深浅</span><input id="amoFxBackground" type="range" min="50" max="200" step="5" value="115" oninput="setAmoEffectSetting('backgroundIntensity',this.value)"><output id="amoFxBackgroundValue" for="amoFxBackground">115%</output></label>
         <button type="button" class="amo-global-glass-toggle" id="amoGlobalGlassToggle" onclick="toggleAmoGlobalGlassTransparency()" aria-pressed="false">
           <span class="amo-global-glass-icon" aria-hidden="true">◫</span>
           <span class="amo-global-glass-copy"><strong>全局玻璃透明化</strong><small>仅对卡片分层透明模糊，下拉菜单保持实底</small></span>
@@ -5465,7 +5595,7 @@ body.theme-wallpaper{
       <p class="amo-effect-note">效果仅改变卡片类界面的透明背景、模糊和边框，不修改当前其它显示参数、布局或功能；嵌套卡片会保留层级感，下拉菜单保持实底。关闭后恢复原有显示效果。</p>
     </details>
   
-    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.34</strong></div>
+    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.35</strong></div>
 </section>
 </div>
 
@@ -7001,6 +7131,7 @@ function ensureAmoDisplay(){
     d.glassBorderStrength=Number.isFinite(Number(d.glassBorderStrength))?Math.min(100,Math.max(0,Math.round(Number(d.glassBorderStrength)/5)*5)):55;
     d.glassShadowStrength=Number.isFinite(Number(d.glassShadowStrength))?Math.min(100,Math.max(0,Math.round(Number(d.glassShadowStrength)/5)*5)):55;
     d.glassAmbientStrength=Number.isFinite(Number(d.glassAmbientStrength))?Math.min(100,Math.max(0,Math.round(Number(d.glassAmbientStrength)/5)*5)):65;
+    d.backgroundIntensity=Number.isFinite(Number(d.backgroundIntensity))?Math.min(200,Math.max(50,Math.round(Number(d.backgroundIntensity)/5)*5)):115;
     d.globalGlassTransparency=d.globalGlassTransparency===true;
     if(hadLegacyColorPreset){try{saveJSON(KEY_SETTINGS,settings);}catch(_){/* 仅读写设置项，失败后保留原始数据。 */}}
     return d;
@@ -7030,6 +7161,7 @@ function applyDisplaySettings(){
     root.style.setProperty("--header-backdrop",`blur(${d.glassBlur}px) saturate(${saturation}%)`);
     root.style.setProperty("--glass-blur",d.glassBlur+"px");
     root.style.setProperty("--glass-saturation",saturation+"%");
+    root.style.setProperty("--amo-bg-depth",(d.backgroundIntensity/100).toFixed(2));
     root.style.setProperty("--glass-border",`color-mix(in srgb,var(--border-strong) ${borderMix}%,transparent)`);
     root.style.setProperty("--control-border",`color-mix(in srgb,var(--border-strong) ${Math.max(18,borderMix)}%,transparent)`);
     root.style.setProperty("--header-glass-border",`color-mix(in srgb,var(--border-strong) ${borderMix}%,transparent)`);
@@ -7054,7 +7186,8 @@ function applyDisplaySettings(){
       amoFxSaturation:[d.glassSaturation,d.glassSaturation+"%"],
       amoFxBorder:[d.glassBorderStrength,d.glassBorderStrength+"%"],
       amoFxShadow:[d.glassShadowStrength,d.glassShadowStrength+"%"],
-      amoFxAmbient:[d.glassAmbientStrength,d.glassAmbientStrength+"%"]
+      amoFxAmbient:[d.glassAmbientStrength,d.glassAmbientStrength+"%"],
+      amoFxBackground:[d.backgroundIntensity,d.backgroundIntensity+"%"]
     };
     for(const [id,[value,label]] of Object.entries(fxControls)){
       const input=document.getElementById(id);if(input)input.value=value;
@@ -7090,7 +7223,7 @@ function setAmoGlassMode(mode){
     applyDisplaySettings();
 }
 function setAmoEffectSetting(key,value){
-    const bounds={glassOpacity:[10,20,1],glassBlur:[10,18,1],glassSaturation:[100,220,5],glassBorderStrength:[0,100,5],glassShadowStrength:[0,100,5],glassAmbientStrength:[0,100,5]};
+    const bounds={glassOpacity:[10,20,1],glassBlur:[10,18,1],glassSaturation:[100,220,5],glassBorderStrength:[0,100,5],glassShadowStrength:[0,100,5],glassAmbientStrength:[0,100,5],backgroundIntensity:[50,200,5]};
     if(!Object.prototype.hasOwnProperty.call(bounds,key))return;
     const n=Number(value);if(!Number.isFinite(n))return;
     const [lo,hi,step]=bounds[key];
@@ -8027,6 +8160,8 @@ function wordDetailFind(){return getRelationRuntimeCache().wordMap.get(coreVocab
 function wordDetailSpeech(text){return `<button type="button" class="amo-detail-speech" data-detail-speech="${escapeHTML(text)}" aria-label="播放越南语语音" title="播放语音">🔊</button>`;}
 function renderWordDetail(){
     const panel=document.getElementById('wordDetailContent'),word=wordDetailFind();if(!panel||!word)return;
+    const detailScroller=document.getElementById('wordDetailPanel');
+    const previousScrollTop=detailScroller?detailScroller.scrollTop:0;
     const L=settings.uiLanguage==='vi'?{examples:'Ví dụ',moreExamples:'Thêm ví dụ ↓',collapse:'Thu gọn ↑',pairs:'Cụm từ thường dùng',more:'Thêm ↓',related:'Từ liên quan',noneExamples:'Chưa có ví dụ',nonePairs:'Chưa có cụm từ',addPair:'＋ Thêm cụm từ',remember:'Ghi nhớ',remembered:'Đã nhớ',edit:'Sửa từ',del:'Xóa',category:'Phân loại',posMissing:'Chưa đặt từ loại',manageExamples:'Quản lý ví dụ',addRelated:'＋ Thêm từ liên quan',flow1:'Nhận biết nghĩa',flow2:'Hiểu ví dụ',flow3:'Mở rộng liên quan',flow4:'Dùng cụm từ'}:{examples:'例句',moreExamples:'更多例句 ↓',collapse:'收起 ↑',pairs:'🔗 常用搭配扩展',more:'更多 ↓',related:'相关词',noneExamples:'暂无例句',nonePairs:'暂无常用搭配',addPair:'＋ 添加扩展',remember:'标记已记住',remembered:'已记住',edit:'编辑词汇',del:'删除',category:'分类',posMissing:'词性未设置',manageExamples:'管理例句',addRelated:'＋ 添加关联词',flow1:'词义识别',flow2:'例句理解',flow3:'关联扩展',flow4:'搭配应用'};
     const tags=AmoWordView.positions(word),py=shouldShowChinesePinyin()?getChinesePinyin(word.zh):'';
     const ex=AmoWordView.getExamples(word),pairs=AmoWordView.getPairs(word),related=getRelatedEntriesForWord(word).filter(r=>!pairs.some(p=>normalize(p.vi)===normalize(r.vi)));
@@ -8047,6 +8182,9 @@ function renderWordDetail(){
       <section class="amo-detail-section amo-detail-related-section"><div class="amo-detail-section-head"><h3>${L.related} <small>${related.length}</small></h3><div class="amo-detail-head-actions">${related.length>4?`<button type="button" class="amo-detail-link" data-detail-action="toggle-related">${window.__amoWordDetailRelatedExpanded?L.collapse:L.more}</button>`:''}<button type="button" class="amo-detail-link amo-related-add-btn" data-detail-action="add-related">${L.addRelated}</button></div></div><div class="amo-detail-related-list">${visibleRelated.length?visibleRelated.map(r=>{const removable=Array.isArray(relatedRelations)&&relatedRelations.some(x=>relationId(x.wordA,x.wordB,x.type)===relationId(word.vi,r.vi,'related'));return `<div class="amo-detail-related-row"><button type="button" class="amo-detail-related-open" data-detail-related="${escapeHTML(r.vi)}" data-detail-related-zh="${escapeHTML(r.zh)}"><span><strong>${escapeHTML(r.vi)}</strong></span><span>${escapeHTML(r.zh)}</span><span aria-hidden="true">›</span></button>${removable?`<button type="button" class="amo-detail-related-delete" data-detail-action="delete-related" data-related-target="${escapeHTML(r.vi)}" title="删除关联" aria-label="删除与 ${escapeHTML(r.vi)} 的关联">删除关联</button>`:''}</div>`}).join(''):`<div class="amo-detail-empty">暂无关联词，可点击“${L.addRelated}”建立双向关系。</div>`}</div></section>
       <section class="amo-detail-section amo-detail-section-pairs"><div class="amo-detail-section-head"><h3>${L.pairs} <small>${pairs.length}</small></h3><div class="amo-detail-head-actions">${pairs.length>4?`<button type="button" class="amo-detail-link" data-detail-action="toggle-pairs">${window.__amoWordDetailPairsExpanded?L.collapse:L.more}</button>`:''}</div></div><div class="amo-detail-pairs">${visiblePairs.length?visiblePairs.map((p,i)=>`<div class="amo-detail-pair" role="button" tabindex="0" data-detail-related="${escapeHTML(p.vi)}" data-detail-related-zh="${escapeHTML(p.zh)}"><span><strong>${escapeHTML(p.vi)}</strong>${wordDetailSpeech(p.vi)}</span><span>${escapeHTML(p.zh)}</span><span aria-hidden="true">›</span></div>`).join(''):`<div class="amo-detail-empty">${L.nonePairs}</div>`}</div></section>
       <section class="amo-detail-actions" aria-label="词汇学习操作"><button type="button" class="btn btn-small remember-btn ${isCoreVocabulary(word)?'remembered':''}" data-detail-action="remember">${isCoreVocabulary(word)?L.remembered:L.remember}</button><button type="button" class="btn btn-small" data-detail-action="edit">${L.edit}</button><button type="button" class="btn btn-small btn-danger" data-detail-action="delete">${L.del}</button></section>`;
+    if(detailScroller&&previousScrollTop>0){
+        requestAnimationFrame(()=>{detailScroller.scrollTop=Math.min(previousScrollTop,Math.max(0,detailScroller.scrollHeight-detailScroller.clientHeight));});
+    }
 }
 function openWordDetail(vi){
     const word=getRelationRuntimeCache().wordMap.get(coreVocabularyKey(vi));if(!word)return false;
@@ -9532,9 +9670,16 @@ function amoRubyChineseHTML(zh, pinyinClass="quiz-pinyin"){
         return `<ruby class="amo-zh-ruby"><span class="amo-zh-character">${escapeHTML(ch)}</span><rp>(</rp><rt class="${pinyinClass}">${escapeHTML(py)}</rt><rp>)</rp></ruby>`;
     }).join("")}</span>`;
 }
+function quizLinePinyin(zh){
+    const raw=String(zh||"");
+    if(!shouldShowChinesePinyin())return "";
+    // “/” 是答案释义分隔符：拼音也使用同样的斜杠分隔，避免拼音与中文错位。
+    return raw.split('/').map(part=>getChinesePinyin(part).trim()).join(' / ');
+}
 function chineseQuizHTML(zh){
     const raw=String(zh||"");
-    return `<span class="quiz-zh-wrap" data-zh-source="${escapeHTML(raw)}"><span class="quiz-chinese">${amoRubyChineseHTML(raw)}</span></span>`;
+    const py=quizLinePinyin(raw);
+    return `<span class="quiz-zh-wrap quiz-zh-line" data-zh-source="${escapeHTML(raw)}">${py?`<span class="quiz-pinyin quiz-pinyin-line">${escapeHTML(py)}</span>`:''}<span class="quiz-chinese quiz-chinese-line">${escapeHTML(raw)}</span></span>`;
 }
 
 /* ====================== V31.21 轻量级智能出题调度器 ====================== */
@@ -13253,7 +13398,7 @@ const AmoTextIO=(()=>{
 </script>
 
 <script id="amo-v3118-pos-version">
-window.AMO_BUILD_VERSION="V31.34";
+window.AMO_BUILD_VERSION="V31.35";
 </script>
 
 <script id="amo-v3126-enhancements">
@@ -13267,7 +13412,7 @@ function toggleAmoGlobalGlassTransparency(){
 }
 function resetAmoEffectSettings(){
   const d=ensureAmoDisplay();
-  Object.assign(d,{glassOpacity:12,glassBlur:14,glassSaturation:175,glassBorderStrength:55,glassShadowStrength:55,glassAmbientStrength:65});
+  Object.assign(d,{glassOpacity:12,glassBlur:14,glassSaturation:175,glassBorderStrength:55,glassShadowStrength:55,glassAmbientStrength:65,backgroundIntensity:115});
   saveJSON(KEY_SETTINGS,settings);applyDisplaySettings();showToast('高级效果已恢复默认值');
 }
 let amoSystemThemeMedia=null;
@@ -13533,6 +13678,7 @@ document.addEventListener('DOMContentLoaded',()=>{initAmoSystemTheme();enhanceAm
 <script id="amo-v3131-update-history">
 (function(){
   const AMO_UPDATE_HISTORY = [
+    {version:'V31.35',items:['修复手机词汇详情弹层滚动和搜索后详情自动跳回顶部的问题，并统一编辑/关联输入框 16px 防止 iPhone 聚焦缩放。','答题中文改为整行拼音 + 整行中文；中文含“/”时拼音同步保留斜杠，手机选择题改为四项纵向。','短句练习增加手机底部留白；高级效果新增“底色深浅”50%～200%，恢复默认同步恢复为115%。']},
     {version:'V31.34',items:['修复考试错题回顾答案串改、重复题、题型顺序和多答案/忽略标点评分规则。','优化选择题干扰项长度与相似度，并加强手机输入题、填空题、翻译题交互。','重新设计全局玻璃透明化：所有卡片分层透明模糊，下拉菜单保持实底；手机显示设置增加底部触控留白。']},
     {version:'V31.33',items:['优化“全局玻璃透明化”为分层玻璃：导航、欢迎横幅、统计卡、长文本使用不同透明度与模糊强度，提升阅读清晰度。','修复批量添加“拼音修改”说明在夜间模式下白底灰字的问题。']},
     {version:'V31.32',items:['文字与显示 → 高级效果新增“全局玻璃透明化”，统一全页面 20px 模糊、透明层级和玻璃边框；关闭后恢复原有效果。','夜间模式同步使用深色半透明玻璃，并优化背景图片按比例铺满显示。']},
