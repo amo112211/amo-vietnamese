@@ -117,7 +117,7 @@
 </style>
 <script id="amo-early-theme">
 (function(){
-  var mode='normal',image='',glass='all';
+  var mode='normal',image='',glass='all',globalGlass=false;
   try{
     var saved=JSON.parse(localStorage.getItem('vn_settings_v3')||'{}');
     if(saved&&typeof saved==='object'){
@@ -127,12 +127,14 @@
       else if(saved.themeMode==='night')mode='night';
       else if(saved.themeMode==='wallpaper'&&typeof saved.amoWallpaperData==='string'&&saved.amoWallpaperData.startsWith('data:image/')){mode='wallpaper';image=saved.amoWallpaperData}
       if(saved.amoDisplay&&['off','header','all'].includes(saved.amoDisplay.glassMode))glass=saved.amoDisplay.glassMode;
+      if(saved.amoDisplay&&saved.amoDisplay.globalGlassTransparency===true)globalGlass=true;
     }
   }catch(_){}
   document.documentElement.classList.add('amo-initial-'+mode,'amo-theme-starting');
   var themeMeta=document.getElementById('amo-browser-theme-color');
   if(themeMeta)themeMeta.content=mode==='night'?'#111824':mode==='wallpaper'?'#edf4f1':'#f7f0ed';
-  window.__amoInitialTheme={mode:mode,image:image,glass:glass};
+  if(globalGlass)document.documentElement.classList.add('amo-initial-global-glass');
+  window.__amoInitialTheme={mode:mode,image:image,glass:glass,globalGlass:globalGlass};
 })();
 </script>
 <style>
@@ -5067,29 +5069,25 @@ body.amo-glass-all :is(.hero,.amo-settings-sheet,.modal-box,.ui-language-setting
 
 
 <style id="amo-exam-v3128-style">
-/* ====================== V31.28 考试系统 ====================== */
-#exam{--exam-blue:var(--primary,#2686d9);--exam-soft:var(--primary-light,#eef7ff);}
-.exam-shell{max-width:980px;margin:0 auto;display:grid;gap:16px}
-.exam-panel{background:var(--glass-bg-strong,var(--card));border:1px solid var(--border);border-radius:20px;padding:20px;box-shadow:var(--glass-shadow)}
-.exam-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap}
-.exam-head h2{margin:0;font-size:24px}.exam-sub{color:var(--muted);font-size:13px;margin-top:5px;line-height:1.6}
-.exam-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:18px}
-.exam-field{display:grid;gap:8px}.exam-field>span,.exam-legend{font-weight:800;font-size:14px;color:var(--text)}
+/* ====================== V31.30 考试系统：设置 / 进行 / 结果 / 历史 ====================== */
+#exam{--exam-blue:var(--primary,#2686d9);--exam-soft:var(--primary-light,#eef7ff);--exam-good:#24a36a;--exam-warn:#d99216;--exam-bad:#d9534f}
+.exam-shell{max-width:1040px;margin:0 auto;display:grid;gap:16px}.exam-panel{background:var(--glass-bg-strong,var(--card));border:1px solid var(--border);border-radius:20px;padding:20px;box-shadow:var(--glass-shadow)}
+.exam-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap}.exam-head h2{margin:0;font-size:24px}.exam-sub{color:var(--muted);font-size:13px;margin-top:5px;line-height:1.65}.exam-head-actions{display:flex;gap:8px;flex-wrap:wrap}
+.exam-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px}.exam-field{display:grid;gap:8px}.exam-field>span,.exam-legend{font-weight:800;font-size:14px;color:var(--text)}
 .exam-choice-row{display:flex;gap:8px;flex-wrap:wrap}.exam-chip{position:relative;display:inline-flex;align-items:center;gap:7px;padding:9px 12px;border:1px solid var(--border);border-radius:12px;background:var(--card);cursor:pointer;user-select:none;font-size:13px}.exam-chip input{margin:0}.exam-chip:has(input:checked){border-color:var(--primary);background:var(--primary-light);color:var(--primary-dark)}
-.exam-select,.exam-number{width:100%;min-height:42px;border:1px solid var(--border);border-radius:12px;background:var(--card);color:var(--text);padding:9px 11px;outline:none}.exam-select:focus-visible,.exam-number:focus-visible{border-color:var(--primary);box-shadow:0 0 0 3px color-mix(in srgb,var(--primary) 18%,transparent)}
-.exam-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:18px}
-.exam-start-btn{min-width:160px}
-.exam-progress-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:10px;font-weight:800}.exam-progress-track{height:8px;border-radius:999px;background:color-mix(in srgb,var(--border) 65%,transparent);overflow:hidden}.exam-progress-bar{height:100%;width:0;background:var(--primary);transition:width .2s ease}
-.exam-meta-row{display:flex;gap:12px;justify-content:space-between;align-items:center;margin-top:10px;color:var(--muted);font-size:13px}
-.exam-question-card{margin-top:18px;text-align:center;padding:20px 14px;border-radius:18px;background:color-mix(in srgb,var(--card) 90%,transparent);border:1px solid var(--border)}
-.exam-source-badge{display:inline-flex;padding:5px 9px;border-radius:999px;background:var(--primary-light);color:var(--primary-dark);font-size:12px;font-weight:800}.exam-prompt{font-size:28px;font-weight:900;line-height:1.45;color:var(--primary-dark);margin:16px auto 6px;word-break:break-word}.exam-hint{font-size:12px;color:var(--muted);min-height:18px}
-.exam-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:18px}.exam-option{min-height:52px;border:1px solid var(--border);border-radius:13px;background:var(--card);color:var(--text);padding:10px 12px;font-weight:700;cursor:pointer}.exam-option:hover{border-color:var(--primary);background:var(--primary-light)}.exam-option.selected{border-color:var(--primary);box-shadow:0 0 0 2px color-mix(in srgb,var(--primary) 17%,transparent)}
-.exam-input-wrap{margin:18px auto 0;max-width:620px}.exam-answer-input{width:100%;min-height:48px;border:1px solid var(--border);border-radius:13px;background:var(--card);color:var(--text);padding:11px 13px;font-size:16px;outline:none}.exam-answer-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px color-mix(in srgb,var(--primary) 18%,transparent)}
+.exam-select,.exam-number{width:100%;min-height:42px;border:1px solid var(--border);border-radius:12px;background:var(--popup-surface,var(--card));color:var(--text);padding:9px 11px;outline:none}.exam-select option{background:var(--popup-surface,var(--card));color:var(--text)}.exam-select:focus-visible,.exam-number:focus-visible{border-color:var(--primary);box-shadow:0 0 0 3px color-mix(in srgb,var(--primary) 18%,transparent)}
+.exam-type-counts{grid-column:1/-1;display:grid;gap:10px}.exam-type-count-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.exam-type-count{border:1px solid var(--border);border-radius:14px;padding:11px;background:color-mix(in srgb,var(--card) 92%,transparent);display:grid;gap:7px}.exam-type-count-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.exam-type-count-title{font-weight:900;font-size:14px}.exam-type-points{font-size:11px;color:var(--muted);white-space:nowrap}
+.exam-setup-summary{grid-column:1/-1;display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 14px;border:1px solid var(--border);border-radius:14px;background:color-mix(in srgb,var(--exam-soft) 62%,var(--card))}.exam-setup-summary strong{font-size:16px}.exam-setup-summary span{font-size:12px;color:var(--muted)}.exam-note{grid-column:1/-1;color:var(--muted);font-size:12px;line-height:1.65;padding:0 2px}
+.exam-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:18px}.exam-start-btn{min-width:170px}.exam-history-panel{margin-top:16px;border-top:1px solid var(--border);padding-top:16px}.exam-history-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.exam-history-head h3{margin:0}.exam-history-list{display:grid;gap:9px;max-height:340px;overflow:auto;overscroll-behavior:contain}.exam-history-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:11px 12px;border:1px solid var(--border);border-radius:13px;background:var(--card)}.exam-history-score{font-size:20px;font-weight:950;color:var(--primary-dark)}.exam-history-meta{font-size:12px;color:var(--muted);line-height:1.55}.exam-history-date{font-size:12px;color:var(--muted);text-align:right}
+.exam-progress-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:10px;font-weight:800}.exam-progress-track{height:8px;border-radius:999px;background:color-mix(in srgb,var(--border) 65%,transparent);overflow:hidden}.exam-progress-bar{height:100%;width:0;background:var(--primary);transition:width .2s ease}.exam-meta-row{display:flex;gap:12px;justify-content:space-between;align-items:center;margin-top:10px;color:var(--muted);font-size:13px}
+.exam-question-card{margin-top:18px;text-align:center;padding:20px 14px;border-radius:18px;background:color-mix(in srgb,var(--card) 90%,transparent);border:1px solid var(--border)}.exam-source-badge{display:inline-flex;padding:5px 9px;border-radius:999px;background:var(--primary-light);color:var(--primary-dark);font-size:12px;font-weight:800}.exam-prompt{font-size:28px;font-weight:900;line-height:1.5;color:var(--primary-dark);margin:16px auto 6px;word-break:break-word;white-space:pre-wrap}.exam-hint{font-size:12px;color:var(--muted);min-height:18px;line-height:1.55}
+.exam-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:18px}.exam-option{position:relative;min-height:52px;border:1px solid var(--border);border-radius:13px;background:var(--card);color:var(--text);padding:10px 12px;font-weight:700;cursor:pointer;text-align:left}.exam-option:hover{border-color:var(--primary);background:var(--primary-light)}.exam-option.selected{border-color:var(--primary);box-shadow:0 0 0 2px color-mix(in srgb,var(--primary) 17%,transparent)}.exam-option-radio{position:absolute;opacity:0;pointer-events:none}
+.exam-input-wrap{margin:18px auto 0;max-width:680px}.exam-answer-input{width:100%;min-height:48px;border:1px solid var(--border);border-radius:13px;background:var(--card);color:var(--text);padding:11px 13px;font-size:16px;outline:none}textarea.exam-answer-input{min-height:96px;resize:vertical;line-height:1.55}.exam-answer-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px color-mix(in srgb,var(--primary) 18%,transparent)}
 .exam-nav-actions{display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap}.exam-nav-actions .btn{min-width:112px}
-.exam-result-hero{text-align:center;padding:8px 0 16px}.exam-result-score{font-size:44px;font-weight:950;color:var(--primary-dark);line-height:1}.exam-result-rate{font-size:15px;color:var(--muted);margin-top:7px}.exam-stat-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:12px 0 18px}.exam-stat{padding:12px;border:1px solid var(--border);border-radius:14px;text-align:center;background:color-mix(in srgb,var(--card) 92%,transparent)}.exam-stat strong{display:block;font-size:20px}.exam-stat span{display:block;font-size:12px;color:var(--muted);margin-top:3px}
-.exam-review{display:grid;gap:9px;max-height:42vh;overflow:auto;overscroll-behavior:contain;padding-right:3px}.exam-review-item{padding:12px;border:1px solid var(--border);border-radius:13px;background:var(--card)}.exam-review-item.wrong{border-color:color-mix(in srgb,#d9534f 42%,var(--border));background:color-mix(in srgb,#fff0f0 58%,var(--card))}.theme-night .exam-review-item.wrong{background:rgba(130,45,45,.16)}.exam-review-q{font-weight:800;line-height:1.5}.exam-review-a{font-size:13px;color:var(--muted);margin-top:5px;line-height:1.5}.exam-review-a b{color:var(--text)}
-.exam-empty{padding:18px;text-align:center;color:var(--muted)}
-@media(max-width:700px){.exam-panel{padding:14px;border-radius:16px}.exam-grid{grid-template-columns:1fr;gap:13px}.exam-prompt{font-size:23px;margin-top:13px}.exam-options{grid-template-columns:1fr}.exam-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.exam-actions .btn,.exam-start-btn{width:100%}.exam-nav-actions{display:grid;grid-template-columns:1fr 1fr}.exam-nav-actions .btn{min-width:0}.exam-nav-actions .exam-submit-btn{grid-column:1/-1}.exam-review{max-height:38vh}}
+.exam-result-hero{text-align:center;padding:8px 0 16px}.exam-result-score{font-size:46px;font-weight:950;color:var(--primary-dark);line-height:1}.exam-result-rate{font-size:14px;color:var(--muted);margin-top:8px}.exam-stat-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;margin:12px 0 18px}.exam-stat{padding:12px 8px;border:1px solid var(--border);border-radius:14px;text-align:center;background:color-mix(in srgb,var(--card) 92%,transparent)}.exam-stat strong{display:block;font-size:20px}.exam-stat span{display:block;font-size:12px;color:var(--muted);margin-top:3px}.exam-type-score-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:0 0 18px}.exam-type-score{padding:11px;border-radius:13px;border:1px solid var(--border);background:var(--card);text-align:center}.exam-type-score strong{display:block;font-size:17px}.exam-type-score span{font-size:12px;color:var(--muted)}
+.exam-review-title{margin:0 0 10px}.exam-review{display:grid;gap:9px;max-height:44vh;overflow:auto;overscroll-behavior:contain;padding-right:3px}.exam-review-item{padding:12px;border:1px solid var(--border);border-radius:13px;background:var(--card)}.exam-review-item.wrong{border-color:color-mix(in srgb,var(--exam-bad) 42%,var(--border));background:color-mix(in srgb,#fff0f0 58%,var(--card))}.exam-review-item.partial{border-color:color-mix(in srgb,var(--exam-warn) 55%,var(--border));background:color-mix(in srgb,#fff8e9 65%,var(--card))}.theme-night .exam-review-item.wrong{background:rgba(130,45,45,.16)}.theme-night .exam-review-item.partial{background:rgba(170,120,25,.14)}.exam-review-q{font-weight:800;line-height:1.5}.exam-review-a{font-size:13px;color:var(--muted);margin-top:5px;line-height:1.6}.exam-review-a b{color:var(--text)}.exam-match-row{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}.exam-match-token{font-size:11px;border-radius:999px;padding:3px 7px;background:color-mix(in srgb,var(--exam-good) 15%,var(--card));color:var(--text)}.exam-match-token.miss{background:color-mix(in srgb,var(--exam-bad) 12%,var(--card));text-decoration:line-through;color:var(--muted)}.exam-empty{padding:18px;text-align:center;color:var(--muted)}
+@media(max-width:800px){.exam-type-count-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.exam-stat-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.exam-type-score-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.exam-panel{padding:14px;border-radius:16px}.exam-grid{grid-template-columns:1fr;gap:13px}.exam-prompt{font-size:22px;margin-top:13px}.exam-options{grid-template-columns:1fr}.exam-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.exam-actions .btn,.exam-start-btn{width:100%}.exam-nav-actions{display:grid;grid-template-columns:1fr 1fr}.exam-nav-actions .btn{min-width:0}.exam-nav-actions .exam-submit-btn{grid-column:1/-1}.exam-review{max-height:40vh}.exam-head-actions{width:100%}.exam-head-actions .btn{flex:1}.exam-history-item{grid-template-columns:1fr}.exam-history-date{text-align:left}.exam-setup-summary{align-items:flex-start;flex-direction:column}}
 </style>
 
 
@@ -5124,6 +5122,248 @@ body #sentenceReading select:focus {
   box-shadow:0 0 0 2px color-mix(in srgb,var(--primary) 14%,transparent)!important;
 }
 </style>
+
+<style id="amo-v3131-ui-fixes">
+/* ====================== V31.31 设置 / 批量添加 / 考试按钮 ====================== */
+#add .amo-batch-category-panel{margin:0 0 16px;padding:0;overflow:hidden;background:color-mix(in srgb,var(--card) 94%,transparent)}
+#add .amo-batch-category-summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:52px;padding:13px 15px;cursor:pointer;user-select:none}
+#add .amo-batch-category-summary::-webkit-details-marker{display:none}
+#add .amo-batch-category-summary>span:first-child{display:grid;gap:2px}
+#add .amo-batch-category-summary strong{font-size:15px;color:var(--text)}
+#add .amo-batch-category-summary small{font-size:12px;font-weight:500;color:var(--muted)}
+#add .amo-batch-category-chevron{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:10px;background:color-mix(in srgb,var(--primary-light) 78%,var(--card));color:var(--primary-dark);transition:transform .2s ease;flex:0 0 auto}
+#add .amo-batch-category-panel[open] .amo-batch-category-chevron{transform:rotate(180deg)}
+#add .amo-batch-category-body{border-top:1px solid var(--border);padding:14px 15px 15px}
+#add .amo-batch-category-create{display:flex;gap:8px;flex-wrap:wrap}
+#add .amo-batch-category-create .search{flex:1;min-width:220px}
+#add .amo-batch-category-list{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+#add .amo-batch-category-note{color:var(--muted);font-size:13px;margin-top:9px;line-height:1.55}
+
+#add .amo-batch-help{background:color-mix(in srgb,var(--primary-light) 46%,var(--card));color:var(--text);border:1px solid color-mix(in srgb,var(--primary) 18%,var(--border));box-shadow:none}
+#add .amo-batch-help code{background:color-mix(in srgb,var(--card) 78%,var(--primary-light));color:var(--primary-dark);border:1px solid color-mix(in srgb,var(--primary) 15%,var(--border))}
+.theme-night #add .amo-batch-help,html.amo-initial-night #add .amo-batch-help{background:rgba(25,39,53,.82)!important;color:#e8f0f7!important;border-color:rgba(132,171,198,.22)!important}
+.theme-night #add .amo-batch-help code,html.amo-initial-night #add .amo-batch-help code{background:rgba(64,91,112,.35)!important;color:#dff5ef!important;border-color:rgba(132,171,198,.25)!important}
+.theme-night #add .amo-batch-help strong,.theme-night #add .amo-batch-help span,html.amo-initial-night #add .amo-batch-help strong,html.amo-initial-night #add .amo-batch-help span{color:inherit}
+
+.amo-update-history-card p{color:var(--muted);line-height:1.65}
+.amo-update-history-modal{z-index:6500}
+.amo-update-history-box{width:min(720px,calc(100vw - 28px));max-height:min(82vh,760px);display:flex;flex-direction:column;gap:12px}
+.amo-update-history-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.amo-update-history-top p{margin:5px 0 0;color:var(--muted);font-size:13px;line-height:1.55}
+.amo-update-history-list{display:grid;gap:10px;overflow:auto;overscroll-behavior:contain;padding-right:3px}
+.amo-update-item{border:1px solid var(--border);border-radius:14px;padding:12px 13px;background:color-mix(in srgb,var(--card) 94%,transparent)}
+.amo-update-item-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:7px}
+.amo-update-version{font-weight:950;color:var(--primary-dark);font-size:15px}
+.amo-update-current{font-size:11px;padding:3px 7px;border-radius:999px;background:var(--primary-light);color:var(--primary-dark);font-weight:800}
+.amo-update-item ul{margin:0;padding-left:20px;color:var(--text);line-height:1.65;font-size:13px}
+.amo-update-item li+li{margin-top:3px}
+
+#exam .exam-nav-actions{display:grid;grid-template-columns:minmax(120px,.8fr) minmax(220px,1.45fr) minmax(120px,.8fr);align-items:stretch;gap:10px;margin-top:18px}
+#exam .exam-nav-actions .btn{min-height:52px;min-width:0;border-radius:14px;font-weight:850;padding:10px 14px;touch-action:manipulation}
+#exam .exam-nav-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:color-mix(in srgb,var(--card) 94%,transparent)}
+#exam .exam-submit-btn{display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:0 8px 22px color-mix(in srgb,var(--primary) 20%,transparent);font-size:15px}
+#exam .exam-submit-next{font-size:12px;opacity:.78;font-weight:750}
+#exam .exam-nav-actions .btn:active{transform:scale(.985)}
+#exam .exam-nav-actions .btn:focus-visible{outline:3px solid color-mix(in srgb,var(--primary) 28%,transparent);outline-offset:2px}
+@media(max-width:700px){
+  #add .amo-batch-category-create{display:grid;grid-template-columns:1fr}
+  #add .amo-batch-category-create .search{min-width:0;width:100%}
+  #exam .exam-nav-actions{position:sticky;bottom:max(8px,env(safe-area-inset-bottom));z-index:15;grid-template-columns:1fr 1fr;gap:8px;margin:16px -4px 0;padding:8px;border:1px solid var(--border);border-radius:17px;background:color-mix(in srgb,var(--card) 90%,transparent);backdrop-filter:blur(14px) saturate(150%);-webkit-backdrop-filter:blur(14px) saturate(150%);box-shadow:0 10px 28px rgba(20,42,55,.12)}
+  #exam .exam-nav-actions .btn{min-height:50px;font-size:14px}
+  #exam .exam-submit-btn{grid-column:1/-1;grid-row:1;min-height:56px;font-size:16px;border-radius:15px}
+  #exam .exam-prev-btn{grid-column:1;grid-row:2}
+  #exam .exam-next-btn{grid-column:2;grid-row:2}
+}
+@media(max-width:380px){
+  #exam .exam-nav-actions{gap:7px;padding:7px}
+  #exam .exam-nav-actions .btn{padding:9px 8px}
+}
+</style>
+
+
+<style id="amo-v3132-global-glass">
+/* ====================== V31.34 全局玻璃透明化 ======================
+   原则：
+   - 不修改布局、文字、字号、圆角、阴影、业务功能；
+   - 仅给卡片型容器增加分层透明背景 + backdrop blur + 半透明边框；
+   - 下拉框、下拉菜单、option 保持实底，不参加玻璃透明化。
+================================================================ */
+
+/* 开关本身 */
+.amo-global-glass-toggle{
+  width:100%;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;
+  gap:10px;min-height:58px;padding:10px 12px;border:1px solid var(--border);border-radius:14px;
+  background:color-mix(in srgb,var(--card) 92%,transparent);color:var(--text);text-align:left;cursor:pointer;
+}
+.amo-global-glass-toggle:hover{border-color:var(--primary)}
+.amo-global-glass-toggle:focus-visible{outline:3px solid color-mix(in srgb,var(--primary) 25%,transparent);outline-offset:2px}
+.amo-global-glass-icon{display:grid;place-items:center;width:34px;height:34px;border-radius:11px;background:var(--primary-light);color:var(--primary-dark);font-size:18px}
+.amo-global-glass-copy{display:grid;gap:2px;min-width:0}
+.amo-global-glass-copy strong{font-size:14px;color:var(--text)}
+.amo-global-glass-copy small{font-size:11px;line-height:1.45;color:var(--muted);font-weight:500}
+.amo-global-glass-state{min-width:54px;padding:5px 8px;border-radius:999px;background:color-mix(in srgb,var(--border) 45%,transparent);color:var(--muted);font-size:11px;font-weight:800;text-align:center;white-space:nowrap}
+.amo-global-glass-toggle.active{border-color:color-mix(in srgb,var(--primary) 55%,var(--border));background:color-mix(in srgb,var(--primary-light) 54%,var(--card))}
+.amo-global-glass-toggle.active .amo-global-glass-state{background:var(--primary);color:#fff}
+
+/* 浅色分层 */
+body.amo-global-glass-transparent{
+  --amo-glass-l1-bg:rgba(255,255,255,.68);
+  --amo-glass-l1-blur:16px;
+  --amo-glass-l1-border:rgba(255,255,255,.72);
+  --amo-glass-l2-bg:rgba(255,255,255,.74);
+  --amo-glass-l2-blur:12px;
+  --amo-glass-l2-border:rgba(255,255,255,.78);
+  --amo-glass-l3-bg:rgba(255,255,255,.84);
+  --amo-glass-l3-blur:8px;
+  --amo-glass-l3-border:rgba(255,255,255,.82);
+  --amo-glass-read-bg:rgba(255,255,255,.88);
+  --amo-glass-read-blur:6px;
+  --amo-glass-read-border:rgba(255,255,255,.78);
+}
+
+/* 一级：页面大容器、顶部、欢迎区、设置面板 */
+body.amo-global-glass-transparent :is(
+  .header,.hero,.amo-settings-sheet,.modal-box,.exam-panel,
+  #quiz .quiz-box,#home>.card.card-padding
+){
+  background:var(--amo-glass-l1-bg)!important;
+  border-color:var(--amo-glass-l1-border)!important;
+  backdrop-filter:blur(var(--amo-glass-l1-blur)) saturate(140%)!important;
+  -webkit-backdrop-filter:blur(var(--amo-glass-l1-blur)) saturate(140%)!important;
+}
+
+/* 二级：主要业务卡片 */
+body.amo-global-glass-transparent :is(
+  .card,.word-card,.sentence-card,.grammar-card,.wrong-item,.quiz-card,
+  .exam-question-card,.exam-history-item,.exam-review-item,.backup-card,
+  .amo-setting-group,.toolbar,.ui-language-setting-card
+){
+  background:var(--amo-glass-l2-bg)!important;
+  border-color:var(--amo-glass-l2-border)!important;
+  backdrop-filter:blur(var(--amo-glass-l2-blur)) saturate(135%)!important;
+  -webkit-backdrop-filter:blur(var(--amo-glass-l2-blur)) saturate(135%)!important;
+}
+
+/* 三级：嵌套统计卡、考试小卡等，更接近实底保证数字清晰 */
+body.amo-global-glass-transparent :is(
+  .stats .stat,.exam-stat,.exam-type-score,.exam-type-count,
+  .amo-update-item,.exam-option
+){
+  background:var(--amo-glass-l3-bg)!important;
+  border-color:var(--amo-glass-l3-border)!important;
+  backdrop-filter:blur(var(--amo-glass-l3-blur)) saturate(125%)!important;
+  -webkit-backdrop-filter:blur(var(--amo-glass-l3-blur)) saturate(125%)!important;
+}
+
+/* 阅读型卡片最实，文字不发灰 */
+body.amo-global-glass-transparent :is(
+  .help,.amo-batch-help,.amo-pinyin-help,.learning-note,.study-description
+){
+  background:var(--amo-glass-read-bg)!important;
+  border-color:var(--amo-glass-read-border)!important;
+  backdrop-filter:blur(var(--amo-glass-read-blur)) saturate(115%)!important;
+  -webkit-backdrop-filter:blur(var(--amo-glass-read-blur)) saturate(115%)!important;
+  color:var(--text)!important;
+  opacity:1!important;
+}
+
+/* 嵌套卡片必须保持层级，而不是被外层统一成同一个透明度 */
+body.amo-global-glass-transparent .card .card,
+body.amo-global-glass-transparent #home>.card.card-padding .ui-language-setting-card{
+  background:var(--amo-glass-l3-bg)!important;
+  border-color:var(--amo-glass-l3-border)!important;
+  backdrop-filter:blur(var(--amo-glass-l3-blur)) saturate(125%)!important;
+  -webkit-backdrop-filter:blur(var(--amo-glass-l3-blur)) saturate(125%)!important;
+}
+
+/* 夜晚模式：保持同一层级逻辑 */
+body.theme-night.amo-global-glass-transparent{
+  --amo-glass-l1-bg:rgba(14,20,31,.72);
+  --amo-glass-l1-border:rgba(255,255,255,.15);
+  --amo-glass-l2-bg:rgba(17,24,37,.78);
+  --amo-glass-l2-border:rgba(255,255,255,.14);
+  --amo-glass-l3-bg:rgba(21,29,43,.86);
+  --amo-glass-l3-border:rgba(255,255,255,.13);
+  --amo-glass-read-bg:rgba(18,25,38,.91);
+  --amo-glass-read-border:rgba(255,255,255,.12);
+}
+
+/* 下拉控件和下拉菜单：明确保持实底，不玻璃化 */
+body.amo-global-glass-transparent :is(
+  select,.select,option,optgroup,
+  .amo-category-menu,.amo-pos-dropdown-menu,.amo-relation-dropdown-menu,
+  .quiz-round-menu,.dropdown-menu,[role="menu"]
+){
+  background:var(--popup-surface,var(--card))!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+body.theme-night.amo-global-glass-transparent :is(
+  select,.select,option,optgroup,
+  .amo-category-menu,.amo-pos-dropdown-menu,.amo-relation-dropdown-menu,
+  .quiz-round-menu,.dropdown-menu,[role="menu"]
+){
+  background:var(--popup-surface,var(--solid-surface,var(--card)))!important;
+}
+
+/* 拼音说明夜间继续保持可读 */
+body.theme-night #customPinyinCard .amo-pinyin-help,
+html.amo-initial-night body #customPinyinCard .amo-pinyin-help{
+  background:rgba(25,39,53,.86)!important;color:#e9f1f7!important;
+  border:1px solid rgba(150,184,207,.22)!important;box-shadow:none!important;
+}
+body.theme-night #customPinyinCard .amo-pinyin-help code,
+html.amo-initial-night body #customPinyinCard .amo-pinyin-help code{
+  display:inline-block;background:rgba(68,93,114,.36)!important;color:#e7fbf5!important;
+  border:1px solid rgba(150,184,207,.20)!important;
+}
+
+/* 背景图保持原比例 */
+body.theme-wallpaper{
+  background-size:100% 100%,cover!important;
+  background-position:center center,center center!important;
+  background-repeat:no-repeat,no-repeat!important;
+  background-attachment:fixed,fixed!important;
+}
+@media(max-width:700px){
+  .amo-global-glass-toggle{grid-template-columns:auto minmax(0,1fr);align-items:start}
+  .amo-global-glass-state{grid-column:2;justify-self:start}
+  body.theme-wallpaper{background-attachment:scroll,scroll!important;background-position:center top,center top!important}
+}
+</style>
+
+
+<style id="amo-v3134-mobile-exam-and-settings">
+/* 手机考试输入交互 */
+@media(max-width:700px){
+  #exam .exam-question-card{scroll-margin-top:72px;scroll-margin-bottom:190px}
+  #exam .exam-input-wrap{margin-top:14px;scroll-margin-bottom:190px}
+  #exam .exam-answer-input{
+    min-height:52px;
+    font-size:16px!important; /* 防止 iOS 聚焦自动放大 */
+    line-height:1.55;
+    padding:13px 14px;
+    border-radius:14px;
+  }
+  #exam textarea.exam-answer-input{
+    min-height:96px;
+    max-height:240px;
+    overflow-y:auto;
+    resize:none;
+  }
+  #exam .exam-answer-input:focus{
+    box-shadow:0 0 0 3px color-mix(in srgb,var(--primary) 22%,transparent);
+  }
+
+  /* 文字与显示设置底部增加约两行可触控留白，避免最后项目贴住屏幕边缘 */
+  #amoDisplayDialog{
+    padding-bottom:calc(112px + env(safe-area-inset-bottom))!important;
+    scroll-padding-bottom:calc(112px + env(safe-area-inset-bottom));
+  }
+  #amoAdvancedEffects{margin-bottom:16px}
+}
+</style>
+
 </head>
 <body>
 <script id="amo-early-body-theme">
@@ -5153,7 +5393,7 @@ body #sentenceReading select:focus {
         <div class="logo">
             <div class="logo-icon">🇻🇳</div>
             <div>
-                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="当前版本 V31.29">V31.29</span></div>
+                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="当前版本 V31.34">V31.34</span></div>
                 <div class="logo-sub">中文母语者 · 零基础学习</div>
             </div>
         </div>
@@ -5214,13 +5454,18 @@ body #sentenceReading select:focus {
         <label class="amo-range-row" for="amoFxBorder"><span>边框强度</span><input id="amoFxBorder" type="range" min="0" max="100" step="5" value="55" oninput="setAmoEffectSetting('glassBorderStrength',this.value)"><output id="amoFxBorderValue" for="amoFxBorder">55%</output></label>
         <label class="amo-range-row" for="amoFxShadow"><span>阴影强度</span><input id="amoFxShadow" type="range" min="0" max="100" step="5" value="55" oninput="setAmoEffectSetting('glassShadowStrength',this.value)"><output id="amoFxShadowValue" for="amoFxShadow">55%</output></label>
         <label class="amo-range-row" for="amoFxAmbient"><span>环境光强度</span><input id="amoFxAmbient" type="range" min="0" max="100" step="5" value="65" oninput="setAmoEffectSetting('glassAmbientStrength',this.value)"><output id="amoFxAmbientValue" for="amoFxAmbient">65%</output></label>
+        <button type="button" class="amo-global-glass-toggle" id="amoGlobalGlassToggle" onclick="toggleAmoGlobalGlassTransparency()" aria-pressed="false">
+          <span class="amo-global-glass-icon" aria-hidden="true">◫</span>
+          <span class="amo-global-glass-copy"><strong>全局玻璃透明化</strong><small>仅对卡片分层透明模糊，下拉菜单保持实底</small></span>
+          <span class="amo-global-glass-state" id="amoGlobalGlassState">未开启</span>
+        </button>
         <button type="button" class="amo-reset-effects" onclick="resetAmoEffectSettings()">↺ 恢复高级效果默认值</button>
         <label class="amo-system-theme-row"><input type="checkbox" id="amoFollowSystemTheme" onchange="setAmoFollowSystemTheme(this.checked)"><span>夜间模式自动跟随系统设置</span></label>
       </div>
-      <p class="amo-effect-note">效果仅改变界面视觉，不会修改词汇、答题记录或其它学习数据。背景模糊范围 10–18px，白色透明度范围 10–20%。</p>
+      <p class="amo-effect-note">效果仅改变卡片类界面的透明背景、模糊和边框，不修改当前其它显示参数、布局或功能；嵌套卡片会保留层级感，下拉菜单保持实底。关闭后恢复原有显示效果。</p>
     </details>
   
-    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.29</strong></div>
+    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.34</strong></div>
 </section>
 </div>
 
@@ -5500,40 +5745,39 @@ body #sentenceReading select:focus {
   <div class="exam-shell">
     <div id="examSetupView" class="exam-panel">
       <div class="exam-head">
-        <div><h2 id="examPageTitle">考试</h2><div class="exam-sub">从词汇、词汇例句和短句中组卷；开始后本轮题目固定，完成后统一查看结果与错题。</div></div>
+        <div><h2 id="examPageTitle">考试</h2><div class="exam-sub">按题型独立设置数量；优先使用已经在答题练习中出现过的词汇及其例句/相关短句。考试开始后本轮题目固定。</div></div>
+        <div class="exam-head-actions"><button class="btn" type="button" onclick="ExamManager.toggleHistory()">查看历史分数</button></div>
       </div>
       <div class="exam-grid">
-        <label class="exam-field"><span>题目数量</span><select id="examCount" class="exam-select"><option>10</option><option selected>20</option><option>30</option><option>50</option></select></label>
         <label class="exam-field"><span>出题模式</span><select id="examMode" class="exam-select"><option value="smart">智能考试</option><option value="random">完全随机</option><option value="wrong">错题专项</option></select></label>
-        <div class="exam-field"><span class="exam-legend">题目方向</span><div class="exam-choice-row"><label class="exam-chip"><input type="checkbox" id="examDirViZh" checked> 越南语 → 中文</label><label class="exam-chip"><input type="checkbox" id="examDirZhVi" checked> 中文 → 越南语</label></div></div>
-        <div class="exam-field"><span class="exam-legend">答题方式</span><div class="exam-choice-row"><label class="exam-chip"><input type="checkbox" id="examTypeChoice" checked> 选择题</label><label class="exam-chip"><input type="checkbox" id="examTypeInput" checked> 输入题</label></div></div>
-        <div class="exam-field"><span class="exam-legend">题目来源</span><div class="exam-choice-row"><label class="exam-chip"><input type="checkbox" id="examSourceWords" checked> 词汇</label><label class="exam-chip"><input type="checkbox" id="examSourceExamples" checked> 词汇例句</label><label class="exam-chip"><input type="checkbox" id="examSourceSentences" checked> 短句</label></div></div>
         <label class="exam-field"><span>学习分类</span><select id="examCategory" class="exam-select"><option value="">全部分类</option></select></label>
+        <div class="exam-field"><span class="exam-legend">题目方向</span><div class="exam-choice-row"><label class="exam-chip"><input type="checkbox" id="examDirViZh" checked> 越南语 → 中文</label><label class="exam-chip"><input type="checkbox" id="examDirZhVi" checked> 中文 → 越南语</label></div></div>
+        <div class="exam-field"><span class="exam-legend">普通题来源</span><div class="exam-choice-row"><label class="exam-chip"><input type="checkbox" id="examSourceWords" checked> 词汇</label><label class="exam-chip"><input type="checkbox" id="examSourceExamples" checked> 词汇例句</label><label class="exam-chip"><input type="checkbox" id="examSourceSentences" checked> 短句</label></div></div>
+        <div class="exam-type-counts"><span class="exam-legend">各题型数量</span><div class="exam-type-count-grid">
+          <label class="exam-type-count"><span class="exam-type-count-head"><span class="exam-type-count-title">选择题</span><span class="exam-type-points">2分 / 题</span></span><select id="examChoiceCount" class="exam-select" onchange="ExamManager.refreshSetupSummary()"></select></label>
+          <label class="exam-type-count"><span class="exam-type-count-head"><span class="exam-type-count-title">输入题</span><span class="exam-type-points">4分 / 题</span></span><select id="examInputCount" class="exam-select" onchange="ExamManager.refreshSetupSummary()"></select></label>
+          <label class="exam-type-count"><span class="exam-type-count-head"><span class="exam-type-count-title">填空题</span><span class="exam-type-points">5分 / 题</span></span><select id="examFillCount" class="exam-select" onchange="ExamManager.refreshSetupSummary()"></select></label>
+          <label class="exam-type-count"><span class="exam-type-count-head"><span class="exam-type-count-title">翻译题</span><span class="exam-type-points">10分 / 题</span></span><select id="examTranslationCount" class="exam-select" onchange="ExamManager.refreshSetupSummary()"></select></label>
+        </div></div>
+        <div class="exam-setup-summary"><strong id="examSetupTotal">共 20 题 · 满分 96 分</strong><span>填空题只从词汇例句出题；翻译题只使用例句/短句，并优先关联已经练习过的词汇。</span></div>
+        <div class="exam-note">选择题干扰项限定在同来源类型中，并优先选择同词性、同学习分类、长度接近的答案；不会再把完整例句混进词汇选择题。</div>
       </div>
       <div class="exam-actions"><button class="btn btn-primary exam-start-btn" type="button" onclick="ExamManager.startFromSetup()">开始考试</button></div>
+      <div id="examHistoryPanel" class="exam-history-panel" hidden><div class="exam-history-head"><h3>历史分数</h3><button class="btn" type="button" onclick="ExamManager.toggleHistory(false)">收起</button></div><div id="examHistoryList" class="exam-history-list"></div></div>
     </div>
-
     <div id="examRunView" class="exam-panel" hidden>
-      <div class="exam-progress-head"><span id="examProgressText">1 / 20</span><span id="examTimer">00:00</span></div>
-      <div class="exam-progress-track" aria-hidden="true"><div id="examProgressBar" class="exam-progress-bar"></div></div>
-      <div class="exam-meta-row"><span id="examQuestionType">选择题</span><span id="examAnsweredCount">已答 0</span></div>
-      <div class="exam-question-card">
-        <span id="examSourceBadge" class="exam-source-badge">词汇</span>
-        <div id="examPrompt" class="exam-prompt"></div>
-        <div id="examPromptHint" class="exam-hint"></div>
-        <div id="examAnswerArea"></div>
-      </div>
-      <div class="exam-nav-actions">
-        <button class="btn" type="button" onclick="ExamManager.prev()">上一题</button>
-        <button class="btn btn-primary exam-submit-btn" type="button" onclick="ExamManager.submitAndNext()">确认并下一题</button>
-        <button class="btn" type="button" onclick="ExamManager.next()">下一题</button>
+      <div class="exam-progress-head"><span id="examProgressText">1 / 20</span><span id="examTimer">00:00</span></div><div class="exam-progress-track" aria-hidden="true"><div id="examProgressBar" class="exam-progress-bar"></div></div><div class="exam-meta-row"><span id="examQuestionType">选择题</span><span id="examAnsweredCount">已答 0</span></div>
+      <div class="exam-question-card"><span id="examSourceBadge" class="exam-source-badge">词汇</span><div id="examPrompt" class="exam-prompt"></div><div id="examPromptHint" class="exam-hint"></div><div id="examAnswerArea"></div></div>
+      <div class="exam-nav-actions" aria-label="考试答题操作">
+        <button class="btn exam-nav-btn exam-prev-btn" type="button" onclick="ExamManager.prev()" aria-label="上一题"><span aria-hidden="true">←</span><span>上一题</span></button>
+        <button class="btn btn-primary exam-submit-btn" type="button" onclick="ExamManager.submitAndNext()" aria-label="确认当前答案并进入下一题"><span>确认答案</span><span class="exam-submit-next">下一题 →</span></button>
+        <button class="btn exam-nav-btn exam-next-btn" type="button" onclick="ExamManager.next()" aria-label="不确认当前答案直接查看下一题"><span>下一题</span><span aria-hidden="true">→</span></button>
       </div>
     </div>
-
     <div id="examResultView" class="exam-panel" hidden>
-      <div class="exam-result-hero"><div class="exam-result-score" id="examResultScore">0 / 0</div><div class="exam-result-rate" id="examResultRate">正确率 0%</div></div>
-      <div class="exam-stat-grid"><div class="exam-stat"><strong id="examStatCorrect">0</strong><span>正确</span></div><div class="exam-stat"><strong id="examStatWrong">0</strong><span>错误</span></div><div class="exam-stat"><strong id="examStatTime">0:00</strong><span>用时</span></div><div class="exam-stat"><strong id="examStatInput">0</strong><span>输入题</span></div></div>
-      <h3 style="margin:0 0 10px">错题回顾</h3><div id="examReview" class="exam-review"></div>
+      <div class="exam-result-hero"><div class="exam-result-score" id="examResultScore">0 / 0 分</div><div class="exam-result-rate" id="examResultRate">得分率 0%</div></div>
+      <div class="exam-stat-grid"><div class="exam-stat"><strong id="examStatCorrect">0</strong><span>正确</span></div><div class="exam-stat"><strong id="examStatPartial">0</strong><span>部分正确</span></div><div class="exam-stat"><strong id="examStatWrong">0</strong><span>错误</span></div><div class="exam-stat"><strong id="examStatTime">00:00</strong><span>用时</span></div><div class="exam-stat"><strong id="examStatAnswered">0</strong><span>总题数</span></div></div>
+      <div id="examTypeScoreGrid" class="exam-type-score-grid"></div><h3 class="exam-review-title">错题与部分正确</h3><div id="examReview" class="exam-review"></div>
       <div class="exam-actions"><button class="btn" type="button" onclick="ExamManager.backToSetup()">返回考试设置</button><button class="btn btn-primary" type="button" onclick="ExamManager.retryWrong()">只练错题</button></div>
     </div>
   </div>
@@ -5553,16 +5797,21 @@ body #sentenceReading select:focus {
 <section id="add" class="page">
     <div class="card card-padding">
         <h2 style="margin-top:0;">批量添加词汇</h2>
-        <div class="card" style="margin-bottom:16px;padding:16px;background:#f8fbff;">
-            <h3 style="margin:0 0 10px;">自定义分类</h3>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                <input id="newCategoryInput" class="search" style="flex:1;min-width:220px;" placeholder="例如：聊天、恋爱、网络、工作">
-                <button class="btn btn-primary" type="button" onclick="addCustomCategory()">新增分类</button>
+        <details class="card amo-batch-category-panel">
+            <summary class="amo-batch-category-summary">
+                <span><strong>自定义分类</strong><small>默认收起，需要时展开管理</small></span>
+                <span class="amo-batch-category-chevron" aria-hidden="true">⌄</span>
+            </summary>
+            <div class="amo-batch-category-body">
+                <div class="amo-batch-category-create">
+                    <input id="newCategoryInput" class="search" placeholder="例如：聊天、恋爱、网络、工作">
+                    <button class="btn btn-primary" type="button" onclick="addCustomCategory()">新增分类</button>
+                </div>
+                <div id="customCategoryList" class="amo-batch-category-list"></div>
+                <div class="amo-batch-category-note">你新增的分类可以删除；删除分类不会删除词汇。</div>
             </div>
-            <div id="customCategoryList" style="display:flex;gap:7px;flex-wrap:wrap;margin-top:12px;"></div>
-            <div style="color:var(--muted);font-size:13px;margin-top:8px;">你新增的分类可以删除；删除分类不会删除词汇。</div>
-        </div>
-        <div class="help">
+        </details>
+        <div class="help amo-batch-help">
             每行一个词汇，只需要使用：<br><br>
             <code>xin chào=你好</code><br>
             <code>cảm ơn=谢谢</code><br>
@@ -5591,7 +5840,7 @@ tạm biệt=再见"></textarea>
     </div>
     <div class="card card-padding" style="margin-top:18px;">
         <h2 style="margin-top:0;">批量添加短句</h2>
-        <div class="help">
+        <div class="help amo-batch-help">
             格式与词汇相同：<br><br>
             <code>Xin chào, bạn khỏe không?=你好，你好吗？</code><br>
             <code>Cảm ơn bạn rất nhiều.=非常感谢你。</code><br>
@@ -5613,7 +5862,7 @@ Hôm nay bạn có bận không?=你今天忙吗？"></textarea>
     <div class="card card-padding" id="customPinyinCard" style="margin-top:18px;">
         <h2 style="margin-top:0;">拼音修改</h2>
         <p style="color:var(--muted);line-height:1.7;">每行一条，中文=拼音。支持数字声调、带声调拼音，不要求音节间有空格。保存后匹配的词语及句子优先使用这里的拼音，多音字可按词组分别设置。</p>
-        <div class="help"><code>银行=yin2 hang2</code><br><code>行走=xing2zou3</code><br><code>银行=yín háng</code><br><code>行走=xíngzǒu</code></div>
+        <div class="help amo-pinyin-help"><code>银行=yin2 hang2</code><br><code>行走=xing2zou3</code><br><code>银行=yín háng</code><br><code>行走=xíngzǒu</code></div>
         <textarea id="customPinyinInput" spellcheck="false" autocomplete="off" placeholder="银行=yin2 hang2&#10;行走=xing2zou3"></textarea>
         <div id="customPinyinError" role="alert" style="color:var(--danger);font-weight:700;margin-top:8px;"></div>
         <div class="amo-pinyin-actions">
@@ -5750,6 +5999,11 @@ Hôm nay bạn có bận không?=你今天忙吗？"></textarea>
   <div id="amoTextPreview" class="amo-backup-preview" role="status" hidden></div>
   <button type="button" class="btn btn-primary" id="amoTextConfirm" onclick="AmoTextIO.confirm()" hidden>确认合并 TXT</button>
 </div>
+<div class="card backup-card amo-update-history-card">
+  <h3>🕘 历史更新记录</h3>
+  <p>查看近期重要版本的主要更新内容，方便确认当前版本新增了什么。</p>
+  <button type="button" class="btn" onclick="openAmoUpdateHistory()">查看历史更新记录</button>
+</div>
 <div class="card backup-card" id="amoRawDataCard">
   <h3>🛟 原始数据应急备份</h3>
   <p>按原样导出本网站在当前浏览器中的存储内容，用于发生数据异常时人工恢复；本文件不适用于上面的普通 JSON 导入。</p>
@@ -5768,6 +6022,20 @@ Hôm nay bạn có bận không?=你今天忙吗？"></textarea>
 </main>
 </div>
 
+
+<div class="modal amo-update-history-modal" id="amoUpdateHistoryModal" role="dialog" aria-modal="true" aria-labelledby="amoUpdateHistoryTitle" aria-hidden="true" onclick="if(event.target===this)closeAmoUpdateHistory()">
+  <div class="modal-box amo-update-history-box" tabindex="-1">
+    <div class="amo-update-history-top">
+      <div>
+        <h2 class="modal-title" id="amoUpdateHistoryTitle">历史更新记录</h2>
+        <p>只保留每个版本最重要的改动，方便快速查看。</p>
+      </div>
+      <button type="button" class="btn btn-small" onclick="closeAmoUpdateHistory()" aria-label="关闭历史更新记录">×</button>
+    </div>
+    <div id="amoUpdateHistoryList" class="amo-update-history-list"></div>
+    <div class="modal-actions"><button type="button" class="btn btn-primary" onclick="closeAmoUpdateHistory()">关闭</button></div>
+  </div>
+</div>
 
 <div class="modal" id="wordActionModal" role="dialog" aria-modal="true" aria-hidden="true" onclick="if(event.target===this)closeWordActionModal()">
   <div class="modal-box">
@@ -6733,6 +7001,7 @@ function ensureAmoDisplay(){
     d.glassBorderStrength=Number.isFinite(Number(d.glassBorderStrength))?Math.min(100,Math.max(0,Math.round(Number(d.glassBorderStrength)/5)*5)):55;
     d.glassShadowStrength=Number.isFinite(Number(d.glassShadowStrength))?Math.min(100,Math.max(0,Math.round(Number(d.glassShadowStrength)/5)*5)):55;
     d.glassAmbientStrength=Number.isFinite(Number(d.glassAmbientStrength))?Math.min(100,Math.max(0,Math.round(Number(d.glassAmbientStrength)/5)*5)):65;
+    d.globalGlassTransparency=d.globalGlassTransparency===true;
     if(hadLegacyColorPreset){try{saveJSON(KEY_SETTINGS,settings);}catch(_){/* 仅读写设置项，失败后保留原始数据。 */}}
     return d;
 }
@@ -6771,6 +7040,14 @@ function applyDisplaySettings(){
     root.style.setProperty("--shadow",`var(--glass-shadow)`);
     document.body.classList.remove("amo-glass-off","amo-glass-header");
     document.body.classList.add("amo-glass-all");
+    document.body.classList.toggle("amo-global-glass-transparent",d.globalGlassTransparency===true);
+    const globalGlassBtn=document.getElementById("amoGlobalGlassToggle");
+    const globalGlassState=document.getElementById("amoGlobalGlassState");
+    if(globalGlassBtn){
+      globalGlassBtn.classList.toggle("active",d.globalGlassTransparency===true);
+      globalGlassBtn.setAttribute("aria-pressed",String(d.globalGlassTransparency===true));
+    }
+    if(globalGlassState)globalGlassState.textContent=d.globalGlassTransparency===true?"已开启":"未开启";
     const fxControls={
       amoFxOpacity:[d.glassOpacity,d.glassOpacity+"%"],
       amoFxBlur:[d.glassBlur,d.glassBlur+"px"],
@@ -6787,7 +7064,7 @@ function applyDisplaySettings(){
     
     const wallpaper=settings.themeMode==="wallpaper" && typeof settings.amoWallpaperData==="string" && settings.amoWallpaperData.startsWith("data:image/");
     document.body.classList.toggle("theme-wallpaper",wallpaper);
-    document.body.style.backgroundImage=wallpaper?`linear-gradient(rgba(250,255,254,.18),rgba(250,255,254,.24)),url("${settings.amoWallpaperData}")`:"";
+    document.body.style.backgroundImage=wallpaper?`linear-gradient(rgba(250,255,254,.14),rgba(250,255,254,.20)),url("${settings.amoWallpaperData}")`:"";
     const colors=amoCurrentColors();
     ["vi","zh","py"].forEach((key,i)=>{
         root.style.setProperty("--study-"+key+"-color",colors[i]);
@@ -12976,11 +13253,18 @@ const AmoTextIO=(()=>{
 </script>
 
 <script id="amo-v3118-pos-version">
-window.AMO_BUILD_VERSION="V31.25";
+window.AMO_BUILD_VERSION="V31.34";
 </script>
 
 <script id="amo-v3126-enhancements">
 /* ====================== V31.27 设置 / 弹窗 / 可访问性增强 ====================== */
+function toggleAmoGlobalGlassTransparency(){
+  const d=ensureAmoDisplay();
+  d.globalGlassTransparency=!d.globalGlassTransparency;
+  saveJSON(KEY_SETTINGS,settings);
+  applyDisplaySettings();
+  showToast(d.globalGlassTransparency?'已开启全局玻璃透明化：卡片已按层级透明模糊':'已关闭全局玻璃透明化：已恢复原有显示效果');
+}
 function resetAmoEffectSettings(){
   const d=ensureAmoDisplay();
   Object.assign(d,{glassOpacity:12,glassBlur:14,glassSaturation:175,glassBorderStrength:55,glassShadowStrength:55,glassAmbientStrength:65});
@@ -13015,107 +13299,281 @@ document.addEventListener('DOMContentLoaded',()=>{initAmoSystemTheme();enhanceAm
 
 
 <script id="amo-exam-v3128-script">
-/* ====================== V31.28 第一版考试系统 ====================== */
+/* ====================== V31.30 考试系统 ======================
+   QuestionScheduler -> 负责“选哪些词”
+   ExamQuestionBank   -> 负责“建立考试题库与干扰项”
+   ExamScoring        -> 负责“答案判断与计分”
+   updateVocabStats   -> 负责“学习统计”
+   examHistory        -> 负责“考试历史”
+   render             -> 负责“考试 UI”
+   ExamManager        -> 负责“考试流程”
+================================================================ */
 (function(){
   const KEY_EXAM_HISTORY='vn_exam_history_v1';
-  const state={questions:[],index:0,startedAt:0,finishedAt:0,timerId:null,mode:'smart',count:20,category:'',wrongOnly:false};
+  const POINTS={choice:2,input:4,fill:5,translation:10};
+  const TYPE_LABEL={choice:'选择题',input:'输入题',fill:'填空题',translation:'翻译题'};
+  const COUNT_OPTIONS=[0,2,4,5,6,8,10,12,15,20,30];
   const $=id=>document.getElementById(id);
   const norm=v=>typeof normalize==='function'?normalize(v):String(v||'').trim().toLowerCase();
+  const examCanonical=v=>norm(v).replace(/[\p{P}\p{S}\s]+/gu,'');
+  const pairKey=x=>examCanonical(x?.vi)+'\u001f'+examCanonical(x?.zh);
+  const answerDisplayLength=v=>{
+    const s=String(v||'').trim();
+    const zh=(s.match(/[\u3400-\u9fff]/g)||[]).length;
+    if(zh)return zh;
+    const words=s.match(/[\p{L}\p{M}\p{N}]+/gu)||[];
+    return words.length>1?words.length:examCanonical(s).length;
+  };
   const esc=v=>typeof escapeHTML==='function'?escapeHTML(String(v??'')):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
-  function splitLines(v){return String(v||'').split(/\r?\n/).map(x=>x.trim()).filter(Boolean);}
-  function parseEmbeddedExample(line){
-    const m=String(line||'').trim().match(/^([\s\S]+?)\s*[（(]([^()（）]*[\u3400-\u9fff][^()（）]*)[）)]\s*$/u);
-    return m?{vi:m[1].trim(),zh:m[2].trim()}:{vi:String(line||'').trim(),zh:''};
-  }
-  function getWordExamples(word){
-    try{
-      const store=(typeof examples==='object'&&examples)?examples:{};
-      const raw=store[norm(word.vi)]||{};
-      const vis=splitLines(raw.vi),zhs=splitLines(raw.zh),out=[];
-      vis.forEach((line,i)=>{const p=parseEmbeddedExample(line);const zh=p.zh||zhs[i]||'';if(p.vi&&zh)out.push({vi:p.vi,zh,ownerKey:norm(word.vi),category:word.category||'',source:'example'});});
-      const pairs=Array.isArray(word.collocations)?word.collocations:[];
-      for(const pair of pairs){for(const ex of (Array.isArray(pair?.examples)?pair.examples:[])){if(ex?.vi&&ex?.zh)out.push({vi:String(ex.vi).trim(),zh:String(ex.zh).trim(),ownerKey:norm(word.vi),category:word.category||'',source:'example'});}}
-      return out;
-    }catch(_){return [];}
-  }
-  function buildPools(category=''){
-    const words=(typeof allWords==='function'?allWords():[]).filter(w=>w&&w.vi&&w.zh&&(!category||String(w.category||'')===category));
-    const wordItems=words.map(w=>({vi:String(w.vi).trim(),zh:String(w.zh).trim(),ownerKey:norm(w.vi),category:w.category||'',source:'word',word:w}));
-    const exampleItems=[];for(const w of words)exampleItems.push(...getWordExamples(w));
-    const sentenceItems=(typeof allSentences==='function'?allSentences():[]).filter(x=>x&&x.vi&&x.zh&&(!category||String(x.category||'')===category)).map(x=>({vi:String(x.vi).trim(),zh:String(x.zh).trim(),ownerKey:'',category:x.category||'',source:'sentence'}));
-    return {words:wordItems,examples:dedupePairs(exampleItems),sentences:dedupePairs(sentenceItems)};
-  }
-  function dedupePairs(items){const seen=new Set();return items.filter(x=>{const k=norm(x.vi)+'\u001f'+norm(x.zh);if(!x.vi||!x.zh||seen.has(k))return false;seen.add(k);return true;});}
-  function selectedConfig(){
-    return {count:Number($('examCount')?.value||20),mode:$('examMode')?.value||'smart',category:$('examCategory')?.value||'',dirs:[...($('examDirViZh')?.checked?['vi-zh']:[]),...($('examDirZhVi')?.checked?['zh-vi']:[])],types:[...($('examTypeChoice')?.checked?['choice']:[]),...($('examTypeInput')?.checked?['input']:[])],sources:[...($('examSourceWords')?.checked?['word']:[]),...($('examSourceExamples')?.checked?['example']:[]),...($('examSourceSentences')?.checked?['sentence']:[])]};
-  }
-  function populateCategories(){
-    const sel=$('examCategory');if(!sel)return;const current=sel.value;const set=new Set();
-    try{for(const w of allWords())if(String(w.category||'').trim())set.add(String(w.category).trim());for(const x of allSentences())if(String(x.category||'').trim())set.add(String(x.category).trim());}catch(_){ }
-    sel.innerHTML='<option value="">全部分类</option>'+Array.from(set).sort((a,b)=>a.localeCompare(b,'zh-CN')).map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');
-    if(Array.from(sel.options).some(o=>o.value===current))sel.value=current;
-  }
+  const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
+  const splitLines=v=>String(v||'').split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+  const state={questions:[],index:0,startedAt:0,finishedAt:0,timerId:null,mode:'smart',category:''};
+  function parseEmbeddedExample(line){const m=String(line||'').trim().match(/^([\s\S]+?)\s*[（(]([^()（）]*[\u3400-\u9fff][^()（）]*)[）)]\s*$/u);return m?{vi:m[1].trim(),zh:m[2].trim()}:{vi:String(line||'').trim(),zh:''};}
+  function dedupePairs(items){const seen=new Set();return (items||[]).filter(x=>{const k=norm(x?.vi)+'\u001f'+norm(x?.zh);if(!x?.vi||!x?.zh||seen.has(k))return false;seen.add(k);return true;});}
+  function containsVietnamesePhrase(sentence,word){const s=String(sentence||'').toLocaleLowerCase('vi'),w=String(word||'').trim().toLocaleLowerCase('vi');if(!s||!w)return false;const idx=s.indexOf(w);if(idx<0)return false;const isLetter=c=>!!c&&/[\p{L}\p{M}\p{N}]/u.test(c);return !isLetter(s[idx-1])&&!isLetter(s[idx+w.length]);}
+  function replacePhraseWithBlank(sentence,word){const src=String(sentence||''),needle=String(word||'').trim();if(!src||!needle)return '';const low=src.toLocaleLowerCase('vi'),find=needle.toLocaleLowerCase('vi'),idx=low.indexOf(find);if(idx<0)return '';const isLetter=c=>!!c&&/[\p{L}\p{M}\p{N}]/u.test(c);if(isLetter(low[idx-1])||isLetter(low[idx+find.length]))return '';return src.slice(0,idx)+'______'+src.slice(idx+needle.length);}
+
+  const examHistory={
+    load(){try{const rows=loadJSON(KEY_EXAM_HISTORY,[]);return Array.isArray(rows)?rows:[];}catch(_){return []; }},
+    saveRecord(record){try{const rows=this.load();rows.push(record);saveJSON(KEY_EXAM_HISTORY,rows.slice(-100));}catch(_){}}
+  };window.examHistory=examHistory;
+
+  const ExamQuestionBank={
+    getPracticedKeys(){const stats=typeof getVocabStats==='function'?getVocabStats():{};return new Set(Object.entries(stats||{}).filter(([,s])=>Number(s?.answerCount||0)>0).map(([k])=>norm(k)).filter(Boolean));},
+    getWordExamples(word){
+      try{const store=(typeof examples==='object'&&examples)?examples:{},raw=store[norm(word.vi)]||{},vis=splitLines(raw.vi),zhs=splitLines(raw.zh),out=[];
+        vis.forEach((line,i)=>{const p=parseEmbeddedExample(line),zh=p.zh||zhs[i]||'';if(p.vi&&zh)out.push({vi:p.vi,zh,ownerKey:norm(word.vi),ownerVi:String(word.vi||'').trim(),category:word.category||'',pos:word.pos||'',source:'example',word});});
+        const pairs=Array.isArray(word.collocations)?word.collocations:[];for(const pair of pairs){for(const ex of (Array.isArray(pair?.examples)?pair.examples:[])){if(ex?.vi&&ex?.zh)out.push({vi:String(ex.vi).trim(),zh:String(ex.zh).trim(),ownerKey:norm(word.vi),ownerVi:String(word.vi||'').trim(),category:word.category||'',pos:word.pos||'',source:'example',word});}}return out;
+      }catch(_){return [];}
+    },
+    buildPools(category=''){
+      const practiced=this.getPracticedKeys(),words=(typeof allWords==='function'?allWords():[]).filter(w=>w&&w.vi&&w.zh&&(!category||String(w.category||'')===category));
+      const wordItems=words.map(w=>({vi:String(w.vi).trim(),zh:String(w.zh).trim(),ownerKey:norm(w.vi),ownerVi:String(w.vi).trim(),category:w.category||'',pos:w.pos||'',source:'word',word:w,practiced:practiced.has(norm(w.vi))}));
+      const exampleItems=[];for(const w of words)exampleItems.push(...this.getWordExamples(w).map(x=>({...x,practiced:practiced.has(norm(w.vi))})));
+      const practicedWords=words.filter(w=>practiced.has(norm(w.vi))).map(w=>String(w.vi||'').trim()).filter(Boolean);
+      const sentenceItems=(typeof allSentences==='function'?allSentences():[]).filter(x=>x&&x.vi&&x.zh&&(!category||String(x.category||'')===category)).map(x=>{const hits=practicedWords.filter(w=>containsVietnamesePhrase(x.vi,w)).slice(0,8);return {vi:String(x.vi).trim(),zh:String(x.zh).trim(),ownerKey:'',ownerVi:'',category:x.category||'',pos:'',source:'sentence',practiceKeys:hits.map(norm),practiced:hits.length>0};});
+      return {words:wordItems,examples:dedupePairs(exampleItems),sentences:dedupePairs(sentenceItems),practiced};
+    },
+    filterByMode(items,mode){const stats=typeof getVocabStats==='function'?getVocabStats():{};if(mode==='wrong')return items.filter(x=>x.ownerKey&&Number(stats?.[x.ownerKey]?.wrongCount||0)>0);const practiced=items.filter(x=>x.practiced);return practiced.length?practiced:items.slice();},
+    select(items,count,mode){items=dedupePairs(this.filterByMode(items,mode));if(count<=0)return [];if(mode==='smart'&&window.QuestionScheduler){const backed=items.filter(x=>x.ownerKey),other=items.filter(x=>!x.ownerKey),reps=new Map();for(const x of backed)if(!reps.has(x.ownerKey))reps.set(x.ownerKey,x);let smart=[];if(reps.size){smart=QuestionScheduler.selectQuestions({source:Array.from(reps.keys()).map(vi=>({vi})),count:Math.min(count,reps.size),mode:'smart'}).map(w=>reps.get(norm(w.vi))).filter(Boolean);}return dedupePairs([...smart,...shuffle(backed),...shuffle(other)]).slice(0,count);}return shuffle(items).slice(0,count);},
+    distractors(item,dir,allItems,answer){
+      const targetLen=Math.max(1,answerDisplayLength(answer));
+      const candidates=dedupePairs((allItems||[]).filter(x=>x.source===item.source))
+        .map(x=>({item:x,value:dir==='vi-zh'?x.zh:x.vi}))
+        .filter(x=>examCanonical(x.value)!==examCanonical(answer))
+        .map(x=>({...x,len:Math.max(1,answerDisplayLength(x.value))}));
+      const tightDiff=Math.max(1,Math.ceil(targetLen*.35));
+      const wideDiff=Math.max(2,Math.ceil(targetLen*.65));
+      let pool=candidates.filter(x=>Math.abs(x.len-targetLen)<=tightDiff);
+      if(pool.length<3)pool=candidates.filter(x=>Math.abs(x.len-targetLen)<=wideDiff);
+      if(pool.length<3)pool=candidates;
+      const scored=pool.map(x=>{
+        let score=0;
+        if(item.pos&&x.item.pos&&String(item.pos)===String(x.item.pos))score+=12;
+        if(item.category&&x.item.category&&String(item.category)===String(x.item.category))score+=9;
+        const diff=Math.abs(x.len-targetLen);
+        score+=Math.max(0,10-diff*3);
+        if(item.source==='word')score+=4;
+        return {...x,score};
+      }).sort((a,b)=>b.score-a.score);
+      const top=scored.slice(0,Math.min(12,scored.length));
+      return shuffle(top).slice(0,3).map(x=>x.value);
+    },
+    fillCandidates(pools){return pools.examples.filter(x=>x.ownerVi&&x.practiced&&containsVietnamesePhrase(x.vi,x.ownerVi)).map(x=>({...x,blankPrompt:replacePhraseWithBlank(x.vi,x.ownerVi),fillAnswer:x.ownerVi})).filter(x=>x.blankPrompt&&x.fillAnswer);},
+    translationCandidates(pools){const examples=pools.examples.filter(x=>x.practiced),sentences=pools.sentences.filter(x=>x.practiced);return dedupePairs([...examples,...sentences]).filter(x=>{const viWords=String(x.vi||'').trim().split(/\s+/).filter(Boolean).length,zhChars=(String(x.zh||'').match(/[\u3400-\u9fff]/g)||[]).length;return viWords>=3&&zhChars>=5;});}
+  };window.ExamQuestionBank=ExamQuestionBank;
+
+  const ExamScoring={
+    exactAlternatives(answer){
+      return String(answer||'').split(/[\/、；;]/).map(examCanonical).filter(Boolean);
+    },
+    exact(q,value){
+      const v=examCanonical(value);if(!v)return false;
+      if(this.exactAlternatives(q.answer).includes(v))return true;
+      if(q.item?.source==='word'){
+        return String(q.answer||'').split(/[\/、；;，,]/).map(examCanonical).filter(Boolean).includes(v);
+      }
+      return false;
+    },
+    segment(text,lang){text=String(text||'').trim();if(!text)return [];try{if(typeof Intl!=='undefined'&&Intl.Segmenter){const seg=new Intl.Segmenter(lang==='zh'?'zh':'vi',{granularity:'word'});return Array.from(seg.segment(text)).filter(x=>x.isWordLike!==false).map(x=>norm(x.segment)).filter(x=>x&&/[\p{L}\p{M}\p{N}\u3400-\u9fff]/u.test(x));}}catch(_){}if(lang==='zh')return (text.match(/[\u3400-\u9fff]{1,2}|[A-Za-z0-9]+/g)||[]).map(norm).filter(Boolean);return (text.match(/[\p{L}\p{M}\p{N}]+/gu)||[]).map(norm).filter(Boolean);},
+    translation(q,value){if(this.exact(q,value))return {ratio:1,score:q.maxScore,status:'correct',matched:[],missed:[]};const lang=q.dir==='vi-zh'?'zh':'vi',expected=this.segment(q.answer,lang),actual=this.segment(value,lang);if(!expected.length||!actual.length)return {ratio:0,score:0,status:'wrong',matched:[],missed:expected};const counts=new Map();for(const t of actual)counts.set(t,(counts.get(t)||0)+1);const matched=[],missed=[];for(const t of expected){const n=counts.get(t)||0;if(n>0){matched.push(t);counts.set(t,n-1);}else missed.push(t);}const recall=matched.length/expected.length,lengthPenalty=Math.min(1,actual.length/Math.max(1,expected.length),expected.length/Math.max(1,actual.length)),ratio=clamp(recall*(0.85+0.15*lengthPenalty),0,1),score=Math.round(q.maxScore*ratio),status=ratio>=0.8?'correct':ratio>=0.4?'partial':'wrong';return {ratio,score,status,matched,missed};},
+    grade(q,value){if(q.type==='translation'){const r=this.translation(q,value);return {...r,correct:r.status==='correct'};}const ok=this.exact(q,value);return {ratio:ok?1:0,score:ok?q.maxScore:0,status:ok?'correct':'wrong',correct:ok,matched:[],missed:[]};}
+  };window.ExamScoring=ExamScoring;
+
+  function selectedConfig(){return {mode:$('examMode')?.value||'smart',category:$('examCategory')?.value||'',dirs:[...($('examDirViZh')?.checked?['vi-zh']:[]),...($('examDirZhVi')?.checked?['zh-vi']:[])],sources:[...($('examSourceWords')?.checked?['word']:[]),...($('examSourceExamples')?.checked?['example']:[]),...($('examSourceSentences')?.checked?['sentence']:[])],counts:{choice:Number($('examChoiceCount')?.value||0),input:Number($('examInputCount')?.value||0),fill:Number($('examFillCount')?.value||0),translation:Number($('examTranslationCount')?.value||0)}};}
+  function populateCountSelect(id,selected){const el=$(id);if(!el)return;el.innerHTML=COUNT_OPTIONS.map(n=>`<option value="${n}" ${n===selected?'selected':''}>${n} 题</option>`).join('');}
+  function populateCategories(){const sel=$('examCategory');if(!sel)return;const current=sel.value,set=new Set();try{for(const w of allWords())if(String(w.category||'').trim())set.add(String(w.category).trim());for(const x of allSentences())if(String(x.category||'').trim())set.add(String(x.category).trim());}catch(_){}sel.innerHTML='<option value="">全部分类</option>'+Array.from(set).sort((a,b)=>a.localeCompare(b,'zh-CN')).map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');if(Array.from(sel.options).some(o=>o.value===current))sel.value=current;}
   function sourceLabel(s){return s==='word'?'词汇':s==='example'?'词汇例句':'短句';}
+  function questionHint(q){if(q.type==='fill')return '根据中文提示补全例句中缺少的词汇：'+q.item.zh;if(q.type==='translation')return q.item.source==='example'?'来自已练习词汇的例句':'来自包含已练习词汇的短句';return q.item.source==='word'?'词汇题':q.item.source==='example'?'来自词汇例句':'来自短句库';}
+  function makeQuestion(item,type,dir,index,allItems){let prompt=dir==='vi-zh'?item.vi:item.zh,answer=dir==='vi-zh'?item.zh:item.vi;if(type==='fill'){dir='fill-vi';prompt=item.blankPrompt;answer=item.fillAnswer;}const q={id:'e'+Date.now().toString(36)+'_'+type+'_'+index,item,dir,type,prompt,answer,options:[],userAnswer:'',submitted:false,correct:null,status:'unanswered',maxScore:POINTS[type],score:0,ratio:0,matched:[],missed:[]};if(type==='choice'){const distractors=ExamQuestionBank.distractors(item,dir,allItems,answer);if(distractors.length<3)return null;q.options=shuffle([answer,...distractors]);}return q;}
   function createQuestions(cfg){
-    const pools=buildPools(cfg.category);let base=[];if(cfg.sources.includes('word'))base.push(...pools.words);if(cfg.sources.includes('example'))base.push(...pools.examples);if(cfg.sources.includes('sentence'))base.push(...pools.sentences);base=dedupePairs(base);
-    if(!base.length)return [];
-    let selected=[];
-    if(cfg.mode==='wrong'){
-      const stats=(typeof getVocabStats==='function'?getVocabStats():{});selected=base.filter(x=>x.ownerKey&&((stats[x.ownerKey]?.wrongCount||0)>0));selected=shuffle(selected).slice(0,cfg.count);
-    }else if(cfg.mode==='smart'){
-      const wordBacked=base.filter(x=>x.ownerKey),other=base.filter(x=>!x.ownerKey);let smart=[];
-      if(wordBacked.length&&window.QuestionScheduler){const reps=new Map();for(const x of wordBacked)if(!reps.has(x.ownerKey))reps.set(x.ownerKey,x);smart=QuestionScheduler.selectQuestions({source:Array.from(reps.values()).map(x=>({vi:x.ownerKey})),count:Math.min(cfg.count,reps.size),mode:'smart'}).map(w=>reps.get(norm(w.vi))).filter(Boolean);}
-      const merged=dedupePairs([...smart,...shuffle(wordBacked),...shuffle(other)]);selected=merged.slice(0,Math.min(cfg.count,merged.length));
-    }else selected=shuffle(base).slice(0,Math.min(cfg.count,base.length));
-    selected=shuffle(selected);
-    const answerPools={vi:dedupePairs(base).map(x=>x.vi),zh:dedupePairs(base).map(x=>x.zh)};
-    return selected.map((item,i)=>{
-      const dir=cfg.dirs[i%cfg.dirs.length],type=cfg.types[Math.floor(i/cfg.dirs.length)%cfg.types.length];const prompt=dir==='vi-zh'?item.vi:item.zh;const answer=dir==='vi-zh'?item.zh:item.vi;
-      let options=[];if(type==='choice'){const pool=dir==='vi-zh'?answerPools.zh:answerPools.vi;options=shuffle([answer,...shuffle(pool.filter(v=>norm(v)!==norm(answer))).slice(0,3)]);}
-      return {id:'e'+Date.now().toString(36)+'_'+i,item,dir,type,prompt,answer,options,userAnswer:'',submitted:false,correct:null};
-    });
-  }
-  function answerIsCorrect(q,value){
-    const a=norm(q.answer),v=norm(value);if(!a||!v)return false;if(a===v)return true;
-    if(q.dir==='vi-zh')return a.split(/[\/、；;，,]/).map(norm).filter(Boolean).includes(v);
-    return false;
+    const pools=ExamQuestionBank.buildPools(cfg.category),ordinary=[];
+    if(cfg.sources.includes('word'))ordinary.push(...pools.words);
+    if(cfg.sources.includes('example'))ordinary.push(...pools.examples);
+    if(cfg.sources.includes('sentence'))ordinary.push(...pools.sentences);
+    const ordinaryBase=dedupePairs(ordinary),
+      fillBase=ExamQuestionBank.fillCandidates(pools),
+      translationBase=ExamQuestionBank.translationCandidates(pools),
+      questions=[],usedPairs=new Set();
+    let seq=0;
+
+    function addType(type,count,base,allowedDirs=cfg.dirs){
+      if(!count)return null;
+      const available=base.filter(x=>!usedPairs.has(pairKey(x)));
+      let chosen=ExamQuestionBank.select(available,count,cfg.mode);
+      if(chosen.length<count)return `${TYPE_LABEL[type]}需要 ${count} 道，但去除重复题后当前只有 ${chosen.length} 道可用`;
+      chosen=shuffle(chosen);
+      for(let i=0;i<chosen.length;i++){
+        const dir=type==='fill'?'fill-vi':allowedDirs[i%allowedDirs.length],
+          q=makeQuestion(chosen[i],type,dir,seq++,base);
+        if(!q)return `${TYPE_LABEL[type]}缺少足够的相近干扰项，请减少数量或扩大题目来源`;
+        usedPairs.add(pairKey(chosen[i]));
+        questions.push(q);
+      }
+      return null;
+    }
+
+    const errors=[
+      addType('choice',cfg.counts.choice,ordinaryBase),
+      addType('input',cfg.counts.input,ordinaryBase),
+      addType('fill',cfg.counts.fill,fillBase,['fill-vi']),
+      addType('translation',cfg.counts.translation,translationBase,cfg.dirs)
+    ];
+    const err=errors.find(Boolean);
+    /* 不再打乱四大题型顺序；每个题型内部仍保持随机。 */
+    return err?{questions:[],error:err}:{questions,error:''};
   }
   function saveCurrentAnswer(){
-    const q=state.questions[state.index];if(!q)return;const el=$('examAnswerInput')||document.querySelector('input[name="examOption"]:checked');if(q.type==='choice'){q.userAnswer=el?el.value:q.userAnswer;}else{q.userAnswer=el?el.value.trim():q.userAnswer;}
+    const q=state.questions[state.index];if(!q||q.submitted)return;
+    if(q.type==='choice'){
+      const el=document.querySelector('input[name="examOption"]:checked');
+      q.userAnswer=el?el.value:q.userAnswer;
+    }else{
+      const el=$('examAnswerInput');if(el)q.userAnswer=el.value.trim();
+    }
   }
-  function submitCurrent(){
-    const q=state.questions[state.index];if(!q)return false;saveCurrentAnswer();if(!q.userAnswer){if(typeof showToast==='function')showToast('请先回答当前题目');return false;}
-    if(!q.submitted){q.correct=answerIsCorrect(q,q.userAnswer);q.submitted=true;if(q.item.ownerKey&&typeof updateVocabStats==='function')updateVocabStats(q.item.ownerKey,q.correct?'correct':'wrong');}
-    return true;
+  function updateLearningStats(q){if(!q.item?.ownerKey||typeof updateVocabStats!=='function')return;const result=q.type==='translation'?(q.ratio>=0.8?'correct':'wrong'):(q.correct?'correct':'wrong');updateVocabStats(q.item.ownerKey,result);}
+  function gradeQuestion(q){
+    if(!q||q.submitted)return;
+    const submittedAnswer=String(q.userAnswer||'');
+    const g=ExamScoring.grade(q,submittedAnswer);
+    Object.assign(q,{
+      submitted:true,gradedAnswer:submittedAnswer,correct:g.correct,status:g.status,
+      score:g.score,ratio:g.ratio,matched:g.matched,missed:g.missed
+    });
+    updateLearningStats(q);
   }
-  function render(){
-    const q=state.questions[state.index];if(!q)return;const total=state.questions.length,answered=state.questions.filter(x=>x.submitted).length;
-    $('examProgressText').textContent=`${state.index+1} / ${total}`;$('examProgressBar').style.width=`${((state.index+1)/total)*100}%`;$('examAnsweredCount').textContent=`已答 ${answered}`;$('examQuestionType').textContent=`${q.dir==='vi-zh'?'越南语 → 中文':'中文 → 越南语'} · ${q.type==='choice'?'选择题':'输入题'}`;$('examSourceBadge').textContent=sourceLabel(q.item.source);$('examPrompt').textContent=q.prompt;$('examPromptHint').textContent=q.item.source==='word'?'词汇题':q.item.source==='example'?'来自词汇例句':'来自短句库';
-    if(q.type==='choice'){$('examAnswerArea').innerHTML=`<div class="exam-options">${q.options.map((o,i)=>`<label class="exam-option${q.userAnswer===o?' selected':''}"><input type="radio" name="examOption" value="${esc(o)}" ${q.userAnswer===o?'checked':''} style="position:absolute;opacity:0;pointer-events:none"><span>${String.fromCharCode(65+i)}. ${esc(o)}</span></label>`).join('')}</div>`;document.querySelectorAll('.exam-option').forEach(el=>el.addEventListener('click',()=>{document.querySelectorAll('.exam-option').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');}));}
-    else{$('examAnswerArea').innerHTML=`<div class="exam-input-wrap"><input id="examAnswerInput" class="exam-answer-input" autocomplete="off" value="${esc(q.userAnswer)}" placeholder="请输入答案后点击确认并下一题"></div>`;setTimeout(()=>$('examAnswerInput')?.focus(),0);}
+  function submitCurrent(){const q=state.questions[state.index];if(!q)return false;saveCurrentAnswer();if(!q.userAnswer){showToast?.('请先回答当前题目');return false;}gradeQuestion(q);return true;}
+
+  function autoGrowExamTextarea(el){
+    if(!el||el.tagName!=='TEXTAREA')return;
+    el.style.height='auto';
+    el.style.height=Math.min(Math.max(el.scrollHeight,96),240)+'px';
   }
-  function tick(){if(!state.startedAt)return;const sec=Math.max(0,Math.floor((Date.now()-state.startedAt)/1000));$('examTimer').textContent=formatDuration(sec);}
-  function formatDuration(sec){sec=Math.max(0,Number(sec)||0);const m=Math.floor(sec/60),s=sec%60;return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;}
-  function beginTimer(){clearInterval(state.timerId);tick();state.timerId=setInterval(tick,1000);}
-  function finish(){
-    saveCurrentAnswer();for(const q of state.questions){if(q.userAnswer&&!q.submitted){q.correct=answerIsCorrect(q,q.userAnswer);q.submitted=true;if(q.item.ownerKey&&typeof updateVocabStats==='function')updateVocabStats(q.item.ownerKey,q.correct?'correct':'wrong');}}
-    state.finishedAt=Date.now();clearInterval(state.timerId);state.timerId=null;const total=state.questions.length,correct=state.questions.filter(q=>q.correct===true).length,wrong=total-correct,duration=Math.floor((state.finishedAt-state.startedAt)/1000),rate=total?Math.round(correct/total*100):0,inputCount=state.questions.filter(q=>q.type==='input').length;
-    $('examRunView').hidden=true;$('examResultView').hidden=false;$('examResultScore').textContent=`${correct} / ${total}`;$('examResultRate').textContent=`正确率 ${rate}%`;$('examStatCorrect').textContent=correct;$('examStatWrong').textContent=wrong;$('examStatTime').textContent=formatDuration(duration);$('examStatInput').textContent=inputCount;
-    const wrongs=state.questions.filter(q=>q.correct!==true);$('examReview').innerHTML=wrongs.length?wrongs.map(q=>`<div class="exam-review-item wrong"><div class="exam-review-q">${esc(q.prompt)}</div><div class="exam-review-a">你的答案：<b>${esc(q.userAnswer||'未作答')}</b><br>正确答案：<b>${esc(q.answer)}</b> · ${sourceLabel(q.item.source)}</div></div>`).join(''):'<div class="exam-empty">🎉 本次没有错题</div>';
-    try{const history=loadJSON(KEY_EXAM_HISTORY,[]);history.push({id:Date.now(),startedAt:state.startedAt,finishedAt:state.finishedAt,mode:state.mode,total,correct,wrong,duration,wrongItems:wrongs.slice(0,100).map(q=>({prompt:q.prompt,answer:q.answer,userAnswer:q.userAnswer,source:q.item.source,ownerKey:q.item.ownerKey||''}))});saveJSON(KEY_EXAM_HISTORY,history.slice(-100));}catch(_){ }
+  function enhanceExamInput(q){
+    const el=$('examAnswerInput');if(!el)return;
+    if(q.submitted){el.readOnly=true;el.setAttribute('aria-readonly','true');return;}
+    const fine=window.matchMedia&&window.matchMedia('(pointer:fine)').matches;
+    if(fine)setTimeout(()=>el.focus(),0);
+    el.addEventListener('focus',()=>{
+      setTimeout(()=>document.querySelector('#exam .exam-question-card')?.scrollIntoView({block:'center',behavior:'smooth'}),220);
+    });
+    if(el.tagName==='TEXTAREA'){
+      autoGrowExamTextarea(el);
+      el.addEventListener('input',()=>autoGrowExamTextarea(el));
+    }
   }
+  const render={
+    setupSummary(){const cfg=selectedConfig(),total=Object.values(cfg.counts).reduce((a,b)=>a+b,0),max=Object.entries(cfg.counts).reduce((s,[t,n])=>s+n*POINTS[t],0);if($('examSetupTotal'))$('examSetupTotal').textContent=`共 ${total} 题 · 满分 ${max} 分`;},
+    history(){const box=$('examHistoryList');if(!box)return;const rows=examHistory.load().slice().reverse();box.innerHTML=rows.length?rows.slice(0,50).map(r=>{const hasScore=Number.isFinite(Number(r.totalScore))&&Number.isFinite(Number(r.maxScore))&&Number(r.maxScore)>0,score=hasScore?Number(r.totalScore):Number(r.correct||0),max=hasScore?Number(r.maxScore):Number(r.total||0),rate=max?Math.round(score/max*100):0,d=new Date(Number(r.finishedAt||r.id||Date.now())),suffix=hasScore?'分':'题';return `<div class="exam-history-item"><div><div class="exam-history-score">${score} / ${max} ${suffix}</div><div class="exam-history-meta">${hasScore?'得分率':'旧版正确率'} ${rate}% · ${Number(r.total||0)}题 · ${formatDuration(Number(r.duration||0))}</div></div><div class="exam-history-date">${esc(d.toLocaleString())}</div></div>`;}).join(''):'<div class="exam-empty">还没有考试记录</div>';},
+    question(){const q=state.questions[state.index];if(!q)return;const total=state.questions.length,answered=state.questions.filter(x=>x.submitted).length;$('examProgressText').textContent=`${state.index+1} / ${total}`;$('examProgressBar').style.width=`${((state.index+1)/total)*100}%`;$('examAnsweredCount').textContent=`已答 ${answered}`;const direction=q.type==='fill'?'越南语例句填空':(q.dir==='vi-zh'?'越南语 → 中文':'中文 → 越南语');$('examQuestionType').textContent=`${direction} · ${TYPE_LABEL[q.type]} · ${q.maxScore}分`;$('examSourceBadge').textContent=sourceLabel(q.item.source);$('examPrompt').textContent=q.prompt;$('examPromptHint').textContent=questionHint(q);
+      if(q.type==='choice'){
+        $('examAnswerArea').innerHTML=`<div class="exam-options">${q.options.map((o,i)=>`<label class="exam-option${q.userAnswer===o?' selected':''}"><input class="exam-option-radio" type="radio" name="examOption" value="${esc(o)}" ${q.userAnswer===o?'checked':''} ${q.submitted?'disabled':''}><span>${String.fromCharCode(65+i)}. ${esc(o)}</span></label>`).join('')}</div>`;
+        if(!q.submitted)document.querySelectorAll('.exam-option').forEach(el=>el.addEventListener('click',()=>{document.querySelectorAll('.exam-option').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');}));
+      }else if(q.type==='translation'){
+        $('examAnswerArea').innerHTML=`<div class="exam-input-wrap"><textarea id="examAnswerInput" class="exam-answer-input" autocomplete="off" autocapitalize="sentences" spellcheck="true" enterkeyhint="done" placeholder="请输入完整翻译">${esc(q.userAnswer)}</textarea></div>`;
+        enhanceExamInput(q);
+      }else{
+        const placeholder=q.type==='fill'?'请输入空缺答案；多个释义输入其中一个即可':'请输入答案；多个释义输入其中一个即可';
+        $('examAnswerArea').innerHTML=`<div class="exam-input-wrap"><input id="examAnswerInput" class="exam-answer-input" autocomplete="off" autocapitalize="none" enterkeyhint="next" value="${esc(q.userAnswer)}" placeholder="${placeholder}"></div>`;
+        enhanceExamInput(q);
+      }},
+    result(){const total=state.questions.length,totalScore=state.questions.reduce((s,q)=>s+Number(q.score||0),0),maxScore=state.questions.reduce((s,q)=>s+Number(q.maxScore||0),0),correct=state.questions.filter(q=>q.status==='correct').length,partial=state.questions.filter(q=>q.status==='partial').length,wrong=total-correct-partial,rate=maxScore?Math.round(totalScore/maxScore*100):0,duration=Math.floor((state.finishedAt-state.startedAt)/1000);$('examResultScore').textContent=`${totalScore} / ${maxScore} 分`;$('examResultRate').textContent=`得分率 ${rate}%`;$('examStatCorrect').textContent=correct;$('examStatPartial').textContent=partial;$('examStatWrong').textContent=wrong;$('examStatTime').textContent=formatDuration(duration);$('examStatAnswered').textContent=total;
+      $('examTypeScoreGrid').innerHTML=['choice','input','fill','translation'].map(type=>{const qs=state.questions.filter(q=>q.type===type),got=qs.reduce((s,q)=>s+Number(q.score||0),0),max=qs.reduce((s,q)=>s+Number(q.maxScore||0),0);return `<div class="exam-type-score"><strong>${got} / ${max}</strong><span>${TYPE_LABEL[type]}</span></div>`;}).join('');
+      const review=state.questions.filter(q=>q.status!=='correct');$('examReview').innerHTML=review.length?review.map(q=>{const cls=q.status==='partial'?'partial':'wrong',scoreLine=`得分：<b>${q.score} / ${q.maxScore}</b>`;let match='';if(q.type==='translation'&&(q.matched.length||q.missed.length)){match=`<div class="exam-match-row">${q.matched.map(t=>`<span class="exam-match-token">✓ ${esc(t)}</span>`).join('')}${q.missed.map(t=>`<span class="exam-match-token miss">✕ ${esc(t)}</span>`).join('')}</div>`;}return `<div class="exam-review-item ${cls}"><div class="exam-review-q">${esc(q.prompt)}</div><div class="exam-review-a">你的答案：<b>${esc((q.gradedAnswer??q.userAnswer)||'未作答')}</b><br>参考答案：<b>${esc(q.answer)}</b><br>${scoreLine} · ${sourceLabel(q.item.source)}</div>${match}</div>`;}).join(''):'<div class="exam-empty">🎉 本次没有错题或部分正确题</div>';return {total,totalScore,maxScore,correct,partial,wrong,rate,duration};}
+  };window.ExamRender=render;
+  function tick(){if(!state.startedAt)return;const sec=Math.max(0,Math.floor((Date.now()-state.startedAt)/1000));$('examTimer').textContent=formatDuration(sec);}function formatDuration(sec){sec=Math.max(0,Number(sec)||0);const m=Math.floor(sec/60),s=sec%60;return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;}function beginTimer(){clearInterval(state.timerId);tick();state.timerId=setInterval(tick,1000);}
+  function finish(){saveCurrentAnswer();for(const q of state.questions){if(!q.submitted){if(q.userAnswer)gradeQuestion(q);else Object.assign(q,{submitted:true,gradedAnswer:'',correct:false,status:'wrong',score:0,ratio:0});}}state.finishedAt=Date.now();clearInterval(state.timerId);state.timerId=null;$('examRunView').hidden=true;$('examResultView').hidden=false;const summary=render.result(),breakdown={};for(const type of ['choice','input','fill','translation']){const qs=state.questions.filter(q=>q.type===type);breakdown[type]={score:qs.reduce((s,q)=>s+q.score,0),max:qs.reduce((s,q)=>s+q.maxScore,0),count:qs.length};}examHistory.saveRecord({id:Date.now(),startedAt:state.startedAt,finishedAt:state.finishedAt,mode:state.mode,category:state.category,total:summary.total,correct:summary.correct,partialCorrect:summary.partial,wrong:summary.wrong,duration:summary.duration,totalScore:summary.totalScore,maxScore:summary.maxScore,breakdown,wrongItems:state.questions.filter(q=>q.status!=='correct').slice(0,100).map(q=>({prompt:q.prompt,answer:q.answer,userAnswer:q.userAnswer,source:q.item.source,ownerKey:q.item.ownerKey||'',type:q.type,score:q.score,maxScore:q.maxScore,status:q.status}))});}
+
   const ExamManager={
-    enter(){populateCategories();},
-    startFromSetup(){const cfg=selectedConfig();if(!cfg.dirs.length){showToast?.('至少选择一个题目方向');return;}if(!cfg.types.length){showToast?.('至少选择一种答题方式');return;}if(!cfg.sources.length){showToast?.('至少选择一个题目来源');return;}const qs=createQuestions(cfg);if(!qs.length){showToast?.(cfg.mode==='wrong'?'当前范围没有可用于错题专项的题目':'当前条件下没有可用题目');return;}state.questions=qs;state.index=0;state.startedAt=Date.now();state.finishedAt=0;state.mode=cfg.mode;state.count=cfg.count;state.category=cfg.category;$('examSetupView').hidden=true;$('examResultView').hidden=true;$('examRunView').hidden=false;beginTimer();render();},
-    submitAndNext(){if(!submitCurrent())return;if(state.index>=state.questions.length-1){finish();return;}state.index++;render();},
-    prev(){saveCurrentAnswer();if(state.index>0){state.index--;render();}},
-    next(){saveCurrentAnswer();if(state.index<state.questions.length-1){state.index++;render();}else finish();},
-    backToSetup(){clearInterval(state.timerId);state.timerId=null;$('examRunView').hidden=true;$('examResultView').hidden=true;$('examSetupView').hidden=false;populateCategories();},
-    retryWrong(){const wrongs=state.questions.filter(q=>q.correct!==true).map(q=>q.item);if(!wrongs.length){showToast?.('本次没有错题');return;}const cfg=selectedConfig();const unique=dedupePairs(wrongs);state.questions=shuffle(unique).map((item,i)=>{const dir=cfg.dirs[i%cfg.dirs.length]||'vi-zh',type=cfg.types[i%cfg.types.length]||'choice',prompt=dir==='vi-zh'?item.vi:item.zh,answer=dir==='vi-zh'?item.zh:item.vi;const all=dedupePairs(buildPools(cfg.category).words.concat(buildPools(cfg.category).examples,buildPools(cfg.category).sentences));const pool=(dir==='vi-zh'?all.map(x=>x.zh):all.map(x=>x.vi)).filter(v=>norm(v)!==norm(answer));return {id:'r'+Date.now().toString(36)+'_'+i,item,dir,type,prompt,answer,options:type==='choice'?shuffle([answer,...shuffle(pool).slice(0,3)]):[],userAnswer:'',submitted:false,correct:null};});state.index=0;state.startedAt=Date.now();state.finishedAt=0;$('examResultView').hidden=true;$('examRunView').hidden=false;beginTimer();render();}
-  };
-  window.ExamManager=ExamManager;
+    enter(){populateCategories();if(!$('examChoiceCount')?.options.length){populateCountSelect('examChoiceCount',6);populateCountSelect('examInputCount',6);populateCountSelect('examFillCount',4);populateCountSelect('examTranslationCount',4);}render.setupSummary();},
+    refreshSetupSummary(){render.setupSummary();},toggleHistory(force){const panel=$('examHistoryPanel');if(!panel)return;const show=typeof force==='boolean'?force:panel.hidden;panel.hidden=!show;if(show)render.history();},
+    startFromSetup(){const cfg=selectedConfig(),total=Object.values(cfg.counts).reduce((a,b)=>a+b,0);if(!cfg.dirs.length){showToast?.('至少选择一个题目方向');return;}if(!cfg.sources.length&&(cfg.counts.choice||cfg.counts.input)){showToast?.('选择题或输入题至少需要一个普通题目来源');return;}if(total<=0){showToast?.('请至少选择一种题型并设置题目数量');return;}const built=createQuestions(cfg);if(built.error){showToast?.(built.error);return;}if(!built.questions.length){showToast?.('当前条件下没有可用题目');return;}state.questions=built.questions;state.index=0;state.startedAt=Date.now();state.finishedAt=0;state.mode=cfg.mode;state.category=cfg.category;$('examSetupView').hidden=true;$('examResultView').hidden=true;$('examRunView').hidden=false;beginTimer();render.question();},
+    submitAndNext(){if(!submitCurrent())return;if(state.index>=state.questions.length-1){finish();return;}state.index++;render.question();},prev(){saveCurrentAnswer();if(state.index>0){state.index--;render.question();}},next(){saveCurrentAnswer();if(state.index<state.questions.length-1){state.index++;render.question();}else finish();},backToSetup(){clearInterval(state.timerId);state.timerId=null;$('examRunView').hidden=true;$('examResultView').hidden=true;$('examSetupView').hidden=false;populateCategories();render.setupSummary();},
+    retryWrong(){
+      const retry=state.questions.filter(q=>q.status!=='correct');
+      if(!retry.length){showToast?.('本次没有错题或部分正确题');return;}
+      const order={choice:0,input:1,fill:2,translation:3};
+      state.questions=retry.map((old,i)=>{
+        const q={...old,id:'retry_'+Date.now().toString(36)+'_'+i,userAnswer:'',gradedAnswer:'',submitted:false,correct:null,status:'unanswered',score:0,ratio:0,matched:[],missed:[]};
+        if(q.type==='choice')q.options=shuffle(q.options);
+        return q;
+      }).sort((a,b)=>(order[a.type]??9)-(order[b.type]??9));
+      state.index=0;state.startedAt=Date.now();state.finishedAt=0;
+      $('examResultView').hidden=true;$('examRunView').hidden=false;beginTimer();render.question();
+    }
+  };window.ExamManager=ExamManager;
+  document.addEventListener('DOMContentLoaded',()=>{populateCountSelect('examChoiceCount',6);populateCountSelect('examInputCount',6);populateCountSelect('examFillCount',4);populateCountSelect('examTranslationCount',4);render.setupSummary();});
   document.addEventListener('keydown',e=>{if(!$('exam')?.classList.contains('active'))return;if(e.key==='Enter'&&$('examRunView')&&!$('examRunView').hidden){const tag=document.activeElement?.tagName;if(tag==='TEXTAREA')return;ExamManager.submitAndNext();}});
+})();
+</script>
+
+
+<script id="amo-v3131-update-history">
+(function(){
+  const AMO_UPDATE_HISTORY = [
+    {version:'V31.34',items:['修复考试错题回顾答案串改、重复题、题型顺序和多答案/忽略标点评分规则。','优化选择题干扰项长度与相似度，并加强手机输入题、填空题、翻译题交互。','重新设计全局玻璃透明化：所有卡片分层透明模糊，下拉菜单保持实底；手机显示设置增加底部触控留白。']},
+    {version:'V31.33',items:['优化“全局玻璃透明化”为分层玻璃：导航、欢迎横幅、统计卡、长文本使用不同透明度与模糊强度，提升阅读清晰度。','修复批量添加“拼音修改”说明在夜间模式下白底灰字的问题。']},
+    {version:'V31.32',items:['文字与显示 → 高级效果新增“全局玻璃透明化”，统一全页面 20px 模糊、透明层级和玻璃边框；关闭后恢复原有效果。','夜间模式同步使用深色半透明玻璃，并优化背景图片按比例铺满显示。']},
+    {version:'V31.31',items:['设置新增历史更新记录；批量添加的分类管理默认收起。','优化批量添加夜间说明样式，并重新设计手机/电脑考试答题操作按钮。']},
+    {version:'V31.30',items:['考试新增选择题、输入题、填空题、翻译题，并支持分别设置数量。','加入按题型计分、翻译题部分得分和历史分数查看。','优化选择题干扰项，避免把完整例句混入词汇选择题。']},
+    {version:'V31.29',items:['修复短句页面下拉框透明问题，白天、夜间和背景图模式下均保持可读。']},
+    {version:'V31.28',items:['加入第一版独立考试模块，支持智能、随机、错题专项和考试结果页。']},
+    {version:'V31.27',items:['优化词汇详情打开速度，增加词汇与关联运行时索引，减少大词库反复全量扫描。']},
+    {version:'V31.26',items:['优化一键关联去重和扫描性能，新增“检查关联”。','词汇详情显示学习统计，并增加待确认分类筛选。','高级显示效果增加恢复默认与自动跟随系统夜间模式。']},
+    {version:'V31.25',items:['新增“关联管理 → 一键补全关联”。','修复删除关联确认弹窗被词汇详情面板遮挡的问题。']},
+    {version:'V31.24',items:['新增高级效果设置：透明度、模糊、饱和度、边框、阴影和环境光。','加入明确版本号显示，并继续压缩例句/搭配编辑框初始高度。']},
+    {version:'V31.23',items:['词性管理增加本地判断学习分类；不确定时进入待确认分类。','编辑词汇的学习分类改为下拉选择，并优化例句/常用搭配编辑框。']},
+    {version:'V31.22',items:['修复学习分类与筛选列表不同步；已有学习分类会进入筛选下拉。']},
+    {version:'V31.21',items:['新增独立 vocabStats 学习统计和 QuestionScheduler 智能出题调度器。','按最近答错、错误率、复习间隔和连续正确动态调整出题权重。']}
+  ];
+  function render(){
+    const box=document.getElementById('amoUpdateHistoryList');
+    if(!box)return;
+    box.innerHTML=AMO_UPDATE_HISTORY.map((row,index)=>`
+      <section class="amo-update-item">
+        <div class="amo-update-item-head">
+          <span class="amo-update-version">${row.version}</span>
+          ${index===0?'<span class="amo-update-current">近期重点</span>':''}
+        </div>
+        <ul>${row.items.map(x=>`<li>${x}</li>`).join('')}</ul>
+      </section>`).join('');
+  }
+  window.openAmoUpdateHistory=function(){
+    const modal=document.getElementById('amoUpdateHistoryModal');
+    if(!modal)return;
+    render();
+    modal.classList.add('show');
+    modal.setAttribute('aria-hidden','false');
+    setTimeout(()=>modal.querySelector('.amo-update-history-box')?.focus(),0);
+  };
+  window.closeAmoUpdateHistory=function(){
+    const modal=document.getElementById('amoUpdateHistoryModal');
+    if(!modal)return;
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden','true');
+  };
 })();
 </script>
 
