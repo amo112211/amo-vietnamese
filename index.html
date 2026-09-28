@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.60</title>
+<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.61</title>
 <meta name="theme-color" content="#f0f4f8" id="amo-browser-theme-color">
 
 
@@ -5968,7 +5968,7 @@ body.amo-action-modal-scroll-lock{overflow:hidden!important;overscroll-behavior:
         <button type="button" class="amo-reset-effects" id="amoResetDrawerSettingsBtn" onclick="resetAmoDrawerSettings()">↺ 恢复默认抽屉动效</button>
       </div>
     </details>
-    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.60</strong></div>
+    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.61</strong></div>
 </section>
 </div>
 
@@ -15030,7 +15030,7 @@ html.amo-initial-night .header .nav button.active{
 }
 </style>
 <script id="amo-v3150-sheet-drag-close">
-(()=>{'use strict';/* V31.60: disabled — unified drawer state machine owns gestures. */})();
+(()=>{'use strict';/* V31.61: disabled — unified drawer state machine owns gestures. */})();
 </script>
 
 
@@ -15160,7 +15160,7 @@ body.amo-glass-all .page p:not(.word-vi):not(.sentence-vi){color:var(--amo-help-
     }
   }
   function attachDrawerClose(host,overlay,closeFn){
-    /* V31.60: retained for compatibility, but gesture binding is owned by AmoUnifiedDrawer. */
+    /* V31.61: retained for compatibility, but gesture binding is owned by AmoUnifiedDrawer. */
     return;
     if(!host || host.dataset.dragCloseReady==='1')return;
     let row=host.querySelector('.amo-modal-grabber-row,.amo-sheet-grabber-row');
@@ -15478,7 +15478,7 @@ body.amo-global-glass-transparent .header .nav{
 }
 </style>
 <script id="amo-v3153-drawer-cleanup">
-(()=>{'use strict';/* V31.60: disabled — no class-change half-reset during close. */})();
+(()=>{'use strict';/* V31.61: disabled — no class-change half-reset during close. */})();
 </script>
 
 
@@ -15588,7 +15588,7 @@ body.amo-global-glass-transparent .header .nav{
 }
 </style>
 <script id="amo-v3154-edit-sheet-drag-controller">
-(()=>{'use strict';/* V31.60: disabled — unified edit/display controller owns gestures. */})();
+(()=>{'use strict';/* V31.61: disabled — unified edit/display controller owns gestures. */})();
 </script>
 
 
@@ -15764,31 +15764,130 @@ body.amo-global-glass-transparent .header .nav{
 <script id="amo-v3158-two-detent-sheet-controller">
 (()=>{
  'use strict';
- const mobile=()=>matchMedia('(max-width:700px)').matches,reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
+ const mobile=()=>matchMedia('(max-width:700px)').matches;
+ const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
  const vh=()=>Math.max(320,Math.round(window.visualViewport?.height||innerHeight||document.documentElement.clientHeight||720));
  const cfg=()=>{let d={};try{d=typeof ensureAmoDisplay==='function'?ensureAmoDisplay():{}}catch(_){}return d||{}};
- const stops=(kind)=>{const d=cfg(),h=vh(),half=Math.min(.65,Math.max(.45,Number(d.drawerHalfHeight||54)/100)),expanded=Math.min(.94,Math.max(half+.08,Number(d.drawerExpandedHeight||86)/100));return kind==='detail'?[{id:'half',px:Math.round(h*half)},{id:'expanded',px:Math.round(h*expanded)},{id:'full',px:h}]:[{id:'half',px:Math.round(h*half)},{id:'expanded',px:Math.round(h*expanded)}]};
- const snapMs=()=>reduced()?1:Math.min(560,Math.max(220,Math.round((Number(cfg().drawerSettleMs)||780)*.55)));
+ const stops=(kind)=>{
+   const d=cfg(),h=vh(),half=Math.min(.65,Math.max(.45,Number(d.drawerHalfHeight||54)/100)),expanded=Math.min(.94,Math.max(half+.08,Number(d.drawerExpandedHeight||86)/100));
+   return kind==='detail'?[{id:'half',px:Math.round(h*half)},{id:'expanded',px:Math.round(h*expanded)},{id:'full',px:h}]:[{id:'half',px:Math.round(h*half)},{id:'expanded',px:Math.round(h*expanded)}];
+ };
+ const snapMs=()=>reduced()?1:Math.min(520,Math.max(220,Math.round((Number(cfg().drawerSettleMs)||780)*.50)));
  let active=null,snapTimer=0;
  const modal=document.getElementById('wordActionModal'),displayOverlay=document.getElementById('amoDisplayOverlay'),display=document.getElementById('amoDisplayDialog'),detailOverlay=document.getElementById('wordDetailOverlay'),detail=document.getElementById('wordDetailPanel');
- function infoFor(kind){if(kind==='edit'){const panel=modal?.querySelector('.modal-box');return panel&&modal?.classList.contains('show')&&modal.classList.contains('amo-word-edit-sheet')?{kind,panel,overlay:modal}:null}if(kind==='display')return display&&!displayOverlay?.hidden?{kind,panel:display,overlay:displayOverlay}:null;if(kind==='detail')return detail&&!detailOverlay?.hidden?{kind,panel:detail,overlay:detailOverlay}:null;return null}
- function clean(info,removeHeight=false){if(!info)return;clearTimeout(snapTimer);const p=info.panel;p.classList.remove('amo-unified-sheet-dragging');p.style.removeProperty('transition');p.style.removeProperty('transform');if(removeHeight){p.style.removeProperty('height');p.style.removeProperty('min-height');p.style.removeProperty('max-height');p.style.removeProperty('--amo-sheet-height');p.classList.remove('is-fullscreen');delete p.dataset.amoSheetOpened;delete p.dataset.amoSheetDetent}info.overlay?.style.removeProperty('opacity');info.overlay?.style.removeProperty('transition')}
- function abort(kind,removeHeight=false){if(!active||kind&&active.kind!==kind)return;const a=active;active=null;try{a.row.releasePointerCapture?.(a.id)}catch(_){}clean(a,removeHeight)}
- function grip(info){
-   let row;if(info.kind==='detail'){row=[...info.panel.children].find(x=>x.classList?.contains('amo-sheet-grabber-row')&&!x.classList.contains('amo-modal-grabber-row'));if(!row)return null}
-   else{row=[...info.panel.children].find(x=>x.classList?.contains('amo-modal-grabber-row'));if(row){const clone=row.cloneNode(true);row.replaceWith(clone);row=clone}else{row=document.createElement('div');row.className='amo-sheet-grabber-row amo-modal-grabber-row';row.innerHTML='<button type="button" class="amo-sheet-grabber"></button>';info.panel.insertBefore(row,info.panel.firstChild)}}
-   row.dataset.amoUnifiedGrip='1';row.style.touchAction='none';const btn=row.querySelector('.amo-sheet-grabber');if(btn){btn.style.touchAction='none';btn.setAttribute('aria-label',info.kind==='edit'?'上下拖动编辑词汇抽屉':info.kind==='display'?'上下拖动文字与显示抽屉':'上下拖动词汇详情抽屉')}return row
+ function infoFor(kind){
+   if(kind==='edit'){const panel=modal?.querySelector('.modal-box');return panel&&modal?.classList.contains('show')&&modal.classList.contains('amo-word-edit-sheet')?{kind,panel,overlay:modal}:null}
+   if(kind==='display')return display&&!displayOverlay?.hidden?{kind,panel:display,overlay:displayOverlay}:null;
+   if(kind==='detail')return detail&&!detailOverlay?.hidden?{kind,panel:detail,overlay:detailOverlay}:null;
+   return null;
  }
- function setHeight(info,name,animate=false){const levels=stops(info.kind),item=levels.find(x=>x.id===name)||levels[0],ms=snapMs(),p=info.panel;p.dataset.amoSheetDetent=item.id;p.dataset.amoSheetOpened='1';p.classList.toggle('is-fullscreen',info.kind==='detail'&&item.id==='full');p.style.transform='translate3d(0,0,0)';if(info.kind==='detail'){p.style.setProperty('--amo-sheet-height',item.px+'px');p.style.removeProperty('height');p.style.removeProperty('min-height');p.style.removeProperty('max-height')}else{p.style.setProperty('height',item.px+'px','important');p.style.setProperty('min-height',item.px+'px','important');p.style.setProperty('max-height',item.px+'px','important')}if(animate){p.style.transition=info.kind==='detail'?`height ${ms}ms cubic-bezier(.18,.88,.24,1),transform ${ms}ms cubic-bezier(.18,.88,.24,1)`:`height ${ms}ms cubic-bezier(.18,.88,.24,1),min-height ${ms}ms cubic-bezier(.18,.88,.24,1),max-height ${ms}ms cubic-bezier(.18,.88,.24,1),transform ${ms}ms cubic-bezier(.18,.88,.24,1)`;snapTimer=setTimeout(()=>p.style.removeProperty('transition'),ms+24)}else{p.style.transition='none';requestAnimationFrame(()=>p.style.removeProperty('transition'))}}
- function prepare(kind){const info=infoFor(kind);if(!mobile()||!info)return null;const row=grip(info);if(!row)return null;if(!info.panel.dataset.amoSheetOpened)setHeight(info,'half',false);return {info,row}}
- function begin(kind,row,e){if(!mobile()||active||(e.button!==undefined&&e.button!==0))return;const info=infoFor(kind);if(!info)return;clearTimeout(snapTimer);const r=info.panel.getBoundingClientRect();active={...info,row,id:e.pointerId,startY:e.clientY,startT:performance.now(),startHeight:r.height,currentHeight:r.height,closeOffset:0};info.panel.classList.add('amo-unified-sheet-dragging');info.panel.style.transition='none';try{row.setPointerCapture?.(e.pointerId)}catch(_){}e.preventDefault();e.stopImmediatePropagation()}
- function move(e){if(!active||e.pointerId!==active.id)return;const levels=stops(active.kind),half=levels[0].px,max=levels.at(-1).px,dy=e.clientY-active.startY,raw=active.startHeight-dy,h=Math.min(max,Math.max(half,raw)),off=Math.max(0,half-raw);active.currentHeight=h;active.closeOffset=off;if(active.kind==='detail')active.panel.style.setProperty('--amo-sheet-height',Math.round(h)+'px');else{active.panel.style.setProperty('height',Math.round(h)+'px','important');active.panel.style.setProperty('min-height',Math.round(h)+'px','important');active.panel.style.setProperty('max-height',Math.round(h)+'px','important')}active.panel.style.transform=`translate3d(0,${Math.round(off)}px,0)`;e.preventDefault();e.stopImmediatePropagation()}
- function finish(e,cancelled=false){if(!active||e.pointerId!==active.id)return;const a=active;active=null;try{a.row.releasePointerCapture?.(e.pointerId)}catch(_){}a.panel.classList.remove('amo-unified-sheet-dragging');const dy=e.clientY-a.startY,v=dy/Math.max(1,performance.now()-a.startT),d=cfg(),distance=Number(d.drawerCloseDistance)||90,speed=Number(d.drawerCloseVelocity)||.5;if(!cancelled&&a.closeOffset>0&&(a.closeOffset>distance||v>speed)){a.panel.style.removeProperty('transition');a.panel.style.removeProperty('transform');if(a.kind==='edit')window.closeWordActionModal?.();else if(a.kind==='display')window.closeAmoDisplaySettings?.();else window.closeWordDetail?.();return}const levels=stops(a.kind);let target;if(cancelled)target=a.panel.dataset.amoSheetDetent||'half';else if(v<-.32){const above=levels.filter(x=>x.px>a.currentHeight+4);target=(above[0]||levels.at(-1)).id}else if(v>.32&&a.closeOffset===0){const below=[...levels].reverse().find(x=>x.px<a.currentHeight-4);target=(below||levels[0]).id}else target=levels.reduce((best,x)=>Math.abs(x.px-a.currentHeight)<Math.abs(best.px-a.currentHeight)?x:best,levels[0]).id;setHeight(a,target,true);e.preventDefault();e.stopImmediatePropagation()}
- document.addEventListener('pointerdown',e=>{const row=e.target.closest?.('[data-amo-unified-grip="1"]');if(!row)return;const kind=row.closest('#amoDisplayDialog')?'display':row.closest('#wordActionModal')?'edit':row.closest('#wordDetailPanel')?'detail':null;if(kind)begin(kind,row,e)},{capture:true,passive:false});document.addEventListener('pointermove',move,{capture:true,passive:false});document.addEventListener('pointerup',e=>finish(e,false),{capture:true,passive:false});document.addEventListener('pointercancel',e=>finish(e,true),{capture:true,passive:false});
- function normalize(){for(const kind of ['edit','display','detail']){const info=infoFor(kind);if(info){prepare(kind);if(!active||active.panel!==info.panel)setHeight(info,info.panel.dataset.amoSheetDetent||'half',false)}else{const panel=kind==='edit'?modal?.querySelector('.modal-box'):kind==='display'?display:detail;if(panel){if(active?.kind===kind)abort(kind,true);clean({panel,overlay:kind==='edit'?modal:kind==='display'?displayOverlay:detailOverlay},true)}}}}
- const baseCloseEdit=window.closeWordActionModal,baseCloseDisplay=window.closeAmoDisplaySettings;if(typeof baseCloseEdit==='function')window.closeWordActionModal=function(){if(active?.kind==='edit')abort('edit',false);return baseCloseEdit.apply(this,arguments)};if(typeof baseCloseDisplay==='function')window.closeAmoDisplaySettings=function(){if(active?.kind==='display')abort('display',false);return baseCloseDisplay.apply(this,arguments)};
- const obs=new MutationObserver(()=>requestAnimationFrame(normalize));if(modal)obs.observe(modal,{attributes:true,attributeFilter:['class']});if(displayOverlay)obs.observe(displayOverlay,{attributes:true,attributeFilter:['hidden','class']});if(detailOverlay)obs.observe(detailOverlay,{attributes:true,attributeFilter:['hidden','class']});
- const resize=()=>requestAnimationFrame(()=>{normalize();for(const kind of ['edit','display','detail']){const info=infoFor(kind);if(info)setHeight(info,info.panel.dataset.amoSheetDetent||'half',false)}});window.visualViewport?.addEventListener('resize',resize,{passive:true});window.addEventListener('resize',resize,{passive:true});document.addEventListener('DOMContentLoaded',normalize,{once:true});requestAnimationFrame(normalize);
+ function clean(info,removeHeight=false){
+   if(!info)return;clearTimeout(snapTimer);const p=info.panel;
+   p.classList.remove('amo-unified-sheet-dragging');p.style.removeProperty('transition');p.style.removeProperty('transform');
+   if(removeHeight){p.style.removeProperty('height');p.style.removeProperty('min-height');p.style.removeProperty('max-height');p.style.removeProperty('--amo-sheet-height');p.classList.remove('is-fullscreen');delete p.dataset.amoSheetOpened;delete p.dataset.amoSheetDetent}
+   info.overlay?.style.removeProperty('opacity');info.overlay?.style.removeProperty('transition');
+ }
+ function abort(kind,removeHeight=false){
+   if(!active||kind&&active.kind!==kind)return;const a=active;active=null;
+   try{a.row.releasePointerCapture?.(a.id)}catch(_){}clean(a,removeHeight);
+ }
+ function grip(info){
+   let row;
+   if(info.kind==='detail'){
+     row=[...info.panel.children].find(x=>x.classList?.contains('amo-sheet-grabber-row')&&!x.classList.contains('amo-modal-grabber-row'));if(!row)return null;
+   }else{
+     row=[...info.panel.children].find(x=>x.classList?.contains('amo-modal-grabber-row'));
+     if(row){const clone=row.cloneNode(true);row.replaceWith(clone);row=clone}
+     else{row=document.createElement('div');row.className='amo-sheet-grabber-row amo-modal-grabber-row';row.innerHTML='<button type="button" class="amo-sheet-grabber"></button>';info.panel.insertBefore(row,info.panel.firstChild)}
+   }
+   row.dataset.amoUnifiedGrip='1';row.style.touchAction='none';
+   const btn=row.querySelector('.amo-sheet-grabber');
+   if(btn){btn.style.touchAction='none';btn.setAttribute('aria-label',info.kind==='edit'?'上下拖动编辑词汇抽屉':info.kind==='display'?'上下拖动文字与显示抽屉':'上下拖动词汇详情抽屉')}
+   return row;
+ }
+ function applyHeight(info,px){
+   const p=info.panel,rounded=Math.max(1,Math.round(px));
+   if(info.kind==='detail'){
+     p.style.setProperty('--amo-sheet-height',rounded+'px');
+     p.style.removeProperty('height');p.style.removeProperty('min-height');p.style.removeProperty('max-height');
+   }else{
+     /* Only height changes while dragging. Mutating min/max every frame caused Safari/visualViewport oscillation. */
+     p.style.setProperty('height',rounded+'px','important');
+     p.style.removeProperty('min-height');p.style.removeProperty('max-height');
+   }
+ }
+ function setHeight(info,name,animate=false){
+   const levels=stops(info.kind),item=levels.find(x=>x.id===name)||levels[0],ms=snapMs(),p=info.panel;
+   p.dataset.amoSheetDetent=item.id;p.dataset.amoSheetOpened='1';p.classList.toggle('is-fullscreen',info.kind==='detail'&&item.id==='full');p.style.transform='translate3d(0,0,0)';
+   if(animate){
+     p.style.transition=`height ${ms}ms cubic-bezier(.18,.88,.24,1),transform ${ms}ms cubic-bezier(.18,.88,.24,1)`;
+     requestAnimationFrame(()=>applyHeight(info,item.px));
+     clearTimeout(snapTimer);snapTimer=setTimeout(()=>p.style.removeProperty('transition'),ms+30);
+   }else{
+     p.style.transition='none';applyHeight(info,item.px);requestAnimationFrame(()=>p.style.removeProperty('transition'));
+   }
+ }
+ function prepare(kind){
+   const info=infoFor(kind);if(!mobile()||!info)return null;const row=grip(info);if(!row)return null;
+   if(!info.panel.dataset.amoSheetOpened)setHeight(info,'half',false);return {info,row};
+ }
+ function begin(kind,row,e){
+   if(!mobile()||active||(e.button!==undefined&&e.button!==0))return;const info=infoFor(kind);if(!info)return;
+   clearTimeout(snapTimer);const r=info.panel.getBoundingClientRect();
+   active={...info,row,id:e.pointerId,startY:e.clientY,startT:performance.now(),startHeight:r.height,currentHeight:r.height,closeOffset:0,lastY:e.clientY};
+   info.panel.classList.add('amo-unified-sheet-dragging');info.panel.style.transition='none';
+   try{row.setPointerCapture?.(e.pointerId)}catch(_){}e.preventDefault();e.stopImmediatePropagation();
+ }
+ function move(e){
+   if(!active||e.pointerId!==active.id)return;
+   const levels=stops(active.kind),half=levels[0].px,max=levels.at(-1).px,dy=e.clientY-active.startY,raw=active.startHeight-dy,h=Math.min(max,Math.max(half,raw)),off=Math.max(0,half-raw);
+   active.currentHeight=h;active.closeOffset=off;active.lastY=e.clientY;applyHeight(active,h);
+   /* translate only when the user pulls below the half detent; never introduce x-axis movement. */
+   active.panel.style.transform=off>0?`translate3d(0,${Math.round(off)}px,0)`:'translate3d(0,0,0)';
+   e.preventDefault();e.stopImmediatePropagation();
+ }
+ function finish(e,cancelled=false){
+   if(!active||e.pointerId!==active.id)return;const a=active;active=null;
+   try{a.row.releasePointerCapture?.(e.pointerId)}catch(_){}a.panel.classList.remove('amo-unified-sheet-dragging');
+   const endY=Number.isFinite(e.clientY)?e.clientY:a.lastY,dy=endY-a.startY,v=dy/Math.max(1,performance.now()-a.startT),d=cfg(),distance=Number(d.drawerCloseDistance)||90,speed=Number(d.drawerCloseVelocity)||.5;
+   if(!cancelled&&a.closeOffset>0&&(a.closeOffset>distance||v>speed)){
+     a.panel.style.removeProperty('transition');a.panel.style.removeProperty('transform');
+     if(a.kind==='edit')window.closeWordActionModal?.();else if(a.kind==='display')window.closeAmoDisplaySettings?.();else window.closeWordDetail?.();
+     return;
+   }
+   const levels=stops(a.kind);let target;
+   if(cancelled)target=a.panel.dataset.amoSheetDetent||'half';
+   else if(v<-.32){const above=levels.filter(x=>x.px>a.currentHeight+4);target=(above[0]||levels.at(-1)).id}
+   else if(v>.32&&a.closeOffset===0){const below=[...levels].reverse().find(x=>x.px<a.currentHeight-4);target=(below||levels[0]).id}
+   else target=levels.reduce((best,x)=>Math.abs(x.px-a.currentHeight)<Math.abs(best.px-a.currentHeight)?x:best,levels[0]).id;
+   setHeight(a,target,true);e.preventDefault();e.stopImmediatePropagation();
+ }
+ document.addEventListener('pointerdown',e=>{
+   const row=e.target.closest?.('[data-amo-unified-grip="1"]');if(!row)return;
+   const kind=row.closest('#amoDisplayDialog')?'display':row.closest('#wordActionModal')?'edit':row.closest('#wordDetailPanel')?'detail':null;if(kind)begin(kind,row,e);
+ },{capture:true,passive:false});
+ document.addEventListener('pointermove',move,{capture:true,passive:false});
+ document.addEventListener('pointerup',e=>finish(e,false),{capture:true,passive:false});
+ document.addEventListener('pointercancel',e=>finish(e,true),{capture:true,passive:false});
+ function normalize(){
+   for(const kind of ['edit','display','detail']){
+     const info=infoFor(kind);
+     if(info){prepare(kind);if(!active||active.panel!==info.panel)setHeight(info,info.panel.dataset.amoSheetDetent||'half',false)}
+     else{const panel=kind==='edit'?modal?.querySelector('.modal-box'):kind==='display'?display:detail;if(panel){if(active?.kind===kind)abort(kind,true);clean({panel,overlay:kind==='edit'?modal:kind==='display'?displayOverlay:detailOverlay},true)}}
+   }
+ }
+ const baseCloseEdit=window.closeWordActionModal,baseCloseDisplay=window.closeAmoDisplaySettings;
+ if(typeof baseCloseEdit==='function')window.closeWordActionModal=function(){if(active?.kind==='edit')abort('edit',false);return baseCloseEdit.apply(this,arguments)};
+ if(typeof baseCloseDisplay==='function')window.closeAmoDisplaySettings=function(){if(active?.kind==='display')abort('display',false);return baseCloseDisplay.apply(this,arguments)};
+ const obs=new MutationObserver(()=>requestAnimationFrame(normalize));
+ if(modal)obs.observe(modal,{attributes:true,attributeFilter:['class']});if(displayOverlay)obs.observe(displayOverlay,{attributes:true,attributeFilter:['hidden','class']});if(detailOverlay)obs.observe(detailOverlay,{attributes:true,attributeFilter:['hidden','class']});
+ const resize=()=>{
+   /* Browser toolbar / visualViewport can resize while a finger is down. Never re-snap during an active drag. */
+   if(active)return;
+   requestAnimationFrame(()=>{if(active)return;normalize();for(const kind of ['edit','display','detail']){const info=infoFor(kind);if(info)setHeight(info,info.panel.dataset.amoSheetDetent||'half',false)}});
+ };
+ window.visualViewport?.addEventListener('resize',resize,{passive:true});window.addEventListener('resize',resize,{passive:true});
+ document.addEventListener('DOMContentLoaded',normalize,{once:true});requestAnimationFrame(normalize);
  window.AmoUnifiedDrawer={refresh:normalize,getSettings:cfg,setDetent:(kind,name,animate=true)=>{const info=infoFor(kind);if(info)setHeight(info,name,animate)},abort:(kind)=>abort(kind,false)};
 })();
 </script>
@@ -15966,7 +16065,7 @@ body.amo-global-glass-transparent .header .nav{
 }
 </style>
 <script id="amo-v3159-close-cleanup">
-(()=>{'use strict';/* V31.60: disabled — unified state machines perform close cleanup. */})();
+(()=>{'use strict';/* V31.61: disabled — unified state machines perform close cleanup. */})();
 </script>
 
 
@@ -16001,6 +16100,75 @@ body.amo-global-glass-transparent .header .nav{
   document.addEventListener('DOMContentLoaded',()=>window.applyDisplaySettings?.(),{once:true});
 })();
 </script>
+
+
+<style id="amo-v3161-bottom-actions-drawer-stability-exam-glass">
+@media(max-width:700px){
+  /* Bottom action rows sit closer to the physical bottom while preserving a small safe-area cushion. */
+  #wordActionModal.amo-word-edit-sheet .modal-box{
+    min-height:0!important;
+    max-height:94dvh!important;
+    contain:paint style!important;
+  }
+  #wordActionModal.amo-word-edit-sheet .modal-actions{
+    margin-top:auto!important;
+    padding:5px 0 max(4px,calc(env(safe-area-inset-bottom) - 8px))!important;
+  }
+  #wordActionModal.amo-word-edit-sheet #wordActionBody{
+    scrollbar-gutter:stable;
+  }
+  .amo-word-detail-panel .amo-detail-actions{
+    bottom:0!important;
+    margin-top:auto!important;
+    padding:5px 0 max(4px,calc(env(safe-area-inset-bottom) - 8px))!important;
+  }
+
+  /* During a drag, only the vertical height/translate axis is allowed to change. */
+  #wordActionModal.amo-word-edit-sheet .modal-box.amo-unified-sheet-dragging,
+  #amoDisplayDialog.amo-unified-sheet-dragging,
+  .amo-word-detail-panel.amo-unified-sheet-dragging{
+    transition:none!important;
+    animation:none!important;
+    margin-left:0!important;
+    margin-right:0!important;
+    left:auto!important;
+    right:auto!important;
+  }
+
+  /* Mobile exam: use the same transparent blurred glass family as Quiz / Sentence Practice. */
+  body:not(.amo-glass-off) .app #exam{
+    background:transparent!important;
+  }
+  body:not(.amo-glass-off) .app #exam :is(#examSetupView,#examRunView,#examResultView).exam-panel{
+    background:color-mix(in srgb,var(--amo-layer-bg,var(--glass-bg)) 58%,transparent)!important;
+    border:1px solid color-mix(in srgb,var(--amo-layer-border,var(--glass-border)) 82%,rgba(255,255,255,.16))!important;
+    border-radius:26px!important;
+    -webkit-backdrop-filter:blur(calc(var(--glass-blur,14px) + 5px)) saturate(var(--glass-saturation,175%))!important;
+    backdrop-filter:blur(calc(var(--glass-blur,14px) + 5px)) saturate(var(--glass-saturation,175%))!important;
+    box-shadow:0 14px 38px rgba(13,23,38,.15),inset 0 1px 0 rgba(255,255,255,.25)!important;
+  }
+  body:not(.amo-glass-off) .app #examRunView .exam-question-card{
+    background:color-mix(in srgb,var(--amo-layer-bg-strong,var(--glass-bg-strong)) 68%,transparent)!important;
+    border-radius:26px!important;
+    -webkit-backdrop-filter:blur(calc(var(--glass-blur,14px) + 6px)) saturate(var(--glass-saturation,175%))!important;
+    backdrop-filter:blur(calc(var(--glass-blur,14px) + 6px)) saturate(var(--glass-saturation,175%))!important;
+    box-shadow:0 16px 42px rgba(12,22,38,.18),inset 0 1px 0 rgba(255,255,255,.28)!important;
+  }
+  body:not(.amo-glass-off) .app #exam :is(
+    .exam-ai-compose,.exam-type-count,.exam-setup-summary,.exam-option,.exam-answer-input,
+    .exam-stat,.exam-type-score,.exam-history-item,.exam-review-item,.exam-nav-actions
+  ){
+    background:color-mix(in srgb,var(--amo-layer-bg,var(--glass-bg)) 52%,transparent)!important;
+    border-color:color-mix(in srgb,var(--amo-layer-border,var(--glass-border)) 78%,transparent)!important;
+    -webkit-backdrop-filter:blur(var(--glass-blur,14px)) saturate(var(--glass-saturation,175%))!important;
+    backdrop-filter:blur(var(--glass-blur,14px)) saturate(var(--glass-saturation,175%))!important;
+  }
+  body:not(.amo-glass-off) .app #exam :is(select,input:not([type="checkbox"]):not([type="radio"]),textarea){
+    background:color-mix(in srgb,var(--amo-layer-bg-strong,var(--glass-bg-strong)) 54%,transparent)!important;
+    border-color:color-mix(in srgb,var(--amo-layer-border,var(--glass-border)) 82%,transparent)!important;
+  }
+}
+</style>
 
 </body>
 </html>
