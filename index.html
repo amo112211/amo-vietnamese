@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.63</title>
+<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.64</title>
 <meta name="theme-color" content="#f0f4f8" id="amo-browser-theme-color">
 
 
@@ -5867,7 +5867,7 @@ body.amo-action-modal-scroll-lock{overflow:hidden!important;overscroll-behavior:
   document.body.classList.add(initial.glass==='off'?'amo-glass-off':initial.glass==='header'?'amo-glass-header':'amo-glass-all');
 })();
 </script>
-<!-- Build: V31.63 -->
+<!-- Build: V31.64 -->
 <!--
   阿莫 V30 兼容架构 / 扩展入口
   数据源：builtInWords/builtInSentences/vietnameseGrammar/chineseGrammar（原有内容未经改写）。
@@ -5882,7 +5882,7 @@ body.amo-action-modal-scroll-lock{overflow:hidden!important;overscroll-behavior:
         <div class="logo">
             <div class="logo-icon">🇻🇳</div>
             <div>
-                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.63">V31.63</span></div>
+                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.64">V31.64</span></div>
                 <div class="logo-sub">中文母语者 · 零基础学习</div>
             </div>
         </div>
@@ -5968,7 +5968,7 @@ body.amo-action-modal-scroll-lock{overflow:hidden!important;overscroll-behavior:
         <button type="button" class="amo-reset-effects" id="amoResetDrawerSettingsBtn" onclick="resetAmoDrawerSettings()">↺ 恢复默认抽屉动效</button>
       </div>
     </details>
-    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.63</strong></div>
+    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.64</strong></div>
 </section>
 </div>
 
@@ -7720,7 +7720,7 @@ function closeAmoDisplaySettings(){
     const overlay=document.getElementById("amoDisplayOverlay");if(!overlay)return;
     document.getElementById("amoDisplayOpen")?.setAttribute("aria-expanded","false");
     const finish=()=>{overlay.hidden=true;overlay.classList.remove("amo-settings-closing");if(amoSettingsLastFocus?.isConnected)amoSettingsLastFocus.focus({preventScroll:true});amoSettingsLastFocus=null;};
-    if(!overlay.hidden&&matchMedia('(max-width:700px)').matches&&!matchMedia('(prefers-reduced-motion: reduce)').matches){overlay.classList.add("amo-settings-closing");amoDisplayCloseTimer=setTimeout(finish,420);}else finish();
+    if(!overlay.hidden&&matchMedia('(max-width:700px)').matches&&!matchMedia('(prefers-reduced-motion: reduce)').matches){overlay.classList.add("amo-settings-closing");amoDisplayCloseTimer=setTimeout(finish,280);}else finish();
 }
 document.getElementById("amoDisplayOverlay")?.addEventListener("keydown",event=>{
     if(event.key!=="Tab")return;
@@ -8619,14 +8619,14 @@ function closeWordDetail(){
     const overlay=document.getElementById('wordDetailOverlay');if(!overlay||overlay.hidden)return;
     clearTimeout(amoWordDetailCloseTimer);const token=++amoWordDetailCloseToken;
     overlay.classList.add('is-closing');
-    const ms=matchMedia('(prefers-reduced-motion: reduce)').matches?1:420;
+    const ms=matchMedia('(prefers-reduced-motion: reduce)').matches?1:280;
     amoWordDetailCloseTimer=setTimeout(()=>{if(token!==amoWordDetailCloseToken)return;overlay.hidden=true;overlay.classList.remove('is-closing');overlay.setAttribute('aria-hidden','true');},ms);
     document.body.classList.remove('amo-detail-open');window.__amoWordDetailKey='';
 }
 document.getElementById('wordDetailPanel')?.addEventListener('keydown',event=>{const row=event.target.closest('[data-detail-related]');if(row&&(event.key==='Enter'||event.key===' ')){event.preventDefault();row.click();}});
 document.getElementById('wordDetailPanel')?.addEventListener('click',event=>{
     const speech=event.target.closest('[data-detail-speech]');if(speech){event.preventDefault();event.stopPropagation();if(typeof window.playDirectStudySpeech==='function')window.playDirectStudySpeech(null,'vi',speech.dataset.detailSpeech);return;}
-    const related=event.target.closest('[data-detail-related]');if(related){event.preventDefault();event.stopPropagation();closeWordDetail();setTimeout(()=>openRelatedWord(related.dataset.detailRelated||'',related.dataset.detailRelatedZh||''),440);return;}
+    const related=event.target.closest('[data-detail-related]');if(related){event.preventDefault();event.stopPropagation();closeWordDetail();setTimeout(()=>openRelatedWord(related.dataset.detailRelated||'',related.dataset.detailRelatedZh||''),300);return;}
     const action=event.target.closest('[data-detail-action]')?.dataset.detailAction;if(!action)return;
     const word=wordDetailFind();if(action==='close'){closeWordDetail();return;}if(!word)return;
     if(action==='toggle-examples'){window.__amoWordDetailExamplesExpanded=!window.__amoWordDetailExamplesExpanded;renderWordDetail();return;}
@@ -8837,7 +8837,7 @@ function closeWordActionModal(){
  const modal=document.getElementById('wordActionModal'),confirmBtn=document.getElementById('wordActionConfirmBtn');if(!modal)return;
  pendingWordAction=null;if(confirmBtn)confirmBtn.disabled=false;
  const token=++amoWordModalToken,animated=modal.classList.contains('amo-word-edit-sheet')&&matchMedia('(max-width:700px)').matches&&!matchMedia('(prefers-reduced-motion: reduce)').matches;
- if(animated){modal.classList.add('amo-modal-closing');amoWordModalCloseTimer=setTimeout(()=>{if(token!==amoWordModalToken)return;modal.classList.remove('show','amo-word-action-front','amo-word-edit-sheet','amo-word-delete-confirm','amo-modal-closing');modal.setAttribute('aria-hidden','true');modal.style.removeProperty('--amo-vv-top');modal.style.removeProperty('--amo-vv-bottom');modal.style.removeProperty('--amo-vv-height');unlockAmoActionModalScroll()},420);}
+ if(animated){modal.classList.add('amo-modal-closing');amoWordModalCloseTimer=setTimeout(()=>{if(token!==amoWordModalToken)return;modal.classList.remove('show','amo-word-action-front','amo-word-edit-sheet','amo-word-delete-confirm','amo-modal-closing');modal.setAttribute('aria-hidden','true');modal.style.removeProperty('--amo-vv-top');modal.style.removeProperty('--amo-vv-bottom');modal.style.removeProperty('--amo-vv-height');unlockAmoActionModalScroll()},280);}
  else{modal.classList.remove('show','amo-word-action-front','amo-word-edit-sheet','amo-word-delete-confirm','amo-modal-closing');modal.setAttribute('aria-hidden','true');modal.style.removeProperty('--amo-vv-top');modal.style.removeProperty('--amo-vv-bottom');modal.style.removeProperty('--amo-vv-height');unlockAmoActionModalScroll();}
 }
 /* 完整词汇编辑弹窗，与学习展示完全分离，支持词性、多例句、多搭配。 */
@@ -13969,7 +13969,7 @@ const AmoTextIO=(()=>{
 </script>
 
 <script id="amo-v3118-pos-version">
-window.AMO_BUILD_VERSION="V31.63";
+window.AMO_BUILD_VERSION="V31.64";
 </script>
 
 <script id="amo-v3126-enhancements">
@@ -14374,6 +14374,7 @@ document.addEventListener('DOMContentLoaded',()=>{initAmoSystemTheme();enhanceAm
 <script id="amo-v3131-update-history">
 (function(){
   const AMO_UPDATE_HISTORY = [
+    {version:'V31.64',items:['所有手机 Bottom Sheet 默认打开档位改为扩展档；手指拖拽阶段保持连续跟手伸缩，只有松手时才吸附到半屏/中层/扩展/全屏。','词汇详情标题区进一步上移收紧；词汇详情与编辑词汇底部操作栏统一为同一套玻璃蒙版、按钮高度与间距，正文不再透到按钮下方。','抽屉关闭动画由约420ms加快约三分之一至280ms；开始关闭时立即撤销背景遮罩模糊，只保留抽屉本体滑出，减少残影和拖尾。','统一抽屉拖拽过程只更新高度与必要的Y轴位移，避免重复写max-height；继续保留多档吸附和全屏圆角收口。','同步更新页面标题、顶部版本徽标、设置页当前版本、AMO_BUILD_VERSION 与历史更新记录为 V31.64。']},
     {version:'V31.63',items:['手机顶部导航改为滚动进度驱动：从开始下滑即连续收缩，不再达到阈值后突然切换；Header 第一排高度、透明度、位移和导航间距同步渐变，降低界面跳动与抖动。','统一词汇详情、编辑词汇、文字与显示三种 Bottom Sheet 为同一套四档状态机：半屏 → 中层 → 扩展 → 全屏，上拉逐档吸附，下拉逐档返回或关闭；抽屉动效设置继续控制起势、落位和关闭阈值。','收紧词汇详情与编辑词汇底部操作区真实底部空白：抽屉使用 flex 内部滚动，按钮区占据实际底边，仅保留极小安全区。','修复手机答题卡底部操作被固定高度/overflow 裁切：取消内部 max-height 裁切，由页面外层滚动，开始/下一题等底部按钮可完整滚动到可视区域。','同步更新页面标题、顶部版本徽标、设置页当前版本、AMO_BUILD_VERSION 与历史更新记录为 V31.63。']},
     {version:'V31.62',items:['实测并修复手机考试页滚动时的内容跳动：Header 收起/展开改变考试顶层 top 时同步补偿 exam.scrollTop，保持当前题面视觉位置连续。','逐页回归首页、词汇、短句、答题、考试、练习短句、语法、错题与设置/备份等主要页面的滚动稳定性，考试页增加 overflow-anchor 隔离，避免浏览器滚动锚定与 Header 联动叠加。','全面收紧手机词汇列表卡片及例句/搭配展开区留白：缩小卡片内边距、段落间距、展开行高与列表间距，同时保留触控尺寸和可读性。','词汇详情与编辑词汇底部操作区进一步贴近底部安全区，减少按钮下方空白；手机考试背景改为真正透明玻璃，让壁纸/弥散背景能够透出。','同步更新页面标题、顶部版本徽标、设置页当前版本和 AMO_BUILD_VERSION 为 V31.62。']},
     {version:'V31.49',items:['全面复查并收敛 V31.40～V31.48 的移动交互：词汇与短句统一使用同一 Swipe progress，同帧驱动卡片位移/缩放与右侧操作区，解决按钮追赶、短句操作常驻和松手跳变。','修复顶部 Header 折叠抖动：采用双阈值状态机，并把考试独立滚动容器接入折叠逻辑；导航下拉可恢复完整 Header，底部圆角保持一致。','手机编辑词汇继续使用慢速 Bottom Sheet，取消/保存按钮居中、增高并上移；词汇/短句删除统一保持居中确认弹窗，详情内编辑仍保留二级抽屉压层效果。','复查答题完成态、宽屏居中、返回顶部、词汇编辑后刷新、考试选择题索引判分、考试历史滚动、AI 智能组卷与自适应学习逻辑，保留现有 LocalStorage 结构。']},
@@ -14682,14 +14683,14 @@ html.amo-initial-night .header .nav button.active{
  if(typeof originalOpen==='function')window.openWordDetail=function(vi){
    clearTimeout(enterTimer);const token=++openToken;returnFocus=document.activeElement;panel.setAttribute('aria-hidden','false');panel.classList.remove('is-fullscreen','amo-unified-sheet-dragging');panel.style.removeProperty('transition');panel.style.removeProperty('transform');
    const ok=originalOpen.call(this,vi);if(!ok)return ok;if(!mobile())return ok;
-   installGrabber();requestAnimationFrame(()=>window.AmoUnifiedDrawer?.setDetent?.('detail','half',false));
+   installGrabber();requestAnimationFrame(()=>window.AmoUnifiedDrawer?.setDetent?.('detail','expanded',false));
    const d=cfg(),lift=Math.max(160,Number(d.drawerLiftMs)||300),settle=Math.max(420,Number(d.drawerSettleMs)||780);
    if(!reduced()){panel.style.transition='none';panel.style.transform='translate3d(0,105%,0)';requestAnimationFrame(()=>{if(token!==openToken)return;panel.style.transition=`transform ${lift}ms cubic-bezier(.14,.92,.32,1)`;panel.style.transform='translate3d(0,-10px,0)';enterTimer=setTimeout(()=>{if(token!==openToken)return;panel.style.transition=`transform ${settle}ms cubic-bezier(.2,.76,.24,1)`;panel.style.transform='translate3d(0,0,0)';enterTimer=setTimeout(()=>{if(token===openToken){panel.style.removeProperty('transition');panel.style.removeProperty('transform')}},settle+24)},lift)})}
    window.AmoUnifiedDrawer?.refresh?.();return ok;
  };
  if(typeof originalClose==='function')window.closeWordDetail=function(){
    clearTimeout(enterTimer);++openToken;window.AmoUnifiedDrawer?.abort?.('detail');panel.style.removeProperty('transition');panel.style.removeProperty('transform');panel.classList.remove('amo-unified-sheet-dragging');
-   const result=originalClose.apply(this,arguments);setTimeout(()=>{if(overlay.hidden){panel.classList.remove('is-fullscreen','is-parented');overlay.classList.remove('is-parented');panel.style.removeProperty('--amo-sheet-height');panel.style.removeProperty('height');panel.style.removeProperty('min-height');panel.style.removeProperty('max-height');delete panel.dataset.amoSheetOpened;delete panel.dataset.amoSheetDetent;document.body.classList.remove('amo-word-edit-nested');panel.setAttribute('aria-hidden','false');if(returnFocus?.isConnected)returnFocus.focus?.({preventScroll:true});returnFocus=null}},450);return result;
+   const result=originalClose.apply(this,arguments);setTimeout(()=>{if(overlay.hidden){panel.classList.remove('is-fullscreen','is-parented');overlay.classList.remove('is-parented');panel.style.removeProperty('--amo-sheet-height');panel.style.removeProperty('height');panel.style.removeProperty('min-height');panel.style.removeProperty('max-height');delete panel.dataset.amoSheetOpened;delete panel.dataset.amoSheetDetent;document.body.classList.remove('amo-word-edit-nested');panel.setAttribute('aria-hidden','false');if(returnFocus?.isConnected)returnFocus.focus?.({preventScroll:true});returnFocus=null}},310);return result;
  };
 })();
 </script>
@@ -15800,7 +15801,6 @@ body.amo-global-glass-transparent .header .nav{
  function applyHeight(info,px){
    const p=info.panel,rounded=Math.max(1,Math.round(px));
    p.style.setProperty('height',rounded+'px','important');
-   p.style.setProperty('max-height','100dvh','important');
    p.style.removeProperty('min-height');
    if(info.kind==='detail')p.style.setProperty('--amo-sheet-height',rounded+'px');
  }
@@ -15813,12 +15813,13 @@ body.amo-global-glass-transparent .header .nav{
  }
  function entrance(info){
    const p=info.panel,d=cfg(),lift=Math.max(160,Number(d.drawerLiftMs)||300),settle=Math.max(420,Number(d.drawerSettleMs)||780),levels=stops();
-   clearOpenTimers(p);applyDetentClass(info,'half');p.style.transition='none';applyHeight(info,levels[0].px);
+   const initial=levels.find(x=>x.id==='expanded')||levels.at(-2)||levels[0];
+   clearOpenTimers(p);applyDetentClass(info,initial.id);p.style.transition='none';applyHeight(info,initial.px);
    if(reduced()){p.style.transform='translate3d(0,0,0)';return}
    p.style.transform='translate3d(0,105%,0)';
    requestAnimationFrame(()=>{p.style.transition=`transform ${lift}ms cubic-bezier(.14,.92,.32,1)`;p.style.transform='translate3d(0,-10px,0)';const t1=setTimeout(()=>{p.style.transition=`transform ${settle}ms cubic-bezier(.2,.76,.24,1)`;p.style.transform='translate3d(0,0,0)';const t2=setTimeout(()=>p.style.removeProperty('transition'),settle+20);openTimers.set(p,[t1,t2])},lift);openTimers.set(p,[t1])});
  }
- function prepare(kind){const info=infoFor(kind);if(!mobile()||!info)return null;const row=grip(info);if(!row)return null;if(!info.panel.dataset.amoSheetOpened){if(kind==='detail')setHeight(info,'half',false);else entrance(info)}return {info,row}}
+ function prepare(kind){const info=infoFor(kind);if(!mobile()||!info)return null;const row=grip(info);if(!row)return null;if(!info.panel.dataset.amoSheetOpened){if(kind==='detail')setHeight(info,'expanded',false);else entrance(info)}return {info,row}}
  function begin(kind,row,e){
    if(!mobile()||active||(e.button!==undefined&&e.button!==0))return;const info=infoFor(kind);if(!info)return;
    clearTimeout(snapTimer);clearOpenTimers(info.panel);const r=info.panel.getBoundingClientRect();
@@ -15834,7 +15835,7 @@ body.amo-global-glass-transparent .header .nav{
    const endY=Number.isFinite(e.clientY)?e.clientY:a.lastY,dy=endY-a.startY,v=dy/Math.max(1,performance.now()-a.startT),d=cfg(),distance=Number(d.drawerCloseDistance)||90,speed=Number(d.drawerCloseVelocity)||.5;
    if(!cancelled&&a.closeOffset>0&&(a.closeOffset>distance||v>speed)){a.panel.style.removeProperty('transition');a.panel.style.removeProperty('transform');if(a.kind==='edit')window.closeWordActionModal?.();else if(a.kind==='display')window.closeAmoDisplaySettings?.();else window.closeWordDetail?.();return}
    const levels=stops();let target;
-   if(cancelled)target=a.panel.dataset.amoSheetDetent||'half';
+   if(cancelled)target=a.panel.dataset.amoSheetDetent||'expanded';
    else if(v<-.32){target=(levels.find(x=>x.px>a.currentHeight+5)||levels.at(-1)).id}
    else if(v>.32&&a.closeOffset===0){target=([...levels].reverse().find(x=>x.px<a.currentHeight-5)||levels[0]).id}
    else target=levels.reduce((best,x)=>Math.abs(x.px-a.currentHeight)<Math.abs(best.px-a.currentHeight)?x:best,levels[0]).id;
@@ -15845,7 +15846,7 @@ body.amo-global-glass-transparent .header .nav{
  function normalize(){
    for(const kind of ['edit','display','detail']){
      const info=infoFor(kind);
-     if(info){prepare(kind);if(!active||active.panel!==info.panel){const name=info.panel.dataset.amoSheetDetent||'half';const known=stops().some(x=>x.id===name)?name:'half';setHeight(info,known,false)}}
+     if(info){prepare(kind);if(!active||active.panel!==info.panel){const name=info.panel.dataset.amoSheetDetent||'expanded';const known=stops().some(x=>x.id===name)?name:'expanded';setHeight(info,known,false)}}
      else{const panel=kind==='edit'?modal?.querySelector('.modal-box'):kind==='display'?display:detail;if(panel){if(active?.kind===kind)abort(kind,true);clean({panel,overlay:kind==='edit'?modal:kind==='display'?displayOverlay:detailOverlay},true)}}
    }
  }
@@ -15853,7 +15854,7 @@ body.amo-global-glass-transparent .header .nav{
  if(typeof baseCloseEdit==='function')window.closeWordActionModal=function(){if(active?.kind==='edit')abort('edit',false);return baseCloseEdit.apply(this,arguments)};
  if(typeof baseCloseDisplay==='function')window.closeAmoDisplaySettings=function(){if(active?.kind==='display')abort('display',false);return baseCloseDisplay.apply(this,arguments)};
  const obs=new MutationObserver(()=>requestAnimationFrame(normalize));if(modal)obs.observe(modal,{attributes:true,attributeFilter:['class']});if(displayOverlay)obs.observe(displayOverlay,{attributes:true,attributeFilter:['hidden','class']});if(detailOverlay)obs.observe(detailOverlay,{attributes:true,attributeFilter:['hidden','class']});
- const resize=()=>{if(active)return;requestAnimationFrame(()=>{if(active)return;for(const kind of ['edit','display','detail']){const info=infoFor(kind);if(info){const name=info.panel.dataset.amoSheetDetent||'half';setHeight(info,stops().some(x=>x.id===name)?name:'half',false)}}})};
+ const resize=()=>{if(active)return;requestAnimationFrame(()=>{if(active)return;for(const kind of ['edit','display','detail']){const info=infoFor(kind);if(info){const name=info.panel.dataset.amoSheetDetent||'expanded';setHeight(info,stops().some(x=>x.id===name)?name:'expanded',false)}}})};
  window.visualViewport?.addEventListener('resize',resize,{passive:true});window.addEventListener('resize',resize,{passive:true});document.addEventListener('DOMContentLoaded',normalize,{once:true});requestAnimationFrame(normalize);
  window.AmoUnifiedDrawer={refresh:normalize,getSettings:cfg,getStops:stops,setDetent:(kind,name,animate=true)=>{const info=infoFor(kind);if(info)setHeight(info,name,animate)},abort:(kind)=>abort(kind,false)};
 })();
@@ -15870,7 +15871,7 @@ body.amo-global-glass-transparent .header .nav{
 
 
 <style id="amo-v3158-two-detent-sheet-style">
-:root{--sheet-exit-duration:420ms!important;--sheet-exit-easing:cubic-bezier(.4,0,.9,.55)!important}
+:root{--sheet-exit-duration:280ms!important;--sheet-exit-easing:cubic-bezier(.32,.04,.72,.34)!important}
 @media(max-width:700px){
   #wordActionModal.amo-word-edit-sheet .modal-box,
   #amoDisplayDialog{
@@ -16303,6 +16304,115 @@ body.amo-global-glass-transparent .header .nav{
   ensure();
 })();
 </script>
+
+
+<style id="amo-v3164-expanded-default-sheet-polish">
+:root{
+  --sheet-exit-duration:280ms!important;
+  --sheet-exit-easing:cubic-bezier(.32,.04,.72,.34)!important;
+}
+@media(max-width:700px){
+  /* Stable max boundary is CSS-owned; drag loop only changes height/translateY. */
+  #wordActionModal.amo-word-edit-sheet .modal-box,
+  #amoDisplayDialog,
+  .amo-word-detail-panel{
+    max-height:100dvh!important;
+    min-height:0!important;
+    will-change:height,transform!important;
+  }
+  .amo-unified-sheet-dragging{
+    transition:none!important;
+    animation:none!important;
+    will-change:height,transform!important;
+  }
+
+  /* Detail title sits one visual row higher while keeping the two-line grabber usable. */
+  .amo-word-detail-panel>.amo-sheet-grabber-row:first-child{
+    height:24px!important;
+    min-height:24px!important;
+    flex-basis:24px!important;
+    margin:0!important;
+    padding:0!important;
+  }
+  .amo-word-detail-panel .amo-detail-head{
+    top:24px!important;
+    margin:-5px -16px 0!important;
+    padding:0 16px 6px!important;
+  }
+  .amo-word-detail-panel .amo-detail-title-wrap{
+    margin-top:0!important;
+    padding-top:0!important;
+    transform:translate3d(0,-1px,0)!important;
+  }
+
+  /* One footer mask language for detail + edit. It hides scrolling text beneath the actions. */
+  .amo-word-detail-panel .amo-detail-actions,
+  #wordActionModal.amo-word-edit-sheet .modal-actions{
+    position:sticky!important;
+    bottom:0!important;
+    z-index:60!important;
+    display:flex!important;
+    justify-content:center!important;
+    align-items:center!important;
+    gap:12px!important;
+    flex-wrap:nowrap!important;
+    margin-top:auto!important;
+    margin-bottom:0!important;
+    margin-left:-16px!important;
+    margin-right:-16px!important;
+    padding:9px 16px max(8px,env(safe-area-inset-bottom))!important;
+    background:color-mix(in srgb,var(--amo-layer-bg-strong,var(--glass-bg-strong)) 86%,rgba(18,28,42,.12))!important;
+    border-top:1px solid color-mix(in srgb,var(--amo-layer-border,var(--glass-border)) 74%,transparent)!important;
+    box-shadow:0 -10px 30px rgba(10,20,35,.12),inset 0 1px 0 rgba(255,255,255,.16)!important;
+    -webkit-backdrop-filter:blur(calc(var(--glass-blur,14px) + 5px)) saturate(var(--glass-saturation,175%))!important;
+    backdrop-filter:blur(calc(var(--glass-blur,14px) + 5px)) saturate(var(--glass-saturation,175%))!important;
+  }
+  .amo-word-detail-panel .amo-detail-actions .btn,
+  .amo-word-detail-panel .amo-detail-actions .btn-danger,
+  #wordActionModal.amo-word-edit-sheet .modal-actions .btn{
+    flex:1 1 0!important;
+    width:auto!important;
+    min-width:0!important;
+    max-width:180px!important;
+    min-height:58px!important;
+    height:58px!important;
+    margin:0!important;
+    padding:10px 12px!important;
+    border-radius:15px!important;
+    font-size:15px!important;
+    font-weight:800!important;
+  }
+
+  /* Closing: sheet leaves quickly, backdrop blur disappears immediately. */
+  .amo-word-detail-overlay.is-closing .amo-word-detail-panel,
+  #wordActionModal.amo-word-edit-sheet.amo-modal-closing .modal-box,
+  .amo-settings-overlay.amo-settings-closing .amo-settings-sheet{
+    animation:none!important;
+    transform:translate3d(0,105%,0)!important;
+    opacity:1!important;
+    transition:transform 280ms var(--sheet-exit-easing)!important;
+  }
+  body:not(.amo-glass-off) .amo-word-detail-overlay.is-closing .amo-word-detail-backdrop,
+  body:not(.amo-glass-off) .amo-settings-overlay.amo-settings-closing,
+  body:not(.amo-glass-off) #wordActionModal.amo-modal-closing,
+  .amo-word-detail-overlay.is-closing .amo-word-detail-backdrop,
+  .amo-settings-overlay.amo-settings-closing,
+  #wordActionModal.amo-modal-closing{
+    -webkit-backdrop-filter:none!important;
+    backdrop-filter:none!important;
+    background:transparent!important;
+    opacity:1!important;
+    transition:none!important;
+  }
+
+  /* Full screen remains the same physical sheet; only the top corners disappear. */
+  .amo-word-detail-panel.is-fullscreen,
+  #wordActionModal.amo-word-edit-sheet .modal-box.is-fullscreen,
+  #amoDisplayDialog.is-fullscreen{
+    border-radius:0!important;
+  }
+}
+</style>
 
 </body>
 </html>
