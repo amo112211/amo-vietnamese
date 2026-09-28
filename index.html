@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.61</title>
+<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.63</title>
 <meta name="theme-color" content="#f0f4f8" id="amo-browser-theme-color">
 
 
@@ -5867,7 +5867,7 @@ body.amo-action-modal-scroll-lock{overflow:hidden!important;overscroll-behavior:
   document.body.classList.add(initial.glass==='off'?'amo-glass-off':initial.glass==='header'?'amo-glass-header':'amo-glass-all');
 })();
 </script>
-<!-- Build: V31.59 -->
+<!-- Build: V31.63 -->
 <!--
   阿莫 V30 兼容架构 / 扩展入口
   数据源：builtInWords/builtInSentences/vietnameseGrammar/chineseGrammar（原有内容未经改写）。
@@ -5882,7 +5882,7 @@ body.amo-action-modal-scroll-lock{overflow:hidden!important;overscroll-behavior:
         <div class="logo">
             <div class="logo-icon">🇻🇳</div>
             <div>
-                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.59">V31.59</span></div>
+                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.63">V31.63</span></div>
                 <div class="logo-sub">中文母语者 · 零基础学习</div>
             </div>
         </div>
@@ -5968,7 +5968,7 @@ body.amo-action-modal-scroll-lock{overflow:hidden!important;overscroll-behavior:
         <button type="button" class="amo-reset-effects" id="amoResetDrawerSettingsBtn" onclick="resetAmoDrawerSettings()">↺ 恢复默认抽屉动效</button>
       </div>
     </details>
-    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.61</strong></div>
+    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.63</strong></div>
 </section>
 </div>
 
@@ -13969,7 +13969,7 @@ const AmoTextIO=(()=>{
 </script>
 
 <script id="amo-v3118-pos-version">
-window.AMO_BUILD_VERSION="V31.59";
+window.AMO_BUILD_VERSION="V31.63";
 </script>
 
 <script id="amo-v3126-enhancements">
@@ -14374,6 +14374,8 @@ document.addEventListener('DOMContentLoaded',()=>{initAmoSystemTheme();enhanceAm
 <script id="amo-v3131-update-history">
 (function(){
   const AMO_UPDATE_HISTORY = [
+    {version:'V31.63',items:['手机顶部导航改为滚动进度驱动：从开始下滑即连续收缩，不再达到阈值后突然切换；Header 第一排高度、透明度、位移和导航间距同步渐变，降低界面跳动与抖动。','统一词汇详情、编辑词汇、文字与显示三种 Bottom Sheet 为同一套四档状态机：半屏 → 中层 → 扩展 → 全屏，上拉逐档吸附，下拉逐档返回或关闭；抽屉动效设置继续控制起势、落位和关闭阈值。','收紧词汇详情与编辑词汇底部操作区真实底部空白：抽屉使用 flex 内部滚动，按钮区占据实际底边，仅保留极小安全区。','修复手机答题卡底部操作被固定高度/overflow 裁切：取消内部 max-height 裁切，由页面外层滚动，开始/下一题等底部按钮可完整滚动到可视区域。','同步更新页面标题、顶部版本徽标、设置页当前版本、AMO_BUILD_VERSION 与历史更新记录为 V31.63。']},
+    {version:'V31.62',items:['实测并修复手机考试页滚动时的内容跳动：Header 收起/展开改变考试顶层 top 时同步补偿 exam.scrollTop，保持当前题面视觉位置连续。','逐页回归首页、词汇、短句、答题、考试、练习短句、语法、错题与设置/备份等主要页面的滚动稳定性，考试页增加 overflow-anchor 隔离，避免浏览器滚动锚定与 Header 联动叠加。','全面收紧手机词汇列表卡片及例句/搭配展开区留白：缩小卡片内边距、段落间距、展开行高与列表间距，同时保留触控尺寸和可读性。','词汇详情与编辑词汇底部操作区进一步贴近底部安全区，减少按钮下方空白；手机考试背景改为真正透明玻璃，让壁纸/弥散背景能够透出。','同步更新页面标题、顶部版本徽标、设置页当前版本和 AMO_BUILD_VERSION 为 V31.62。']},
     {version:'V31.49',items:['全面复查并收敛 V31.40～V31.48 的移动交互：词汇与短句统一使用同一 Swipe progress，同帧驱动卡片位移/缩放与右侧操作区，解决按钮追赶、短句操作常驻和松手跳变。','修复顶部 Header 折叠抖动：采用双阈值状态机，并把考试独立滚动容器接入折叠逻辑；导航下拉可恢复完整 Header，底部圆角保持一致。','手机编辑词汇继续使用慢速 Bottom Sheet，取消/保存按钮居中、增高并上移；词汇/短句删除统一保持居中确认弹窗，详情内编辑仍保留二级抽屉压层效果。','复查答题完成态、宽屏居中、返回顶部、词汇编辑后刷新、考试选择题索引判分、考试历史滚动、AI 智能组卷与自适应学习逻辑，保留现有 LocalStorage 结构。']},
     {version:'V31.45',items:['&#x8bcd;&#x6c47;&#x624b;&#x673a;&#x4fa7;&#x6ed1;&#x64cd;&#x4f5c;&#x533a;&#x6536;&#x7a84;&#x4e3a; 92px&#xff0c;&#x968f;&#x624b;&#x52a8;&#x4e2d;&#x6ed1;&#x5165;&#xff0c;&#x5e76;&#x4f7f;&#x8bcd;&#x6c47;&#x5361;&#x7247;&#x8f7b;&#x5fae;&#x7f29;&#x653e;&#x3002;']},
     {version:'V31.44',items:['&#x4fee;&#x590d;&#x684c;&#x9762;&#x7aef;&#x53ca;&#x79fb;&#x52a8;&#x7aef;&#x7684; Swipe Actions &#x9694;&#x79bb;&#xff1b;&#x6539;&#x7a97;&#x540e;&#x6e05;&#x9664;&#x5f00;&#x542f;&#x72b6;&#x6001;&#x548c;&#x5361;&#x7247;&#x4f4d;&#x79fb;&#xff0c;&#x684c;&#x9762;&#x6062;&#x590d;&#x539f;&#x6709;&#x8bcd;&#x6c47;&#x70b9;&#x51fb;&#x5c55;&#x793a;&#x8be6;&#x60c5;&#x3002;']},
@@ -14665,7 +14667,7 @@ html.amo-initial-night .header .nav button.active{
  function installGrabber(){
    panel.querySelectorAll(':scope > .amo-modal-grabber-row').forEach(x=>x.remove());
    let row=[...panel.children].find(x=>x.classList?.contains('amo-sheet-grabber-row')&&!x.classList.contains('amo-modal-grabber-row'));
-   if(!row){row=document.createElement('div');row.className='amo-sheet-grabber-row';row.innerHTML='<button type="button" class="amo-sheet-grabber" id="amoWordDrawerGrabber" aria-label="上下拖动词汇详情抽屉" aria-controls="wordDetailPanel"></button><div class="amo-sheet-sr-controls" role="group" aria-label="词汇详情高度"><button type="button" data-drawer-detent="half">半屏</button><button type="button" data-drawer-detent="expanded">扩展</button><button type="button" data-drawer-detent="full">全屏</button></div>';panel.insertBefore(row,content)}
+   if(!row){row=document.createElement('div');row.className='amo-sheet-grabber-row';row.innerHTML='<button type="button" class="amo-sheet-grabber" id="amoWordDrawerGrabber" aria-label="上下拖动词汇详情抽屉" aria-controls="wordDetailPanel"></button><div class="amo-sheet-sr-controls" role="group" aria-label="词汇详情高度"><button type="button" data-drawer-detent="half">半屏</button><button type="button" data-drawer-detent="middle">中层</button><button type="button" data-drawer-detent="expanded">扩展</button><button type="button" data-drawer-detent="full">全屏</button></div>';panel.insertBefore(row,content)}
    row.dataset.amoUnifiedGrip='1';
    const btn=row.querySelector('.amo-sheet-grabber');if(btn){btn.id='amoWordDrawerGrabber';btn.setAttribute('aria-label','上下拖动词汇详情抽屉');btn.setAttribute('aria-controls','wordDetailPanel')}
    row.querySelectorAll('[data-drawer-detent]').forEach(b=>{b.onclick=()=>window.AmoUnifiedDrawer?.setDetent?.('detail',b.dataset.drawerDetent,true)});
@@ -14950,64 +14952,53 @@ html.amo-initial-night .header .nav button.active{
  'use strict';
  const header=document.querySelector('.header'),inner=header?.querySelector('.header-inner'),nav=header?.querySelector('.nav'),exam=document.getElementById('exam');
  if(!header||!inner||!nav)return;
- const COLLAPSE_AT=150,EXPAND_AT=6,LOCK_MS=520;
- let compact=header.classList.contains('is-compact'),forcedOpen=false,forceY=0,frame=0,navGesture=null,topSyncFrame=0,topSyncUntil=0,lastY=0,lockUntil=0;
+ const MOBILE='(max-width:700px)',RANGE=112;
+ let raf=0,lastProgress=-1,innerHeight=0,headerHeight=0,forcedOpen=false,gesture=null;
+ const isMobile=()=>matchMedia(MOBILE).matches;
  function currentScroll(){
-   if(document.body.classList.contains('amo-exam-open')&&exam?.classList.contains('active'))return exam.scrollTop||0;
-   return window.scrollY||document.documentElement.scrollTop||0;
+   if(document.body.classList.contains('amo-exam-open')&&exam?.classList.contains('active'))return Math.max(0,exam.scrollTop||0);
+   return Math.max(0,window.scrollY||document.documentElement.scrollTop||0);
  }
- lastY=currentScroll();
- function syncExamTop(){
-   if(!document.body.classList.contains('amo-exam-open'))return;
-   document.documentElement.style.setProperty('--amo-exam-top',Math.max(0,Math.round(header.getBoundingClientRect().bottom))+'px');
+ function measure(){
+   if(!isMobile())return;
+   const oldInnerTransform=inner.style.transform,oldNavTransform=nav.style.transform,oldClip=header.style.clipPath;
+   inner.style.transform='none';nav.style.transform='none';header.style.clipPath='none';
+   innerHeight=Math.max(1,inner.getBoundingClientRect().height);headerHeight=Math.max(1,header.getBoundingClientRect().height);
+   inner.style.transform=oldInnerTransform;nav.style.transform=oldNavTransform;header.style.clipPath=oldClip;
  }
- function syncExamTopBurst(){
-   topSyncUntil=performance.now()+500;
-   if(topSyncFrame)return;
-   const tick=()=>{topSyncFrame=0;syncExamTop();if(performance.now()<topSyncUntil)topSyncFrame=requestAnimationFrame(tick)};
-   topSyncFrame=requestAnimationFrame(tick);
- }
- function setCompact(value,force=false){
-   value=!!value;
-   if(compact===value){syncExamTop();return}
-   if(!force&&performance.now()<lockUntil)return;
-   compact=value;
-   lockUntil=performance.now()+LOCK_MS;
-   header.classList.toggle('is-compact',value);
-   try{inner.inert=value}catch(_){ }
-   inner.setAttribute('aria-hidden',String(value));
-   syncExamTopBurst();
- }
- function update(){
-   frame=0;
-   const y=currentScroll(),dy=y-lastY;
-   lastY=y;
-   if(y<=EXPAND_AT){forcedOpen=false;setCompact(false,true);return}
-   if(forcedOpen){
-     if(y>forceY+64&&dy>0){forcedOpen=false;if(y>COLLAPSE_AT)setCompact(true,true)}
-     else setCompact(false,true);
-     return;
+ function setProgress(p){
+   p=Math.max(0,Math.min(1,p));if(Math.abs(p-lastProgress)<.001)return;lastProgress=p;if(!innerHeight||!headerHeight)measure();
+   const clip=innerHeight*p,scale=1-.025*p;
+   header.style.setProperty('--amo-header-progress',p.toFixed(4));
+   header.style.setProperty('--amo-header-clip',clip.toFixed(2)+'px');
+   header.style.setProperty('--amo-header-scale',scale.toFixed(4));
+   header.style.setProperty('--amo-nav-shift',(-clip).toFixed(2)+'px');
+   header.style.setProperty('--amo-inner-shift',(-12*p).toFixed(2)+'px');
+   header.style.setProperty('--amo-inner-opacity',Math.max(0,1-p*1.12).toFixed(4));
+   header.style.setProperty('--amo-nav-gap',(6-p).toFixed(2)+'px');
+   header.style.setProperty('--amo-nav-pad',(6-2*p).toFixed(2)+'px');
+   inner.style.pointerEvents=p>.88?'none':'';try{inner.inert=p>.985}catch(_){ }inner.setAttribute('aria-hidden',String(p>.985));header.classList.remove('is-compact');
+   if(document.body.classList.contains('amo-exam-open')){
+     const r=header.getBoundingClientRect(),visualBottom=r.top+headerHeight-clip;
+     document.documentElement.style.setProperty('--amo-exam-top',Math.max(0,Math.round(visualBottom))+'px');
    }
-   if(performance.now()<lockUntil){syncExamTop();return}
-   if(!compact&&y>COLLAPSE_AT&&dy>=0)setCompact(true);
-   else if(compact&&y<=EXPAND_AT&&dy<=0)setCompact(false);
  }
- function schedule(){if(!frame)frame=requestAnimationFrame(update)}
- window.addEventListener('scroll',schedule,{passive:true});
- exam?.addEventListener('scroll',schedule,{passive:true});
- window.addEventListener('resize',()=>{lastY=currentScroll();schedule();syncExamTopBurst()},{passive:true});
- nav.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse')return;navGesture={id:e.pointerId,x:e.clientX,y:e.clientY}},{passive:true});
- document.addEventListener('pointermove',e=>{
-   if(!navGesture||e.pointerId!==navGesture.id)return;
-   const dy=e.clientY-navGesture.y,dx=e.clientX-navGesture.x;
-   if(dy>30&&Math.abs(dy)>Math.abs(dx)*1.2){forcedOpen=true;forceY=currentScroll();setCompact(false,true);navGesture=null}
- },{passive:true});
- document.addEventListener('pointerup',e=>{if(navGesture&&navGesture.id===e.pointerId)navGesture=null},{passive:true});
- document.addEventListener('pointercancel',()=>{navGesture=null},{passive:true});
- header.addEventListener('transitionend',e=>{if(e.target===inner||e.target===header)syncExamTop()});
- new MutationObserver(()=>{lastY=currentScroll();schedule();syncExamTopBurst()}).observe(document.body,{attributes:true,attributeFilter:['class']});
- document.querySelectorAll('.page').forEach(page=>new MutationObserver(()=>{lastY=currentScroll();schedule()}).observe(page,{attributes:true,attributeFilter:['class']}));
- schedule();syncExamTop();
+ function resetDesktop(){
+   lastProgress=-1;innerHeight=0;headerHeight=0;
+   ['--amo-header-progress','--amo-header-clip','--amo-header-scale','--amo-nav-shift','--amo-inner-shift','--amo-inner-opacity','--amo-nav-gap','--amo-nav-pad'].forEach(x=>header.style.removeProperty(x));
+   inner.style.removeProperty('pointer-events');try{inner.inert=false}catch(_){ }inner.setAttribute('aria-hidden','false');header.classList.remove('is-compact');
+ }
+ function update(){raf=0;if(!isMobile()){resetDesktop();return}const y=currentScroll(),p=forcedOpen?0:Math.min(1,y/RANGE);setProgress(p);if(forcedOpen&&y>RANGE*.75)forcedOpen=false}
+ function schedule(){if(!raf)raf=requestAnimationFrame(update)}
+ window.addEventListener('scroll',schedule,{passive:true});exam?.addEventListener('scroll',schedule,{passive:true});
+ window.addEventListener('resize',()=>{innerHeight=0;headerHeight=0;lastProgress=-1;measure();schedule()},{passive:true});
+ window.visualViewport?.addEventListener('resize',()=>{if(!gesture){innerHeight=0;headerHeight=0;lastProgress=-1;measure();schedule()}},{passive:true});
+ nav.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse')return;gesture={id:e.pointerId,x:e.clientX,y:e.clientY}},{passive:true});
+ document.addEventListener('pointermove',e=>{if(!gesture||e.pointerId!==gesture.id)return;const dy=e.clientY-gesture.y,dx=e.clientX-gesture.x;if(dy>28&&Math.abs(dy)>Math.abs(dx)*1.2){forcedOpen=true;setProgress(0);gesture=null}},{passive:true});
+ document.addEventListener('pointerup',e=>{if(gesture&&gesture.id===e.pointerId)gesture=null},{passive:true});document.addEventListener('pointercancel',()=>{gesture=null},{passive:true});
+ new MutationObserver(()=>{innerHeight=0;headerHeight=0;lastProgress=-1;requestAnimationFrame(()=>{measure();schedule()})}).observe(document.body,{attributes:true,attributeFilter:['class']});
+ document.querySelectorAll('.page').forEach(page=>new MutationObserver(schedule).observe(page,{attributes:true,attributeFilter:['class']}));
+ measure();schedule();window.AmoProgressiveHeader={refresh:()=>{innerHeight=0;headerHeight=0;lastProgress=-1;measure();schedule()},setProgress};
 })();
 </script>
 
@@ -15138,7 +15129,7 @@ body.amo-glass-all .page p:not(.word-vi):not(.sentence-vi){color:var(--amo-help-
       if(liftOut)liftOut.textContent=d.drawerLiftMs+'ms'; if(settleOut)settleOut.textContent=d.drawerSettleMs+'ms';
       document.querySelectorAll('#amoDrawerSettings h3').forEach(el=>el.textContent='抽屉动效');
       const note=document.querySelector('#amoDrawerSettings .amo-setting-hint');
-      if(note)note.textContent='调整全局抽屉式弹层在手机上的起势、落位与关闭阈值；词汇详情、编辑词汇、文字与显示等抽屉都会同步生效。';
+      if(note)note.textContent='调整全局抽屉式弹层在手机上的起势、落位与关闭阈值；上拉支持半屏 → 中层 → 扩展 → 全屏四档吸附，词汇详情、编辑词汇、文字与显示同步生效。';
     };
   }
   function patchSettingsUI(){
@@ -15767,13 +15758,21 @@ body.amo-global-glass-transparent .header .nav{
  const mobile=()=>matchMedia('(max-width:700px)').matches;
  const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
  const vh=()=>Math.max(320,Math.round(window.visualViewport?.height||innerHeight||document.documentElement.clientHeight||720));
- const cfg=()=>{let d={};try{d=typeof ensureAmoDisplay==='function'?ensureAmoDisplay():{}}catch(_){}return d||{}};
- const stops=(kind)=>{
-   const d=cfg(),h=vh(),half=Math.min(.65,Math.max(.45,Number(d.drawerHalfHeight||54)/100)),expanded=Math.min(.94,Math.max(half+.08,Number(d.drawerExpandedHeight||86)/100));
-   return kind==='detail'?[{id:'half',px:Math.round(h*half)},{id:'expanded',px:Math.round(h*expanded)},{id:'full',px:h}]:[{id:'half',px:Math.round(h*half)},{id:'expanded',px:Math.round(h*expanded)}];
+ const cfg=()=>{try{return typeof ensureAmoDisplay==='function'?(ensureAmoDisplay()||{}):{}}catch(_){return {}}};
+ const stops=()=>{
+   const d=cfg(),h=vh();
+   const half=Math.min(.65,Math.max(.45,Number(d.drawerHalfHeight||54)/100));
+   const expanded=Math.min(.94,Math.max(half+.12,Number(d.drawerExpandedHeight||86)/100));
+   const middle=Math.min(expanded-.06,Math.max(half+.07,(half+expanded)/2));
+   return [
+     {id:'half',px:Math.round(h*half)},
+     {id:'middle',px:Math.round(h*middle)},
+     {id:'expanded',px:Math.round(h*expanded)},
+     {id:'full',px:h}
+   ];
  };
- const snapMs=()=>reduced()?1:Math.min(520,Math.max(220,Math.round((Number(cfg().drawerSettleMs)||780)*.50)));
- let active=null,snapTimer=0;
+ const snapMs=()=>reduced()?1:Math.min(600,Math.max(220,Math.round((Number(cfg().drawerSettleMs)||780)*.52)));
+ let active=null,snapTimer=0,openTimers=new WeakMap();
  const modal=document.getElementById('wordActionModal'),displayOverlay=document.getElementById('amoDisplayOverlay'),display=document.getElementById('amoDisplayDialog'),detailOverlay=document.getElementById('wordDetailOverlay'),detail=document.getElementById('wordDetailPanel');
  function infoFor(kind){
    if(kind==='edit'){const panel=modal?.querySelector('.modal-box');return panel&&modal?.classList.contains('show')&&modal.classList.contains('amo-word-edit-sheet')?{kind,panel,overlay:modal}:null}
@@ -15781,114 +15780,82 @@ body.amo-global-glass-transparent .header .nav{
    if(kind==='detail')return detail&&!detailOverlay?.hidden?{kind,panel:detail,overlay:detailOverlay}:null;
    return null;
  }
+ function clearOpenTimers(panel){const list=openTimers.get(panel)||[];list.forEach(clearTimeout);openTimers.delete(panel)}
  function clean(info,removeHeight=false){
-   if(!info)return;clearTimeout(snapTimer);const p=info.panel;
-   p.classList.remove('amo-unified-sheet-dragging');p.style.removeProperty('transition');p.style.removeProperty('transform');
-   if(removeHeight){p.style.removeProperty('height');p.style.removeProperty('min-height');p.style.removeProperty('max-height');p.style.removeProperty('--amo-sheet-height');p.classList.remove('is-fullscreen');delete p.dataset.amoSheetOpened;delete p.dataset.amoSheetDetent}
+   if(!info)return;clearTimeout(snapTimer);clearOpenTimers(info.panel);const p=info.panel;
+   p.classList.remove('amo-unified-sheet-dragging','is-fullscreen');p.style.removeProperty('transition');p.style.removeProperty('transform');
+   if(removeHeight){p.style.removeProperty('height');p.style.removeProperty('min-height');p.style.removeProperty('max-height');p.style.removeProperty('--amo-sheet-height');delete p.dataset.amoSheetOpened;delete p.dataset.amoSheetDetent}
    info.overlay?.style.removeProperty('opacity');info.overlay?.style.removeProperty('transition');
  }
- function abort(kind,removeHeight=false){
-   if(!active||kind&&active.kind!==kind)return;const a=active;active=null;
-   try{a.row.releasePointerCapture?.(a.id)}catch(_){}clean(a,removeHeight);
- }
+ function abort(kind,removeHeight=false){if(!active||kind&&active.kind!==kind)return;const a=active;active=null;try{a.row.releasePointerCapture?.(a.id)}catch(_){}clean(a,removeHeight)}
  function grip(info){
-   let row;
-   if(info.kind==='detail'){
-     row=[...info.panel.children].find(x=>x.classList?.contains('amo-sheet-grabber-row')&&!x.classList.contains('amo-modal-grabber-row'));if(!row)return null;
-   }else{
-     row=[...info.panel.children].find(x=>x.classList?.contains('amo-modal-grabber-row'));
-     if(row){const clone=row.cloneNode(true);row.replaceWith(clone);row=clone}
-     else{row=document.createElement('div');row.className='amo-sheet-grabber-row amo-modal-grabber-row';row.innerHTML='<button type="button" class="amo-sheet-grabber"></button>';info.panel.insertBefore(row,info.panel.firstChild)}
-   }
+   let row=[...info.panel.children].find(x=>x.classList?.contains('amo-sheet-grabber-row'));
+   if(!row){row=document.createElement('div');row.className='amo-sheet-grabber-row amo-modal-grabber-row';row.innerHTML='<button type="button" class="amo-sheet-grabber" aria-label="上下拖动抽屉"></button>';info.panel.insertBefore(row,info.panel.firstChild)}
+   /* Remove legacy listeners by replacing the visual grip once. */
+   if(row.dataset.amoUnifiedGrip!=='1'){const clone=row.cloneNode(true);row.replaceWith(clone);row=clone}
    row.dataset.amoUnifiedGrip='1';row.style.touchAction='none';
-   const btn=row.querySelector('.amo-sheet-grabber');
-   if(btn){btn.style.touchAction='none';btn.setAttribute('aria-label',info.kind==='edit'?'上下拖动编辑词汇抽屉':info.kind==='display'?'上下拖动文字与显示抽屉':'上下拖动词汇详情抽屉')}
+   const btn=row.querySelector('.amo-sheet-grabber');if(btn){btn.style.touchAction='none';btn.setAttribute('aria-label',info.kind==='edit'?'上下拖动编辑词汇抽屉':info.kind==='display'?'上下拖动文字与显示抽屉':'上下拖动词汇详情抽屉')}
    return row;
  }
  function applyHeight(info,px){
    const p=info.panel,rounded=Math.max(1,Math.round(px));
-   if(info.kind==='detail'){
-     p.style.setProperty('--amo-sheet-height',rounded+'px');
-     p.style.removeProperty('height');p.style.removeProperty('min-height');p.style.removeProperty('max-height');
-   }else{
-     /* Only height changes while dragging. Mutating min/max every frame caused Safari/visualViewport oscillation. */
-     p.style.setProperty('height',rounded+'px','important');
-     p.style.removeProperty('min-height');p.style.removeProperty('max-height');
-   }
+   p.style.setProperty('height',rounded+'px','important');
+   p.style.setProperty('max-height','100dvh','important');
+   p.style.removeProperty('min-height');
+   if(info.kind==='detail')p.style.setProperty('--amo-sheet-height',rounded+'px');
  }
+ function applyDetentClass(info,id){info.panel.classList.toggle('is-fullscreen',id==='full');info.panel.dataset.amoSheetDetent=id;info.panel.dataset.amoSheetOpened='1'}
  function setHeight(info,name,animate=false){
-   const levels=stops(info.kind),item=levels.find(x=>x.id===name)||levels[0],ms=snapMs(),p=info.panel;
-   p.dataset.amoSheetDetent=item.id;p.dataset.amoSheetOpened='1';p.classList.toggle('is-fullscreen',info.kind==='detail'&&item.id==='full');p.style.transform='translate3d(0,0,0)';
-   if(animate){
-     p.style.transition=`height ${ms}ms cubic-bezier(.18,.88,.24,1),transform ${ms}ms cubic-bezier(.18,.88,.24,1)`;
-     requestAnimationFrame(()=>applyHeight(info,item.px));
-     clearTimeout(snapTimer);snapTimer=setTimeout(()=>p.style.removeProperty('transition'),ms+30);
-   }else{
-     p.style.transition='none';applyHeight(info,item.px);requestAnimationFrame(()=>p.style.removeProperty('transition'));
-   }
+   const levels=stops(),item=levels.find(x=>x.id===name)||levels[0],ms=snapMs(),p=info.panel;
+   clearOpenTimers(p);applyDetentClass(info,item.id);p.style.transform='translate3d(0,0,0)';
+   if(animate){p.style.transition=`height ${ms}ms cubic-bezier(.18,.88,.24,1),transform ${ms}ms cubic-bezier(.18,.88,.24,1),border-radius ${Math.min(ms,360)}ms ease`;requestAnimationFrame(()=>applyHeight(info,item.px));clearTimeout(snapTimer);snapTimer=setTimeout(()=>p.style.removeProperty('transition'),ms+35)}
+   else{p.style.transition='none';applyHeight(info,item.px);requestAnimationFrame(()=>p.style.removeProperty('transition'))}
  }
- function prepare(kind){
-   const info=infoFor(kind);if(!mobile()||!info)return null;const row=grip(info);if(!row)return null;
-   if(!info.panel.dataset.amoSheetOpened)setHeight(info,'half',false);return {info,row};
+ function entrance(info){
+   const p=info.panel,d=cfg(),lift=Math.max(160,Number(d.drawerLiftMs)||300),settle=Math.max(420,Number(d.drawerSettleMs)||780),levels=stops();
+   clearOpenTimers(p);applyDetentClass(info,'half');p.style.transition='none';applyHeight(info,levels[0].px);
+   if(reduced()){p.style.transform='translate3d(0,0,0)';return}
+   p.style.transform='translate3d(0,105%,0)';
+   requestAnimationFrame(()=>{p.style.transition=`transform ${lift}ms cubic-bezier(.14,.92,.32,1)`;p.style.transform='translate3d(0,-10px,0)';const t1=setTimeout(()=>{p.style.transition=`transform ${settle}ms cubic-bezier(.2,.76,.24,1)`;p.style.transform='translate3d(0,0,0)';const t2=setTimeout(()=>p.style.removeProperty('transition'),settle+20);openTimers.set(p,[t1,t2])},lift);openTimers.set(p,[t1])});
  }
+ function prepare(kind){const info=infoFor(kind);if(!mobile()||!info)return null;const row=grip(info);if(!row)return null;if(!info.panel.dataset.amoSheetOpened){if(kind==='detail')setHeight(info,'half',false);else entrance(info)}return {info,row}}
  function begin(kind,row,e){
    if(!mobile()||active||(e.button!==undefined&&e.button!==0))return;const info=infoFor(kind);if(!info)return;
-   clearTimeout(snapTimer);const r=info.panel.getBoundingClientRect();
+   clearTimeout(snapTimer);clearOpenTimers(info.panel);const r=info.panel.getBoundingClientRect();
    active={...info,row,id:e.pointerId,startY:e.clientY,startT:performance.now(),startHeight:r.height,currentHeight:r.height,closeOffset:0,lastY:e.clientY};
-   info.panel.classList.add('amo-unified-sheet-dragging');info.panel.style.transition='none';
-   try{row.setPointerCapture?.(e.pointerId)}catch(_){}e.preventDefault();e.stopImmediatePropagation();
+   info.panel.classList.add('amo-unified-sheet-dragging');info.panel.style.transition='none';try{row.setPointerCapture?.(e.pointerId)}catch(_){}e.preventDefault();e.stopImmediatePropagation();
  }
  function move(e){
-   if(!active||e.pointerId!==active.id)return;
-   const levels=stops(active.kind),half=levels[0].px,max=levels.at(-1).px,dy=e.clientY-active.startY,raw=active.startHeight-dy,h=Math.min(max,Math.max(half,raw)),off=Math.max(0,half-raw);
-   active.currentHeight=h;active.closeOffset=off;active.lastY=e.clientY;applyHeight(active,h);
-   /* translate only when the user pulls below the half detent; never introduce x-axis movement. */
-   active.panel.style.transform=off>0?`translate3d(0,${Math.round(off)}px,0)`:'translate3d(0,0,0)';
-   e.preventDefault();e.stopImmediatePropagation();
+   if(!active||e.pointerId!==active.id)return;const levels=stops(),half=levels[0].px,max=levels.at(-1).px,dy=e.clientY-active.startY,raw=active.startHeight-dy,h=Math.min(max,Math.max(half,raw)),off=Math.max(0,half-raw);
+   active.currentHeight=h;active.closeOffset=off;active.lastY=e.clientY;applyHeight(active,h);active.panel.style.transform=off>0?`translate3d(0,${Math.round(off)}px,0)`:'translate3d(0,0,0)';e.preventDefault();e.stopImmediatePropagation();
  }
  function finish(e,cancelled=false){
-   if(!active||e.pointerId!==active.id)return;const a=active;active=null;
-   try{a.row.releasePointerCapture?.(e.pointerId)}catch(_){}a.panel.classList.remove('amo-unified-sheet-dragging');
+   if(!active||e.pointerId!==active.id)return;const a=active;active=null;try{a.row.releasePointerCapture?.(e.pointerId)}catch(_){}a.panel.classList.remove('amo-unified-sheet-dragging');
    const endY=Number.isFinite(e.clientY)?e.clientY:a.lastY,dy=endY-a.startY,v=dy/Math.max(1,performance.now()-a.startT),d=cfg(),distance=Number(d.drawerCloseDistance)||90,speed=Number(d.drawerCloseVelocity)||.5;
-   if(!cancelled&&a.closeOffset>0&&(a.closeOffset>distance||v>speed)){
-     a.panel.style.removeProperty('transition');a.panel.style.removeProperty('transform');
-     if(a.kind==='edit')window.closeWordActionModal?.();else if(a.kind==='display')window.closeAmoDisplaySettings?.();else window.closeWordDetail?.();
-     return;
-   }
-   const levels=stops(a.kind);let target;
+   if(!cancelled&&a.closeOffset>0&&(a.closeOffset>distance||v>speed)){a.panel.style.removeProperty('transition');a.panel.style.removeProperty('transform');if(a.kind==='edit')window.closeWordActionModal?.();else if(a.kind==='display')window.closeAmoDisplaySettings?.();else window.closeWordDetail?.();return}
+   const levels=stops();let target;
    if(cancelled)target=a.panel.dataset.amoSheetDetent||'half';
-   else if(v<-.32){const above=levels.filter(x=>x.px>a.currentHeight+4);target=(above[0]||levels.at(-1)).id}
-   else if(v>.32&&a.closeOffset===0){const below=[...levels].reverse().find(x=>x.px<a.currentHeight-4);target=(below||levels[0]).id}
+   else if(v<-.32){target=(levels.find(x=>x.px>a.currentHeight+5)||levels.at(-1)).id}
+   else if(v>.32&&a.closeOffset===0){target=([...levels].reverse().find(x=>x.px<a.currentHeight-5)||levels[0]).id}
    else target=levels.reduce((best,x)=>Math.abs(x.px-a.currentHeight)<Math.abs(best.px-a.currentHeight)?x:best,levels[0]).id;
    setHeight(a,target,true);e.preventDefault();e.stopImmediatePropagation();
  }
- document.addEventListener('pointerdown',e=>{
-   const row=e.target.closest?.('[data-amo-unified-grip="1"]');if(!row)return;
-   const kind=row.closest('#amoDisplayDialog')?'display':row.closest('#wordActionModal')?'edit':row.closest('#wordDetailPanel')?'detail':null;if(kind)begin(kind,row,e);
- },{capture:true,passive:false});
- document.addEventListener('pointermove',move,{capture:true,passive:false});
- document.addEventListener('pointerup',e=>finish(e,false),{capture:true,passive:false});
- document.addEventListener('pointercancel',e=>finish(e,true),{capture:true,passive:false});
+ document.addEventListener('pointerdown',e=>{const row=e.target.closest?.('[data-amo-unified-grip="1"]');if(!row)return;const kind=row.closest('#amoDisplayDialog')?'display':row.closest('#wordActionModal')?'edit':row.closest('#wordDetailPanel')?'detail':null;if(kind)begin(kind,row,e)},{capture:true,passive:false});
+ document.addEventListener('pointermove',move,{capture:true,passive:false});document.addEventListener('pointerup',e=>finish(e,false),{capture:true,passive:false});document.addEventListener('pointercancel',e=>finish(e,true),{capture:true,passive:false});
  function normalize(){
    for(const kind of ['edit','display','detail']){
      const info=infoFor(kind);
-     if(info){prepare(kind);if(!active||active.panel!==info.panel)setHeight(info,info.panel.dataset.amoSheetDetent||'half',false)}
+     if(info){prepare(kind);if(!active||active.panel!==info.panel){const name=info.panel.dataset.amoSheetDetent||'half';const known=stops().some(x=>x.id===name)?name:'half';setHeight(info,known,false)}}
      else{const panel=kind==='edit'?modal?.querySelector('.modal-box'):kind==='display'?display:detail;if(panel){if(active?.kind===kind)abort(kind,true);clean({panel,overlay:kind==='edit'?modal:kind==='display'?displayOverlay:detailOverlay},true)}}
    }
  }
  const baseCloseEdit=window.closeWordActionModal,baseCloseDisplay=window.closeAmoDisplaySettings;
  if(typeof baseCloseEdit==='function')window.closeWordActionModal=function(){if(active?.kind==='edit')abort('edit',false);return baseCloseEdit.apply(this,arguments)};
  if(typeof baseCloseDisplay==='function')window.closeAmoDisplaySettings=function(){if(active?.kind==='display')abort('display',false);return baseCloseDisplay.apply(this,arguments)};
- const obs=new MutationObserver(()=>requestAnimationFrame(normalize));
- if(modal)obs.observe(modal,{attributes:true,attributeFilter:['class']});if(displayOverlay)obs.observe(displayOverlay,{attributes:true,attributeFilter:['hidden','class']});if(detailOverlay)obs.observe(detailOverlay,{attributes:true,attributeFilter:['hidden','class']});
- const resize=()=>{
-   /* Browser toolbar / visualViewport can resize while a finger is down. Never re-snap during an active drag. */
-   if(active)return;
-   requestAnimationFrame(()=>{if(active)return;normalize();for(const kind of ['edit','display','detail']){const info=infoFor(kind);if(info)setHeight(info,info.panel.dataset.amoSheetDetent||'half',false)}});
- };
- window.visualViewport?.addEventListener('resize',resize,{passive:true});window.addEventListener('resize',resize,{passive:true});
- document.addEventListener('DOMContentLoaded',normalize,{once:true});requestAnimationFrame(normalize);
- window.AmoUnifiedDrawer={refresh:normalize,getSettings:cfg,setDetent:(kind,name,animate=true)=>{const info=infoFor(kind);if(info)setHeight(info,name,animate)},abort:(kind)=>abort(kind,false)};
+ const obs=new MutationObserver(()=>requestAnimationFrame(normalize));if(modal)obs.observe(modal,{attributes:true,attributeFilter:['class']});if(displayOverlay)obs.observe(displayOverlay,{attributes:true,attributeFilter:['hidden','class']});if(detailOverlay)obs.observe(detailOverlay,{attributes:true,attributeFilter:['hidden','class']});
+ const resize=()=>{if(active)return;requestAnimationFrame(()=>{if(active)return;for(const kind of ['edit','display','detail']){const info=infoFor(kind);if(info){const name=info.panel.dataset.amoSheetDetent||'half';setHeight(info,stops().some(x=>x.id===name)?name:'half',false)}}})};
+ window.visualViewport?.addEventListener('resize',resize,{passive:true});window.addEventListener('resize',resize,{passive:true});document.addEventListener('DOMContentLoaded',normalize,{once:true});requestAnimationFrame(normalize);
+ window.AmoUnifiedDrawer={refresh:normalize,getSettings:cfg,getStops:stops,setDetent:(kind,name,animate=true)=>{const info=infoFor(kind);if(info)setHeight(info,name,animate)},abort:(kind)=>abort(kind,false)};
 })();
 </script>
 
@@ -16169,6 +16136,173 @@ body.amo-global-glass-transparent .header .nav{
   }
 }
 </style>
+
+
+<style id="amo-v3162-scroll-and-spacing-final">
+@media(max-width:700px){
+  /* ---------- Vocabulary list: reduce dead space without shrinking tap targets ---------- */
+  #words .word-grid{
+    gap:8px!important;
+  }
+  #words .amo-compact-word,
+  #words .amo-word-summary{
+    min-height:0!important;
+    padding:8px 10px!important;
+    border-radius:15px!important;
+  }
+  #words .amo-word-main{gap:1px!important}
+  #words .amo-word-topline{gap:4px!important}
+  #words .amo-example-section,
+  #words .amo-pair-section{
+    margin-top:5px!important;
+    padding-top:4px!important;
+  }
+  #words .amo-example-lines{
+    gap:3px!important;
+    padding-top:2px!important;
+  }
+  #words .amo-example-line{padding-block:2px!important}
+  #words .amo-example-line+.amo-example-line{padding-top:3px!important}
+  #words .amo-pair-grid{margin-top:2px!important}
+  #words .amo-pair-row{
+    min-height:38px!important;
+    padding:2px 1px!important;
+  }
+  #words .amo-pair-detail{
+    padding:4px 6px 6px!important;
+    margin-bottom:2px!important;
+  }
+  #words .amo-pair-example-line{padding:3px 0!important}
+  #words .amo-related-type{margin-bottom:2px!important}
+  #words .amo-pair-preview{margin-top:2px!important}
+
+  /* ---------- Vocabulary detail: compact body/footer ---------- */
+  .amo-word-detail-panel{
+    padding-bottom:0!important;
+  }
+  .amo-word-detail-panel .amo-detail-section{
+    padding:10px 0!important;
+  }
+  .amo-word-detail-panel .amo-detail-section-head{
+    margin-bottom:6px!important;
+  }
+  .amo-word-detail-panel .amo-detail-example{
+    padding:5px 0!important;
+  }
+  .amo-word-detail-panel .amo-detail-pair{
+    padding:6px 2px!important;
+  }
+  .amo-word-detail-panel .amo-detail-actions{
+    bottom:0!important;
+    margin:4px 0 0!important;
+    padding:4px 0 max(4px,calc(env(safe-area-inset-bottom) - 24px))!important;
+    background:transparent!important;
+    box-shadow:none!important;
+  }
+  .amo-word-detail-panel .amo-detail-actions .btn,
+  .amo-word-detail-panel .amo-detail-actions .btn-danger{
+    min-height:50px!important;
+  }
+
+  /* ---------- Edit vocabulary footer: closer to bottom on all iPhone safe-area sizes ---------- */
+  #wordActionModal.amo-word-edit-sheet .modal-box{
+    padding-bottom:0!important;
+  }
+  #wordActionModal.amo-word-edit-sheet .modal-actions{
+    margin-top:auto!important;
+    margin-bottom:0!important;
+    padding:4px 0 max(4px,calc(env(safe-area-inset-bottom) - 24px))!important;
+    background:transparent!important;
+    box-shadow:none!important;
+    border:0!important;
+  }
+  #wordActionModal.amo-word-edit-sheet .modal-actions .btn{
+    min-height:52px!important;
+  }
+
+  /* ---------- Exam really sits on the wallpaper/page background ---------- */
+  #exam.page.active{
+    background:transparent!important;
+    overflow-anchor:none!important;
+  }
+  body:not(.amo-glass-off) .app #exam :is(#examSetupView,#examRunView,#examResultView).exam-panel{
+    background:color-mix(in srgb,var(--amo-layer-bg,var(--glass-bg)) 42%,transparent)!important;
+    border-color:color-mix(in srgb,var(--amo-layer-border,var(--glass-border)) 76%,transparent)!important;
+    -webkit-backdrop-filter:blur(calc(var(--glass-blur,14px) + 5px)) saturate(var(--glass-saturation,175%))!important;
+    backdrop-filter:blur(calc(var(--glass-blur,14px) + 5px)) saturate(var(--glass-saturation,175%))!important;
+  }
+  body:not(.amo-glass-off) .app #examRunView .exam-question-card{
+    background:color-mix(in srgb,var(--amo-layer-bg-strong,var(--glass-bg-strong)) 56%,transparent)!important;
+    -webkit-backdrop-filter:blur(calc(var(--glass-blur,14px) + 7px)) saturate(var(--glass-saturation,175%))!important;
+    backdrop-filter:blur(calc(var(--glass-blur,14px) + 7px)) saturate(var(--glass-saturation,175%))!important;
+  }
+  body:not(.amo-glass-off) .app #exam :is(
+    .exam-ai-compose,.exam-type-count,.exam-setup-summary,.exam-option,.exam-answer-input,
+    .exam-stat,.exam-type-score,.exam-history-item,.exam-review-item,.exam-nav-actions
+  ){
+    background:color-mix(in srgb,var(--amo-layer-bg,var(--glass-bg)) 46%,transparent)!important;
+  }
+}
+
+/* Header itself should never be selected as a scroll anchor while its compact state changes. */
+.header{overflow-anchor:none!important}
+</style>
+
+<script id="amo-v3162-scroll-position-stability">
+(()=>{'use strict';/* V31.63: disabled — progressive mobile Header owns continuous layout; threshold compensation would cause feedback/jitter. */})();
+</script>
+
+
+<style id="amo-v3163-progressive-header-drawer-quiz-final">
+@media(max-width:700px){
+  /* Progressive compacting: JS updates the first-row height every scroll frame. Never animate it again. */
+  .header{transform:scaleX(var(--amo-header-scale,1))!important;transform-origin:top center!important;clip-path:inset(0 0 var(--amo-header-clip,0px) 0 round 24px)!important;transition:none!important;will-change:transform,clip-path!important}
+  .header-inner{box-sizing:border-box!important;overflow:hidden!important;opacity:var(--amo-inner-opacity,1)!important;transform:translate3d(0,var(--amo-inner-shift,0px),0)!important;transition:none!important;will-change:opacity,transform!important}
+  .header.is-compact .header-inner{max-height:none!important;padding-left:12px!important;padding-right:12px!important}
+  .header .nav{gap:var(--amo-nav-gap,6px)!important;padding-top:var(--amo-nav-pad,6px)!important;padding-bottom:var(--amo-nav-pad,6px)!important;transform:translate3d(0,var(--amo-nav-shift,0px),0)!important;transition:none!important;will-change:transform!important}
+
+  /* All three sheets share the same mechanics/surface. Content scrolls; action rows occupy the real bottom. */
+  #wordActionModal.amo-word-edit-sheet .modal-box,#amoDisplayDialog,.amo-word-detail-panel{
+    display:flex!important;flex-direction:column!important;overflow:hidden!important;max-height:100dvh!important;min-height:0!important;
+    animation:none!important;transform-origin:center bottom!important;
+  }
+  #wordActionModal.amo-word-edit-sheet .modal-box.is-fullscreen,#amoDisplayDialog.is-fullscreen,.amo-word-detail-panel.is-fullscreen{border-radius:0!important}
+  #wordActionModal.amo-word-edit-sheet #wordActionBody,#amoDisplayDialog>.amo-settings-scroll,#wordDetailContent{
+    flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior:contain!important;
+  }
+  #wordDetailContent{display:flex!important;flex-direction:column!important;padding-bottom:0!important}
+  .amo-word-detail-panel .amo-detail-actions{margin-top:auto!important;position:sticky!important;bottom:0!important;padding:4px 0 max(2px,calc(env(safe-area-inset-bottom) - 31px))!important}
+  #wordActionModal.amo-word-edit-sheet .modal-actions{margin-top:auto!important;padding:4px 0 max(2px,calc(env(safe-area-inset-bottom) - 31px))!important}
+  #wordActionModal.amo-word-edit-sheet .modal-box{padding-bottom:0!important}
+  .amo-word-detail-panel{padding-bottom:0!important}
+
+  /* Display settings needs a real internal scroller so the grip/footer do not participate in content scrolling. */
+  #amoDisplayDialog{padding-bottom:0!important}
+
+  /* Mobile quiz: outer page owns vertical scrolling. Never crop the action buttons inside a fixed-height card. */
+  #quiz.page.active{overflow:visible!important;padding-bottom:calc(28px + env(safe-area-inset-bottom))!important}
+  .app #quiz .quiz-desktop-layout,.app #quiz .quiz-box,.app #quiz.quiz-answer-complete .quiz-box{max-height:none!important;height:auto!important;overflow:visible!important}
+  .app #quiz .quiz-box,.app #quiz.quiz-answer-complete .quiz-box{min-height:clamp(560px,70dvh,680px)!important}
+  .app #quiz .quiz-question,.app #quiz.quiz-answer-complete .quiz-question{flex:1 1 auto!important;min-height:0!important;overflow:visible!important}
+  .app #quiz .quiz-scroll-content,.app #quiz.quiz-answer-complete .quiz-scroll-content{max-height:none!important;overflow:visible!important;overscroll-behavior:auto!important}
+  .app #quiz .quiz-main-actions,.app #quiz.quiz-answer-complete .quiz-main-actions:not([style*="display: none"]){position:static!important;bottom:auto!important;margin-top:auto!important;background:transparent!important;border-top:0!important;padding:10px 0 4px!important}
+  .app #quiz .quiz-options,.app #quiz.quiz-answer-complete .quiz-options,.app #quiz.quiz-answer-complete #quizOptions{max-height:none!important;overflow:visible!important}
+}
+</style>
+<script id="amo-v3163-display-sheet-scroller">
+(()=>{
+  'use strict';
+  const dialog=document.getElementById('amoDisplayDialog');if(!dialog)return;
+  function ensure(){
+    if(dialog.querySelector(':scope > .amo-settings-scroll'))return;
+    const grip=dialog.querySelector(':scope > .amo-sheet-grabber-row');
+    const nodes=[...dialog.childNodes].filter(n=>n!==grip);
+    const wrap=document.createElement('div');wrap.className='amo-settings-scroll';
+    nodes.forEach(n=>wrap.appendChild(n));dialog.appendChild(wrap);
+  }
+  ensure();
+})();
+</script>
 
 </body>
 </html>
