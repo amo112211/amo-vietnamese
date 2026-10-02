@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.64</title>
+<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.70</title>
 <meta name="theme-color" content="#f0f4f8" id="amo-browser-theme-color">
 
 
@@ -5867,7 +5867,7 @@ body.amo-action-modal-scroll-lock{overflow:hidden!important;overscroll-behavior:
   document.body.classList.add(initial.glass==='off'?'amo-glass-off':initial.glass==='header'?'amo-glass-header':'amo-glass-all');
 })();
 </script>
-<!-- Build: V31.64 -->
+<!-- Build: V31.70 -->
 <!--
   阿莫 V30 兼容架构 / 扩展入口
   数据源：builtInWords/builtInSentences/vietnameseGrammar/chineseGrammar（原有内容未经改写）。
@@ -5882,7 +5882,7 @@ body.amo-action-modal-scroll-lock{overflow:hidden!important;overscroll-behavior:
         <div class="logo">
             <div class="logo-icon">🇻🇳</div>
             <div>
-                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.64">V31.64</span></div>
+                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.70">V31.70</span></div>
                 <div class="logo-sub">中文母语者 · 零基础学习</div>
             </div>
         </div>
@@ -5964,11 +5964,11 @@ body.amo-action-modal-scroll-lock{overflow:hidden!important;overscroll-behavior:
         <label class="amo-range-row" for="amoDrawerHalf"><span>半屏停靠高度</span><input id="amoDrawerHalf" type="range" min="45" max="65" step="1" value="54" oninput="setAmoEffectSetting('drawerHalfHeight',this.value)"><output id="amoDrawerHalfValue" for="amoDrawerHalf">54%</output></label>
         <label class="amo-range-row" for="amoDrawerExpanded"><span>扩展停靠高度</span><input id="amoDrawerExpanded" type="range" min="72" max="94" step="1" value="86" oninput="setAmoEffectSetting('drawerExpandedHeight',this.value)"><output id="amoDrawerExpandedValue" for="amoDrawerExpanded">86%</output></label>
         <label class="amo-range-row" for="amoDrawerCloseDistance"><span>下滑关闭距离</span><input id="amoDrawerCloseDistance" type="range" min="50" max="160" step="5" value="90" oninput="setAmoEffectSetting('drawerCloseDistance',this.value)"><output id="amoDrawerCloseDistanceValue" for="amoDrawerCloseDistance">90px</output></label>
-        <label class="amo-range-row" for="amoDrawerCloseVelocity"><span>快速下滑关闭速度</span><input id="amoDrawerCloseVelocity" type="range" min="0.2" max="1.0" step="0.05" value="0.5" oninput="setAmoEffectSetting('drawerCloseVelocity',this.value)"><output id="amoDrawerCloseVelocityValue" for="amoDrawerCloseVelocity">0.50px/ms</output></label>
+        <label class="amo-range-row" for="amoDrawerCloseVelocity"><span>快速下滑关闭速度</span><input id="amoDrawerCloseVelocity" type="range" min="0.8" max="1.5" step="0.05" value="1.0" oninput="setAmoEffectSetting('drawerCloseVelocity',this.value)"><output id="amoDrawerCloseVelocityValue" for="amoDrawerCloseVelocity">1.00px/ms</output></label>
         <button type="button" class="amo-reset-effects" id="amoResetDrawerSettingsBtn" onclick="resetAmoDrawerSettings()">↺ 恢复默认抽屉动效</button>
       </div>
     </details>
-    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.64</strong></div>
+    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.70</strong></div>
 </section>
 </div>
 
@@ -7531,7 +7531,12 @@ function ensureAmoDisplay(){
     d.drawerHalfHeight=Number.isFinite(Number(d.drawerHalfHeight))?Math.min(65,Math.max(45,Math.round(Number(d.drawerHalfHeight)))):54;
     d.drawerExpandedHeight=Number.isFinite(Number(d.drawerExpandedHeight))?Math.min(94,Math.max(72,Math.round(Number(d.drawerExpandedHeight)))):86;
     d.drawerCloseDistance=Number.isFinite(Number(d.drawerCloseDistance))?Math.min(160,Math.max(50,Math.round(Number(d.drawerCloseDistance)/5)*5)):90;
-    d.drawerCloseVelocity=Number.isFinite(Number(d.drawerCloseVelocity))?Math.min(1,Math.max(.2,Math.round(Number(d.drawerCloseVelocity)/.05)*.05)):.5;
+    {
+      const legacyVelocity=Number(d.drawerCloseVelocity);
+      d.drawerCloseVelocity=Number.isFinite(legacyVelocity)
+        ? (legacyVelocity<.8 ? 1 : Math.min(1.5,Math.max(.8,Math.round(legacyVelocity/.05)*.05)))
+        : 1;
+    }
     d.globalGlassTransparency=d.globalGlassTransparency===true;
     if(hadLegacyColorPreset){try{saveJSON(KEY_SETTINGS,settings);}catch(_){/* 仅读写设置项，失败后保留原始数据。 */}}
     return d;
@@ -7629,7 +7634,7 @@ function setAmoGlassMode(mode){
     applyDisplaySettings();
 }
 function setAmoEffectSetting(key,value){
-    const bounds={glassOpacity:[10,20,1],glassBlur:[10,18,1],glassSaturation:[100,220,5],glassBorderStrength:[0,100,5],glassShadowStrength:[0,100,5],glassAmbientStrength:[0,100,5],backgroundIntensity:[50,200,5],drawerLiftMs:[160,520,20],drawerSettleMs:[420,1200,30],drawerHalfHeight:[45,65,1],drawerExpandedHeight:[72,94,1],drawerCloseDistance:[50,160,5],drawerCloseVelocity:[.2,1,.05]};
+    const bounds={glassOpacity:[10,20,1],glassBlur:[10,18,1],glassSaturation:[100,220,5],glassBorderStrength:[0,100,5],glassShadowStrength:[0,100,5],glassAmbientStrength:[0,100,5],backgroundIntensity:[50,200,5],drawerLiftMs:[160,520,20],drawerSettleMs:[420,1200,30],drawerHalfHeight:[45,65,1],drawerExpandedHeight:[72,94,1],drawerCloseDistance:[50,160,5],drawerCloseVelocity:[.8,1.5,.05]};
     if(!Object.prototype.hasOwnProperty.call(bounds,key))return;
     const n=Number(value);if(!Number.isFinite(n))return;
     const [lo,hi,step]=bounds[key];
@@ -11165,6 +11170,50 @@ function markQuizBatchRevealed(){
     updateQuizLiveScore();
 }
 
+function goPreviousQuizBatchItem(){
+    if(!quizBatchReady || !quizBatchKeys.length){
+        showToast("请先开始答题");
+        return false;
+    }
+    if(quizBatchFinished){
+        showToast("本轮答题已经完成");
+        return false;
+    }
+    if(quizBatchIndex<=0){
+        showToast("已经是第一题了");
+        return false;
+    }
+
+    setMobileQuizCompletedLayout(false);
+    const permanentSet=getCoreRememberedSet();
+    let targetIndex=quizBatchIndex-1;
+    while(targetIndex>=0){
+        const key=quizBatchKeys[targetIndex];
+        const item=allWords().find(w=>quizItemKey(w)===normalize(key));
+        if(item && !permanentSet.has(normalize(key))) break;
+        targetIndex--;
+    }
+    if(targetIndex<0){
+        showToast("已经是第一题了");
+        return false;
+    }
+
+    quizBatchIndex=targetIndex;
+    quizCurrent=null;
+    setQuizResetRememberMode("reset");
+    const shown=showCurrentQuizBatchItem();
+    if(shown===false) return false;
+
+    // 已经完成的旧题只作为回看，不重复计入答题次数/学习统计。
+    const previousResult=quizBatchResults[quizBatchIndex];
+    if(previousResult && (previousResult.status==="correct" || previousResult.status==="revealed")){
+        restoreCompletedQuizUI(previousResult.status);
+    }
+    saveQuizSession();
+    keepStudyFocusInView("quiz");
+    return true;
+}
+
 function goNextQuizBatchItem(){
     // 下一题先恢复手机端正常布局，再渲染新题。
     setMobileQuizCompletedLayout(false);
@@ -11673,6 +11722,8 @@ let sentenceReadingOrder = [];
 let sentenceReadingIndex = -1;
 let sentenceReadingHistory = [];
 let sentenceReadingHistoryIndex = -1;
+// V31.68：记录练习短句历史中哪些题已经真正提交过答案；答对/答错都算已作答。
+let sentenceReadingAttemptedHistory = new Set();
 
 function openSentenceReading(){
     showPage("sentenceReading");
@@ -11688,7 +11739,7 @@ function restartSentenceReading(){
             ? "当前分类暂无可练习的短句，请选择其他分类或添加短句。"
             : "暂无可练习的短句，请先添加短句或取消已记住状态。";
         setStudyBankNotice("sentenceReadingPoolNotice",msg);
-        sentenceReadingCurrent=null;sentenceReadingHistory=[];sentenceReadingHistoryIndex=-1;
+        sentenceReadingCurrent=null;sentenceReadingHistory=[];sentenceReadingHistoryIndex=-1;sentenceReadingAttemptedHistory.clear();
         document.getElementById("sentenceReadingQuestion").textContent=msg;
         document.getElementById("sentenceReadingAnswer").replaceChildren();
         document.getElementById("sentenceReadingInput").value="";
@@ -11704,6 +11755,7 @@ function restartSentenceReading(){
     sentenceReadingIndex=-1;
     sentenceReadingHistory=[];
     sentenceReadingHistoryIndex=-1;
+    sentenceReadingAttemptedHistory.clear();
     nextSentenceReading();
 }
 function nextSentenceReading(){
@@ -11763,6 +11815,7 @@ function randomSentenceReading(){
     // 随机/下一题产生新题时写入历史；若之前回退过，则丢弃旧的“前进”分支。
     if(sentenceReadingHistoryIndex < sentenceReadingHistory.length - 1){
         sentenceReadingHistory = sentenceReadingHistory.slice(0, sentenceReadingHistoryIndex + 1);
+        sentenceReadingAttemptedHistory = new Set([...sentenceReadingAttemptedHistory].filter(i=>i<=sentenceReadingHistoryIndex));
     }
     sentenceReadingHistory.push(sentenceReadingCurrent);
     sentenceReadingHistoryIndex = sentenceReadingHistory.length - 1;
@@ -11889,6 +11942,8 @@ function checkSentenceReadingAnswer(){
         input.focus();
         return;
     }
+    // 只要真正提交过一次答案，不论对错，就解锁该题的左右方向键切题。
+    if(sentenceReadingHistoryIndex>=0) sentenceReadingAttemptedHistory.add(sentenceReadingHistoryIndex);
     const mode = document.getElementById("sentenceReadingMode").value;
     const expected = mode === "zh" ? sentenceReadingCurrent.vi : sentenceReadingCurrent.zh;
     const isCorrect = normalizeSentenceReadingAnswer(userAnswer) === normalizeSentenceReadingAnswer(expected);
@@ -12812,7 +12867,7 @@ function init(){
     restorePageScroll(currentPageId);
     renderCategoryControls();
     // 仅注册一次：搜索防抖和动态列表事件委托，换页不会创建新监听器。
-    AmoCore.ui.el('wordSearch')?.addEventListener('input',AmoCore.ui.debounce(()=>{currentWordPage=1;renderWords();}));
+    AmoCore.ui.el('wordSearch')?.addEventListener('input',AmoCore.ui.debounce(()=>{const q=String(AmoCore.ui.el('wordSearch')?.value||'').trim();if(q){const f=AmoCore.ui.el('wordFilter');if(f&&f.value!=='all')f.value='all';}currentWordPage=1;renderWords();}));
     AmoCore.ui.el('sentenceSearch')?.addEventListener('input',AmoCore.ui.debounce(()=>{window.sentenceCurrentPage=1;renderSentences();}));
     AmoCore.ui.el('sentenceList')?.addEventListener('click',event=>{
         const btn=event.target.closest('.sentence-delete-only');
@@ -12863,6 +12918,46 @@ function handleQuizEnterKey(e){
     }
 }
 document.addEventListener("keydown",handleQuizEnterKey);
+
+function isAmoTextEditingTarget(target){
+    return !!(target && (
+        target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        target instanceof HTMLSelectElement ||
+        target.isContentEditable
+    ));
+}
+
+function handleQuizArrowKeys(e){
+    if(e.key!=="ArrowLeft" && e.key!=="ArrowRight") return;
+
+    // 输入框/文本域/下拉框/可编辑区域中，左右键始终留给光标或原生控件。
+    if(isAmoTextEditingTarget(e.target)) return;
+
+    // 弹窗或抽屉正在前景显示时，不让答题页面接管方向键。
+    const wordActionModal=document.getElementById("wordActionModal");
+    if(wordActionModal && wordActionModal.classList.contains("show")) return;
+    const displayOverlay=document.getElementById("amoDisplayOverlay");
+    if(displayOverlay && !displayOverlay.hidden) return;
+    const detailOverlay=document.getElementById("wordDetailOverlay");
+    if(detailOverlay && !detailOverlay.hidden) return;
+
+    const quizPage=document.getElementById("quiz");
+    if(!quizPage || !quizPage.classList.contains("active")) return;
+
+    // V31.68：当前题至少提交过一次答案后才解锁方向键；答对、答错、显示答案都视为已作答。
+    const currentResult=quizBatchResults?.[quizBatchIndex];
+    const hasAttempted=!!(quizCurrent?.answered || (currentResult && !["unanswered","skipped"].includes(currentResult.status)));
+    if(!hasAttempted) return;
+
+    e.preventDefault();
+    if(e.key==="ArrowLeft"){
+        goPreviousQuizBatchItem();
+    }else{
+        goNextQuizBatchItem();
+    }
+}
+document.addEventListener("keydown",handleQuizArrowKeys);
 
 document.addEventListener("DOMContentLoaded",()=>{try{renderCustomPinyinManager();}catch(e){}});
 
@@ -13941,8 +14036,21 @@ const AmoTextIO=(()=>{
     Array.from(select.options).forEach(option=>{const b=document.createElement('button');b.type='button';b.className='amo-category-option'+(option.selected?' selected':'');b.textContent=option.textContent;b.dataset.value=option.value;b.setAttribute('role','option');b.setAttribute('aria-selected',String(option.selected));frag.append(b);});
     menu.replaceChildren(frag);menu.scrollTop=previous;
   }
-  function close(){open=false;menu.hidden=true;trigger.setAttribute('aria-expanded','false');}
-  function show(){groups.forEach(g=>g.close());open=true;menu.hidden=false;trigger.setAttribute('aria-expanded','true');refresh();}
+  function resetPortalStyles(){menu.style.position='';menu.style.left='';menu.style.top='';menu.style.width='';menu.style.maxWidth='';menu.style.zIndex='';}
+  function positionPortalMenu(){
+    if(!open||window.matchMedia('(max-width:700px)').matches)return;
+    const r=trigger.getBoundingClientRect();
+    const minW=Math.max(170,Math.round(r.width));
+    const maxW=Math.min(360,window.innerWidth-16);
+    const width=Math.min(maxW,minW);
+    const left=Math.max(8,Math.min(Math.round(r.left),window.innerWidth-width-8));
+    const below=window.innerHeight-r.bottom;
+    const menuH=Math.min(260,Math.max(96,menu.scrollHeight||180));
+    const top=below>=Math.min(menuH+8,220)?Math.round(r.bottom+5):Math.max(8,Math.round(r.top-menuH-5));
+    menu.style.position='fixed';menu.style.left=left+'px';menu.style.top=top+'px';menu.style.width=width+'px';menu.style.maxWidth=maxW+'px';menu.style.zIndex='20050';
+  }
+  function close(){open=false;menu.hidden=true;trigger.setAttribute('aria-expanded','false');if(menu.parentNode!==shell)shell.appendChild(menu);resetPortalStyles();}
+  function show(){groups.forEach(g=>g.close());open=true;trigger.setAttribute('aria-expanded','true');if(!window.matchMedia('(max-width:700px)').matches&&menu.parentNode!==document.body)document.body.appendChild(menu);menu.hidden=false;refresh();requestAnimationFrame(positionPortalMenu);}
   trigger.addEventListener('click',()=>open?close():show());
   menu.addEventListener('click',event=>{const target=event.target.closest('.amo-category-option');if(!target)return;select.value=target.dataset.value;close();refresh();select.dispatchEvent(new Event('change',{bubbles:true}));trigger.focus({preventScroll:true});});
   // wheel event stays on a stable scroll container; mouse hover never re-selects first item.
@@ -13950,8 +14058,10 @@ const AmoTextIO=(()=>{
   select.addEventListener('change',refresh);new MutationObserver(()=>queueMicrotask(refresh)).observe(select,{childList:true,subtree:true,attributes:true,attributeFilter:['selected']});
   groups.push({close});refresh();
  }
- document.addEventListener('pointerdown',e=>{if(!e.target.closest('.amo-category-picker'))groups.forEach(g=>g.close());});
+ document.addEventListener('pointerdown',e=>{if(!e.target.closest('.amo-category-picker')&&!e.target.closest('.amo-category-menu'))groups.forEach(g=>g.close());});
  document.addEventListener('keydown',e=>{if(e.key==='Escape')groups.forEach(g=>g.close());});
+ window.addEventListener('resize',()=>groups.forEach(g=>g.close()),{passive:true});
+ window.addEventListener('scroll',e=>{if(e.target===document||e.target===document.documentElement||e.target===document.body)groups.forEach(g=>g.close());},{passive:true,capture:true});
 })();
 
 </script>
@@ -13969,7 +14079,7 @@ const AmoTextIO=(()=>{
 </script>
 
 <script id="amo-v3118-pos-version">
-window.AMO_BUILD_VERSION="V31.64";
+window.AMO_BUILD_VERSION="V31.70";
 </script>
 
 <script id="amo-v3126-enhancements">
@@ -14374,7 +14484,11 @@ document.addEventListener('DOMContentLoaded',()=>{initAmoSystemTheme();enhanceAm
 <script id="amo-v3131-update-history">
 (function(){
   const AMO_UPDATE_HISTORY = [
-    {version:'V31.64',items:['所有手机 Bottom Sheet 默认打开档位改为扩展档；手指拖拽阶段保持连续跟手伸缩，只有松手时才吸附到半屏/中层/扩展/全屏。','词汇详情标题区进一步上移收紧；词汇详情与编辑词汇底部操作栏统一为同一套玻璃蒙版、按钮高度与间距，正文不再透到按钮下方。','抽屉关闭动画由约420ms加快约三分之一至280ms；开始关闭时立即撤销背景遮罩模糊，只保留抽屉本体滑出，减少残影和拖尾。','统一抽屉拖拽过程只更新高度与必要的Y轴位移，避免重复写max-height；继续保留多档吸附和全屏圆角收口。','同步更新页面标题、顶部版本徽标、设置页当前版本、AMO_BUILD_VERSION 与历史更新记录为 V31.64。']},
+    {version:'V31.70',items:['修复答题完成后题目与答案之间的大块空白：完成态下进度/正确错误统计不再独占一整行，改为与题目共享同一布局行，答案紧跟题目显示。','同步收紧完成态答案区域的行间距、结果区顶部留白和滚动内容 padding，不使用负 margin 硬拉，避免长题目或不同字号下发生重叠。','手机端保留原有安全布局，仅轻微收紧完成态题目与答案间距；同步更新页面标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION 与更新历史为 V31.70。']},
+    {version:'V31.69',items:['修复分类下拉菜单被后续卡片遮挡：桌面端分类菜单打开时提升到 body 顶层 fixed 浮层，并自动根据视口决定向下或向上展开，不再受父容器 overflow / stacking context 裁切。','统一全站原生 select / option / optgroup 的日间、壁纸与夜间配色和 color-scheme，修复下拉列表白底白字、选项看不清的问题。','加强词汇/短句/答题等工具条下拉层级，管理菜单打开时始终高于内容卡片。','词汇搜索输入有内容时自动切换为“全部词汇”，避免“只看生词 / 已记住 / 需加强记忆”等状态筛选导致搜索漏词；同步更新标题、版本徽标、设置页版本、AMO_BUILD_VERSION 与更新历史。']},
+    {version:'V31.68',items:['新增方向键作答门槛：答题和练习短句在当前题尚未提交答案时，← / → 不切题；只要提交过一次答案，无论正确或错误，左右方向键立即解锁。','答题继续保留答错后可重试：错误答案只把本题标记为“已尝试”，不会强制锁定题目；此时可选择继续修改答案，也可使用方向键切题。','练习短句按历史题位记录“已尝试”状态，返回已经回答过的旧题时仍可继续使用 ← / → 切换；重新生成练习轮次时状态会正确清空。','继续保留输入保护：焦点位于 input、textarea、select 或 contenteditable 时不接管左右方向键；同步更新页面标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION 与更新历史为 V31.68。']},
+    {version:'V31.66',items:['重构手机抽屉拖拽为高性能 FLIP 状态机：拖动开始只做一次布局准备，pointermove 全程只更新 translate3d，不再逐帧修改 height/top/left/margin，显著减少 reflow。','抽屉 pointermove 统一使用 requestAnimationFrame 合帧，并且 will-change 只在拖拽、吸附和关闭期间临时启用，静止后立即清理，降低长期合成层占用。','修复扩展/全屏快速下甩关闭的状态顺序：速度达到阈值后直接沿当前位移滑出，不再先回到半屏；关闭开始同一帧立即撤销外层背景模糊和遮罩。','统一词汇详情、编辑词汇、文字与显示的关闭清理：关闭完成后重置 transform/transition/will-change/高度/抓手状态与滚动锁，避免白闪、残影、下一次打开错位。','改进甩动速度判定为最近约90ms采样速度，避免长时间按住后最后快速甩动被平均速度稀释；继续保留0.80–1.50px/ms速度设置与1.00px/ms默认值。','同步更新页面标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION 与更新历史为 V31.66。']},
+    {version:'V31.65',items:['重排手机词汇详情头部：越南语、拼音、中文释义、词性/分类各自独立占行，取消负位移与压叠规则，解决标题和其它文字重叠。','词汇详情与编辑词汇底部操作区按同一视觉基准统一：加入更强玻璃遮罩，按钮统一62px高度，正文滚动到最底也不会透到操作按钮下方。','快速下滑关闭速度默认改为1.00px/ms，设置范围扩展为0.80–1.50px/ms；旧版低于0.80的保存值自动迁移到新默认1.00。','修复扩展/全屏快速下滑时先吸附到半屏再关闭：达到速度阈值后直接进入关闭轨道，不再经过其它吸附档位。','抽屉开始关闭的同一帧立即取消外层背景模糊和透明遮罩，仅保留抽屉本体滑出；同步更新页面标题、版本徽标、设置页版本、AMO_BUILD_VERSION 与更新历史为V31.65。']},
     {version:'V31.63',items:['手机顶部导航改为滚动进度驱动：从开始下滑即连续收缩，不再达到阈值后突然切换；Header 第一排高度、透明度、位移和导航间距同步渐变，降低界面跳动与抖动。','统一词汇详情、编辑词汇、文字与显示三种 Bottom Sheet 为同一套四档状态机：半屏 → 中层 → 扩展 → 全屏，上拉逐档吸附，下拉逐档返回或关闭；抽屉动效设置继续控制起势、落位和关闭阈值。','收紧词汇详情与编辑词汇底部操作区真实底部空白：抽屉使用 flex 内部滚动，按钮区占据实际底边，仅保留极小安全区。','修复手机答题卡底部操作被固定高度/overflow 裁切：取消内部 max-height 裁切，由页面外层滚动，开始/下一题等底部按钮可完整滚动到可视区域。','同步更新页面标题、顶部版本徽标、设置页当前版本、AMO_BUILD_VERSION 与历史更新记录为 V31.63。']},
     {version:'V31.62',items:['实测并修复手机考试页滚动时的内容跳动：Header 收起/展开改变考试顶层 top 时同步补偿 exam.scrollTop，保持当前题面视觉位置连续。','逐页回归首页、词汇、短句、答题、考试、练习短句、语法、错题与设置/备份等主要页面的滚动稳定性，考试页增加 overflow-anchor 隔离，避免浏览器滚动锚定与 Header 联动叠加。','全面收紧手机词汇列表卡片及例句/搭配展开区留白：缩小卡片内边距、段落间距、展开行高与列表间距，同时保留触控尺寸和可读性。','词汇详情与编辑词汇底部操作区进一步贴近底部安全区，减少按钮下方空白；手机考试背景改为真正透明玻璃，让壁纸/弥散背景能够透出。','同步更新页面标题、顶部版本徽标、设置页当前版本和 AMO_BUILD_VERSION 为 V31.62。']},
     {version:'V31.49',items:['全面复查并收敛 V31.40～V31.48 的移动交互：词汇与短句统一使用同一 Swipe progress，同帧驱动卡片位移/缩放与右侧操作区，解决按钮追赶、短句操作常驻和松手跳变。','修复顶部 Header 折叠抖动：采用双阈值状态机，并把考试独立滚动容器接入折叠逻辑；导航下拉可恢复完整 Header，底部圆角保持一致。','手机编辑词汇继续使用慢速 Bottom Sheet，取消/保存按钮居中、增高并上移；词汇/短句删除统一保持居中确认弹窗，详情内编辑仍保留二级抽屉压层效果。','复查答题完成态、宽屏居中、返回顶部、词汇编辑后刷新、考试选择题索引判分、考试历史滚动、AI 智能组卷与自适应学习逻辑，保留现有 LocalStorage 结构。']},
@@ -14660,38 +14774,29 @@ html.amo-initial-night .header .nav button.active{
 <script id="amo-v3141-vocabulary-drawer-controller">
 (()=>{
  'use strict';
- const panel=document.getElementById('wordDetailPanel'),overlay=document.getElementById('wordDetailOverlay'),content=document.getElementById('wordDetailContent'),actionModal=document.getElementById('wordActionModal');
- if(!panel||!overlay||!content)return;
- const mobile=()=>matchMedia('(max-width:700px)').matches,reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
- const cfg=()=>{let d={};try{d=typeof ensureAmoDisplay==='function'?ensureAmoDisplay():{}}catch(_){}return d||{}};
- let openToken=0,returnFocus=null,wasNested=false,enterTimer=0;
- function installGrabber(){
-   panel.querySelectorAll(':scope > .amo-modal-grabber-row').forEach(x=>x.remove());
-   let row=[...panel.children].find(x=>x.classList?.contains('amo-sheet-grabber-row')&&!x.classList.contains('amo-modal-grabber-row'));
-   if(!row){row=document.createElement('div');row.className='amo-sheet-grabber-row';row.innerHTML='<button type="button" class="amo-sheet-grabber" id="amoWordDrawerGrabber" aria-label="上下拖动词汇详情抽屉" aria-controls="wordDetailPanel"></button><div class="amo-sheet-sr-controls" role="group" aria-label="词汇详情高度"><button type="button" data-drawer-detent="half">半屏</button><button type="button" data-drawer-detent="middle">中层</button><button type="button" data-drawer-detent="expanded">扩展</button><button type="button" data-drawer-detent="full">全屏</button></div>';panel.insertBefore(row,content)}
-   row.dataset.amoUnifiedGrip='1';
-   const btn=row.querySelector('.amo-sheet-grabber');if(btn){btn.id='amoWordDrawerGrabber';btn.setAttribute('aria-label','上下拖动词汇详情抽屉');btn.setAttribute('aria-controls','wordDetailPanel')}
-   row.querySelectorAll('[data-drawer-detent]').forEach(b=>{b.onclick=()=>window.AmoUnifiedDrawer?.setDetent?.('detail',b.dataset.drawerDetent,true)});
-   return row;
- }
- const removeRemember=()=>content.querySelector('[data-detail-action="remember"]')?.remove();new MutationObserver(removeRemember).observe(content,{childList:true,subtree:true});removeRemember();
- if(actionModal){
-   const syncNested=()=>{const visible=actionModal.classList.contains('show'),nested=mobile()&&visible&&actionModal.classList.contains('amo-word-edit-sheet')&&!overlay.hidden&&document.body.classList.contains('amo-detail-open');const hiddenValue=String(nested);if(panel.getAttribute('aria-hidden')!==hiddenValue)panel.setAttribute('aria-hidden',hiddenValue);panel.classList.toggle('is-parented',nested);overlay.classList.toggle('is-parented',nested);document.body.classList.toggle('amo-word-edit-nested',nested);if(wasNested&&!nested&&!overlay.hidden)requestAnimationFrame(()=>panel.querySelector('[data-detail-action=edit]')?.focus({preventScroll:true}));wasNested=nested};
-   new MutationObserver(syncNested).observe(actionModal,{attributes:true,attributeFilter:['class']});syncNested();
- }
- const originalOpen=window.openWordDetail,originalClose=window.closeWordDetail;
- if(typeof originalOpen==='function')window.openWordDetail=function(vi){
-   clearTimeout(enterTimer);const token=++openToken;returnFocus=document.activeElement;panel.setAttribute('aria-hidden','false');panel.classList.remove('is-fullscreen','amo-unified-sheet-dragging');panel.style.removeProperty('transition');panel.style.removeProperty('transform');
-   const ok=originalOpen.call(this,vi);if(!ok)return ok;if(!mobile())return ok;
-   installGrabber();requestAnimationFrame(()=>window.AmoUnifiedDrawer?.setDetent?.('detail','expanded',false));
-   const d=cfg(),lift=Math.max(160,Number(d.drawerLiftMs)||300),settle=Math.max(420,Number(d.drawerSettleMs)||780);
-   if(!reduced()){panel.style.transition='none';panel.style.transform='translate3d(0,105%,0)';requestAnimationFrame(()=>{if(token!==openToken)return;panel.style.transition=`transform ${lift}ms cubic-bezier(.14,.92,.32,1)`;panel.style.transform='translate3d(0,-10px,0)';enterTimer=setTimeout(()=>{if(token!==openToken)return;panel.style.transition=`transform ${settle}ms cubic-bezier(.2,.76,.24,1)`;panel.style.transform='translate3d(0,0,0)';enterTimer=setTimeout(()=>{if(token===openToken){panel.style.removeProperty('transition');panel.style.removeProperty('transform')}},settle+24)},lift)})}
-   window.AmoUnifiedDrawer?.refresh?.();return ok;
+ /* V31.66: drawer motion is owned only by AmoUnifiedDrawer.
+    This legacy block now keeps the nested edit/detail depth effect only. */
+ const panel=document.getElementById('wordDetailPanel');
+ const overlay=document.getElementById('wordDetailOverlay');
+ const actionModal=document.getElementById('wordActionModal');
+ if(!panel||!overlay||!actionModal)return;
+ let wasNested=false;
+ const syncNested=()=>{
+   const nested=matchMedia('(max-width:700px)').matches &&
+     actionModal.classList.contains('show') &&
+     actionModal.classList.contains('amo-word-edit-sheet') &&
+     !overlay.hidden && document.body.classList.contains('amo-detail-open');
+   panel.setAttribute('aria-hidden',String(nested));
+   panel.classList.toggle('is-parented',nested);
+   overlay.classList.toggle('is-parented',nested);
+   document.body.classList.toggle('amo-word-edit-nested',nested);
+   if(wasNested&&!nested&&!overlay.hidden){
+     requestAnimationFrame(()=>panel.querySelector('[data-detail-action="edit"]')?.focus({preventScroll:true}));
+   }
+   wasNested=nested;
  };
- if(typeof originalClose==='function')window.closeWordDetail=function(){
-   clearTimeout(enterTimer);++openToken;window.AmoUnifiedDrawer?.abort?.('detail');panel.style.removeProperty('transition');panel.style.removeProperty('transform');panel.classList.remove('amo-unified-sheet-dragging');
-   const result=originalClose.apply(this,arguments);setTimeout(()=>{if(overlay.hidden){panel.classList.remove('is-fullscreen','is-parented');overlay.classList.remove('is-parented');panel.style.removeProperty('--amo-sheet-height');panel.style.removeProperty('height');panel.style.removeProperty('min-height');panel.style.removeProperty('max-height');delete panel.dataset.amoSheetOpened;delete panel.dataset.amoSheetDetent;document.body.classList.remove('amo-word-edit-nested');panel.setAttribute('aria-hidden','false');if(returnFocus?.isConnected)returnFocus.focus?.({preventScroll:true});returnFocus=null}},310);return result;
- };
+ new MutationObserver(syncNested).observe(actionModal,{attributes:true,attributeFilter:['class']});
+ syncNested();
 })();
 </script>
 
@@ -15087,14 +15192,14 @@ body.amo-glass-all .page p:not(.word-vi):not(.sentence-vi){color:var(--amo-help-
   };
   window.resetAmoDrawerSettings=function(){
     const d=window.ensureAmoDisplay();
-    Object.assign(d,{drawerLiftMs:300,drawerSettleMs:780,drawerHalfHeight:54,drawerExpandedHeight:86,drawerCloseDistance:90,drawerCloseVelocity:.5});
+    Object.assign(d,{drawerLiftMs:300,drawerSettleMs:780,drawerHalfHeight:54,drawerExpandedHeight:86,drawerCloseDistance:90,drawerCloseVelocity:1});
     saveJSON(KEY_SETTINGS,settings);
     window.applyDisplaySettings();
     showToast('抽屉动效已恢复默认值');
   };
   if(typeof saved.setAmoEffectSetting==='function'){
     window.setAmoEffectSetting=function(key,value){
-      const bounds={glassOpacity:[5,50,1],glassBlur:[10,18,1],glassSaturation:[100,220,5],glassBorderStrength:[0,100,5],glassShadowStrength:[0,100,5],glassAmbientStrength:[0,100,5],backgroundIntensity:[50,200,5],drawerLiftMs:[160,520,20],drawerSettleMs:[420,1200,30],drawerHalfHeight:[45,65,1],drawerExpandedHeight:[72,94,1],drawerCloseDistance:[50,160,5],drawerCloseVelocity:[.2,1,.05]};
+      const bounds={glassOpacity:[5,50,1],glassBlur:[10,18,1],glassSaturation:[100,220,5],glassBorderStrength:[0,100,5],glassShadowStrength:[0,100,5],glassAmbientStrength:[0,100,5],backgroundIntensity:[50,200,5],drawerLiftMs:[160,520,20],drawerSettleMs:[420,1200,30],drawerHalfHeight:[45,65,1],drawerExpandedHeight:[72,94,1],drawerCloseDistance:[50,160,5],drawerCloseVelocity:[.8,1.5,.05]};
       if(!Object.prototype.hasOwnProperty.call(bounds,key))return;
       const n=Number(value);if(!Number.isFinite(n))return;
       const [lo,hi,step]=bounds[key];
@@ -15183,6 +15288,21 @@ body.amo-glass-all .page p:not(.word-vi):not(.sentence-vi){color:var(--amo-help-
     document.addEventListener('keydown',e=>{
       const page=document.getElementById('sentenceReading');
       if(!page?.classList.contains('active'))return;
+
+      // 正在输入答案时，左右方向键只移动输入光标，不切题。
+      if((e.key==='ArrowLeft'||e.key==='ArrowRight') && typeof isAmoTextEditingTarget==='function' && isAmoTextEditingTarget(e.target)) return;
+
+      if(e.key==='ArrowLeft'||e.key==='ArrowRight'){
+        // V31.68：短句必须至少提交过一次答案后，左右方向键才用于切题；答对/答错都解锁。
+        if(!sentenceReadingAttemptedHistory.has(sentenceReadingHistoryIndex)) return;
+        e.preventDefault();
+        if(e.key==='ArrowLeft'){
+          if(typeof previousSentenceReading==='function') previousSentenceReading();
+        }else if(typeof nextSentenceReading==='function'){
+          nextSentenceReading();
+        }
+        return;
+      }
       if(e.key==='Enter' && (e.ctrlKey||e.metaKey)){ e.preventDefault(); if(typeof nextSentenceReading==='function') nextSentenceReading(); return; }
       if(e.key==='Escape'){ const btn=document.getElementById('sentenceReadingShowAnswerBtn'); if(btn){e.preventDefault(); btn.click();} }
     });
@@ -15756,12 +15876,28 @@ body.amo-global-glass-transparent .header .nav{
 <script id="amo-v3158-two-detent-sheet-controller">
 (()=>{
  'use strict';
+ /* V31.66 High-performance Bottom Sheet controller.
+    Drag phase: transform-only + rAF. No per-frame height/top/left/margin writes.
+    Snap phase: transform animation, then one final height commit (FLIP-style).
+ */
  const mobile=()=>matchMedia('(max-width:700px)').matches;
  const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
- const vh=()=>Math.max(320,Math.round(window.visualViewport?.height||innerHeight||document.documentElement.clientHeight||720));
+ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+ const viewportH=()=>Math.max(320,Math.round(window.visualViewport?.height||innerHeight||document.documentElement.clientHeight||720));
  const cfg=()=>{try{return typeof ensureAmoDisplay==='function'?(ensureAmoDisplay()||{}):{}}catch(_){return {}}};
- const stops=()=>{
-   const d=cfg(),h=vh();
+ const CLOSE_MS=280;
+ const SNAP_MIN=190;
+ const state=new Map();
+ let drag=null,raf=0,latestPointer=null;
+
+ const modal=document.getElementById('wordActionModal');
+ const displayOverlay=document.getElementById('amoDisplayOverlay');
+ const display=document.getElementById('amoDisplayDialog');
+ const detailOverlay=document.getElementById('wordDetailOverlay');
+ const detail=document.getElementById('wordDetailPanel');
+
+ function stops(){
+   const d=cfg(),h=viewportH();
    const half=Math.min(.65,Math.max(.45,Number(d.drawerHalfHeight||54)/100));
    const expanded=Math.min(.94,Math.max(half+.12,Number(d.drawerExpandedHeight||86)/100));
    const middle=Math.min(expanded-.06,Math.max(half+.07,(half+expanded)/2));
@@ -15771,92 +15907,248 @@ body.amo-global-glass-transparent .header .nav{
      {id:'expanded',px:Math.round(h*expanded)},
      {id:'full',px:h}
    ];
- };
- const snapMs=()=>reduced()?1:Math.min(600,Math.max(220,Math.round((Number(cfg().drawerSettleMs)||780)*.52)));
- let active=null,snapTimer=0,openTimers=new WeakMap();
- const modal=document.getElementById('wordActionModal'),displayOverlay=document.getElementById('amoDisplayOverlay'),display=document.getElementById('amoDisplayDialog'),detailOverlay=document.getElementById('wordDetailOverlay'),detail=document.getElementById('wordDetailPanel');
+ }
+ function snapMs(){return reduced()?1:Math.min(520,Math.max(SNAP_MIN,Math.round((Number(cfg().drawerSettleMs)||780)*.42)))}
  function infoFor(kind){
-   if(kind==='edit'){const panel=modal?.querySelector('.modal-box');return panel&&modal?.classList.contains('show')&&modal.classList.contains('amo-word-edit-sheet')?{kind,panel,overlay:modal}:null}
+   if(kind==='edit'){
+     const panel=modal?.querySelector('.modal-box');
+     return panel&&modal?.classList.contains('show')&&modal.classList.contains('amo-word-edit-sheet')?{kind,panel,overlay:modal}:null;
+   }
    if(kind==='display')return display&&!displayOverlay?.hidden?{kind,panel:display,overlay:displayOverlay}:null;
    if(kind==='detail')return detail&&!detailOverlay?.hidden?{kind,panel:detail,overlay:detailOverlay}:null;
    return null;
  }
- function clearOpenTimers(panel){const list=openTimers.get(panel)||[];list.forEach(clearTimeout);openTimers.delete(panel)}
- function clean(info,removeHeight=false){
-   if(!info)return;clearTimeout(snapTimer);clearOpenTimers(info.panel);const p=info.panel;
-   p.classList.remove('amo-unified-sheet-dragging','is-fullscreen');p.style.removeProperty('transition');p.style.removeProperty('transform');
-   if(removeHeight){p.style.removeProperty('height');p.style.removeProperty('min-height');p.style.removeProperty('max-height');p.style.removeProperty('--amo-sheet-height');delete p.dataset.amoSheetOpened;delete p.dataset.amoSheetDetent}
-   info.overlay?.style.removeProperty('opacity');info.overlay?.style.removeProperty('transition');
+ function footer(info){
+   if(info.kind==='detail')return info.panel.querySelector('.amo-detail-actions');
+   if(info.kind==='edit')return info.panel.querySelector('.modal-actions');
+   return null;
  }
- function abort(kind,removeHeight=false){if(!active||kind&&active.kind!==kind)return;const a=active;active=null;try{a.row.releasePointerCapture?.(a.id)}catch(_){}clean(a,removeHeight)}
- function grip(info){
+ function clearTimers(panel){
+   const s=state.get(panel);if(!s)return;
+   (s.timers||[]).forEach(clearTimeout);s.timers=[];
+ }
+ function addTimer(panel,id){
+   const s=state.get(panel)||{};(s.timers||(s.timers=[])).push(id);state.set(panel,s);
+ }
+ function ensureGrip(info){
    let row=[...info.panel.children].find(x=>x.classList?.contains('amo-sheet-grabber-row'));
-   if(!row){row=document.createElement('div');row.className='amo-sheet-grabber-row amo-modal-grabber-row';row.innerHTML='<button type="button" class="amo-sheet-grabber" aria-label="上下拖动抽屉"></button>';info.panel.insertBefore(row,info.panel.firstChild)}
-   /* Remove legacy listeners by replacing the visual grip once. */
-   if(row.dataset.amoUnifiedGrip!=='1'){const clone=row.cloneNode(true);row.replaceWith(clone);row=clone}
-   row.dataset.amoUnifiedGrip='1';row.style.touchAction='none';
-   const btn=row.querySelector('.amo-sheet-grabber');if(btn){btn.style.touchAction='none';btn.setAttribute('aria-label',info.kind==='edit'?'上下拖动编辑词汇抽屉':info.kind==='display'?'上下拖动文字与显示抽屉':'上下拖动词汇详情抽屉')}
+   if(!row){
+     row=document.createElement('div');row.className=info.kind==='detail'?'amo-sheet-grabber-row':'amo-sheet-grabber-row amo-modal-grabber-row';
+     row.innerHTML='<button type="button" class="amo-sheet-grabber" aria-label="上下拖动抽屉"></button>';
+     info.panel.insertBefore(row,info.panel.firstChild);
+   }
+   /* Detail has legacy CSS that intentionally hides .amo-modal-grabber-row. Keep its grip as the native detail grip. */
+   row.classList.toggle('amo-modal-grabber-row',info.kind!=='detail');
+   /* Clone once to remove every legacy per-element drag listener. */
+   if(row.dataset.amoPerfGrip!=='1'){
+     const clone=row.cloneNode(true);row.replaceWith(clone);row=clone;
+   }
+   row.classList.toggle('amo-modal-grabber-row',info.kind!=='detail');
+   row.dataset.amoPerfGrip='1';delete row.dataset.amoUnifiedGrip;
+   row.style.touchAction='none';
+   const btn=row.querySelector('.amo-sheet-grabber');
+   if(btn){btn.style.touchAction='none';btn.setAttribute('aria-label',info.kind==='detail'?'上下拖动词汇详情抽屉':info.kind==='edit'?'上下拖动编辑词汇抽屉':'上下拖动文字与显示抽屉')}
    return row;
  }
- function applyHeight(info,px){
-   const p=info.panel,rounded=Math.max(1,Math.round(px));
-   p.style.setProperty('height',rounded+'px','important');
-   p.style.removeProperty('min-height');
-   if(info.kind==='detail')p.style.setProperty('--amo-sheet-height',rounded+'px');
+ function setDetentMeta(info,name){
+   info.panel.dataset.amoSheetDetent=name;
+   info.panel.dataset.amoSheetOpened='1';
+   info.panel.classList.toggle('is-fullscreen',name==='full');
  }
- function applyDetentClass(info,id){info.panel.classList.toggle('is-fullscreen',id==='full');info.panel.dataset.amoSheetDetent=id;info.panel.dataset.amoSheetOpened='1'}
- function setHeight(info,name,animate=false){
-   const levels=stops(),item=levels.find(x=>x.id===name)||levels[0],ms=snapMs(),p=info.panel;
-   clearOpenTimers(p);applyDetentClass(info,item.id);p.style.transform='translate3d(0,0,0)';
-   if(animate){p.style.transition=`height ${ms}ms cubic-bezier(.18,.88,.24,1),transform ${ms}ms cubic-bezier(.18,.88,.24,1),border-radius ${Math.min(ms,360)}ms ease`;requestAnimationFrame(()=>applyHeight(info,item.px));clearTimeout(snapTimer);snapTimer=setTimeout(()=>p.style.removeProperty('transition'),ms+35)}
-   else{p.style.transition='none';applyHeight(info,item.px);requestAnimationFrame(()=>p.style.removeProperty('transition'))}
+ function resetMotion(info,removeHeight=false){
+   if(!info)return;clearTimers(info.panel);
+   const p=info.panel,f=footer(info);
+   p.classList.remove('amo-perf-dragging','amo-perf-settling','amo-perf-closing');
+   p.style.removeProperty('transition');p.style.removeProperty('transform');p.style.removeProperty('will-change');
+   if(f){f.style.removeProperty('transition');f.style.removeProperty('transform');f.style.removeProperty('will-change')}
+   if(removeHeight){p.style.removeProperty('height');delete p.dataset.amoSheetDetent;delete p.dataset.amoSheetOpened}
  }
+ function commitRest(info,name){
+   const item=stops().find(x=>x.id===name)||stops().find(x=>x.id==='expanded');
+   const p=info.panel;resetMotion(info,false);setDetentMeta(info,item.id);
+   p.style.setProperty('height',item.px+'px','important');
+   p.style.transform='translate3d(0,0,0)';
+   requestAnimationFrame(()=>p.style.removeProperty('transform'));
+ }
+ function killBackdrop(info){
+   const targets=info.kind==='detail'?[info.overlay?.querySelector('.amo-word-detail-backdrop')]:[info.overlay];
+   targets.filter(Boolean).forEach(el=>{
+     el.style.setProperty('-webkit-backdrop-filter','none','important');
+     el.style.setProperty('backdrop-filter','none','important');
+     el.style.setProperty('background','transparent','important');
+     el.style.setProperty('transition','none','important');
+     el.style.setProperty('opacity','1','important');
+   });
+ }
+ function restoreBackdrop(info){
+   const targets=info.kind==='detail'?[info.overlay?.querySelector('.amo-word-detail-backdrop')]:[info.overlay];
+   targets.filter(Boolean).forEach(el=>{
+     el.style.removeProperty('-webkit-backdrop-filter');el.style.removeProperty('backdrop-filter');
+     el.style.removeProperty('background');el.style.removeProperty('transition');el.style.removeProperty('opacity');
+   });
+ }
+ function anyOpen(){return ['detail','edit','display'].some(k=>!!infoFor(k))}
+ function syncBodyLock(){document.body.classList.toggle('amo-perf-sheet-open',mobile()&&anyOpen())}
+
  function entrance(info){
-   const p=info.panel,d=cfg(),lift=Math.max(160,Number(d.drawerLiftMs)||300),settle=Math.max(420,Number(d.drawerSettleMs)||780),levels=stops();
-   const initial=levels.find(x=>x.id==='expanded')||levels.at(-2)||levels[0];
-   clearOpenTimers(p);applyDetentClass(info,initial.id);p.style.transition='none';applyHeight(info,initial.px);
-   if(reduced()){p.style.transform='translate3d(0,0,0)';return}
-   p.style.transform='translate3d(0,105%,0)';
-   requestAnimationFrame(()=>{p.style.transition=`transform ${lift}ms cubic-bezier(.14,.92,.32,1)`;p.style.transform='translate3d(0,-10px,0)';const t1=setTimeout(()=>{p.style.transition=`transform ${settle}ms cubic-bezier(.2,.76,.24,1)`;p.style.transform='translate3d(0,0,0)';const t2=setTimeout(()=>p.style.removeProperty('transition'),settle+20);openTimers.set(p,[t1,t2])},lift);openTimers.set(p,[t1])});
+   const p=info.panel,target=stops().find(x=>x.id==='expanded')||stops().at(-2);
+   resetMotion(info,false);restoreBackdrop(info);setDetentMeta(info,target.id);
+   p.style.setProperty('height',target.px+'px','important');
+   const d=cfg(),lift=Math.max(160,Number(d.drawerLiftMs)||300),settle=Math.max(420,Number(d.drawerSettleMs)||780);
+   if(reduced()){p.style.transform='translate3d(0,0,0)';requestAnimationFrame(()=>p.style.removeProperty('transform'));return}
+   p.style.willChange='transform';p.style.transition='none';p.style.transform=`translate3d(0,${target.px+24}px,0)`;
+   requestAnimationFrame(()=>{
+     p.style.transition=`transform ${lift}ms cubic-bezier(.18,.82,.28,1)`;p.style.transform='translate3d(0,-7px,0)';
+     addTimer(p,setTimeout(()=>{
+       p.style.transition=`transform ${settle}ms cubic-bezier(.2,.76,.24,1)`;p.style.transform='translate3d(0,0,0)';
+       addTimer(p,setTimeout(()=>{p.style.removeProperty('transition');p.style.removeProperty('transform');p.style.removeProperty('will-change')},settle+24));
+     },lift));
+   });
  }
- function prepare(kind){const info=infoFor(kind);if(!mobile()||!info)return null;const row=grip(info);if(!row)return null;if(!info.panel.dataset.amoSheetOpened){if(kind==='detail')setHeight(info,'expanded',false);else entrance(info)}return {info,row}}
- function begin(kind,row,e){
-   if(!mobile()||active||(e.button!==undefined&&e.button!==0))return;const info=infoFor(kind);if(!info)return;
-   clearTimeout(snapTimer);clearOpenTimers(info.panel);const r=info.panel.getBoundingClientRect();
-   active={...info,row,id:e.pointerId,startY:e.clientY,startT:performance.now(),startHeight:r.height,currentHeight:r.height,closeOffset:0,lastY:e.clientY};
-   info.panel.classList.add('amo-unified-sheet-dragging');info.panel.style.transition='none';try{row.setPointerCapture?.(e.pointerId)}catch(_){}e.preventDefault();e.stopImmediatePropagation();
+ function activate(kind){
+   const info=infoFor(kind);if(!mobile()||!info)return;
+   ensureGrip(info);syncBodyLock();
+   const s=state.get(info.panel)||{};
+   if(!s.open){s.open=true;s.lastFocus=document.activeElement;state.set(info.panel,s);entrance(info)}
+ }
+ function deactivate(kind){
+   const panel=kind==='edit'?modal?.querySelector('.modal-box'):kind==='display'?display:detail;if(!panel)return;
+   const s=state.get(panel)||{};s.open=false;state.set(panel,s);
+   resetMotion({kind,panel,overlay:kind==='edit'?modal:kind==='display'?displayOverlay:detailOverlay},true);
+   syncBodyLock();
+ }
+
+ function prepareDrag(info,e,row){
+   if(!mobile()||drag||(e.button!==undefined&&e.button!==0))return;
+   clearTimers(info.panel);
+   const p=info.panel,f=footer(info),max=viewportH(),rect=p.getBoundingClientRect(),startVisible=Math.min(max,Math.max(1,rect.height));
+   const startY=max-startVisible;
+   p.classList.add('amo-perf-dragging');p.style.transition='none';p.style.willChange='transform';
+   /* One layout commit at drag start, visually cancelled by the equivalent translateY. */
+   p.style.setProperty('height',max+'px','important');p.style.transform=`translate3d(0,${startY}px,0)`;
+   if(f){f.style.transition='none';f.style.willChange='transform';f.style.transform=`translate3d(0,${-startY}px,0)`}
+   drag={...info,row,id:e.pointerId,startClientY:e.clientY,lastClientY:e.clientY,startVisible,max,currentVisible:startVisible,currentY:startY,samples:[{y:e.clientY,t:performance.now()}]};
+   try{row.setPointerCapture?.(e.pointerId)}catch(_){}
+   e.preventDefault();e.stopImmediatePropagation();
+ }
+ function applyDragFrame(){
+   raf=0;if(!drag||latestPointer==null)return;
+   const dy=latestPointer-drag.startClientY;
+   const visible=clamp(drag.startVisible-dy,0,drag.max),y=drag.max-visible;
+   drag.currentVisible=visible;drag.currentY=y;
+   drag.panel.style.transform=`translate3d(0,${y.toFixed(2)}px,0)`;
+   const f=footer(drag);if(f)f.style.transform=`translate3d(0,${(-y).toFixed(2)}px,0)`;
  }
  function move(e){
-   if(!active||e.pointerId!==active.id)return;const levels=stops(),half=levels[0].px,max=levels.at(-1).px,dy=e.clientY-active.startY,raw=active.startHeight-dy,h=Math.min(max,Math.max(half,raw)),off=Math.max(0,half-raw);
-   active.currentHeight=h;active.closeOffset=off;active.lastY=e.clientY;applyHeight(active,h);active.panel.style.transform=off>0?`translate3d(0,${Math.round(off)}px,0)`:'translate3d(0,0,0)';e.preventDefault();e.stopImmediatePropagation();
+   if(!drag||e.pointerId!==drag.id)return;
+   latestPointer=e.clientY;drag.lastClientY=e.clientY;
+   const now=performance.now();drag.samples.push({y:e.clientY,t:now});drag.samples=drag.samples.filter(x=>now-x.t<=100);
+   if(!raf)raf=requestAnimationFrame(applyDragFrame);
+   e.preventDefault();e.stopImmediatePropagation();
+ }
+ function recentVelocity(a,endY){
+   const now=performance.now(),samples=(a.samples||[]).filter(x=>now-x.t<=90),first=samples[0]||{y:a.startClientY,t:now-16};
+   return (endY-first.y)/Math.max(1,now-first.t);
+ }
+ function settle(a,targetName){
+   const p=a.panel,f=footer(a),levels=stops(),target=levels.find(x=>x.id===targetName)||levels.find(x=>x.id==='expanded'),targetY=a.max-target.px,ms=snapMs();
+   setDetentMeta(a,target.id);p.classList.remove('amo-perf-dragging');p.classList.add('amo-perf-settling');
+   p.style.willChange='transform';p.style.transition=`transform ${ms}ms cubic-bezier(.2,.8,.2,1)`;p.style.transform=`translate3d(0,${targetY}px,0)`;
+   if(f){f.style.willChange='transform';f.style.transition=`transform ${ms}ms cubic-bezier(.2,.8,.2,1)`;f.style.transform=`translate3d(0,${-targetY}px,0)`}
+   addTimer(p,setTimeout(()=>{
+     /* FLIP commit: same visual top, one height write after compositor animation ends. */
+     p.style.transition='none';p.style.setProperty('height',target.px+'px','important');p.style.transform='translate3d(0,0,0)';
+     if(f){f.style.transition='none';f.style.transform='translate3d(0,0,0)'}
+     requestAnimationFrame(()=>{p.classList.remove('amo-perf-settling');p.style.removeProperty('transition');p.style.removeProperty('transform');p.style.removeProperty('will-change');if(f){f.style.removeProperty('transition');f.style.removeProperty('transform');f.style.removeProperty('will-change')}});
+   },ms+20));
+ }
+ function finalizeClosed(info){
+   const p=info.panel,s=state.get(p)||{};
+   resetMotion(info,true);restoreBackdrop(info);s.open=false;state.set(p,s);
+   if(info.kind==='detail'){
+     clearTimeout(typeof amoWordDetailCloseTimer!=='undefined'?amoWordDetailCloseTimer:0);
+     info.overlay.hidden=true;info.overlay.classList.remove('is-closing','amo-perf-closing');info.overlay.setAttribute('aria-hidden','true');
+     document.body.classList.remove('amo-detail-open','amo-word-edit-nested');window.__amoWordDetailKey='';
+   }else if(info.kind==='display'){
+     clearTimeout(typeof amoDisplayCloseTimer!=='undefined'?amoDisplayCloseTimer:0);
+     info.overlay.hidden=true;info.overlay.classList.remove('amo-settings-closing','amo-perf-closing');
+     document.getElementById('amoDisplayOpen')?.setAttribute('aria-expanded','false');
+   }else{
+     if(typeof pendingWordAction!=='undefined')pendingWordAction=null;
+     const confirm=document.getElementById('wordActionConfirmBtn');if(confirm)confirm.disabled=false;
+     info.overlay.classList.remove('show','amo-word-action-front','amo-word-edit-sheet','amo-word-delete-confirm','amo-modal-closing','amo-perf-closing');
+     info.overlay.setAttribute('aria-hidden','true');info.overlay.style.removeProperty('--amo-vv-top');info.overlay.style.removeProperty('--amo-vv-bottom');info.overlay.style.removeProperty('--amo-vv-height');
+     if(typeof unlockAmoActionModalScroll==='function')unlockAmoActionModalScroll();
+   }
+   syncBodyLock();
+   if(s.lastFocus?.isConnected)requestAnimationFrame(()=>s.lastFocus.focus?.({preventScroll:true}));
+ }
+ function closeMotion(info,currentY=null){
+   if(!info||info.panel.classList.contains('amo-perf-closing'))return;
+   const p=info.panel,f=footer(info),max=viewportH(),rect=p.getBoundingClientRect();clearTimers(p);killBackdrop(info);
+   p.classList.remove('amo-perf-dragging','amo-perf-settling');p.classList.add('amo-perf-closing');
+   /* If close starts from rest, enter the same max-height FLIP coordinate space once. */
+   let y=Number.isFinite(currentY)?currentY:max-Math.min(max,Math.max(1,rect.height));
+   p.style.transition='none';p.style.setProperty('height',max+'px','important');p.style.transform=`translate3d(0,${y}px,0)`;p.style.willChange='transform';
+   if(f){f.style.transition='none';f.style.transform=`translate3d(0,${-y}px,0)`;f.style.willChange='transform'}
+   requestAnimationFrame(()=>{
+     p.style.transition=`transform ${reduced()?1:CLOSE_MS}ms cubic-bezier(.2,0,.2,1)`;p.style.transform=`translate3d(0,${max+36}px,0)`;
+     if(f){f.style.transition=`transform ${reduced()?1:CLOSE_MS}ms cubic-bezier(.2,0,.2,1)`;f.style.transform='translate3d(0,0,0)'}
+     addTimer(p,setTimeout(()=>finalizeClosed(info),reduced()?2:CLOSE_MS+16));
+   });
  }
  function finish(e,cancelled=false){
-   if(!active||e.pointerId!==active.id)return;const a=active;active=null;try{a.row.releasePointerCapture?.(e.pointerId)}catch(_){}a.panel.classList.remove('amo-unified-sheet-dragging');
-   const endY=Number.isFinite(e.clientY)?e.clientY:a.lastY,dy=endY-a.startY,v=dy/Math.max(1,performance.now()-a.startT),d=cfg(),distance=Number(d.drawerCloseDistance)||90,speed=Number(d.drawerCloseVelocity)||.5;
-   if(!cancelled&&a.closeOffset>0&&(a.closeOffset>distance||v>speed)){a.panel.style.removeProperty('transition');a.panel.style.removeProperty('transform');if(a.kind==='edit')window.closeWordActionModal?.();else if(a.kind==='display')window.closeAmoDisplaySettings?.();else window.closeWordDetail?.();return}
+   if(!drag||e.pointerId!==drag.id)return;
+   if(raf){cancelAnimationFrame(raf);raf=0;applyDragFrame()}
+   const a=drag;drag=null;latestPointer=null;try{a.row.releasePointerCapture?.(e.pointerId)}catch(_){}
+   const endY=Number.isFinite(e.clientY)?e.clientY:a.lastClientY,v=recentVelocity(a,endY),dy=endY-a.startClientY,d=cfg(),distance=Number(d.drawerCloseDistance)||90,speed=Number(d.drawerCloseVelocity)||1;
+   const half=stops()[0].px;
+   /* Critical order: high downward velocity closes DIRECTLY from any detent. No half-screen hop. */
+   if(!cancelled&&dy>0&&(v>=speed || a.currentVisible < half-distance)){
+     closeMotion(a,a.currentY);e.preventDefault();e.stopImmediatePropagation();return;
+   }
    const levels=stops();let target;
    if(cancelled)target=a.panel.dataset.amoSheetDetent||'expanded';
-   else if(v<-.32){target=(levels.find(x=>x.px>a.currentHeight+5)||levels.at(-1)).id}
-   else if(v>.32&&a.closeOffset===0){target=([...levels].reverse().find(x=>x.px<a.currentHeight-5)||levels[0]).id}
-   else target=levels.reduce((best,x)=>Math.abs(x.px-a.currentHeight)<Math.abs(best.px-a.currentHeight)?x:best,levels[0]).id;
-   setHeight(a,target,true);e.preventDefault();e.stopImmediatePropagation();
+   else if(v<-.34)target=(levels.find(x=>x.px>a.currentVisible+6)||levels.at(-1)).id;
+   else if(v>.34)target=([...levels].reverse().find(x=>x.px<a.currentVisible-6)||levels[0]).id;
+   else target=levels.reduce((best,x)=>Math.abs(x.px-a.currentVisible)<Math.abs(best.px-a.currentVisible)?x:best,levels[0]).id;
+   settle(a,target);e.preventDefault();e.stopImmediatePropagation();
  }
- document.addEventListener('pointerdown',e=>{const row=e.target.closest?.('[data-amo-unified-grip="1"]');if(!row)return;const kind=row.closest('#amoDisplayDialog')?'display':row.closest('#wordActionModal')?'edit':row.closest('#wordDetailPanel')?'detail':null;if(kind)begin(kind,row,e)},{capture:true,passive:false});
- document.addEventListener('pointermove',move,{capture:true,passive:false});document.addEventListener('pointerup',e=>finish(e,false),{capture:true,passive:false});document.addEventListener('pointercancel',e=>finish(e,true),{capture:true,passive:false});
- function normalize(){
-   for(const kind of ['edit','display','detail']){
+
+ document.addEventListener('pointerdown',e=>{
+   const row=e.target.closest?.('[data-amo-perf-grip="1"]');if(!row)return;
+   const kind=row.closest('#amoDisplayDialog')?'display':row.closest('#wordActionModal')?'edit':row.closest('#wordDetailPanel')?'detail':null;
+   const info=kind&&infoFor(kind);if(info)prepareDrag(info,e,row);
+ },{capture:true,passive:false});
+ document.addEventListener('pointermove',move,{capture:true,passive:false});
+ document.addEventListener('pointerup',e=>finish(e,false),{capture:true,passive:false});
+ document.addEventListener('pointercancel',e=>finish(e,true),{capture:true,passive:false});
+
+ function sync(){
+   if(!mobile())return;
+   for(const kind of ['detail','edit','display']){
      const info=infoFor(kind);
-     if(info){prepare(kind);if(!active||active.panel!==info.panel){const name=info.panel.dataset.amoSheetDetent||'expanded';const known=stops().some(x=>x.id===name)?name:'expanded';setHeight(info,known,false)}}
-     else{const panel=kind==='edit'?modal?.querySelector('.modal-box'):kind==='display'?display:detail;if(panel){if(active?.kind===kind)abort(kind,true);clean({panel,overlay:kind==='edit'?modal:kind==='display'?displayOverlay:detailOverlay},true)}}
+     if(info)activate(kind);else deactivate(kind);
    }
  }
- const baseCloseEdit=window.closeWordActionModal,baseCloseDisplay=window.closeAmoDisplaySettings;
- if(typeof baseCloseEdit==='function')window.closeWordActionModal=function(){if(active?.kind==='edit')abort('edit',false);return baseCloseEdit.apply(this,arguments)};
- if(typeof baseCloseDisplay==='function')window.closeAmoDisplaySettings=function(){if(active?.kind==='display')abort('display',false);return baseCloseDisplay.apply(this,arguments)};
- const obs=new MutationObserver(()=>requestAnimationFrame(normalize));if(modal)obs.observe(modal,{attributes:true,attributeFilter:['class']});if(displayOverlay)obs.observe(displayOverlay,{attributes:true,attributeFilter:['hidden','class']});if(detailOverlay)obs.observe(detailOverlay,{attributes:true,attributeFilter:['hidden','class']});
- const resize=()=>{if(active)return;requestAnimationFrame(()=>{if(active)return;for(const kind of ['edit','display','detail']){const info=infoFor(kind);if(info){const name=info.panel.dataset.amoSheetDetent||'expanded';setHeight(info,stops().some(x=>x.id===name)?name:'expanded',false)}}})};
- window.visualViewport?.addEventListener('resize',resize,{passive:true});window.addEventListener('resize',resize,{passive:true});document.addEventListener('DOMContentLoaded',normalize,{once:true});requestAnimationFrame(normalize);
- window.AmoUnifiedDrawer={refresh:normalize,getSettings:cfg,getStops:stops,setDetent:(kind,name,animate=true)=>{const info=infoFor(kind);if(info)setHeight(info,name,animate)},abort:(kind)=>abort(kind,false)};
+ const obs=new MutationObserver(()=>requestAnimationFrame(sync));
+ if(detailOverlay)obs.observe(detailOverlay,{attributes:true,attributeFilter:['hidden','class']});
+ if(displayOverlay)obs.observe(displayOverlay,{attributes:true,attributeFilter:['hidden','class']});
+ if(modal)obs.observe(modal,{attributes:true,attributeFilter:['class']});
+ window.visualViewport?.addEventListener('resize',()=>{if(!drag)requestAnimationFrame(()=>{for(const kind of ['detail','edit','display']){const info=infoFor(kind);if(info)commitRest(info,info.panel.dataset.amoSheetDetent||'expanded')}})},{passive:true});
+ window.addEventListener('resize',()=>{if(!drag)requestAnimationFrame(sync)},{passive:true});
+
+ const rawCloseDetail=window.closeWordDetail,rawCloseEdit=window.closeWordActionModal,rawCloseDisplay=window.closeAmoDisplaySettings;
+ window.closeWordDetail=function(){const info=infoFor('detail');if(mobile()&&info){closeMotion(info);return}return rawCloseDetail?.apply(this,arguments)};
+ window.closeWordActionModal=function(){const info=infoFor('edit');if(mobile()&&info){closeMotion(info);return}return rawCloseEdit?.apply(this,arguments)};
+ window.closeAmoDisplaySettings=function(){const info=infoFor('display');if(mobile()&&info){closeMotion(info);return}return rawCloseDisplay?.apply(this,arguments)};
+
+ window.AmoUnifiedDrawer={
+   refresh:sync,getSettings:cfg,getStops:stops,
+   setDetent:(kind,name,animate=true)=>{const info=infoFor(kind);if(!info)return;const target=stops().find(x=>x.id===name)||stops().find(x=>x.id==='expanded');if(!animate){commitRest(info,target.id);return}const max=viewportH(),current=Math.min(max,Math.max(1,info.panel.getBoundingClientRect().height)),y=max-current;info.panel.style.setProperty('height',max+'px','important');info.panel.style.transform=`translate3d(0,${y}px,0)`;settle({...info,max,currentVisible:current,currentY:y},target.id)},
+   abort:(kind)=>{if(drag?.kind===kind){const a=drag;drag=null;latestPointer=null;if(raf){cancelAnimationFrame(raf);raf=0}commitRest(a,a.panel.dataset.amoSheetDetent||'expanded')}}
+ };
+ document.addEventListener('DOMContentLoaded',sync,{once:true});requestAnimationFrame(sync);
 })();
 </script>
 
@@ -16410,6 +16702,229 @@ body.amo-global-glass-transparent .header .nav{
   #wordActionModal.amo-word-edit-sheet .modal-box.is-fullscreen,
   #amoDisplayDialog.is-fullscreen{
     border-radius:0!important;
+  }
+}
+</style>
+
+
+<style id="amo-v3165-detail-layout-and-fast-close">
+@media(max-width:700px){
+  /* Detail header: each semantic line owns its own row; no negative offsets/overlap. */
+  .amo-word-detail-panel>.amo-sheet-grabber-row:first-child{
+    height:30px!important;min-height:30px!important;flex-basis:30px!important;
+    margin:0!important;padding:0!important;background:transparent!important;
+  }
+  .amo-word-detail-panel .amo-detail-head{
+    position:relative!important;top:auto!important;
+    margin:0!important;padding:4px 20px 10px!important;
+    min-height:0!important;background:transparent!important;
+    border:0!important;box-shadow:none!important;
+    -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+  }
+  .amo-word-detail-panel .amo-detail-title-wrap{
+    display:grid!important;grid-template-columns:minmax(0,1fr)!important;
+    gap:5px!important;align-items:start!important;
+    margin:0!important;padding:0!important;transform:none!important;
+  }
+  .amo-word-detail-panel .amo-detail-vi{
+    display:flex!important;align-items:center!important;gap:7px!important;
+    margin:0!important;padding:0!important;font-size:clamp(28px,7.4vw,36px)!important;
+    line-height:1.16!important;overflow-wrap:anywhere!important;
+  }
+  .amo-word-detail-panel .amo-detail-py{
+    display:block!important;margin:0!important;padding:0!important;
+    font-size:clamp(18px,5vw,24px)!important;line-height:1.28!important;
+  }
+  .amo-word-detail-panel .amo-detail-zh{
+    display:block!important;margin:0!important;padding:0!important;
+    font-size:clamp(22px,5.8vw,29px)!important;line-height:1.24!important;
+    font-weight:800!important;overflow-wrap:anywhere!important;
+  }
+  .amo-word-detail-panel .amo-detail-close{
+    position:absolute!important;right:18px!important;top:2px!important;
+  }
+  .amo-word-detail-panel .amo-detail-tags{
+    display:flex!important;align-items:center!important;gap:8px!important;flex-wrap:wrap!important;
+    margin:2px 20px 8px!important;padding:0!important;line-height:1.3!important;
+    clear:both!important;
+  }
+  .amo-word-detail-panel .amo-detail-study-flow{
+    margin:0 20px 8px!important;padding:0!important;line-height:1.45!important;
+  }
+  .amo-word-detail-panel .amo-detail-learning-stats{
+    margin-left:20px!important;margin-right:20px!important;
+  }
+
+  /* Figure-3 style footer mask: same visual language for detail and edit sheets. */
+  .amo-word-detail-panel .amo-detail-actions,
+  #wordActionModal.amo-word-edit-sheet .modal-actions{
+    flex:0 0 auto!important;position:sticky!important;bottom:0!important;z-index:80!important;
+    display:flex!important;align-items:center!important;justify-content:center!important;
+    gap:14px!important;flex-wrap:nowrap!important;
+    margin-top:auto!important;margin-bottom:0!important;
+    margin-left:-16px!important;margin-right:-16px!important;
+    padding:12px 20px max(12px,env(safe-area-inset-bottom))!important;
+    background:color-mix(in srgb,var(--amo-layer-bg-strong,var(--glass-bg-strong)) 94%,rgba(12,22,36,.24))!important;
+    border-top:1px solid color-mix(in srgb,var(--amo-layer-border,var(--glass-border)) 86%,transparent)!important;
+    box-shadow:0 -16px 34px rgba(7,14,26,.18),inset 0 1px 0 rgba(255,255,255,.14)!important;
+    -webkit-backdrop-filter:blur(calc(var(--glass-blur,14px) + 7px)) saturate(var(--glass-saturation,175%))!important;
+    backdrop-filter:blur(calc(var(--glass-blur,14px) + 7px)) saturate(var(--glass-saturation,175%))!important;
+  }
+  .amo-word-detail-panel .amo-detail-actions .btn,
+  .amo-word-detail-panel .amo-detail-actions .btn-danger,
+  #wordActionModal.amo-word-edit-sheet .modal-actions .btn{
+    flex:1 1 0!important;width:auto!important;max-width:220px!important;min-width:0!important;
+    height:62px!important;min-height:62px!important;padding:11px 14px!important;
+    margin:0!important;border-radius:18px!important;font-size:16px!important;font-weight:800!important;
+  }
+  /* Keep scrolling content under the mask, never over it. */
+  .amo-word-detail-panel{padding-bottom:0!important;}
+  #wordActionModal.amo-word-edit-sheet .modal-box{padding-bottom:0!important;}
+
+  /* Closing starts with zero background blur/veil. */
+  .amo-word-detail-overlay.is-closing .amo-word-detail-backdrop,
+  .amo-settings-overlay.amo-settings-closing,
+  #wordActionModal.amo-modal-closing{
+    -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+    background:transparent!important;transition:none!important;opacity:1!important;
+  }
+}
+</style>
+
+
+<style id="amo-v3166-high-performance-drawer">
+@media(max-width:700px){
+  /* Rest state has no permanent compositor hint; only active motion gets will-change. */
+  #wordActionModal.amo-word-edit-sheet .modal-box,
+  #amoDisplayDialog,
+  .amo-word-detail-panel{
+    bottom:0!important;
+    min-height:0!important;
+    max-height:100dvh!important;
+    overflow:hidden!important;
+    animation:none!important;
+    transition:none;
+    will-change:auto!important;
+    transform:translate3d(0,0,0);
+    backface-visibility:hidden;
+  }
+  .amo-word-detail-overlay,
+  .amo-settings-overlay,
+  #wordActionModal.amo-word-edit-sheet{
+    overflow:hidden!important;
+  }
+  body.amo-perf-sheet-open{overflow:hidden!important;overscroll-behavior:none!important;touch-action:pan-x pan-y}
+
+  /* Scroll happens inside content, while the sheet shell stays composited. */
+  #wordDetailContent,
+  #wordActionModal.amo-word-edit-sheet #wordActionBody,
+  #amoDisplayDialog>.amo-settings-scroll{
+    flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;
+    -webkit-overflow-scrolling:touch;overscroll-behavior:contain!important;
+  }
+  #amoDisplayDialog{display:flex!important;flex-direction:column!important}
+
+  .amo-sheet-grabber-row[data-amo-perf-grip="1"]{
+    flex:0 0 30px!important;height:30px!important;min-height:30px!important;
+    touch-action:none!important;user-select:none!important;-webkit-user-select:none!important;cursor:grab!important;
+  }
+  .amo-sheet-grabber-row[data-amo-perf-grip="1"]:active{cursor:grabbing!important}
+
+  /* Drag/snap/close are compositor-only. */
+  .amo-perf-dragging,.amo-perf-settling,.amo-perf-closing{animation:none!important;backface-visibility:hidden!important}
+  .amo-perf-dragging{transition:none!important}
+  .amo-perf-dragging .amo-detail-actions,
+  .amo-perf-settling .amo-detail-actions,
+  .amo-perf-closing .amo-detail-actions,
+  #wordActionModal.amo-word-edit-sheet .amo-perf-dragging .modal-actions,
+  #wordActionModal.amo-word-edit-sheet .amo-perf-settling .modal-actions,
+  #wordActionModal.amo-word-edit-sheet .amo-perf-closing .modal-actions{
+    backface-visibility:hidden!important;
+  }
+
+  /* The old closing classes must never start a second animation after the perf controller. */
+  .amo-word-detail-overlay.is-closing .amo-word-detail-panel,
+  #wordActionModal.amo-word-edit-sheet.amo-modal-closing .modal-box,
+  .amo-settings-overlay.amo-settings-closing .amo-settings-sheet{
+    animation:none!important;
+  }
+  .amo-word-detail-overlay.amo-perf-closing .amo-word-detail-backdrop,
+  #wordActionModal.amo-perf-closing,
+  .amo-settings-overlay.amo-perf-closing{
+    -webkit-backdrop-filter:none!important;backdrop-filter:none!important;background:transparent!important;transition:none!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){.amo-perf-settling,.amo-perf-closing{transition-duration:.01ms!important}}
+</style>
+
+
+<style id="amo-v3169-dropdown-layer-fixes">
+/* V31.70：所有下拉层避免被卡片/工具条 stacking context 裁切。 */
+#words .toolbar,#sentences .toolbar,#quiz .toolbar,#sentenceReading .toolbar{position:relative;z-index:80;overflow:visible!important}
+#words .amo-pos-dropdown[open],#words .amo-relation-dropdown[open]{z-index:20020!important}
+#words .amo-pos-dropdown-menu,#words .amo-relation-dropdown-menu{z-index:20030!important}
+.amo-category-menu{z-index:20050!important;isolation:isolate}
+/* 原生 select 菜单的可读性：日间/壁纸使用浅色系统菜单，夜间使用深色系统菜单。 */
+body:not(.theme-night) select{color-scheme:light!important}
+body:not(.theme-night) select option,body:not(.theme-night) select optgroup{background:#fff!important;color:#172635!important}
+body.theme-night select{color-scheme:dark!important}
+body.theme-night select option,body.theme-night select optgroup{background:#172131!important;color:#eef4ff!important}
+html.amo-initial-night body select{color-scheme:dark!important}
+html.amo-initial-night body select option,html.amo-initial-night body select optgroup{background:#172131!important;color:#eef4ff!important}
+</style>
+
+
+<style id="amo-v3170-quiz-complete-spacing-fix">
+/* V31.70：答题完成态减少题目与答案之间的结构性留白。 */
+@media(min-width:701px){
+  #quiz.quiz-answer-complete .quiz-question-row{
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:auto auto!important;
+    row-gap:2px!important;
+    align-items:center!important;
+  }
+  #quiz.quiz-answer-complete .quiz-question-row .quiz-question-phrase{
+    grid-column:1!important;
+    grid-row:1!important;
+    max-width:calc(100% - 150px)!important;
+    margin-top:0!important;
+    margin-bottom:0!important;
+  }
+  #quiz.quiz-answer-complete .quiz-question-row .quiz-progress-stack{
+    grid-column:1!important;
+    grid-row:1!important;
+    justify-self:end!important;
+    align-self:center!important;
+    margin:0!important;
+    position:relative!important;
+    right:auto!important;
+    top:auto!important;
+    z-index:2!important;
+  }
+  #quiz.quiz-answer-complete .quiz-question-row #quizInlineMeaning.quiz-inline-meaning.show{
+    grid-column:1!important;
+    grid-row:2!important;
+    margin:2px auto 0!important;
+    padding:0 86px!important;
+  }
+  #quiz.quiz-answer-complete #quizResult.quiz-result{
+    margin-top:0!important;
+    padding-top:0!important;
+  }
+  #quiz.quiz-answer-complete .quiz-scroll-content{
+    padding-top:0!important;
+  }
+}
+@media(max-width:700px){
+  #quiz.quiz-answer-complete .quiz-question-row .quiz-progress-stack{
+    margin-top:.22em!important;
+  }
+  #quiz.quiz-answer-complete .quiz-question-row #quizInlineMeaning.quiz-inline-meaning.show{
+    margin-top:.22em!important;
+  }
+  #quiz.quiz-answer-complete #quizResult.quiz-result{
+    padding-top:0!important;
+    margin-top:0!important;
   }
 }
 </style>
