@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.70</title>
+<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.72</title>
 <meta name="theme-color" content="#f0f4f8" id="amo-browser-theme-color">
 
 
@@ -5853,6 +5853,103 @@ body.amo-action-modal-scroll-lock{overflow:hidden!important;overscroll-behavior:
 }
 </style>
 
+
+<style id="amo-v3171-dropdown-solid-unified">
+/* V31.71：统一全站下拉菜单为图7这种清晰的白底列表样式，避免透明叠底、选项被背景干扰。 */
+:root{
+  --amo-dropdown-solid-bg:#ffffff;
+  --amo-dropdown-solid-text:#18263a;
+  --amo-dropdown-solid-border:#cfd7e3;
+  --amo-dropdown-solid-hover:#edf4ff;
+  --amo-dropdown-solid-selected:#dbeafe;
+  --amo-dropdown-solid-selected-text:#10335d;
+}
+/* 原生 select 下拉统一使用清晰白底系统菜单 */
+body select,
+body .select{
+  color-scheme:light!important;
+}
+body select option,
+body select optgroup{
+  background:#ffffff!important;
+  color:#18263a!important;
+}
+/* 自定义下拉菜单统一实底白色列表，取消玻璃化与背景透出 */
+.amo-category-picker>.amo-category-menu,
+#words .amo-pos-dropdown-menu,
+#words .amo-relation-dropdown-menu,
+.quiz-round-menu,
+.dropdown-menu,
+[role="menu"]{
+  background:var(--amo-dropdown-solid-bg)!important;
+  color:var(--amo-dropdown-solid-text)!important;
+  border:1px solid var(--amo-dropdown-solid-border)!important;
+  border-radius:6px!important;
+  box-shadow:0 8px 24px rgba(15,23,42,.18)!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  overflow-y:auto!important;
+  scrollbar-gutter:stable both-edges;
+}
+.amo-category-picker>.amo-category-menu,
+#words .amo-pos-dropdown-menu,
+#words .amo-relation-dropdown-menu,
+.quiz-round-menu,
+.dropdown-menu,
+[role="menu"]{
+  padding:4px!important;
+  max-height:min(360px,62vh)!important;
+}
+.amo-category-menu .amo-category-option,
+#words .amo-pos-dropdown-item,
+.quiz-round-option,
+.dropdown-menu button,
+[role="menu"] > button,
+[role="menuitem"]{
+  display:block;
+  width:100%;
+  text-align:left;
+  background:transparent!important;
+  color:var(--amo-dropdown-solid-text)!important;
+  border:0!important;
+  border-radius:4px!important;
+  padding:8px 10px!important;
+  line-height:1.35!important;
+  min-height:auto!important;
+  box-shadow:none!important;
+  font-weight:500!important;
+}
+.amo-category-menu .amo-category-option:hover,
+.amo-category-menu .amo-category-option:focus-visible,
+#words .amo-pos-dropdown-item:hover,
+#words .amo-pos-dropdown-item:focus-visible,
+.quiz-round-option:hover,
+.quiz-round-option:focus-visible,
+.dropdown-menu button:hover,
+.dropdown-menu button:focus-visible,
+[role="menu"] > button:hover,
+[role="menuitem"]:hover,
+[role="menuitem"]:focus-visible{
+  background:var(--amo-dropdown-solid-hover)!important;
+  color:var(--amo-dropdown-solid-text)!important;
+  outline:none!important;
+}
+.amo-category-menu .amo-category-option.selected,
+.quiz-round-option.active,
+[role="menuitem"][aria-selected="true"]{
+  background:var(--amo-dropdown-solid-selected)!important;
+  color:var(--amo-dropdown-solid-selected-text)!important;
+  font-weight:700!important;
+}
+#words .amo-pos-dropdown-note,
+#words .amo-pos-dropdown-ai{
+  color:#5c6d82!important;
+}
+#words .amo-pos-dropdown-note{
+  border-top:1px solid #e4eaf2!important;
+}
+</style>
+
 </head>
 <body>
 <script id="amo-early-body-theme">
@@ -5867,7 +5964,7 @@ body.amo-action-modal-scroll-lock{overflow:hidden!important;overscroll-behavior:
   document.body.classList.add(initial.glass==='off'?'amo-glass-off':initial.glass==='header'?'amo-glass-header':'amo-glass-all');
 })();
 </script>
-<!-- Build: V31.70 -->
+<!-- Build: V31.72 -->
 <!--
   阿莫 V30 兼容架构 / 扩展入口
   数据源：builtInWords/builtInSentences/vietnameseGrammar/chineseGrammar（原有内容未经改写）。
@@ -5882,7 +5979,7 @@ body.amo-action-modal-scroll-lock{overflow:hidden!important;overscroll-behavior:
         <div class="logo">
             <div class="logo-icon">🇻🇳</div>
             <div>
-                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.70">V31.70</span></div>
+                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.72">V31.72</span></div>
                 <div class="logo-sub">中文母语者 · 零基础学习</div>
             </div>
         </div>
@@ -5968,7 +6065,7 @@ body.amo-action-modal-scroll-lock{overflow:hidden!important;overscroll-behavior:
         <button type="button" class="amo-reset-effects" id="amoResetDrawerSettingsBtn" onclick="resetAmoDrawerSettings()">↺ 恢复默认抽屉动效</button>
       </div>
     </details>
-    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.70</strong></div>
+    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.72</strong></div>
 </section>
 </div>
 
@@ -14079,7 +14176,7 @@ const AmoTextIO=(()=>{
 </script>
 
 <script id="amo-v3118-pos-version">
-window.AMO_BUILD_VERSION="V31.70";
+window.AMO_BUILD_VERSION="V31.72";
 </script>
 
 <script id="amo-v3126-enhancements">
@@ -14484,6 +14581,8 @@ document.addEventListener('DOMContentLoaded',()=>{initAmoSystemTheme();enhanceAm
 <script id="amo-v3131-update-history">
 (function(){
   const AMO_UPDATE_HISTORY = [
+    {version:'V31.72',items:['仅电脑端修复分类/分组下拉：彻底停用词汇、短句、答题、练习短句、批量添加等分类选择的自定义半透明浮层，统一显示浏览器原生 select，打开后使用系统滚动列表；手机端保持现有布局与交互不变。','桌面原生分类下拉明确使用浅色系统菜单和深色文字，解决上一版最终 CSS 被后续旧规则覆盖、视觉看起来没有变化的问题。','词汇、短句、答题、练习短句的分组/分类筛选区域在桌面滚动时固定在顶部 Header 下方，长列表浏览时仍可快速切换分类；批量添加表单保持原位不固定。','同步更新页面标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION 与更新历史为 V31.72。']},
+    {version:'V31.71',items:['统一全站下拉菜单视觉为图7这种清晰的白底列表：词汇、短句、答题、练习短句、批量添加等页面的分类菜单、工具菜单和轮次菜单改为实底白色面板，取消透明玻璃叠底与背景穿透。','统一下拉项样式：选项改为清晰单列列表，悬停/选中使用浅蓝高亮，滚动区域改为稳定滚动容器并保留足够层级，避免被卡片或背景内容干扰。','统一原生 select 与 option/optgroup 的 light 配色，提升系统下拉列表可读性；同步更新页面标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION 与更新历史为 V31.71。']},
     {version:'V31.70',items:['修复答题完成后题目与答案之间的大块空白：完成态下进度/正确错误统计不再独占一整行，改为与题目共享同一布局行，答案紧跟题目显示。','同步收紧完成态答案区域的行间距、结果区顶部留白和滚动内容 padding，不使用负 margin 硬拉，避免长题目或不同字号下发生重叠。','手机端保留原有安全布局，仅轻微收紧完成态题目与答案间距；同步更新页面标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION 与更新历史为 V31.70。']},
     {version:'V31.69',items:['修复分类下拉菜单被后续卡片遮挡：桌面端分类菜单打开时提升到 body 顶层 fixed 浮层，并自动根据视口决定向下或向上展开，不再受父容器 overflow / stacking context 裁切。','统一全站原生 select / option / optgroup 的日间、壁纸与夜间配色和 color-scheme，修复下拉列表白底白字、选项看不清的问题。','加强词汇/短句/答题等工具条下拉层级，管理菜单打开时始终高于内容卡片。','词汇搜索输入有内容时自动切换为“全部词汇”，避免“只看生词 / 已记住 / 需加强记忆”等状态筛选导致搜索漏词；同步更新标题、版本徽标、设置页版本、AMO_BUILD_VERSION 与更新历史。']},
     {version:'V31.68',items:['新增方向键作答门槛：答题和练习短句在当前题尚未提交答案时，← / → 不切题；只要提交过一次答案，无论正确或错误，左右方向键立即解锁。','答题继续保留答错后可重试：错误答案只把本题标记为“已尝试”，不会强制锁定题目；此时可选择继续修改答案，也可使用方向键切题。','练习短句按历史题位记录“已尝试”状态，返回已经回答过的旧题时仍可继续使用 ← / → 切换；重新生成练习轮次时状态会正确清空。','继续保留输入保护：焦点位于 input、textarea、select 或 contenteditable 时不接管左右方向键；同步更新页面标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION 与更新历史为 V31.68。']},
@@ -16859,7 +16958,7 @@ body.amo-global-glass-transparent .header .nav{
 
 
 <style id="amo-v3169-dropdown-layer-fixes">
-/* V31.70：所有下拉层避免被卡片/工具条 stacking context 裁切。 */
+/* V31.71：所有下拉层避免被卡片/工具条 stacking context 裁切。 */
 #words .toolbar,#sentences .toolbar,#quiz .toolbar,#sentenceReading .toolbar{position:relative;z-index:80;overflow:visible!important}
 #words .amo-pos-dropdown[open],#words .amo-relation-dropdown[open]{z-index:20020!important}
 #words .amo-pos-dropdown-menu,#words .amo-relation-dropdown-menu{z-index:20030!important}
@@ -16875,7 +16974,7 @@ html.amo-initial-night body select option,html.amo-initial-night body select opt
 
 
 <style id="amo-v3170-quiz-complete-spacing-fix">
-/* V31.70：答题完成态减少题目与答案之间的结构性留白。 */
+/* V31.71：答题完成态减少题目与答案之间的结构性留白。 */
 @media(min-width:701px){
   #quiz.quiz-answer-complete .quiz-question-row{
     grid-template-columns:minmax(0,1fr)!important;
@@ -16928,6 +17027,119 @@ html.amo-initial-night body select option,html.amo-initial-night body select opt
   }
 }
 </style>
+
+
+<style id="amo-v3172-desktop-native-category-selects">
+/* V31.72：仅电脑端。分类/分组选择统一回到浏览器原生 select；手机端完全不改。 */
+@media (min-width:701px){
+  /* 停用 V31 旧的自定义分类浮层，只保留原生 select。 */
+  .amo-category-picker{
+    display:inline-flex!important;
+    position:relative!important;
+    min-width:0!important;
+    max-width:100%!important;
+    overflow:visible!important;
+    vertical-align:middle!important;
+  }
+  .amo-category-picker>.amo-category-trigger,
+  .amo-category-picker>.amo-category-menu{
+    display:none!important;
+    visibility:hidden!important;
+    pointer-events:none!important;
+  }
+  .amo-category-picker>select{
+    position:static!important;
+    inset:auto!important;
+    display:block!important;
+    width:auto!important;
+    min-width:150px!important;
+    max-width:min(320px,38vw)!important;
+    height:42px!important;
+    min-height:42px!important;
+    opacity:1!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+    clip:auto!important;
+    clip-path:none!important;
+    overflow:visible!important;
+    margin:0!important;
+    padding:0 34px 0 12px!important;
+    border:1px solid var(--control-border,var(--border))!important;
+    border-radius:10px!important;
+    background:var(--control-bg,#fff)!important;
+    color:var(--text-primary,#18263a)!important;
+    color-scheme:light!important;
+    appearance:auto!important;
+    -webkit-appearance:menulist!important;
+    box-shadow:none!important;
+  }
+  /* 桌面原生下拉项明确保持图7那种白底深色文字。 */
+  select option,select optgroup{
+    background:#fff!important;
+    color:#18263a!important;
+  }
+
+  /* 分类/分组筛选滚动时固定在 Header 下方；只处理浏览列表/答题页面。 */
+  #words .toolbar,
+  #sentences .amo-desktop-category-sticky,
+  #quiz .toolbar,
+  #sentenceReading .toolbar{
+    position:sticky!important;
+    top:var(--amo-desktop-category-sticky-top,96px)!important;
+    z-index:310!important;
+    overflow:visible!important;
+  }
+  #words .toolbar,
+  #quiz .toolbar,
+  #sentenceReading .toolbar,
+  #sentences .amo-desktop-category-sticky{
+    background:color-mix(in srgb,var(--card,#fff) 94%,transparent)!important;
+    -webkit-backdrop-filter:blur(14px) saturate(145%)!important;
+    backdrop-filter:blur(14px) saturate(145%)!important;
+    border:1px solid var(--border-subtle,var(--border))!important;
+    border-radius:14px!important;
+    box-shadow:0 8px 22px rgba(15,23,42,.10)!important;
+  }
+  #sentences .amo-desktop-category-sticky{
+    margin-bottom:14px!important;
+  }
+}
+</style>
+
+
+<script id="amo-v3172-desktop-category-sticky">
+(()=>{
+  'use strict';
+  const mq=window.matchMedia('(min-width:701px)');
+  const root=document.documentElement;
+  function updateStickyTop(){
+    if(!mq.matches){root.style.removeProperty('--amo-desktop-category-sticky-top');return;}
+    const header=document.querySelector('.header');
+    const bottom=header?Math.max(0,Math.round(header.getBoundingClientRect().bottom)):88;
+    root.style.setProperty('--amo-desktop-category-sticky-top',(bottom+8)+'px');
+  }
+  function markSentenceFilter(){
+    const select=document.getElementById('sentenceCategoryFilter');
+    const card=select?.closest('.card');
+    if(card)card.classList.add('amo-desktop-category-sticky');
+  }
+  function enforceDesktopNativeSelects(){
+    const ids=['wordCategory','quizCategory','batchWordCategory','sentenceCategoryFilter','sentenceReadingCategory','batchSentenceCategory'];
+    ids.forEach(id=>{
+      const select=document.getElementById(id);
+      if(!select)return;
+      if(mq.matches){
+        select.removeAttribute('aria-hidden');
+        select.tabIndex=0;
+      }
+    });
+  }
+  function init(){markSentenceFilter();enforceDesktopNativeSelects();updateStickyTop();}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+  window.addEventListener('resize',()=>{enforceDesktopNativeSelects();updateStickyTop();},{passive:true});
+  mq.addEventListener?.('change',()=>{enforceDesktopNativeSelects();updateStickyTop();});
+})();
+</script>
 
 </body>
 </html>
