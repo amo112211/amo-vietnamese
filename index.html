@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.104</title>
+<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.107</title>
 <meta name="theme-color" content="#f0f4f8" id="amo-browser-theme-color">
 
 
@@ -110,8 +110,8 @@
 <style id="amo-initial-theme">
   /* Prime the saved theme before the stylesheet and before the first visible frame. */
   html {background:#f7f0ed;color-scheme:light}
-  html.amo-initial-night {background:#1D1A15;color-scheme:dark}
-  html.amo-theme-starting.amo-initial-night body {background:radial-gradient(circle at 18% 20%,rgba(200,160,100,.16),transparent 52%),radial-gradient(circle at 81% 78%,rgba(150,110,70,.13),transparent 53%),#1D1A15!important;color:#EAE2CF;background-attachment:fixed!important}
+  html.amo-initial-night {background:#101c21;color-scheme:dark}
+  html.amo-theme-starting.amo-initial-night body {background:radial-gradient(circle at 18% 20%,rgba(71,143,130,.12),transparent 52%),radial-gradient(circle at 81% 78%,rgba(72,109,132,.08),transparent 53%),#101c21!important;color:#e7eeec;background-attachment:fixed!important}
   html.amo-theme-starting.amo-initial-normal body {background:radial-gradient(circle at 15% 18%,rgba(150,205,255,.30),transparent 48%),radial-gradient(circle at 84% 20%,rgba(120,175,235,.24),transparent 50%),radial-gradient(circle at 58% 82%,rgba(165,205,240,.18),transparent 54%),radial-gradient(circle at 36% 55%,rgba(200,225,250,.16),transparent 44%),#dce9f4!important;background-attachment:fixed!important}
   html.amo-theme-starting body,html.amo-theme-starting .header,html.amo-theme-starting .card{transition:none!important;animation:none!important}
 </style>
@@ -132,7 +132,7 @@
   }catch(_){}
   document.documentElement.classList.add('amo-initial-'+mode,'amo-theme-starting');
   var themeMeta=document.getElementById('amo-browser-theme-color');
-  if(themeMeta)themeMeta.content=mode==='night'?'#1D1A15':mode==='wallpaper'?'#edf4f1':'#dce9f4';
+  if(themeMeta)themeMeta.content=mode==='night'?'#101c21':mode==='wallpaper'?'#edf4f1':'#dce9f4';
   if(globalGlass)document.documentElement.classList.add('amo-initial-global-glass');
   window.__amoInitialTheme={mode:mode,image:image,glass:glass,globalGlass:globalGlass};
 })();
@@ -4388,27 +4388,24 @@ html.amo-theme-starting body, html.amo-theme-starting .header, html.amo-theme-st
   color-scheme:light;
 }
 body.theme-night {
-  --page-bg:radial-gradient(circle at 16% 18%,rgba(200,160,100,.16),transparent 48%),radial-gradient(circle at 82% 22%,rgba(150,110,70,.14),transparent 50%),radial-gradient(circle at 72% 82%,rgba(90,70,50,.12),transparent 54%),#1D1A15;
-  --text-primary:#EAE2CF;--text-secondary:#B6A98F;
-  --border-subtle:rgba(225,205,160,.13);--border-normal:rgba(225,205,160,.22);--border-strong:rgba(225,205,160,.38);
-  --glass-bg:rgba(34,30,24,calc(.24 + var(--header-glass-alpha,.10)));
-  --glass-bg-soft:rgba(38,34,28,calc(.13 + var(--header-glass-alpha,.10)));--glass-bg-elevated:rgba(42,37,30,calc(.32 + var(--header-glass-alpha,.10)));--glass-bg-strong:rgba(47,41,33,calc(.44 + var(--header-glass-alpha,.10)));--glass-bg-subtle:rgba(160,130,85,.10);
-  --glass-blur:20px;--glass-radius:20px;
-  --glass-border:var(--border-normal);--glass-highlight:rgba(250,240,215,.20);
-  --glass-shadow:0 10px 27px rgba(20,14,4,.30),inset 0 1px 0 var(--glass-highlight);
-  --control-bg:rgba(170,140,95,.15);--control-border:var(--border-normal);
-  --solid-surface:#26221B;--feedback-surface:#26221B;--popup-surface:#26221B;--popup-hover:#3A352A;--button-hover:rgba(190,160,110,.25);
-  --bg:#1D1A15;--card:var(--glass-bg);--text:var(--text-primary);--muted:var(--text-secondary);--border:var(--border-normal);
-  --shadow:var(--glass-shadow);--primary:#66cbbd;--primary-dark:#9ce0d4;--primary-light:rgba(104,170,170,.22);
+  /* V31.107: 深青灰 / 暖白 / 青绿；高级透明度与自定义文字配色继续生效。 */
+  --page-bg:radial-gradient(circle at 16% 18%,rgba(71,143,130,calc(.12 * var(--amo-bg-depth,1.15))),transparent 48%),radial-gradient(circle at 82% 76%,rgba(72,109,132,calc(.08 * var(--amo-bg-depth,1.15))),transparent 54%),#101c21;
+  --text-primary:#e7eeec;--text-secondary:#afc0bf;
+  --border-subtle:rgba(175,201,199,.16);--border-normal:rgba(175,201,199,.28);--border-strong:#86b8b0;
+  --glass-bg:rgba(27,44,50,calc(.62 + var(--header-glass-alpha,.10)));
+  --glass-bg-soft:rgba(27,44,50,calc(.48 + var(--header-glass-alpha,.10)));--glass-bg-elevated:rgba(33,53,59,calc(.72 + var(--header-glass-alpha,.10)));--glass-bg-strong:rgba(36,58,64,calc(.78 + var(--header-glass-alpha,.10)));--glass-bg-subtle:rgba(131,175,167,.12);
+  --glass-blur:20px;--glass-radius:20px;--glass-border:var(--border-normal);--glass-highlight:rgba(220,244,234,.10);
+  --glass-shadow:0 10px 27px rgba(0,9,13,.28),inset 0 1px 0 var(--glass-highlight);
+  --control-bg:rgba(132,168,167,.12);--control-border:var(--border-normal);
+  --solid-surface:#20343b;--feedback-surface:#20343b;--popup-surface:#20343b;--popup-hover:#304b52;--button-hover:rgba(132,185,175,.18);
+  --bg:#101c21;--card:var(--glass-bg);--text:var(--text-primary);--muted:var(--text-secondary);--border:var(--border-normal);--shadow:var(--glass-shadow);
+  --primary:#8cd5be;--primary-dark:#abe6d2;--primary-light:rgba(140,213,190,.15);--success:#8cd5be;--danger:#ffadb2;--warning:#e9c68f;
   --surface-1:var(--glass-bg);--surface-2:var(--glass-bg-elevated);--surface-3:var(--glass-bg-subtle);
-  --button-bg:var(--control-bg);--button-text:var(--text-primary);--danger-bg:rgba(232,93,117,.20);--danger-text:#ffd3de;--accent-answer:#f5b16f;
-  --header-text:var(--text-primary);--header-subtext:var(--text-secondary);
-  --header-glass-bg:linear-gradient(135deg,rgba(150,125,80,calc(var(--header-glass-alpha,.12) * 1.6)),rgba(100,80,50,calc(var(--header-glass-alpha,.12) * 1.15)));
-  --header-glass-border:var(--border-normal);--header-pill-border:var(--border-normal);
-  --header-pill-bg:var(--control-bg);--header-pill-bg-hover:var(--button-hover);
-  --header-pill-active-bg:linear-gradient(135deg,rgba(180,150,95,.24),rgba(150,120,70,.16));
-  --header-pill-active-border:var(--border-strong);--header-control-bg:var(--control-bg);
-  --header-control-active-bg:var(--button-hover);
+  --button-bg:var(--control-bg);--button-text:var(--text-primary);--danger-bg:rgba(225,107,123,.15);--danger-text:#ffbdc1;--accent-answer:#e9c68f;
+  --header-text:var(--text-primary);--header-subtext:var(--text-secondary);--header-glass-bg:var(--glass-bg-strong);
+  --header-glass-border:var(--border-normal);--header-pill-border:var(--border-normal);--header-glass-shadow:var(--glass-shadow);
+  --header-pill-bg:var(--control-bg);--header-pill-bg-hover:var(--button-hover);--header-pill-active-bg:rgba(140,213,190,.17);
+  --header-pill-active-border:var(--border-strong);--header-control-bg:var(--control-bg);--header-control-active-bg:var(--button-hover);
   color-scheme:dark;
 }
 /* 图片只是浅色模式的可选背景，不会成为第三个主题。 */
@@ -4421,7 +4418,7 @@ body.theme-wallpaper {
   --header-text:var(--text-primary);--header-subtext:var(--text-secondary);
 }
 html {background-color:#f7f0ed}
-html:has(body.theme-night){background-color:#1D1A15;color-scheme:dark}
+html:has(body.theme-night){background-color:#101c21;color-scheme:dark}
 body:not(.theme-wallpaper){background:var(--page-bg)!important;background-attachment:fixed!important;color:var(--text-primary)}
 body.theme-wallpaper{background-color:#f7f0ed!important;color:var(--text-primary)}
 .app,.main,.page{background-color:transparent}
@@ -5298,13 +5295,13 @@ body.amo-global-glass-transparent #home>.card.card-padding .ui-language-setting-
 
 /* 夜晚模式：保持同一层级逻辑 */
 body.theme-night.amo-global-glass-transparent{
-  --amo-glass-l1-bg:rgba(34,30,24,.74);
+  --amo-glass-l1-bg:rgba(27,44,50,.80);
   --amo-glass-l1-border:rgba(255,255,255,.15);
-  --amo-glass-l2-bg:rgba(38,34,28,.80);
+  --amo-glass-l2-bg:rgba(33,53,59,.86);
   --amo-glass-l2-border:rgba(255,255,255,.14);
-  --amo-glass-l3-bg:rgba(42,37,30,.88);
+  --amo-glass-l3-bg:rgba(36,58,64,.92);
   --amo-glass-l3-border:rgba(255,255,255,.13);
-  --amo-glass-read-bg:rgba(46,40,32,.92);
+  --amo-glass-read-bg:rgba(36,58,64,.96);
   --amo-glass-read-border:rgba(255,255,255,.12);
 }
 
@@ -5398,24 +5395,7 @@ body.theme-wallpaper{
     radial-gradient(circle at 36% 55%,rgba(200,225,250,calc(.16 * var(--amo-bg-depth))),transparent 44%),
     #dce9f4;
 }
-body.theme-night{
-  --page-bg:
-    radial-gradient(circle at 16% 18%,rgba(200,160,100,calc(.16 * var(--amo-bg-depth))),transparent 48%),
-    radial-gradient(circle at 82% 22%,rgba(150,110,70,calc(.14 * var(--amo-bg-depth))),transparent 50%),
-    radial-gradient(circle at 72% 82%,rgba(90,70,50,calc(.12 * var(--amo-bg-depth))),transparent 54%),
-    #1D1A15;
-  --text-primary:#EAE2CF;--text-secondary:#B6A98F;
-  --border-subtle:rgba(225,205,160,.13);--border-normal:rgba(225,205,160,.22);--border-strong:rgba(225,205,160,.38);
-  --glass-bg:rgba(34,30,24,calc(.24 + var(--header-glass-alpha,.10)));
-  --glass-bg-soft:rgba(38,34,28,calc(.13 + var(--header-glass-alpha,.10)));--glass-bg-elevated:rgba(42,37,30,calc(.32 + var(--header-glass-alpha,.10)));--glass-bg-strong:rgba(47,41,33,calc(.44 + var(--header-glass-alpha,.10)));--glass-bg-subtle:rgba(160,130,85,.10);
-  --glass-blur:20px;--glass-radius:20px;
-  --glass-border:var(--border-normal);--glass-highlight:rgba(250,240,215,.20);
-  --glass-shadow:0 10px 27px rgba(20,14,4,.30),inset 0 1px 0 var(--glass-highlight);
-  --control-bg:rgba(170,140,95,.15);--control-border:var(--border-normal);
-  --solid-surface:#26221B;--feedback-surface:#26221B;--popup-surface:#26221B;--popup-hover:#3A352A;--button-hover:rgba(190,160,110,.25);
-  --bg:#1D1A15;--card:var(--glass-bg);--text:#EAE2CF;--muted:#B6A98F;--border:var(--border-normal);
-  --shadow:var(--glass-shadow);--surface-1:var(--glass-bg);--surface-2:var(--glass-bg-elevated);--surface-3:var(--glass-bg-subtle);
-}
+/* V31.107: 夜间主题统一在上方主题变量块维护，消除重复覆盖。 */
 
 /* 答题中文统一：整行拼音在上、整行中文在下，不再逐字 ruby 对齐。 */
 #quiz .quiz-zh-line{
@@ -5991,7 +5971,7 @@ body select optgroup{
   document.body.classList.add(initial.glass==='off'?'amo-glass-off':initial.glass==='header'?'amo-glass-header':'amo-glass-all');
 })();
 </script>
-<!-- Build: V31.104 -->
+<!-- Build: V31.107 -->
 <!--
   阿莫 V30 兼容架构 / 扩展入口
   数据源：builtInWords/builtInSentences/vietnameseGrammar/chineseGrammar（原有内容未经改写）。
@@ -6006,7 +5986,7 @@ body select optgroup{
         <div class="logo">
             <div class="logo-icon">🇻🇳</div>
             <div>
-                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.104">V31.104</span></div>
+                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.107">V31.107</span></div>
                 <div class="logo-sub">中文母语者 · 零基础学习</div>
             </div>
         </div>
@@ -6092,7 +6072,7 @@ body select optgroup{
         <button type="button" class="amo-reset-effects" id="amoResetDrawerSettingsBtn" onclick="resetAmoDrawerSettings()">↺ 恢复默认抽屉动效</button>
       </div>
     </details>
-    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.104</strong></div>
+    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.107</strong></div>
 </section>
 </div>
 
@@ -6467,7 +6447,10 @@ body select optgroup{
                 <div class="amo-batch-category-note">你新增的分类可以删除；删除分类不会删除词汇。</div>
             </div>
         </details>
-        <div class="help amo-batch-help">
+        <!-- V31.107: 添加说明默认收起；分类/词性属于表单，始终可用。 -->
+        <details class="help amo-batch-help amo-batch-instructions" id="batchWordInstructions">
+            <summary><span><strong>添加词汇说明</strong><small>格式、引号与例句写法</small></span><span class="amo-help-chevron" aria-hidden="true">⌄</span></summary>
+            <div class="amo-help-content">
             每行一个词汇，只需要使用：<br><br>
             <code>xin chào=你好</code><br>
             <code>cảm ơn=谢谢</code><br>
@@ -6478,10 +6461,13 @@ body select optgroup{
             <br><br>
             等号 <strong>=</strong> 两边可使用「越南语=中文」或「中文=越南语」，系统按文字自动识别。<br>
             <code>位置=vị trí</code><br><code>ngân hàng=银行</code><br><br>
-            <strong>批量添加分类：</strong>
+            高级格式：<code>越南语=中文=词性=越南语例句</code>；第三列已有有效词性时保留，留空时自动判断。常见写法如 noun/N/名、verb/V/动、adj/形 会自动标准化；无法可靠判断时标记为“待确认”。若第三列是旧版学习分类文本，则继续按分类兼容保存。
+            </div>
+        </details>
+        <div class="amo-batch-options">
+            <label for="batchWordCategory"><strong>批量添加分类：</strong></label>
             <select id="batchWordCategory" class="select" style="margin-left:8px;"></select><br>
             <label for="batchWordPos"><strong>默认词性：</strong></label><select id="batchWordPos" class="select" aria-label="批量添加默认词性"><option value="">自动判断（优先使用每行第三列）</option><option value="名词">名词</option><option value="动词">动词</option><option value="形容词">形容词</option><option value="副词">副词</option><option value="代词">代词</option><option value="数词">数词</option><option value="量词">量词</option><option value="介词">介词</option><option value="连词">连词</option><option value="助词">助词</option><option value="感叹词">感叹词</option><option value="疑问词">疑问词</option><option value="指示词">指示词</option><option value="时间词">时间词</option><option value="方位词">方位词</option><option value="情态词">情态词</option><option value="问候语">问候语</option><option value="固定短语">固定短语</option><option value="成语/惯用语">成语/惯用语</option></select><br>
-            高级格式：<code>越南语=中文=词性=越南语例句</code>；第三列已有有效词性时保留，留空时自动判断。常见写法如 noun/N/名、verb/V/动、adj/形 会自动标准化；无法可靠判断时标记为“待确认”。若第三列是旧版学习分类文本，则继续按分类兼容保存。
         </div>
         <textarea id="batchWords" placeholder="xin chào=你好
 cảm ơn=谢谢
@@ -6496,13 +6482,16 @@ tạm biệt=再见"></textarea>
     </div>
     <div class="card card-padding" style="margin-top:18px;">
         <h2 style="margin-top:0;">批量添加短句</h2>
-        <div class="help amo-batch-help">
+        <details class="help amo-batch-help amo-batch-instructions" id="batchSentenceInstructions">
+            <summary><span><strong>添加短句说明</strong><small>支持中越双向格式</small></span><span class="amo-help-chevron" aria-hidden="true">⌄</span></summary>
+            <div class="amo-help-content">
             格式与词汇相同：<br><br>
             <code>Xin chào, bạn khỏe không?=你好，你好吗？</code><br>
             <code>Cảm ơn bạn rất nhiều.=非常感谢你。</code><br>
             <code>你好，你好吗？=Xin chào, bạn khỏe không?</code><br>
             <span>支持「越南语=中文」及「中文=越南语」，系统自动识别两侧语言。</span>
-        </div>
+            </div>
+        </details>
         <div style="margin-bottom:8px;">
       <select class="select" id="batchSentenceCategory"><option value="">不指定分类</option></select>
     </div>
@@ -6641,8 +6630,16 @@ Hôm nay bạn có bận không?=你今天忙吗？"></textarea>
 <div class="card backup-card" id="amoTextDataCard">
   <h3>📄 词汇和短句 TXT 导入 / 导出</h3>
   <p>词汇：越南语=中文意思=类型=例句1=例句2（可继续增加例句）；短句：越南语=中文意思。只交换学习内容，不包含答题记录、已记住状态或个人设置；完整保存请使用上方 JSON 备份。</p>
+  <!-- V31.107: 此筛选只用于词汇导出，不影响短句和 JSON 备份。 -->
+  <label for="amoWordExportScope" class="speech-setting-label">词汇导出范围</label>
+  <select id="amoWordExportScope" class="select" aria-describedby="amoWordExportHint">
+    <option value="all">全部词汇</option>
+    <option value="without-examples">仅没有例句的词汇</option>
+  </select>
+  <p id="amoWordExportHint" class="amo-setting-hint">中文或越南语例句任一有内容，均视为已有例句。短句导出不受此选项影响。</p>
+  <p id="amoWordExportStatus" class="amo-setting-hint" role="status" aria-live="polite"></p>
   <div class="amo-text-actions">
-    <button type="button" class="btn btn-primary" onclick="AmoTextIO.exportFile('words')">导出词汇 TXT</button>
+    <button id="amoWordExportBtn" type="button" class="btn btn-primary" onclick="AmoTextIO.exportFile('words')">导出词汇 TXT</button>
     <button type="button" class="btn btn-primary" onclick="AmoTextIO.exportFile('sentences')">导出短句 TXT</button>
   </div>
   <label for="amoTextFile" class="speech-setting-label">导入 TXT 文件（先检查，确认后合并）</label>
@@ -7397,7 +7394,7 @@ const AMO_FONT_DEFAULTS=Object.freeze({ui:16,vi:21,zh:15,py:15,exampleVi:14,exam
 const AMO_FONT_LIMITS={ui:[12,28],vi:[16,48],zh:[12,40],py:[10,30],exampleVi:[11,34],exampleZh:[11,34],question:[22,72],answer:[16,64]};
 const AMO_PALETTES={
     normal:{mint:["#10786d","#1769d2","#1167e8"],soft:["#315f4d","#36553a","#385c96"],bright:["#057c88","#184ed9","#0058ee"]},
-    night:{mint:["#94e2c6","#f2f6ff","#a8c7ff"],soft:["#b6d9b4","#f4f1d6","#c0cef5"],bright:["#61e3dc","#ffffff","#b1c7ff"]}
+    night:{mint:["#abe6d2","#e7eeec","#b7cddb"],soft:["#c1dcca","#f1e8d5","#bdccd2"],bright:["#91f0dc","#ffffff","#c4ddf3"]}
 };
 
 /* V31 新字段均为可选：旧版 {vi,zh,category} 无需迁移或覆盖。 */
@@ -7738,6 +7735,9 @@ function applyDisplaySettings(){
       const output=document.getElementById(id+"Value");if(output)output.textContent=label;
     }
     document.body.classList.toggle("theme-night",settings.themeMode==="night");
+    // V31.107: switching themes also updates the browser chrome, not just first load.
+    const themeMeta=document.getElementById('amo-browser-theme-color');
+    if(themeMeta)themeMeta.content=settings.themeMode==='night'?'#101c21':settings.themeMode==='wallpaper'?'#edf4f1':'#dce9f4';
     
     const wallpaper=settings.themeMode==="wallpaper" && typeof settings.amoWallpaperData==="string" && settings.amoWallpaperData.startsWith("data:image/");
     document.body.classList.toggle("theme-wallpaper",wallpaper);
@@ -11360,6 +11360,8 @@ function showCurrentQuizBatchItem(){
     if(summary) summary.style.display="none";
     const actions=document.querySelector("#quiz .quiz-main-actions");
     if(actions) actions.style.display="";
+    // V31.105 修复：渲染新题前清理底部操作区残留的填空/自由输入提交按钮（反复切换答题方式会累积出多个“提交”按钮）。
+    if(actions) actions.querySelectorAll(".quiz-fill-submit,.quiz-submit-btn").forEach(el=>el.remove());
 
     const permanentSet=getCoreRememberedSet();
     while(quizBatchIndex<quizBatchKeys.length && permanentSet.has(normalize(quizBatchKeys[quizBatchIndex]))){
@@ -14064,6 +14066,8 @@ else amoAdminApplyLanguage();
  */
 const AmoTextIO=(()=>{
     let pending=null;
+    // V31.107: prevent accidental double downloads during a double click.
+    const exporting=new Set();
     const field=v=>{
         const text=String(v??'');
         return /[="\r\n]/.test(text)?'"'+text.replace(/"/g,'""')+'"':text;
@@ -14090,14 +14094,29 @@ const AmoTextIO=(()=>{
         const removed=new Set((isWord?deletedWords:deletedSentences).map(x=>normalize(typeof x==='string'?x:x?.vi)));
         const map=new Map();
         for(const item of [...base,...custom]){
+            if(!item || typeof item.vi!=='string')continue;
             const key=normalize(item.vi);
             if(key&&!removed.has(key))map.set(key,item);
         }
         return [...map.values()];
     }
-    function serialize(kind){
+    // V31.107: inspect the word's own example store, including Chinese-only content.
+    function hasWordExample(item){
+        const saved=examples?.[normalize(item.vi)];
+        const hasText=value=>typeof value==='string'&&value.replace(/[\s\u200B-\u200D\u2060\uFEFF]/gu,'').length>0;
+        return !!saved&&(hasText(saved.vi)||hasText(saved.zh));
+    }
+    function exportItems(kind,{withoutExamples=false}={}){
+        if(!['words','sentences'].includes(kind))throw new Error('导出类型无效');
+        const items=allActive(kind);
+        return kind==='words'&&withoutExamples?items.filter(item=>!hasWordExample(item)):items;
+    }
+    function serialize(kind,options={}){
+        return serializeRows(kind,exportItems(kind,options));
+    }
+    function serializeRows(kind,items){
         const words=kind==='words';
-        return allActive(kind).map(item=>{
+        return items.map(item=>{
             if(!words)return [item.vi,item.zh].map(field).join('=');
             const key=normalize(item.vi),saved=examples[key]||{};
             const viExamples=String(saved.vi||'').split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
@@ -14120,16 +14139,40 @@ const AmoTextIO=(()=>{
     }
     function download(text,name,type='text/plain;charset=utf-8'){
         const blob=new Blob(['\uFEFF',text],{type});
-        const url=URL.createObjectURL(blob),link=document.createElement('a');
-        link.href=url;link.download=name;document.body.appendChild(link);link.click();link.remove();
-        setTimeout(()=>URL.revokeObjectURL(url),5000);
+        const url=URL.createObjectURL(blob);
+        // V31.107: release the link and object URL even when triggering download fails.
+        try{
+            const link=document.createElement('a');
+            try{link.href=url;link.download=name;document.body.appendChild(link);link.click();}
+            finally{link.remove();}
+        }finally{setTimeout(()=>URL.revokeObjectURL(url),5000);}
     }
     function exportFile(kind){
-        if(!['words','sentences'].includes(kind))return;
+        if(!['words','sentences'].includes(kind)||exporting.has(kind))return;
+        const withoutExamples=kind==='words'&&document.getElementById('amoWordExportScope')?.value==='without-examples';
+        const status=kind==='words'?document.getElementById('amoWordExportStatus'):null;
+        const button=kind==='words'?document.getElementById('amoWordExportBtn'):null;
+        exporting.add(kind);
+        if(button){button.disabled=true;button.setAttribute('aria-busy','true');}
         try{
-            download(serialize(kind),'阿莫_'+(kind==='words'?'词汇':'短句')+'_'+new Date().toISOString().slice(0,10)+'.txt');
-            showToast('TXT 已生成；学习状态请另存 JSON 完整备份');
-        }catch(error){showToast('导出失败：'+error.message);}
+            const items=exportItems(kind,{withoutExamples});
+            if(!items.length){
+                const message=withoutExamples?'没有符合条件的词汇可导出。':'当前没有可导出的'+(kind==='words'?'词汇':'短句')+'。';
+                if(status)status.textContent=message;
+                showToast(message);return;
+            }
+            const label=kind==='words'?(withoutExamples?'无例句词汇':'词汇'):'短句';
+            download(serializeRows(kind,items),'阿莫_'+label+'_'+new Date().toISOString().slice(0,10)+'.txt');
+            const message='TXT 已生成：'+items.length+' 条'+label+'。';
+            if(status)status.textContent=message;
+            showToast(message+'学习状态请另存 JSON 完整备份');
+        }catch(error){
+            const message='导出失败：'+(error?.message||'请稍后重试');
+            if(status)status.textContent=message;
+            showToast(message);
+        }finally{
+            setTimeout(()=>{exporting.delete(kind);if(button){button.disabled=false;button.removeAttribute('aria-busy');}},450);
+        }
     }
     function parse(text,kind){
         if(!['words','sentences'].includes(kind))throw new Error('导入类型无效');
@@ -14350,7 +14393,7 @@ const AmoTextIO=(()=>{
 </script>
 
 <script id="amo-v3118-pos-version">
-window.AMO_BUILD_VERSION="V31.104";
+window.AMO_BUILD_VERSION="V31.107";
 </script>
 
 <script id="amo-v3126-enhancements">
@@ -14755,6 +14798,9 @@ document.addEventListener('DOMContentLoaded',()=>{initAmoSystemTheme();enhanceAm
 <script id="amo-v3131-update-history">
 (function(){
   const AMO_UPDATE_HISTORY = [
+    {version:'V31.107',date:'2026-10-05',items:['批量添加词汇与短句的说明支持展开/收起，默认收起；分类和默认词性选择保持可见，原格式与业务功能保留。','设置页 TXT 新增导出范围：全部词汇 / 仅没有例句的词汇；中文或越南语例句任一非空即排除，空结果不下载，支持重复点击保护与条数反馈，短句与 JSON 备份不受影响。','夜间主题统一为深青灰底色、暖白文字、柔和青绿强调色；整合重复主题变量，协调弹窗、说明、下拉、正确/错误状态及浏览器主题色，保留用户自定义文字配色。','说明交互采用原生 details，动画仅使用 transform / opacity，支持键盘、减少动态效果和手机布局。','同步更新页面标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION 和历史更新记录为 V31.107。']},
+    {version:'V31.106',items:['按答题页截图重新整理五种提示语与题目：提示语和题目使用同一水平中心轴，语音按钮出现时题目仍保持真正居中。','整体上移提示语与题目，减少题卡顶部空耗；在题目与答案选项之间为例句/答题反馈预留稳定留白，答对后例句直接占用该区域，不再挤压题目。','桌面与手机端分别设置合适的顶部间距和例句预留高度，保持现有答题逻辑、题库与统计不变。','同步更新页面标题、顶部版本徽标、设置页版本与 AMO_BUILD_VERSION 为 V31.106。']},
+    {version:'V31.105',items:['彻底修复答题页底部累积出大量“提交”按钮的 BUG（截图约40个堆叠）：根因是填空模式的提交按钮会被移动到底部操作区，但切换答题方式时旧按钮从不清理，反复切换后不断累积；现已在渲染新题前强制清理操作区残留的填空/自由输入提交按钮，并给移动逻辑加上移动前清理，任何切换路径都不会再累积。','同步更新页面标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION 与更新历史为 V31.105。']},
     {version:'V31.104',items:['强化五种提示语与题目的同轴居中：提示语、题目强制全宽并水平居中，在任何窗口宽度/浏览器缩放下都与题目严格对齐。','加大提示语与题目之间的垂直间距（提示语相对题目增高）；题目与答案区之间增加留白，为例句（内联释义）显示预留空间。','答题完成后“开始/下一题”按钮防御性显示，避免个别模式下按钮缺失；手机端布局与桌面端保持一致。','同步更新页面标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION 与更新历史为 V31.104。']},
     {version:'V31.103',items:['答题统计区布局调整：进度条（如 07/20）移到右上角“💗 需加强记忆”按钮正下方（右缘与 💗 对齐）；✅ 正确数与 ❌ 错误数改为竖列显示（✅ 在上、❌ 在下），左边缘与进度条对齐。','“越南语是什么意思？”、“中文对应的越南语是？”、“请写出对应的越南语”、“请写出对应的中文”、“根据中文补全越南语例句 · 标准”五种提示语与下方题目、内联答案保持同一水平中心轴居中。','修复答题渲染 JS（enforceCenteredProgress）强制居中与右上角新布局冲突的问题，取消强制居中改为左对齐；进度条移出题目行后，题目与提示语在桌面/手机端布局不受影响。','同步更新页面标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION 与更新历史为 V31.103。']},
     {version:'V31.102',items:['考试“输入题”判分改为与翻译题一致的按词计分：答对几个词得几分，部分匹配可获得部分得分，输入题满分仍为 4 分。','输入题批改页同步显示词汇拆分（✓ 答对 / ✕ 漏掉），方便查看扣分原因。','本版另存为新文件（阿莫自学助手_V31.102_输入题按词计分.html），与旧版并行。','同步更新页面标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION 与更新历史为 V31.102。']},
@@ -15005,8 +15051,8 @@ body.theme-night .header .nav,
 html.amo-initial-night .header .nav{
   background:
     linear-gradient(180deg,
-      rgba(38,50,69,.62),
-      rgba(28,38,54,.48));
+      rgba(33,53,59,.86),
+      rgba(27,44,50,.78));
   border-color:rgba(150,176,207,.18);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.06),
@@ -15630,8 +15676,8 @@ body.amo-glass-all .page p:not(.word-vi):not(.sentence-vi){color:var(--amo-help-
   --amo-overlay-bg:rgba(10,16,26,.34);
 }
 body.theme-night{
-  --amo-layer-bg:rgba(24,32,46,calc(.42 + var(--header-glass-alpha,.20) * .18));
-  --amo-layer-bg-strong:rgba(27,36,51,calc(.48 + var(--header-glass-alpha,.20) * .18));
+  --amo-layer-bg:var(--glass-bg-elevated);
+  --amo-layer-bg-strong:var(--glass-bg-strong);
   --amo-overlay-bg:rgba(4,8,15,.48);
 }
 /* All modal / drawer / detail surfaces use one visual system. Advanced effects feed these variables. */
@@ -18498,6 +18544,10 @@ body.amo-glass-off #quiz.quiz-fill-mode .quiz-main-actions{
     if(!isFillMode())return;
     const options=optionsEl(),actions=actionsEl(),show=showEl();
     if(!options||!actions)return;
+    // V31.105 修复：移动前先清掉底部操作区残留的旧填空提交按钮（反复切换答题方式会在操作区累积出多个“提交”按钮）。
+    actions.querySelectorAll('.quiz-fill-submit,.quiz-submit-btn').forEach(el=>{
+      if(el.parentElement===actions)el.remove();
+    });
     const submit=options.querySelector('.quiz-fill-submit') || document.querySelector('#quiz .quiz-fill-submit');
     if(submit && submit.parentElement!==actions){
       actions.insertBefore(submit,show&&show.parentElement===actions?show:actions.firstChild);
@@ -18918,10 +18968,172 @@ body.amo-glass-off #quiz.quiz-fill-mode .quiz-main-actions{
     margin-top:6px !important;
     margin-bottom:12px !important
 }
+
+/* ====================== V31.106 五种提示语 / 题目 / 例句留白最终布局 ======================
+   目标：
+   1) 五种提示语与题目严格共用同一中心轴；语音按钮出现也不把题目推偏。
+   2) 提示语与题目整体上移，减少顶部无效空白。
+   3) #quizResult 作为例句/反馈槽位，在题目与答案选项之间保留稳定空间。
+*/
+.app #quiz .quiz-question{
+    padding-top:24px !important;
+    padding-bottom:28px !important
+}
+.app #quiz .quiz-question #quizLabel{
+    display:block !important;
+    width:100% !important;
+    max-width:100% !important;
+    box-sizing:border-box !important;
+    padding-left:56px !important;
+    padding-right:56px !important;
+    margin:0 auto 10px !important;
+    text-align:center !important;
+    line-height:1.45 !important
+}
+/* 用左右等宽保护列夹住题目：中间题目永远处于卡片真正中心，右侧语音键不再造成视觉偏移。 */
+.app #quiz .quiz-question-row .quiz-question-phrase{
+    display:grid !important;
+    grid-template-columns:42px minmax(0,1fr) 42px !important;
+    align-items:center !important;
+    justify-items:center !important;
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    margin:0 auto !important
+}
+.app #quiz .quiz-question-row .quiz-question-phrase #quizWord{
+    grid-column:2 !important;
+    grid-row:1 !important;
+    display:block !important;
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    margin:0 !important;
+    padding:0 !important;
+    text-align:center !important;
+    justify-self:stretch !important
+}
+.app #quiz .quiz-question-row .quiz-question-phrase #quizQuestionSpeechBtn{
+    grid-column:3 !important;
+    grid-row:1 !important;
+    position:static !important;
+    inset:auto !important;
+    left:auto !important;
+    right:auto !important;
+    top:auto !important;
+    transform:none !important;
+    justify-self:center !important;
+    margin:0 !important
+}
+.app #quiz .quiz-question-row{
+    width:100% !important;
+    max-width:100% !important;
+    padding-left:0 !important;
+    padding-right:0 !important;
+    margin:0 auto !important
+}
+/* 例句/反馈专用槽位：未作答时就是题目与答案之间的呼吸留白；作答后直接显示例句。 */
+.app #quiz #quizResult.quiz-result{
+    box-sizing:border-box !important;
+    min-height:78px !important;
+    width:100% !important;
+    max-width:650px !important;
+    margin:4px auto 2px !important;
+    padding:7px 8px !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:stretch !important;
+    justify-content:center !important;
+    text-align:center !important;
+    overflow:visible !important
+}
+.app #quiz #quizResult.quiz-result:empty{
+    min-height:78px !important
+}
+.app #quiz #quizResult .quiz-correct-details,
+.app #quiz #quizResult .quiz-correct-example{
+    width:100% !important;
+    max-width:620px !important;
+    margin-left:auto !important;
+    margin-right:auto !important
+}
+.app #quiz #quizOptions.quiz-options{
+    margin-top:6px !important
+}
+@media (max-width:700px){
+    .app #quiz .quiz-question{
+        padding-top:18px !important;
+        padding-bottom:20px !important
+    }
+    .app #quiz .quiz-question #quizLabel{
+        padding-left:44px !important;
+        padding-right:44px !important;
+        margin-bottom:8px !important
+    }
+    .app #quiz .quiz-question-row .quiz-question-phrase{
+        grid-template-columns:34px minmax(0,1fr) 34px !important
+    }
+    .app #quiz #quizResult.quiz-result,
+    .app #quiz #quizResult.quiz-result:empty{
+        min-height:64px !important;
+        margin-top:3px !important;
+        margin-bottom:2px !important;
+        padding:5px 4px !important
+    }
+    .app #quiz #quizOptions.quiz-options{
+        margin-top:4px !important
+    }
+}
 .app #quiz.quiz-answer-complete .quiz-main-actions .quiz-next-btn{
     display:inline-flex !important;
     align-items:center !important;
     justify-content:center !important
+}
+</style>
+
+<style id="amo-v31107-disclosure-and-night-states">
+/* V31.107 改动：原生说明折叠、导出范围排版、夜间语义状态。 */
+#add details.amo-batch-instructions{padding:0;overflow:hidden;margin-bottom:12px;border-radius:14px}
+#add .amo-batch-instructions>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:12px 15px;list-style:none;cursor:pointer;user-select:none}
+#add .amo-batch-instructions>summary::-webkit-details-marker{display:none}
+#add .amo-batch-instructions>summary>span:first-child{display:grid;gap:3px;min-width:0}
+#add .amo-batch-instructions summary strong{color:var(--text-primary);font-size:15px}
+#add .amo-batch-instructions summary small{color:var(--text-secondary);font-size:12px}
+#add .amo-help-chevron{display:grid;place-items:center;flex:0 0 28px;width:28px;height:28px;border-radius:8px;background:var(--primary-light);color:var(--primary-dark);transition:transform 180ms cubic-bezier(.2,.7,.2,1)}
+#add .amo-batch-instructions[open] .amo-help-chevron{transform:rotate(180deg)}
+#add .amo-batch-instructions summary:hover{background:var(--button-hover)}
+#add .amo-batch-instructions>summary:focus-visible{outline:2px solid var(--primary)!important;outline-offset:-3px!important;border-radius:12px}
+#add .amo-batch-instructions summary:active .amo-help-chevron{opacity:.72}
+#add .amo-help-content{padding:12px 15px 16px;border-top:1px solid var(--border-subtle);overflow-wrap:anywhere}
+#add .amo-batch-instructions[open] .amo-help-content{animation:amo-help-reveal 160ms ease-out}
+#add .amo-batch-options{line-height:2;margin:0 0 12px;min-width:0}
+#add .amo-batch-options .select{max-width:100%;margin-block:4px}
+#amoTextDataCard #amoWordExportScope{width:100%;max-width:340px;min-height:44px}
+#amoWordExportStatus:empty{display:none}
+#amoTextDataCard .amo-text-actions{gap:10px;flex-wrap:wrap}
+@keyframes amo-help-reveal{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:translateY(0)}}
+/* Override legacy semantic colors; retain correct/wrong meanings and existing custom study text. */
+body.theme-night :is(.btn-primary,.quiz-submit-btn){background:var(--primary)!important;color:#102c25!important;border-color:var(--primary)!important;text-shadow:none!important}
+body.theme-night #quiz #quizOptions .quiz-option.correct{background:#25473d!important;border-color:var(--primary)!important;color:var(--text-primary)!important}
+body.theme-night #quiz #quizOptions .quiz-option.wrong{background:#4a3037!important;border-color:var(--danger)!important;color:var(--danger-text)!important}
+body.theme-night :is(.btn-danger,[class*="delete"],[class*="danger"]){background:var(--danger-bg)!important;border-color:var(--danger)!important;color:var(--danger-text)!important}
+body.theme-night .remembered{background:#25473d!important;color:#c5ebd9!important;border-color:#76b49c!important}
+body.theme-night :is([onclick*="showQuizAnswer"],[onclick*="showSentenceReadingAnswer"],.show-answer){background:#443b2c!important;color:#f1dfba!important;border-color:#bca274!important}
+body.theme-night :is(#quizResult,#sentenceReadingAnswer,.answer,.correct,.quiz-answer,.answer-text) strong{color:var(--accent-answer)!important}
+body.theme-night a{color:var(--primary-dark)!important}
+body.theme-night #add .amo-batch-help,body.theme-night #customPinyinCard .amo-pinyin-help{background:var(--glass-bg-elevated)!important;color:var(--text-primary)!important;border-color:var(--border-normal)!important}
+body.theme-night #add .amo-batch-help code,body.theme-night #customPinyinCard .amo-pinyin-help code{background:var(--primary-light)!important;color:var(--primary-dark)!important;border-color:var(--border-normal)!important}
+body.theme-night :is(select option,select optgroup){background:var(--popup-surface)!important;color:var(--text-primary)!important}
+body.theme-night :is(button,input,select,textarea,summary,a):focus-visible{outline:2px solid var(--primary)!important;outline-offset:3px}
+@media(max-width:700px){
+  #add .amo-batch-instructions>summary{padding:11px 12px}
+  #add .amo-help-content{padding:12px}
+  #add .amo-batch-options .select{display:block;width:100%;margin-left:0!important}
+  #amoTextDataCard .amo-text-actions>.btn{flex:1 1 150px;min-height:44px;white-space:normal}
+}
+@media(prefers-reduced-motion:reduce){
+  #add .amo-help-chevron{transition:none}
+  #add .amo-batch-instructions[open] .amo-help-content{animation:none}
 }
 </style>
 </body>
