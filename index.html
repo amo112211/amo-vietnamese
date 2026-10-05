@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.98</title>
+<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.104</title>
 <meta name="theme-color" content="#f0f4f8" id="amo-browser-theme-color">
 
 
@@ -5822,7 +5822,7 @@ body.amo-action-modal-scroll-lock{overflow:hidden!important;overscroll-behavior:
  #quiz.quiz-answer-complete .quiz-main-actions .quiz-next-btn{grid-column:1!important;grid-row:1!important;min-height:52px!important}
  #quiz.quiz-answer-complete .quiz-main-actions #quizResetRememberBtn{grid-column:1!important;grid-row:2!important;justify-self:start!important;width:auto!important;min-width:0!important;min-height:44px!important;margin-left:-4px!important;padding-inline:14px!important}
 }
-@media(min-width:1220px){.app #quiz .quiz-desktop-layout{position:relative!important;display:block!important;width:100%!important;max-width:1400px!important;min-height:1px!important;margin:20px auto!important}.app #quiz .quiz-desktop-layout>.quiz-box{width:min(760px,100%)!important;max-width:760px!important;margin:0 auto!important}.app #quiz .quiz-history-side{position:absolute!important;left:calc(50% + 396px)!important;top:0!important;width:210px!important;margin:0!important}}@media(min-width:1101px) and (max-width:1219px){.app #quiz .quiz-desktop-layout{display:block!important;max-width:1400px!important}.app #quiz .quiz-desktop-layout>.quiz-box{width:min(760px,100%)!important;margin:0 auto!important}.app #quiz .quiz-history-side{display:none!important}}
+@media(min-width:1220px){.app #quiz .quiz-desktop-layout{position:relative!important;display:block!important;width:100%!important;max-width:1400px!important;min-height:1px!important;margin:20px auto!important}.app #quiz .quiz-desktop-layout>.quiz-box{width:min(760px,100%)!important;max-width:760px!important;margin:0 auto!important}.app #quiz .quiz-history-side{position:absolute!important;left:calc(50% + 396px)!important;top:0!important;width:210px!important;margin:0!important}}@media(min-width:1101px) and (max-width:1219px){.app #quiz .quiz-desktop-layout{display:block!important;max-width:1400px!important}.app #quiz .quiz-desktop-layout>.quiz-box{width:min(760px,100%)!important;margin:0 auto!important}.app #quiz .quiz-history-side{display:block!important;width:min(760px,100%)!important;margin:12px auto 0!important}}
 @keyframes amoEditSheetIn{from{opacity:.72;transform:translate3d(0,100%,0)}to{opacity:1;transform:translate3d(0,0,0)}}@keyframes amoEditSheetOut{from{opacity:1;transform:translate3d(0,0,0)}to{opacity:.72;transform:translate3d(0,100%,0)}}
 @media(prefers-reduced-motion:reduce){.header-inner{transition-duration:.01ms!important}.amo-word-detail-panel,#wordActionModal.amo-word-edit-sheet .modal-box{animation-duration:.01ms!important;transition-duration:.01ms!important}#wordActionModal.amo-word-edit-sheet.amo-modal-closing .modal-box{animation-duration:.01ms!important}}
 </style>
@@ -5991,7 +5991,7 @@ body select optgroup{
   document.body.classList.add(initial.glass==='off'?'amo-glass-off':initial.glass==='header'?'amo-glass-header':'amo-glass-all');
 })();
 </script>
-<!-- Build: V31.98 -->
+<!-- Build: V31.104 -->
 <!--
   阿莫 V30 兼容架构 / 扩展入口
   数据源：builtInWords/builtInSentences/vietnameseGrammar/chineseGrammar（原有内容未经改写）。
@@ -6006,7 +6006,7 @@ body select optgroup{
         <div class="logo">
             <div class="logo-icon">🇻🇳</div>
             <div>
-                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.98">V31.98</span></div>
+                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.104">V31.104</span></div>
                 <div class="logo-sub">中文母语者 · 零基础学习</div>
             </div>
         </div>
@@ -6092,7 +6092,7 @@ body select optgroup{
         <button type="button" class="amo-reset-effects" id="amoResetDrawerSettingsBtn" onclick="resetAmoDrawerSettings()">↺ 恢复默认抽屉动效</button>
       </div>
     </details>
-    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.98</strong></div>
+    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.104</strong></div>
 </section>
 </div>
 
@@ -11593,6 +11593,9 @@ function toggleQuizHistoryPanel(checked){
     const panel=document.getElementById("quizHistoryPanel");
     if(panel) panel.style.display=checked ? "block" : "none";
     renderQuizHistory();
+    if(checked && panel){
+      setTimeout(()=>{ try{ panel.scrollIntoView({behavior:"smooth",block:"nearest"}); }catch(_){ panel.scrollIntoView(); } },60);
+    }
     keepStudyFocusInView("quiz");
 }
 function clearQuizHistoryView(){
@@ -14347,7 +14350,7 @@ const AmoTextIO=(()=>{
 </script>
 
 <script id="amo-v3118-pos-version">
-window.AMO_BUILD_VERSION="V31.98";
+window.AMO_BUILD_VERSION="V31.104";
 </script>
 
 <script id="amo-v3126-enhancements">
@@ -14500,7 +14503,7 @@ document.addEventListener('DOMContentLoaded',()=>{initAmoSystemTheme();enhanceAm
     segment(text,lang){text=String(text||'').trim();if(!text)return [];try{if(typeof Intl!=='undefined'&&Intl.Segmenter){const seg=new Intl.Segmenter(lang==='zh'?'zh':'vi',{granularity:'word'});return Array.from(seg.segment(text)).filter(x=>x.isWordLike!==false).map(x=>norm(x.segment)).filter(x=>x&&/[\p{L}\p{M}\p{N}\u3400-\u9fff]/u.test(x));}}catch(_){}if(lang==='zh')return (text.match(/[\u3400-\u9fff]{1,2}|[A-Za-z0-9]+/g)||[]).map(norm).filter(Boolean);return (text.match(/[\p{L}\p{M}\p{N}]+/gu)||[]).map(norm).filter(Boolean);},
     translation(q,value){if(this.exact(q,value))return {ratio:1,score:q.maxScore,status:'correct',matched:[],missed:[]};const lang=q.dir==='vi-zh'?'zh':'vi',expected=this.segment(q.answer,lang),actual=this.segment(value,lang);if(!expected.length||!actual.length)return {ratio:0,score:0,status:'wrong',matched:[],missed:expected};const counts=new Map();for(const t of actual)counts.set(t,(counts.get(t)||0)+1);const matched=[],missed=[];for(const t of expected){const n=counts.get(t)||0;if(n>0){matched.push(t);counts.set(t,n-1);}else missed.push(t);}const recall=matched.length/expected.length,lengthPenalty=Math.min(1,actual.length/Math.max(1,expected.length),expected.length/Math.max(1,actual.length)),ratio=clamp(recall*(0.85+0.15*lengthPenalty),0,1),score=Math.round(q.maxScore*ratio),status=ratio>=0.8?'correct':ratio>=0.4?'partial':'wrong';return {ratio,score,status,matched,missed};},
     grade(q,value){
-      if(q.type==='translation'){
+      if(q.type==='translation'||q.type==='input'){
         const r=this.translation(q,value);return {...r,correct:r.status==='correct'};
       }
       let ok=false;
@@ -14718,7 +14721,7 @@ document.addEventListener('DOMContentLoaded',()=>{initAmoSystemTheme();enhanceAm
       const stageCount={};adaptiveRows.forEach(x=>stageCount[x.d.stage]=(stageCount[x.d.stage]||0)+1);
       const mainStage=Object.entries(stageCount).sort((a,b)=>b[1]-a[1])[0]?.[0]||'';
       const diagnosis=adaptiveRows.length?`<div class="exam-review-item" style="margin-bottom:12px"><div class="exam-review-q">🧠 自适应学习诊断</div><div class="exam-review-a">综合掌握度：<b>${avgMastery}%</b> · 遗忘风险：<b>${avgRisk}%</b><br>主要学习阶段：<b>${esc(stageLabel[mainStage]||mainStage)}</b><br>当前最需要加强：<b>${TYPE_LABEL[weakTypes[0]?.t]||''}</b> ${weakTypes[0]?.v||0}%${weakTypes[1]?`、${TYPE_LABEL[weakTypes[1].t]} ${weakTypes[1].v}%`:''}<br>系统已根据本次表现调整后续出题权重和题型训练方向。</div></div>`:'';
-      $('examReview').innerHTML=diagnosis+(review.length?review.map(q=>{const cls=q.status==='partial'?'partial':'wrong',scoreLine=`得分：<b>${q.score} / ${q.maxScore}</b>`;let match='';if(q.type==='translation'&&(q.matched.length||q.missed.length)){match=`<div class="exam-match-row">${q.matched.map(t=>`<span class="exam-match-token">✓ ${esc(t)}</span>`).join('')}${q.missed.map(t=>`<span class="exam-match-token miss">✕ ${esc(t)}</span>`).join('')}</div>`;}return `<div class="exam-review-item ${cls}"><div class="exam-review-q">${esc(q.prompt)}</div><div class="exam-review-a">你的答案：<b>${esc((q.gradedAnswer??q.userAnswer)||'未作答')}</b><br>参考答案：<b>${esc(q.answer)}</b><br>${scoreLine} · ${sourceLabel(q.item.source)}</div>${match}</div>`;}).join(''):'<div class="exam-empty">🎉 本次没有错题或部分正确题</div>');return {total,totalScore,maxScore,correct,partial,wrong,rate,duration};}
+      $('examReview').innerHTML=diagnosis+(review.length?review.map(q=>{const cls=q.status==='partial'?'partial':'wrong',scoreLine=`得分：<b>${q.score} / ${q.maxScore}</b>`;let match='';if((q.type==='translation'||q.type==='input')&&(q.matched.length||q.missed.length)){match=`<div class="exam-match-row">${q.matched.map(t=>`<span class="exam-match-token">✓ ${esc(t)}</span>`).join('')}${q.missed.map(t=>`<span class="exam-match-token miss">✕ ${esc(t)}</span>`).join('')}</div>`;}return `<div class="exam-review-item ${cls}"><div class="exam-review-q">${esc(q.prompt)}</div><div class="exam-review-a">你的答案：<b>${esc((q.gradedAnswer??q.userAnswer)||'未作答')}</b><br>参考答案：<b>${esc(q.answer)}</b><br>${scoreLine} · ${sourceLabel(q.item.source)}</div>${match}</div>`;}).join(''):'<div class="exam-empty">🎉 本次没有错题或部分正确题</div>');return {total,totalScore,maxScore,correct,partial,wrong,rate,duration};}
   };window.ExamRender=render;
   function tick(){if(!state.startedAt)return;const sec=Math.max(0,Math.floor((Date.now()-state.startedAt)/1000));$('examTimer').textContent=formatDuration(sec);}function formatDuration(sec){sec=Math.max(0,Number(sec)||0);const m=Math.floor(sec/60),s=sec%60;return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;}function beginTimer(){clearInterval(state.timerId);tick();state.timerId=setInterval(tick,1000);}
   function finish(){saveCurrentAnswer();for(const q of state.questions){if(!q.submitted){if(q.userAnswer)gradeQuestion(q);else Object.assign(q,{submitted:true,gradedAnswer:'',correct:false,status:'wrong',score:0,ratio:0});}}state.finishedAt=Date.now();clearInterval(state.timerId);state.timerId=null;$('examRunView').hidden=true;$('examResultView').hidden=false;const summary=render.result(),breakdown={};for(const type of ['choice','input','fill','translation']){const qs=state.questions.filter(q=>q.type===type);breakdown[type]={score:qs.reduce((s,q)=>s+q.score,0),max:qs.reduce((s,q)=>s+q.maxScore,0),count:qs.length};}examHistory.saveRecord({id:Date.now(),startedAt:state.startedAt,finishedAt:state.finishedAt,mode:state.mode,category:state.category,total:summary.total,correct:summary.correct,partialCorrect:summary.partial,wrong:summary.wrong,duration:summary.duration,totalScore:summary.totalScore,maxScore:summary.maxScore,breakdown,wrongItems:state.questions.filter(q=>q.status!=='correct').slice(0,100).map(q=>({prompt:q.prompt,answer:q.answer,userAnswer:q.userAnswer,source:q.item.source,ownerKey:q.item.ownerKey||'',type:q.type,score:q.score,maxScore:q.maxScore,status:q.status}))});}
@@ -14752,6 +14755,12 @@ document.addEventListener('DOMContentLoaded',()=>{initAmoSystemTheme();enhanceAm
 <script id="amo-v3131-update-history">
 (function(){
   const AMO_UPDATE_HISTORY = [
+    {version:'V31.104',items:['强化五种提示语与题目的同轴居中：提示语、题目强制全宽并水平居中，在任何窗口宽度/浏览器缩放下都与题目严格对齐。','加大提示语与题目之间的垂直间距（提示语相对题目增高）；题目与答案区之间增加留白，为例句（内联释义）显示预留空间。','答题完成后“开始/下一题”按钮防御性显示，避免个别模式下按钮缺失；手机端布局与桌面端保持一致。','同步更新页面标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION 与更新历史为 V31.104。']},
+    {version:'V31.103',items:['答题统计区布局调整：进度条（如 07/20）移到右上角“💗 需加强记忆”按钮正下方（右缘与 💗 对齐）；✅ 正确数与 ❌ 错误数改为竖列显示（✅ 在上、❌ 在下），左边缘与进度条对齐。','“越南语是什么意思？”、“中文对应的越南语是？”、“请写出对应的越南语”、“请写出对应的中文”、“根据中文补全越南语例句 · 标准”五种提示语与下方题目、内联答案保持同一水平中心轴居中。','修复答题渲染 JS（enforceCenteredProgress）强制居中与右上角新布局冲突的问题，取消强制居中改为左对齐；进度条移出题目行后，题目与提示语在桌面/手机端布局不受影响。','同步更新页面标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION 与更新历史为 V31.103。']},
+    {version:'V31.102',items:['考试“输入题”判分改为与翻译题一致的按词计分：答对几个词得几分，部分匹配可获得部分得分，输入题满分仍为 4 分。','输入题批改页同步显示词汇拆分（✓ 答对 / ✕ 漏掉），方便查看扣分原因。','本版另存为新文件（阿莫自学助手_V31.102_输入题按词计分.html），与旧版并行。','同步更新页面标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION 与更新历史为 V31.102。']},
+    {version:'V31.101',items:['填空/中文题（中文 → 越南语）提示语“中文对应的越南语是？”、中文题目与填空输入行补强水平居中：在原有 text-align:center 基础上，对 #quizLabel、#quizWord 显式强制居中，并让填空输入行 .quiz-fill-line 以 margin:auto 居中，任何窗口宽度下均与选择题布局一致。','说明：提示语文字本身由 JS（renderSpecificQuizItem 的 zh-vi 分支 label.textContent）控制，居中效果由本版 CSS 控制，无需改 JS。','同步更新页面标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION 与更新历史为 V31.101。']},
+    {version:'V31.100',items:['修复答题页题目（越南语词汇）不居中的问题：真因是题目行 .quiz-question-row 遗留 padding-right:62px（旧版为语音按钮预留），导致 flex 内容区整体右偏约 31px，题目视觉偏左；现已清除该内边距。','题目盒子与正确答案内联区补充 margin:auto / text-align 居中，题目、答案、“越南语是什么意思？”三者中心完全对齐。','同步更新页面标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION 与更新历史为 V31.100。']},
+    {version:'V31.99',items:['修复“显示历史记录”在某些窗口宽度（1101-1219px）下完全不显示的问题：该宽度区间历史侧栏被旧样式 display:none 隐藏，勾选后看不到任何内容，现改为块级显示在题卡下方。','勾选“显示历史记录”后自动平滑滚动到历史面板，确保一眼可见。','答题与填空作答记录均会实时写入历史面板，计数与明细正常。','同步更新页面标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION 与更新历史为 V31.99。']},
     {version:'V31.98',items:['答题后选项按钮明显缩小：按钮内拼音/中文文字从 18px 降至 10.5px/12px，内边距与最小高度进一步收紧，按钮整体高度由约 68px 降到约 42px，肉眼可明显看出缩小。','上一版按钮最小高度虽降至 38px，但按钮内文字仍为 18px 大字，内容把按钮撑回原高度，视觉无变化，本版同步压缩文字。','题目、正确答案、例句保持原大小且始终居中不变。','同步更新页面标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION 与更新历史为 V31.98。']},
     {version:'V31.97',items:['按用户确认的方案调整：答题完成后仅四个选项按钮按比例缩小（内边距/高度/字号同步收紧），题目、正确答案与例句保持原大小。','题目、答案、“越南语是什么意思？”提示语增加居中强化样式，任何答题状态下均保持居中。','撤销 V31.96 对题目/答案/例句的全局缩小，恢复清晰大字。','同步更新页面标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION 与更新历史为 V31.97。']},
     {version:'V31.96',items:['答题完成后整体紧凑化：题目（36px→22px）、内联答案、例句、回答状态与选项按钮全面压缩字号与间距，题卡高度大幅下降，答题前后窗口高度几乎不变。','上一版只缩了内联答案与例句，题目与选项按钮仍占大头，本次一并收紧。','同步更新页面标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION 与更新历史为 V31.96。']},
@@ -18135,27 +18144,28 @@ body.amo-glass-off #quiz.quiz-fill-mode .quiz-main-actions{
   function nextBtn(){return document.querySelector('#quiz .quiz-next-btn');}
   function resetBtn(){return document.getElementById('quizResetRememberBtn');}
   function enforceCenteredProgress(){
+    // V31.103: 进度条改右上角(💗 下方)，取消强制居中，改为左对齐 flex-start
     const stack=document.querySelector('#quiz .quiz-progress-centered');
     const counter=document.getElementById('quizBatchCounter');
     const score=document.getElementById('quizLiveScore');
     if(stack){
       stack.style.setProperty('display','flex','important');
       stack.style.setProperty('flex-direction','column','important');
-      stack.style.setProperty('align-items','center','important');
-      stack.style.setProperty('justify-content','center','important');
-      stack.style.setProperty('text-align','center','important');
-      stack.style.setProperty('margin-left','auto','important');
-      stack.style.setProperty('margin-right','auto','important');
+      stack.style.setProperty('align-items','flex-start','important');
+      stack.style.setProperty('justify-content','flex-start','important');
+      stack.style.setProperty('text-align','left','important');
+      stack.style.setProperty('margin-left','0','important');
+      stack.style.setProperty('margin-right','0','important');
     }
     if(counter){
       counter.style.setProperty('display','block','important');
-      counter.style.setProperty('text-align','center','important');
-      counter.style.setProperty('margin-left','auto','important');
-      counter.style.setProperty('margin-right','auto','important');
+      counter.style.setProperty('text-align','left','important');
+      counter.style.setProperty('margin-left','0','important');
+      counter.style.setProperty('margin-right','0','important');
     }
     if(score){
-      score.style.setProperty('align-items','center','important');
-      score.style.setProperty('justify-content','center','important');
+      score.style.setProperty('align-items','flex-start','important');
+      score.style.setProperty('justify-content','flex-start','important');
     }
   }
 
@@ -18805,6 +18815,113 @@ body.amo-glass-off #quiz.quiz-fill-mode .quiz-main-actions{
 .app #quiz.quiz-answer-complete #quizOptions .quiz-option .quiz-pinyin{
   font-size:10.5px !important;
   line-height:1.2 !important
+}
+/* ====================== V31.100 题目与答案盒子强制居中 ======================
+   题目 #quizWord 为 display:block，text-align:center 只居中内部文字，
+   盒子本身靠左（实测中心偏左约 39px）。改用 margin:auto 将盒子居中。 */
+.app #quiz .quiz-question-row #quizWord{
+  margin-left:auto !important;
+  margin-right:auto !important;
+  text-align:center !important
+}
+.app #quiz .quiz-question #quizInlineMeaning.quiz-inline-meaning{
+  margin-left:auto !important;
+  margin-right:auto !important
+}
+/* V31.100 补充：题目短语容器在 flex 行内居中 */
+.app #quiz .quiz-question-row .quiz-question-phrase{
+  margin-left:auto !important;
+  margin-right:auto !important;
+  justify-content:center !important;
+  align-items:center !important
+}
+/* V31.100 补充：消除题目行右侧 62px 历史内边距（导致题目偏左约 31px） */
+.app #quiz .quiz-question-row{
+  padding-right:0 !important;
+  padding-left:0 !important
+}
+/* ====================== V31.101 填空/中文题提示语与输入区居中补强 ======================
+   “中文对应的越南语是？”等提示语、中文题目、填空输入行在任何窗口宽度下
+   均强制水平居中，与选择题布局保持一致。 */
+.app #quiz .quiz-question #quizLabel{
+  text-align:center !important
+}
+.app #quiz .quiz-question #quizWord{
+  text-align:center !important
+}
+.app #quiz #quizOptions .quiz-fill-line{
+  justify-content:center !important;
+  align-items:center !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  width:100% !important
+}
+/* ====================== V31.103 答题统计区布局调整 ======================
+   进度条移到右上角“💗 需加强记忆”按钮正下方；✅/❌ 改竖列并左对齐进度条；
+   五种提示语与下方题目保持同一中心轴居中。 */
+.app #quiz .quiz-question #quizScrollContent .quiz-progress-stack.quiz-progress-centered{
+    position:absolute !important;
+    top:calc(12px + 42px + 8px) !important;
+    right:14px !important;
+    grid-column:auto !important;
+    grid-row:auto !important;
+    align-items:flex-start !important;
+    justify-content:flex-start !important;
+    width:max-content !important;
+    min-width:0 !important;
+    margin:0 !important;
+    padding:0 !important;
+    text-align:left !important;
+    z-index:4 !important
+}
+@media (max-width:700px){
+  .app #quiz .quiz-question #quizScrollContent .quiz-progress-stack.quiz-progress-centered{
+    top:calc(8px + 38px + 8px) !important;
+    right:8px !important
+  }
+}
+.app #quiz .quiz-question #quizScrollContent .quiz-progress-centered .quiz-live-score{
+    flex-direction:column !important;
+    align-items:flex-start !important;
+    justify-content:flex-start !important;
+    gap:2px !important
+}
+.app #quiz .quiz-question #quizScrollContent .quiz-progress-centered .quiz-batch-counter{
+    text-align:left !important
+}
+/* 五种提示语与题目、内联答案同一中心轴居中 */
+.app #quiz .quiz-question #quizLabel,
+.app #quiz .quiz-question #quizWord,
+.app #quiz .quiz-question #quizInlineMeaning .quiz-chinese{
+    text-align:center !important
+}
+/* ====================== V31.104 提示语/题目对齐与间距强化 ======================
+   任何宽度/缩放下提示语与题目严格同轴居中；提示语与题目间距加大；
+   题目与答案区之间留白以容纳例句；答题完成后“开始/下一题”防御性显示。 */
+.app #quiz .quiz-question #quizLabel{
+    display:block !important;
+    width:100% !important;
+    box-sizing:border-box !important;
+    text-align:center !important;
+    margin:0 auto 14px !important
+}
+.app #quiz .quiz-question #quizWord{
+    display:block !important;
+    width:100% !important;
+    box-sizing:border-box !important;
+    text-align:center !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+    margin-bottom:18px !important
+}
+.app #quiz .quiz-question .quiz-inline-meaning{
+    margin-top:6px !important;
+    margin-bottom:12px !important
+}
+.app #quiz.quiz-answer-complete .quiz-main-actions .quiz-next-btn{
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important
 }
 </style>
 </body>
