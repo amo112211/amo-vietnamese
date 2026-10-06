@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.108</title>
+<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.118</title>
 <meta name="theme-color" content="#f0f4f8" id="amo-browser-theme-color">
 
 
@@ -4272,6 +4272,14 @@ body{
 #words .amo-related-search-item span:first-child{color:var(--study-vi-color);font-weight:700}
 #words .amo-related-search-item span:nth-child(2){color:var(--study-zh-color)}
 #words .amo-related-search-item small{color:var(--text-secondary,var(--muted));white-space:nowrap}
+#words .amo-related-search-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+#words .amo-related-search-title>span{display:inline-flex;align-items:baseline;gap:4px;min-width:0}
+#words .amo-related-search-toggle{flex:0 0 auto;min-width:72px;padding:5px 10px;border:1px solid var(--border-subtle,var(--border));border-radius:9px;background:transparent;color:var(--text);font-size:12px;font-weight:750;line-height:1.25;cursor:pointer;transition:background .16s ease,border-color .16s ease,opacity .16s ease}
+#words .amo-related-search-toggle:hover{background:var(--glass-bg-subtle,rgba(128,128,128,.06));border-color:var(--border-strong,var(--border))}
+#words .amo-related-search-toggle:active{opacity:.72}
+#words .amo-related-search-toggle:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+#words .amo-related-search-body[hidden]{display:none!important}
+#wordActionModal.show{z-index:10070!important}
 #words .amo-related-focus{outline:2px solid var(--primary);outline-offset:2px}
 .amo-light-related-detail{display:grid;gap:8px}.amo-light-related-vi{font-size:20px;font-weight:800;color:var(--study-vi-color)}.amo-light-related-zh{font-size:16px;color:var(--study-zh-color)}.amo-related-badge{width:max-content;max-width:100%;padding:3px 8px;border:1px solid var(--border-subtle,var(--border));border-radius:999px;color:var(--text-secondary,var(--muted));font-size:12px}.amo-light-related-links{display:grid;gap:5px;margin-top:4px}.amo-light-related-link{display:block;width:100%;padding:7px 8px;border:1px solid var(--border-subtle,var(--border));border-radius:8px;background:transparent;color:var(--text);text-align:left}
 #words .amo-pair-vi{font-size:var(--amo-exampleVi-px)!important;color:var(--study-vi-color)!important;line-height:1.35!important;overflow-wrap:anywhere}
@@ -5971,7 +5979,7 @@ body select optgroup{
   document.body.classList.add(initial.glass==='off'?'amo-glass-off':initial.glass==='header'?'amo-glass-header':'amo-glass-all');
 })();
 </script>
-<!-- Build: V31.108 -->
+<!-- Build: V31.118 -->
 <!--
   阿莫 V30 兼容架构 / 扩展入口
   数据源：builtInWords/builtInSentences/vietnameseGrammar/chineseGrammar（原有内容未经改写）。
@@ -5986,7 +5994,7 @@ body select optgroup{
         <div class="logo">
             <div class="logo-icon">🇻🇳</div>
             <div>
-                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.108">V31.108</span></div>
+                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.118">V31.118</span></div>
                 <div class="logo-sub">中文母语者 · 零基础学习</div>
             </div>
         </div>
@@ -6041,7 +6049,7 @@ body select optgroup{
     <details class="amo-setting-group amo-advanced amo-effect-settings" id="amoAdvancedEffects">
       <summary>高级效果设置 <span>透明度、模糊与光影</span></summary>
       <div class="amo-advanced-rows">
-        <label class="amo-range-row" for="amoFxOpacity"><span>白色透明度</span><input id="amoFxOpacity" type="range" min="5" max="50" step="1" value="20" oninput="setAmoEffectSetting('glassOpacity',this.value)"><output id="amoFxOpacityValue" for="amoFxOpacity">12%</output></label>
+        <label class="amo-range-row" for="amoFxOpacity"><span>白色透明度</span><input id="amoFxOpacity" type="range" min="5" max="50" step="1" value="20" oninput="setAmoEffectSetting('glassOpacity',this.value)"><output id="amoFxOpacityValue" for="amoFxOpacity">20%</output></label>
         <label class="amo-range-row" for="amoFxBlur"><span>背景模糊</span><input id="amoFxBlur" type="range" min="10" max="18" step="1" value="14" oninput="setAmoEffectSetting('glassBlur',this.value)"><output id="amoFxBlurValue" for="amoFxBlur">14px</output></label>
         <label class="amo-range-row" for="amoFxSaturation"><span>饱和度</span><input id="amoFxSaturation" type="range" min="100" max="220" step="5" value="175" oninput="setAmoEffectSetting('glassSaturation',this.value)"><output id="amoFxSaturationValue" for="amoFxSaturation">175%</output></label>
         <label class="amo-range-row" for="amoFxBorder"><span>边框强度</span><input id="amoFxBorder" type="range" min="0" max="100" step="5" value="55" oninput="setAmoEffectSetting('glassBorderStrength',this.value)"><output id="amoFxBorderValue" for="amoFxBorder">55%</output></label>
@@ -6072,7 +6080,7 @@ body select optgroup{
         <button type="button" class="amo-reset-effects" id="amoResetDrawerSettingsBtn" onclick="resetAmoDrawerSettings()">↺ 恢复默认抽屉动效</button>
       </div>
     </details>
-    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.108</strong></div>
+    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.118</strong></div>
 </section>
 </div>
 
@@ -6273,7 +6281,7 @@ body select optgroup{
     <div id="grammarList" class="sentence-grid"></div>
 </section>
 
-<section id="quiz" class="page">
+<section id="quiz" class="page amo-stable-quiz">
     <div class="toolbar">
         <div>
             <h2 style="margin:0">答题练习</h2>
@@ -6287,7 +6295,7 @@ body select optgroup{
             <option value="vi">越南语题库</option><option value="zh">中文题库</option>
           </select>
         </label>
-        <select class="select" id="quizMode" onchange="changeQuizAnswerMode(this.value)">
+        <select class="select" id="quizMode" oninput="changeQuizAnswerMode(this.value)" onchange="changeQuizAnswerMode(this.value)">
             <option value="vi-zh">越南语 → 中文</option>
             <option value="zh-vi">中文 → 越南语</option>
             <option value="free-zh-vi">中文 → 自己写越南语</option>
@@ -7650,7 +7658,8 @@ function ensureAmoDisplay(){
     // 新字段存放在既有 amoDisplay 中；旧备份缺失时安全使用默认值。
     // V31.24：旧“液态玻璃应用范围”UI 已移除，统一保持全站玻璃，由高级效果设置控制视觉参数。
     d.glassMode="all";
-    d.glassOpacity=Number.isFinite(Number(d.glassOpacity))?Math.min(20,Math.max(10,Math.round(Number(d.glassOpacity)))):12;
+    // V31.109: 与高级效果滑块一致，导入、刷新和包装调用均保留 5–50%。
+    d.glassOpacity=Number.isFinite(Number(d.glassOpacity))?Math.min(50,Math.max(5,Math.round(Number(d.glassOpacity)))):20;
     d.glassBlur=Number.isFinite(Number(d.glassBlur))?Math.min(18,Math.max(10,Math.round(Number(d.glassBlur)))):14;
     d.glassSaturation=Number.isFinite(Number(d.glassSaturation))?Math.min(220,Math.max(100,Math.round(Number(d.glassSaturation)/5)*5)):175;
     d.glassBorderStrength=Number.isFinite(Number(d.glassBorderStrength))?Math.min(100,Math.max(0,Math.round(Number(d.glassBorderStrength)/5)*5)):55;
@@ -7768,7 +7777,7 @@ function setAmoGlassMode(mode){
     applyDisplaySettings();
 }
 function setAmoEffectSetting(key,value){
-    const bounds={glassOpacity:[10,20,1],glassBlur:[10,18,1],glassSaturation:[100,220,5],glassBorderStrength:[0,100,5],glassShadowStrength:[0,100,5],glassAmbientStrength:[0,100,5],backgroundIntensity:[50,200,5],drawerLiftMs:[160,520,20],drawerSettleMs:[420,1200,30],drawerHalfHeight:[45,65,1],drawerExpandedHeight:[72,94,1],drawerCloseDistance:[50,160,5],drawerCloseVelocity:[.8,1.5,.05]};
+    const bounds={glassOpacity:[5,50,1],glassBlur:[10,18,1],glassSaturation:[100,220,5],glassBorderStrength:[0,100,5],glassShadowStrength:[0,100,5],glassAmbientStrength:[0,100,5],backgroundIntensity:[50,200,5],drawerLiftMs:[160,520,20],drawerSettleMs:[420,1200,30],drawerHalfHeight:[45,65,1],drawerExpandedHeight:[72,94,1],drawerCloseDistance:[50,160,5],drawerCloseVelocity:[.8,1.5,.05]};
     if(!Object.prototype.hasOwnProperty.call(bounds,key))return;
     const n=Number(value);if(!Number.isFinite(n))return;
     const [lo,hi,step]=bounds[key];
@@ -8117,7 +8126,20 @@ function getAllRelatedRelations(){
 }
 /* ====================== V31.27 词汇/关联运行时索引 ====================== */
 let __amoRelationRuntimeCache=null;
-function invalidateRelationRuntimeCache(){__amoRelationRuntimeCache=null;}
+let __amoRelationRuntimeStamp='';
+function invalidateRelationRuntimeCache(){__amoRelationRuntimeCache=null;__amoRelationRuntimeStamp='';}
+function relationRuntimeStamp(words){
+    // V31.118: lightweight relation fingerprint; avoids rebuilding all adjacency maps on every filter/search render.
+    let h=2166136261>>>0,count=0;
+    const mix=value=>{const text=String(value||'');for(let i=0;i<text.length;i++){h^=text.charCodeAt(i);h=Math.imul(h,16777619)>>>0;}h^=31;h=Math.imul(h,16777619)>>>0;};
+    for(const word of words||[]){
+        mix(word?.vi);mix(word?.zh);
+        const pairs=Array.isArray(word?.collocations)?word.collocations:[];count+=pairs.length;
+        for(const pair of pairs){mix(pair?.vi);mix(pair?.zh);}
+    }
+    for(const rel of relatedRelations||[]){mix(rel?.wordA);mix(rel?.wordB);mix(rel?.type);}
+    return `${(words||[]).length}:${count}:${(relatedRelations||[]).length}:${h}`;
+}
 function buildRelationRuntimeCache(preloadedWords=null){
     const words=Array.isArray(preloadedWords)?preloadedWords:allWords();
     const wordMap=new Map(words.map(w=>[coreVocabularyKey(w),w]));
@@ -8159,11 +8181,22 @@ function buildRelationRuntimeCache(preloadedWords=null){
     return {words,wordMap,adjacency,relations,describe};
 }
 function getRelationRuntimeCache(preloadedWords=null){
-    if(!__amoRelationRuntimeCache)__amoRelationRuntimeCache=buildRelationRuntimeCache(preloadedWords);
+    if(preloadedWords){
+        const stamp=relationRuntimeStamp(preloadedWords);
+        if(!__amoRelationRuntimeCache||stamp!==__amoRelationRuntimeStamp){
+            __amoRelationRuntimeCache=buildRelationRuntimeCache(preloadedWords);
+            __amoRelationRuntimeStamp=stamp;
+        }
+    }else if(!__amoRelationRuntimeCache){
+        const words=allWords();
+        __amoRelationRuntimeCache=buildRelationRuntimeCache(words);
+        __amoRelationRuntimeStamp=relationRuntimeStamp(words);
+    }
     return __amoRelationRuntimeCache;
 }
 function primeRelationRuntimeCache(words){
     __amoRelationRuntimeCache=buildRelationRuntimeCache(words);
+    __amoRelationRuntimeStamp=relationRuntimeStamp(words);
     return __amoRelationRuntimeCache;
 }
 function relatedDescriptor(key,fallbackZh=""){
@@ -8403,10 +8436,11 @@ function showPage(id, btn){
         document.documentElement.style.removeProperty("--amo-exam-top");
     }
 
-    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-    nextPage.classList.add("active");
-    document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
-    if(btn) btn.classList.add("active");
+    // 只改变实际切换的页面/按钮，隐藏页不再收到无意义的 class 变更。
+    document.querySelectorAll(".page.active").forEach(p=>{if(p!==nextPage)p.classList.remove("active");});
+    if(!nextPage.classList.contains('active'))nextPage.classList.add("active");
+    document.querySelectorAll(".nav button.active").forEach(b=>{if(b!==btn)b.classList.remove("active");});
+    if(btn&&!btn.classList.contains('active'))btn.classList.add("active");
     if(id === "words") renderWords();
     if(id === "sentences"){ renderSentenceCategoryControls(); renderSentences(); }
     if(id === "sentenceReading"){
@@ -8605,24 +8639,56 @@ const AmoWordView=(()=>{
  function resetPairStates(){openedPairDetails.clear();editingPairs.clear();expandedRelated.clear();}
  return Object.freeze({card,toggle,parseExample,getExamples,getPairs,positions,pairAction,pairSubmit,resetPairStates,relatedBlock,toggleRelated,setPageWords(items){currentCards=new Map(items.map(w=>[normalize(w.vi),w]));}});
 })();
+let amoRelatedSearchCollapsed=false,amoRelatedSearchQuery='';
+// V31.118: search relevance ranking. Exact accented matches stay strongest; tone-folded matches are fallback only.
+function foldWordSearchText(text){
+ return normalize(text).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d');
+}
+function getWordSearchRank(word,query){
+ const q=normalize(query);if(!q)return 0;
+ const vi=normalize(word?.vi),zh=normalize(word?.zh);
+ if(vi===q)return 0;
+ if(zh===q)return 1;
+ if(vi.startsWith(q))return 10;
+ if(zh.startsWith(q))return 11;
+ const viWordIndex=vi.indexOf(' '+q),zhWordIndex=zh.indexOf(' '+q);
+ if(viWordIndex>=0)return 20;
+ if(zhWordIndex>=0)return 21;
+ if(vi.includes(q))return 30;
+ if(zh.includes(q))return 31;
+ const fq=foldWordSearchText(q),fvi=foldWordSearchText(vi),fzh=foldWordSearchText(zh);
+ if(!fq)return Infinity;
+ if(fvi===fq)return 40;
+ if(fzh===fq)return 41;
+ if(fvi.startsWith(fq))return 50;
+ if(fzh.startsWith(fq))return 51;
+ if(fvi.includes(fq))return 60;
+ if(fzh.includes(fq))return 61;
+ return Infinity;
+}
 function renderWords(){
  updateWordNavigationBackButton();
- invalidateRelationRuntimeCache();
  const list=document.getElementById('wordList'),pager=document.getElementById('wordPager');
  const search=normalize(document.getElementById('wordSearch').value),filter=document.getElementById('wordFilter').value;
  const category=document.getElementById('wordCategory').value,sort=document.getElementById('wordSort').value;
  const pageSizeVal=document.getElementById('wordPageSize').value,clearBtn=document.getElementById('clearReinforceWordsBtn');
  if(clearBtn)clearBtn.style.display=filter==='reinforce'?'inline-flex':'none';
  let words=allWords();
- primeRelationRuntimeCache(words);
+ getRelationRuntimeCache(words);
  if(filter==='new')words=words.filter(w=>!isCoreVocabulary(w));
  else if(filter==='remembered')words=words.filter(w=>isCoreVocabulary(w));
  else if(filter==='reinforce'){const chosen=new Set(reinforceWords.map(normalize));words=words.filter(w=>chosen.has(normalize(w.vi)));}
  else if(filter==='pendingpos')words=words.filter(w=>{const p=AmoPOS.normalize(w.pos||'');return !p||p==='待确认'||!AmoPOS.valid(p);});
  if(category==='__pending_category__')words=words.filter(w=>String(w.category||'').trim()==='待确认分类');
  else if(category)words=words.filter(w=>w.category===category);
- if(search)words=words.filter(w=>normalize(w.vi).includes(search)||normalize(w.zh).includes(search));
- if(sort==='vi')words.sort((a,b)=>a.vi.localeCompare(b.vi));
+ let searchRanks=null;
+ if(search){
+   searchRanks=new Map();
+   words=words.filter(w=>{const rank=getWordSearchRank(w,search);if(!Number.isFinite(rank))return false;searchRanks.set(w,rank);return true;});
+ }
+ const secondarySort=(a,b)=>sort==='vi'?String(a.vi||'').localeCompare(String(b.vi||'')):sort==='remembered'?Number(isCoreVocabulary(b))-Number(isCoreVocabulary(a)):0;
+ if(search)words.sort((a,b)=>(searchRanks.get(a)-searchRanks.get(b))||secondarySort(a,b));
+ else if(sort==='vi')words.sort((a,b)=>String(a.vi||'').localeCompare(String(b.vi||'')));
  else if(sort==='remembered')words.sort((a,b)=>Number(isCoreVocabulary(b))-Number(isCoreVocabulary(a)));
  const total=words.length;let size=pageSizeVal==='all'?total:Number(pageSizeVal);if(!size||size<1)size=12;
  const pages=Math.max(1,Math.ceil(total/size));pager.dataset.totalPages=String(pages);
@@ -8630,10 +8696,21 @@ function renderWords(){
  const start=(currentWordPage-1)*size; const pageWords=words.slice(start,start+size);
  AmoWordView.setPageWords(pageWords);
  const relatedSearch=search?searchRelatedEntries(search):[];
- const relatedHTML=relatedSearch.length?`<section class="amo-related-search-results"><div class="amo-related-search-title">相关结果 <small>${relatedSearch.length}</small></div>${relatedSearch.map(r=>`<button type="button" class="amo-related-search-item" data-amo-action="open-related-word" data-related-vi="${escapeHTML(r.vi)}" data-related-zh="${escapeHTML(r.zh)}"><span>${escapeHTML(r.vi)}</span><span>${escapeHTML(r.zh)}</span><small>${r.type==='collocation'?'常用搭配':'相关词'}</small></button>`).join('')}</section>`:'';
+ if(search!==amoRelatedSearchQuery){amoRelatedSearchQuery=search;amoRelatedSearchCollapsed=false;}
+ const relatedHTML=relatedSearch.length?`<section class="amo-related-search-results"><div class="amo-related-search-title"><span>相关结果 <small>${relatedSearch.length}</small></span><button type="button" class="amo-related-search-toggle" data-amo-action="toggle-related-search" aria-expanded="${String(!amoRelatedSearchCollapsed)}">${amoRelatedSearchCollapsed?'展开':'折叠'}</button></div><div class="amo-related-search-body" ${amoRelatedSearchCollapsed?'hidden':''}>${relatedSearch.map(r=>`<button type="button" class="amo-related-search-item" data-amo-action="open-related-word" data-related-vi="${escapeHTML(r.vi)}" data-related-zh="${escapeHTML(r.zh)}"><span>${escapeHTML(r.vi)}</span><span>${escapeHTML(r.zh)}</span><small>${r.type==='collocation'?'常用搭配':'相关词'}</small></button>`).join('')}</div></section>`:'';
  list.innerHTML=relatedHTML+(total?pageWords.map(AmoWordView.card).join(''):(relatedSearch.length?'':'<div class="empty">没有找到词汇</div>'));
  if(!list.dataset.amoCompactDelegated){list.dataset.amoCompactDelegated='1';
    list.addEventListener('click',event=>{
+    const relatedToggle=event.target.closest('[data-amo-action="toggle-related-search"]');
+    if(relatedToggle){
+      event.preventDefault();event.stopPropagation();
+      amoRelatedSearchCollapsed=!amoRelatedSearchCollapsed;
+      const section=relatedToggle.closest('.amo-related-search-results'),body=section?.querySelector('.amo-related-search-body');
+      if(body)body.hidden=amoRelatedSearchCollapsed;
+      relatedToggle.textContent=amoRelatedSearchCollapsed?'展开':'折叠';
+      relatedToggle.setAttribute('aria-expanded',String(!amoRelatedSearchCollapsed));
+      return;
+    }
     const related=event.target.closest('[data-amo-action="open-related-word"]');
     if(related){event.preventDefault();event.stopPropagation();openRelatedWord(related.dataset.relatedVi||'',related.dataset.relatedZh||'');return;}
     const speechBtn=event.target.closest('[data-amo-speech]');
@@ -9483,6 +9560,13 @@ function getAllCategories(){
     });
     return Array.from(set);
 }
+/* V31.116：分类内容未变时复用原节点，避免进入批量增加时重建隐藏页和分类管理区。 */
+const categoryRenderedMarkup=new WeakMap();
+function renderCategoryMarkup(node,markup){
+    if(!node||categoryRenderedMarkup.get(node)===markup)return;
+    node.innerHTML=markup;
+    categoryRenderedMarkup.set(node,markup);
+}
 function renderCategoryControls(){
     const cats = getAllCategories().sort((a,b)=>a.localeCompare(b,'zh'));
     const wordSel = document.getElementById("wordCategory");
@@ -9490,25 +9574,25 @@ function renderCategoryControls(){
     const batchSel = document.getElementById("batchWordCategory");
     const wv = wordSel.value, qv = quizSel.value, bv = batchSel.value || "我的词";
     const opts = '<option value="">全部分类</option><option value="__pending_category__">待确认分类</option>' + cats.filter(c=>c!=='待确认分类').map(c=>`<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join("");
-    wordSel.innerHTML = opts;
-    quizSel.innerHTML = '<option value="">全部分类</option>'+
+    renderCategoryMarkup(wordSel,opts);
+    renderCategoryMarkup(quizSel,'<option value="">全部分类</option>'+
         '<option value="__uncategorized__">无分类</option>'+
         '<option value="__pending_category__">待确认分类</option>'+
         '<option value="__reinforce__">需加强记忆</option>'+
-        cats.map(c=>`<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join("");
-    batchSel.innerHTML = '<option value="">无分类</option>' + cats.map(c=>`<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join("");
+        cats.map(c=>`<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join(""));
+    renderCategoryMarkup(batchSel,'<option value="">无分类</option>' + cats.map(c=>`<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join(""));
     if(cats.includes(wv) || wv === '__pending_category__') wordSel.value = wv;
     if(cats.includes(qv) || qv === "__reinforce__" || qv === "__uncategorized__" || qv === "__pending_category__") quizSel.value = qv;
     if(cats.includes(bv)) batchSel.value = bv;
 
     // 关键修改：显示所有分类，而不是仅 customCategories
     const list = document.getElementById("customCategoryList");
-    list.innerHTML = cats.map(c=>`
+    renderCategoryMarkup(list,cats.map(c=>`
         <span class="tag">
             ${escapeHTML(c)}
             <button class="btn btn-small category-remove-action" type="button" style="padding:2px 6px;border:0;background:transparent;color:var(--danger);" data-category="${encodeURIComponent(c)}" aria-label="删除分类">×</button>
         </span>
-    `).join("");
+    `).join(""));
 }
 function addCustomCategory(){
     const input = document.getElementById("newCategoryInput");
@@ -10960,6 +11044,8 @@ function setMobileQuizCompletedLayout(completed){
 }
 let studyFocusRequest=0;
 function keepStudyFocusInView(kind){
+    // V31.111: 保留页面位置，不在判题/切题后主动重新定位整个页面。
+    if(kind==="quiz"&&document.getElementById("quiz")?.classList.contains("amo-stable-quiz"))return;
     if(!isMobileQuizViewport()) return;
     const seq=++studyFocusRequest;
     // 等待答案、例句、答题记录、界面语言变化完成，再对真正的题目定位一次。
@@ -11025,49 +11111,69 @@ function handleQuizResetRemember(){
 }
 
 /* 当前答题记录：关闭网页后，下次进入答题页继续 */
+/* V31.114：存储失败不阻断题型渲染；保留原存储层的异常数据保护。 */
 function saveQuizSession(){
-    saveJSON(KEY_QUIZ_SESSION,{
-        batchKeys:quizBatchKeys,
-        batchIndex:quizBatchIndex,
-        batchResults:quizBatchResults,
-        batchFinished:quizBatchFinished,
-        mode:document.getElementById("quizMode")?.value || "vi-zh",
-        category:document.getElementById("quizCategory")?.value || "",
-        replayRoundIndex:quizReplayRoundIndex,
-        randomMode:!!settings.quizRandomMode,
-        savedAt:Date.now()
-    });
+    try{
+        saveJSON(KEY_QUIZ_SESSION,{
+            batchKeys:quizBatchKeys,
+            batchIndex:quizBatchIndex,
+            batchResults:quizBatchResults,
+            batchFinished:quizBatchFinished,
+            mode:document.getElementById("quizMode")?.value || "vi-zh",
+            category:document.getElementById("quizCategory")?.value || "",
+            replayRoundIndex:quizReplayRoundIndex,
+            randomMode:!!settings.quizRandomMode,
+            savedAt:Date.now()
+        });
+        return true;
+    }catch(error){reportQuizStorageError(error);return false;}
+}
+let quizStorageWarningAt=0;
+function reportQuizStorageError(error){
+    console.error('答题状态保存失败，原有存储未清空：',error);
+    const now=Date.now();
+    if(!quizStorageWarningAt||now-quizStorageWarningAt>5000){
+        quizStorageWarningAt=now;
+        showToast(settings.uiLanguage==='vi'?'Không lưu được tiến độ; hãy sao lưu dữ liệu trong cài đặt.':'答题状态未能保存，请到设置中备份浏览器数据。');
+    }
 }
 function clearQuizSession(){
     localStorage.removeItem(KEY_QUIZ_SESSION);
 }
-function restoreQuizSession(){
+/* V31.114：主动切换时保留用户刚选的题型，不被旧会话覆盖。 */
+function restoreQuizSession({modeOverride=null,restartFinished=false}={}){
     const saved=loadJSON(KEY_QUIZ_SESSION,null);
     if(!saved || !Array.isArray(saved.batchKeys) || !saved.batchKeys.length) return false;
-
-    quizBatchKeys=saved.batchKeys.slice(0,QUIZ_BATCH_SIZE);
-    quizBatchIndex=Math.max(0,Number(saved.batchIndex)||0);
-    quizBatchResults=Array.isArray(saved.batchResults) ? saved.batchResults : quizBatchKeys.map(key=>({key,status:"unanswered",hadWrong:false}));
+    if(restartFinished && saved.batchFinished) return false;
+    const rows=Array.isArray(saved.batchResults)?saved.batchResults:[];
+    const paired=saved.batchKeys.slice(0,QUIZ_BATCH_SIZE).map((key,i)=>({key,row:rows[i]})).filter(x=>typeof x.key==='string'&&x.key.trim());
+    if(!paired.length)return false;
+    quizBatchKeys=paired.map(x=>x.key);
+    quizBatchResults=paired.map(({key,row})=>{
+        const valid=row&&typeof row==='object'&&!Array.isArray(row)&&normalize(row.key)===normalize(key);
+        if(!valid)return {key,status:'unanswered',hadWrong:false};
+        return {...row,key,status:['unanswered','wrong','correct','revealed','skipped'].includes(row.status)?row.status:'unanswered',hadWrong:!!row.hadWrong};
+    });
+    const index=Number(saved.batchIndex);
+    // 无效键仍占原索引位置；过滤后重新映射，避免跳过有效题目。
+    const originalIndex=Number.isFinite(index)?Math.max(0,Math.min(saved.batchKeys.length,Math.floor(index))):0;
+    quizBatchIndex=saved.batchKeys.slice(0,Math.min(originalIndex,QUIZ_BATCH_SIZE)).filter(key=>typeof key==='string'&&key.trim()).length;
     quizBatchFinished=!!saved.batchFinished;
-    quizReplayRoundIndex=(saved.replayRoundIndex===null || saved.replayRoundIndex===undefined) ? null : Number(saved.replayRoundIndex);
+    const replay=Number(saved.replayRoundIndex);
+    quizReplayRoundIndex=saved.replayRoundIndex!=null&&Number.isInteger(replay)&&replay>=0?replay:null;
     quizBatchReady=true;
     renderQuizRoundSelect();
-
-    const modeEl=document.getElementById("quizMode");
-    const catEl=document.getElementById("quizCategory");
-    if(modeEl && saved.mode){
-        modeEl.value=saved.mode;
-        settings.quizAnswerMode=saved.mode;
-        settings.quizBankLanguage=quizBankFromMode(saved.mode);
-        const bank=document.getElementById("quizBankLanguage");if(bank)bank.value=settings.quizBankLanguage;
-        saveJSON(KEY_SETTINGS,settings);
-    }
-    if(catEl && saved.category!==undefined) catEl.value=saved.category;
-
-    if(quizBatchFinished){
-        showQuizBatchSummary();
-        return true;
-    }
+    const modeEl=document.getElementById('quizMode'),catEl=document.getElementById('quizCategory');
+    const modes=['vi-zh','zh-vi','free-zh-vi','free-vi-zh','fill-zh-vi','spell-zh-vi'];
+    const requested=modeOverride??saved.mode;
+    const mode=modes.includes(requested)?requested:(modes.includes(settings.quizAnswerMode)?settings.quizAnswerMode:'vi-zh');
+    settings.quizAnswerMode=mode;settings.quizBankLanguage=quizBankFromMode(mode);
+    if(modeEl&&modeEl.value!==mode)modeEl.value=mode;
+    syncStudyBankControls();
+    // 主动切换由切换入口合并保存；正常恢复仍保存原有偏好。
+    if(modeOverride===null){try{saveJSON(KEY_SETTINGS,settings);}catch(error){reportQuizStorageError(error);}}
+    if(catEl&&typeof saved.category==='string')catEl.value=saved.category;
+    if(quizBatchFinished){showQuizBatchSummary();return true;}
     return showCurrentQuizBatchItem();
 }
 function permanentlyRememberCurrentQuizWord(){
@@ -11189,9 +11295,10 @@ function syncStudyBankControls(){
     const sentenceBank=document.getElementById("sentenceReadingMode");
     if(quizBank) quizBank.value=settings.quizBankLanguage==="zh"?"zh":"vi";
     if(quizMode){
-        const saved=settings.quizAnswerMode||"vi-zh";
-        const free=saved.startsWith("free-");
-        quizMode.value=(settings.quizBankLanguage==="zh")?(free?"free-zh-vi":"zh-vi"):(free?"free-vi-zh":"vi-zh");
+        // V31.114：同步时不再先切回基础题型，避免手机选择器显示与实际模式不一致。
+        const modes=['vi-zh','zh-vi','free-zh-vi','free-vi-zh','fill-zh-vi','spell-zh-vi'];
+        const saved=modes.includes(settings.quizAnswerMode)?settings.quizAnswerMode:'vi-zh';
+        if(quizMode.value!==saved)quizMode.value=saved;
     }
     if(sentenceBank)sentenceBank.value=settings.sentenceBankLanguage==="zh"?"zh":"vi";
 }
@@ -11683,6 +11790,44 @@ function toggleCurrentQuizReinforce(){
     if(document.getElementById("words")?.classList.contains("active")) renderWords();
 }
 
+/* V31.114：只抽取所需的三个干扰项，避免排序整个词库和出现相同选项。 */
+/* V31.115：题型选择器仍有焦点时不自动弹出手机键盘；旧题焦点任务自动失效。 */
+function scheduleQuizInputFocus(input){
+    const current=quizCurrent;
+    setTimeout(()=>{
+        if(!input||quizCurrent!==current||!document.getElementById('quizOptions')?.contains(input))return;
+        if(document.activeElement?.closest?.('select')||document.hidden)return;
+        input.focus({preventScroll:true});
+    },0);
+}
+/* V31.115：每次渲染先清理填空遗留状态，所有题型共享可用的基础操作区。 */
+function resetQuizModeControls(mode){
+    const page=document.getElementById('quiz');if(!page)return;
+    page.classList.toggle('quiz-fill-mode',mode==='fill-zh-vi');
+    page.classList.remove('quiz-answer-complete');
+    if(mode==='fill-zh-vi')page.setAttribute('data-quiz-fill-mode','1');
+    else page.removeAttribute('data-quiz-fill-mode');
+    const actions=page.querySelector('.quiz-main-actions');
+    if(actions){
+        actions.style.display='';
+        actions.querySelectorAll('.quiz-fill-submit,.quiz-submit-btn').forEach(node=>node.remove());
+        const next=actions.querySelector('.quiz-next-btn');
+        if(next){next.style.display='inline-flex';next.disabled=false;}
+    }
+    const show=document.getElementById('quizShowAnswerBtn');
+    if(show){show.style.display='';show.disabled=false;}
+}
+function sampleQuizDistractors(pool,field,correct,count=3){
+    const seen=new Set([correct]),sample=[];let eligible=0;
+    for(const item of pool){
+        const value=item?.[field];
+        if(!value||seen.has(value))continue;
+        seen.add(value);eligible++;
+        if(sample.length<count)sample.push(value);
+        else{const index=Math.floor(Math.random()*eligible);if(index<count)sample[index]=value;}
+    }
+    return sample;
+}
 function renderSpecificQuizItem(item, mode){
     // V31.108: 新题型复用同一轮次，直接进入独立拼词模块。
     if(mode==="spell-zh-vi")return AmoSpellingGame.render(item);
@@ -11690,13 +11835,9 @@ function renderSpecificQuizItem(item, mode){
     setQuizResetRememberMode("reset");
     quizCurrent = {item, mode, answered:false, statsWrongRecorded:false, statsCorrectRecorded:false};
 
-    // 电脑端切换下一题时，内容滚动区回到题目顶部。
-    if(window.matchMedia('(min-width:701px)').matches){
-        const scrollRegion=document.getElementById('quizScrollContent');
-        if(scrollRegion) scrollRegion.scrollTop=0;
-    }
 
-    const words = allWords().filter(w=>!getCoreRememberedSet().has(quizItemKey(w)));
+    const remembered=getCoreRememberedSet();
+    const words = allWords().filter(w=>!remembered.has(quizItemKey(w)));
     const category = document.getElementById("quizCategory").value;
     const reinforceSet = new Set(reinforceWords.map(normalize));
     let categoryPool = category === "__reinforce__" ? words.filter(w=>reinforceSet.has(quizItemKey(w))) : (category === "__uncategorized__" ? words.filter(w=>!String(w.category||"").trim()) : (category ? words.filter(w=>w.category === category) : words));
@@ -11717,7 +11858,7 @@ function renderSpecificQuizItem(item, mode){
         label.textContent = "越南语是什么意思？";
         wordEl.textContent = item.vi;
         const correct = item.zh;
-        const others = categoryPool.filter(w=>w.zh !== correct).sort(()=>Math.random()-0.5).slice(0,3).map(w=>w.zh);
+        const others = sampleQuizDistractors(categoryPool,"zh",correct);
         const options = [correct, ...others].sort(()=>Math.random()-0.5);
         options.forEach(opt=>{
             const btn = document.createElement("button");
@@ -11730,7 +11871,7 @@ function renderSpecificQuizItem(item, mode){
         label.textContent = "中文对应的越南语是？";
         wordEl.innerHTML = chineseQuizHTML(item.zh);
         const correct = item.vi;
-        const others = categoryPool.filter(w=>w.vi !== correct).sort(()=>Math.random()-0.5).slice(0,3).map(w=>w.vi);
+        const others = sampleQuizDistractors(categoryPool,"vi",correct);
         const options = [correct, ...others].sort(()=>Math.random()-0.5);
         options.forEach(opt=>{
             const btn = document.createElement("button");
@@ -11756,7 +11897,7 @@ function renderSpecificQuizItem(item, mode){
             checkAnswer(btn, isAcceptedQuizAnswer(val, item.vi), item);
         };
         optionsEl.appendChild(btn);
-        setTimeout(()=>input.focus(),0);
+        scheduleQuizInputFocus(input);
     }else if(mode === "free-vi-zh"){
         label.textContent = "请写出对应的中文";
         wordEl.textContent = item.vi;
@@ -11774,7 +11915,7 @@ function renderSpecificQuizItem(item, mode){
             checkAnswer(btn, isAcceptedQuizAnswer(val, item.zh), item);
         };
         optionsEl.appendChild(btn);
-        setTimeout(()=>input.focus(),0);
+        scheduleQuizInputFocus(input);
     }
 }
 
@@ -11852,8 +11993,7 @@ function checkAnswer(btn, correct, item){
         const input = document.querySelector("#quizOptions input");
         if(input){
             input.disabled = false;
-            input.focus();
-            input.select();
+            if(!input.hidden){input.focus({preventScroll:true});input.select();}
         }
 
         const key = normalize(item.vi);
@@ -13164,6 +13304,7 @@ init();
 
 function handleQuizEnterKey(e){
     if(e.key!=="Enter" || e.shiftKey || e.ctrlKey || e.altKey || e.metaKey) return;
+    if(isQuizControlEnter(e))return;
 
     // 任何应用内弹窗打开时，都不允许答题页接管 Enter。
     // 特别用于避免“永久记住”确认回车同时触发下一题，造成跳过一道题。
@@ -13188,6 +13329,15 @@ function handleQuizEnterKey(e){
 }
 document.addEventListener("keydown",handleQuizEnterKey);
 
+/* V31.115：原生选择器的确认键只用于选择；按钮回车由浏览器负责点击。 */
+function isQuizControlEnter(event){
+    const controls='select,button,a,summary,textarea,[contenteditable="true"],[contenteditable=""]';
+    return [event?.target,document.activeElement].some(node=>{
+        if(!node||typeof node.closest!=='function')return false;
+        if(node.closest(controls))return true;
+        return node.tagName==='INPUT'&&!node.closest('#quizOptions');
+    });
+}
 function isAmoTextEditingTarget(target){
     return !!(target && (
         target instanceof HTMLInputElement ||
@@ -13449,32 +13599,40 @@ function skipUILanguageNode(node){
   if(p.closest("#wordList,#sentenceList,.word-card,.sentence-card") && !p.closest("button,option,.tag,.empty,.no-example")) return true;
   return false;
 }
-function applyUILanguage(){
+/* V31.114：显式切换语言扫描全页；动态更新只翻译新增子树。 */
+function uiLanguageTouchesSection(root,id){
+ const section=document.getElementById(id);
+ return !!(root?.isConnected&&section&&(root===section||root.contains?.(section)||section.contains(root)));
+}
+function applyUILanguage(root=document.body){
+  if(!root||!root.isConnected)return;
   const vi=settings.uiLanguage==="vi";
-  document.documentElement.lang=vi?"vi":"zh-CN";
-  const sel=document.getElementById("uiLanguageSelect"); if(sel) sel.value=vi?"vi":"zh";
-  const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
-  const arr=[]; while(walker.nextNode()) arr.push(walker.currentNode);
-  arr.forEach(n=>{
-    if(skipUILanguageNode(n)) return;
-    if(!UI_ORIGINAL.has(n)) UI_ORIGINAL.set(n,n.nodeValue);
-    const orig=UI_ORIGINAL.get(n);
-    n.nodeValue=vi?translateUIString(orig):orig;
+  if(root===document.body){
+    document.documentElement.lang=vi?"vi":"zh-CN";
+    const sel=document.getElementById("uiLanguageSelect");
+    if(sel&&sel.value!==(vi?"vi":"zh"))sel.value=vi?"vi":"zh";
+  }
+  const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+  while(walker.nextNode()){
+    const n=walker.currentNode;
+    if(skipUILanguageNode(n))continue;
+    if(!UI_ORIGINAL.has(n))UI_ORIGINAL.set(n,n.nodeValue);
+    const orig=UI_ORIGINAL.get(n),value=vi?translateUIString(orig):orig;
+    if(n.nodeValue!==value)n.nodeValue=value;
+  }
+  const within=selector=>[...(root.matches?.(selector)?[root]:[]),...root.querySelectorAll(selector)];
+  within("input[placeholder],textarea[placeholder]").forEach(el=>{
+    if(el.matches("#batchWords,#batchSentences,#customPinyinInput,.amo-example-text"))return;
+    if(el.dataset.origPlaceholder===undefined)el.dataset.origPlaceholder=el.placeholder;
+    const value=vi?translateUIString(el.dataset.origPlaceholder):el.dataset.origPlaceholder;
+    if(el.placeholder!==value)el.placeholder=value;
   });
-  document.querySelectorAll("input[placeholder],textarea[placeholder]").forEach(el=>{
-    // Input examples are study material: never translate Vietnamese/Chinese source text.
-    if(el.matches("#batchWords,#batchSentences,#customPinyinInput,.amo-example-text")) return;
-    if(!el.dataset.origPlaceholder) el.dataset.origPlaceholder=el.placeholder;
-    el.placeholder=vi?translateUIString(el.dataset.origPlaceholder):el.dataset.origPlaceholder;
-  });
-  document.querySelectorAll("[title],[aria-label]").forEach(el=>{
-    if(el.hasAttribute("title")){
-      if(!el.dataset.origTitle) el.dataset.origTitle=el.getAttribute("title");
-      el.setAttribute("title",vi?translateUIString(el.dataset.origTitle):el.dataset.origTitle);
-    }
-    if(el.hasAttribute("aria-label")){
-      if(!el.dataset.origAriaLabel) el.dataset.origAriaLabel=el.getAttribute("aria-label");
-      el.setAttribute("aria-label",vi?translateUIString(el.dataset.origAriaLabel):el.dataset.origAriaLabel);
+  within("[title],[aria-label]").forEach(el=>{
+    for(const [attr,key] of [['title','origTitle'],['aria-label','origAriaLabel']]){
+      if(!el.hasAttribute(attr))continue;
+      if(el.dataset[key]===undefined)el.dataset[key]=el.getAttribute(attr);
+      const value=vi?translateUIString(el.dataset[key]):el.dataset[key];
+      if(el.getAttribute(attr)!==value)el.setAttribute(attr,value);
     }
   });
 }
@@ -13489,11 +13647,29 @@ function setUILanguage(lang){
   if(document.getElementById("quizResetRememberBtn")?.dataset.action!=="remember") setQuizResetRememberMode("reset");
   showToast(settings.uiLanguage==="vi"?"Đã chuyển sang giao diện tiếng Việt":"界面已切换为中文");
 }
-let uiLangTimer;
-const uiLangObserver=new MutationObserver(()=>{
-  clearTimeout(uiLangTimer);
-  uiLangTimer=setTimeout(applyUILanguage,30);
+let uiLangTimer=0;
+const uiLangPendingRoots=new Set();
+function flushUILanguageRoots(){
+  clearTimeout(uiLangTimer);uiLangTimer=0;
+  const roots=[...uiLangPendingRoots];uiLangPendingRoots.clear();
+  roots.forEach(root=>{if(root.isConnected)applyUILanguage(root);});
+}
+const uiLangObserver=new MutationObserver(records=>{
+  for(const record of records)for(const node of record.addedNodes){
+    const root=node.nodeType===1?node:node.parentElement;
+    if(!root?.isConnected||root.closest('script,style'))continue;
+    let covered=false;
+    for(const existing of uiLangPendingRoots){
+      if(existing.contains(root)){covered=true;break;}
+    }
+    if(covered)continue;
+    for(const existing of uiLangPendingRoots){if(root.contains(existing))uiLangPendingRoots.delete(existing);}
+    uiLangPendingRoots.add(root);
+  }
+  // 固定批次窗口，持续输入不会不断延后；移除节点不触发全页扫描。
+  if(uiLangPendingRoots.size&&!uiLangTimer)uiLangTimer=setTimeout(flushUILanguageRoots,30);
 });
+window.addEventListener('pagehide',()=>{clearTimeout(uiLangTimer);uiLangTimer=0;uiLangPendingRoots.clear();});
 window.addEventListener("load",()=>{
   applyUILanguage();
   uiLangObserver.observe(document.body,{childList:true,subtree:true});
@@ -13706,42 +13882,6 @@ else {syncStudyBankControls();renderQuizRoundSelect();}
 
 
 <script>
-(function(){
-  const quiz=document.getElementById('quiz');
-  const box=quiz?.querySelector('.quiz-box');
-  if(!quiz||!box) return;
-  let frame=0;
-  function sync(){
-    frame=0;
-    if(!quiz.classList.contains('active') || matchMedia('(max-width:700px)').matches) return;
-    let top=Math.round(box.getBoundingClientRect().top);
-    // 顶部筛选栏较高时，答题卡可能从屏幕下半部开始；先把整张卡移到
-    // 固定标题栏下，之后再计算内部可滚动高度，确保下方按钮也在窗口内。
-    if(top+310>innerHeight){
-      const header=document.querySelector('.header');
-      const toolbar=document.querySelector('.display-toolbar');
-      const safeTop=Math.max(0,header?.getBoundingClientRect().bottom||0,
-        toolbar?.getBoundingClientRect().bottom||0)+12;
-      const target=Math.max(0,scrollY+top-safeTop);
-      window.scrollTo({top:target,left:0,behavior:'instant'});
-      top=Math.round(box.getBoundingClientRect().top);
-    }
-    box.style.setProperty('--amo-quiz-viewport-top',Math.max(0,top)+'px');
-  }
-  function schedule(){if(!frame) frame=requestAnimationFrame(sync);}
-  new MutationObserver(()=>{schedule();setTimeout(schedule,160);}).observe(quiz,{attributes:true,attributeFilter:['class']});
-  window.addEventListener('resize',schedule,{passive:true});
-  window.addEventListener('orientationchange',schedule,{passive:true});
-  document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>requestAnimationFrame(schedule)));
-  schedule();
-})();
-
-</script>
-
-
-
-
-<script>
 /* V21：GitHub 云词库。只从固定公共仓库读取 JSON；预览确认前不写本地数据。 */
 const AMO_CLOUD_REPO='amo112211/amo-vietnamese';
 const AMO_CLOUD_API='https://api.github.com/repos/'+AMO_CLOUD_REPO;
@@ -13921,11 +14061,16 @@ function amoCloudApplyLabels(){
  ];
  for(const [selector,zh,vn] of entries){const node=root.querySelector(selector);if(!node)continue;
    const text=node.firstChild&&node.firstChild.nodeType===Node.TEXT_NODE?node.firstChild:node;
-   text.textContent=vi?vn:zh;
+   const value=vi?vn:zh;
+   if(text.textContent!==value)text.textContent=value;
  }
 }
 const amoOldApplyUILanguage=applyUILanguage;
-applyUILanguage=function(){amoOldApplyUILanguage();amoCloudApplyLabels();};
+// V31.116：透传局部根节点，只有云同步区域发生变化才更新其文案。
+applyUILanguage=function(root=document.body){
+ amoOldApplyUILanguage(root);
+ if(uiLanguageTouchesSection(root,'amoCloudSync'))amoCloudApplyLabels();
+};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',amoCloudApplyLabels);
 else amoCloudApplyLabels();
 
@@ -13988,11 +14133,13 @@ function amoAdminPublicData(){
 function amoAdminRefresh(){
  const form=document.getElementById('amoAdminLoginForm');const panel=document.getElementById('amoAdminAuthed');
  if(!form||!panel)return;
- form.hidden=amoAdminAuthorized;panel.hidden=!amoAdminAuthorized;
+ if(form.hidden!==amoAdminAuthorized)form.hidden=amoAdminAuthorized;
+ if(panel.hidden===amoAdminAuthorized)panel.hidden=!amoAdminAuthorized;
  if(amoAdminAuthorized){const data=amoAdminPublicData();const preview=document.getElementById('amoAdminExportPreview');
- const vi=settings.uiLanguage==='vi';preview.textContent=vi?
+ const vi=settings.uiLanguage==='vi';const text=vi?
  `Từ vựng: ${data.customWords.length} · Câu ngắn: ${data.customSentences.length} · Phiên âm tùy chỉnh: ${Object.keys(data.customPinyin).length}. Không xuất lịch sử học và cài đặt cá nhân.`:
  `词汇：${data.customWords.length} 条 · 短句：${data.customSentences.length} 条 · 自定义拼音：${Object.keys(data.customPinyin).length} 条。不导出学习记录和个人设置。`;
+ if(preview.textContent!==text)preview.textContent=text;
  }
 }
 async function amoAdminExport(){
@@ -14029,15 +14176,25 @@ function amoAdminApplyLanguage(){
  for(const id of ['amoAdminTitle','amoAdminDesc','amoAdminLoginBtn','amoAdminSuccess','amoAdminExportBtn','amoAdminLogoutBtn','amoAdminNotice']){
   const el=document.getElementById(id);if(!el)continue;
   const zh=el.dataset.zh||el.textContent;if(!el.dataset.zh)el.dataset.zh=zh;
-  el.textContent=vi?(UI_ZH_VI[zh]||zh):zh;
+  // 相同文字不重复替换文本节点，避免再次触发语言观察器。
+  const value=vi?(UI_ZH_VI[zh]||zh):zh;
+  if(el.textContent!==value)el.textContent=value;
  }
  for(const [id,zh,vn] of [['amoAdminUsername','管理员账号','Tài khoản quản trị'],['amoAdminPassword','管理员密码','Mật khẩu quản trị']]){
-  const el=document.getElementById(id);if(el){el.placeholder=vi?vn:zh;el.setAttribute('aria-label',vi?vn:zh);}
+  const el=document.getElementById(id);if(el){
+   const value=vi?vn:zh;
+   if(el.placeholder!==value)el.placeholder=value;
+   if(el.getAttribute('aria-label')!==value)el.setAttribute('aria-label',value);
+  }
  }
  amoAdminRefresh();
 }
 const amoV22OldApplyUILanguage=applyUILanguage;
-applyUILanguage=function(){amoV22OldApplyUILanguage();amoAdminApplyLanguage();};
+// V31.116：保留完整包装链的局部更新边界，不再将每次变更扩大为全页扫描。
+applyUILanguage=function(root=document.body){
+ amoV22OldApplyUILanguage(root);
+ if(uiLanguageTouchesSection(root,'amoAdminBox'))amoAdminApplyLanguage();
+};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',amoAdminApplyLanguage);
 else amoAdminApplyLanguage();
 
@@ -14376,7 +14533,7 @@ const AmoTextIO=(()=>{
 </script>
 
 <script id="amo-v3118-pos-version">
-window.AMO_BUILD_VERSION="V31.108";
+window.AMO_BUILD_VERSION="V31.118";
 </script>
 
 <script id="amo-v3126-enhancements">
@@ -14781,6 +14938,16 @@ document.addEventListener('DOMContentLoaded',()=>{initAmoSystemTheme();enhanceAm
 <script id="amo-v3131-update-history">
 (function(){
   const AMO_UPDATE_HISTORY = [
+    {version:'V31.118',date:'2026-10-06',items:['词汇搜索新增相关度排序：精确匹配优先，其次为词首匹配、词边界匹配和包含匹配；越南语与中文都会参与排序。','新增越南语无声调兜底搜索：输入不带声调的文本也可匹配带声调词汇，但其优先级低于原字符精确匹配，避免模糊结果抢到最前。','有搜索词时，相关度始终作为第一排序依据；“越南语排序/已记住优先”等原排序仅作为同级结果的次级排序，搜索为空时完全保持原排序逻辑。','搜索排序只进行轻量字符串比较，不新增监听器或全量索引重建；保留V31.117的相关结果折叠、弹窗层级修复和关系缓存优化，并同步更新版本号与更新记录。']},
+    {version:'V31.117',date:'2026-10-06',items:['词汇搜索的“相关结果”右侧新增展开/折叠按钮，默认展开；折叠状态只在当前搜索词内保留，输入新的搜索词会自动恢复展开，键盘焦点与ARIA状态同步。','修复点击相关搜索词后普通词汇弹窗层级低于桌面粘性搜索工具栏的问题：wordActionModal显示时提升到统一弹窗层级，搜索栏和筛选栏不再盖住弹窗及遮罩。','优化词汇页关系数据缓存：搜索、筛选和翻页时先用轻量指纹判断词汇/搭配/关联数据是否变化，未变化时复用关系索引，避免每次renderWords都重建完整关联图，降低大词库下输入搜索和切换筛选的卡顿。','保留词汇详情、关联词多级返回、分类筛选、语音、批量增加、导入导出和原有主题/透明度设置；同步更新标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION与更新记录为V31.117。']},
+    {version:'V31.116',date:'2026-10-06',items:['修复云词库和管理员语言包装未透传局部根节点的问题：动态更新恢复为只处理变化区域，避免再次扩展成全页扫描；显式切换中越界面语言仍更新全页。','云同步、管理员标签和统计预览只在文字发生变化时写入，修复相同文字反复替换节点造成的语言观察器持续循环；相关模块只响应自身区域或全页语言切换。','进入批量增加时，未变化的分类选项和管理列表复用原节点，保留选择值、添加/删除分类和批量添加逻辑；页面导航只改变实际切换的 active 状态，减少隐藏页面的观察器回调。','保留词汇/短句双向批量格式、默认收起的说明、自定义拼音、导入导出、题型切换、拼词及原有配色布局；同步更新标题、版本徽标、设置页版本、AMO_BUILD_VERSION与更新记录为V31.116。']},
+    {version:'V31.115',date:'2026-10-06',items:['修复填空模式全局回车监听在捕获阶段拦截原生题型选择器确认的问题：选择器确认、按钮原生点击和其他编辑控件不再触发提交或下一题；普通题型回车入口同步保护。','统一切换题型时的操作区清理，移除填空遗留属性和提交按钮，恢复开始/下一题按钮；填空题自身仍按未完成/完成状态控制按钮，电脑与手机同步处理。','题型选择同时接收原生input/change事件，并由同一入口去重；选择器保有焦点时，填空与自由填写不再自动抢焦点或弹出手机键盘，从下一题进入输入题仍可正常聚焦，旧题延迟任务继续绑定题目对象。','新增完整HTML和实际脚本加载顺序的回归验证，覆盖填空切往其余五种题型、未答/答对/答错/显示答案、下拉框确认、重复切换和题目进度保持；保留题库、统计、布局、拼词自动判题与错误抖动。','同步更新标题、顶部版本、设置页版本、AMO_BUILD_VERSION和更新记录为V31.115。']},
+    {version:'V31.114',date:'2026-10-06',items:['修复完成一轮后选择答题类型仍显示成绩页的问题：未完成轮次保留题序与进度并立即切换，已完成轮次进入新轮；恢复旧会话时保留刚选的题型，六种题型同步一致。','减少切换时重复存储，设置保存合并到界面更新之后，离开页面或后台时补存；存储失败提示备份且不阻断题型显示，保留异常旧数据保护。','界面翻译由每次动态变化全页扫描改为只处理新增子树，合并相邻更新；拼词仅更新变化的字母和提示，选择题每题只创建一次已记住集合，干扰项线性无重复抽样，填空题查找共用词库索引。','修复切题后的旧填空输入回调和输入法组合状态残留，校验恢复记录中的题目索引与结果行；保留手机系统选择器、原有布局、自动判题、错误抖动、题库、统计与导入导出。','同步更新标题、顶部版本、设置页版本、AMO_BUILD_VERSION和更新记录为V31.114。']},
+    {version:'V31.113',date:'2026-10-06',items:['电脑拼词闯关的“拼字块/直接填写”移至答题卡片左上角，使用CSS定位并为顶部控制留出空间；手机维持原有位置，完成后仍自动隐藏切换按钮。','电脑拼词模式隐藏空反馈区和空状态留白，缩小答案栏、字母池、说明及操作区间距；错误提示和答对例句正常显示，长内容继续自然展开。','无需新增事件、窗口监听或依赖，保留自动判题、直接填写、草稿恢复、错误抖动及原有功能；同步更新标题、顶部版本、设置页版本、AMO_BUILD_VERSION和更新记录为V31.113。']},
+    {version:'V31.112',date:'2026-10-06',items:['手机完成一轮后的“🎯 20 道题完成”标题左移并按屏幕适配字号，给右上角进度与正确/错误数量预留64px，窄屏及长标题可自然换行。','答题卡片只保留外层玻璃底板；内部题面、内容区、成绩面板和按钮区透明，清除叠加的背景、模糊、边框和阴影，电脑与手机同步处理。','取消造成卡片下方大块空白的强制最小高度，卡片按内容收拢，成绩区缩减下方留白；继续使用页面滚动、按钮随内容排列。','保留原题库、统计、成绩单、换题/再来一遍、拼词自动判题、完成后收起和加强错误抖动；同步更新标题、顶部版本、设置页版本、AMO_BUILD_VERSION和更新记录为V31.112。']},
+    {version:'V31.111',date:'2026-10-06',items:['按需求取消答题卡片内部滚动，题面、答案、例句和成绩单自然展开，内容较长时使用整个页面滚动，不裁切内容。','取消底部固定按钮及预留操作区，按钮紧跟内容自然排列；保留响应式基础最小高度，长内容可以撑高卡片，电脑与手机同步处理。','移除已无用途的内部滚动与卡片定位控制器及调用；保留不主动重新定位整页、输入框preventScroll保护、拼词自动判题、完成后收起和18px/520ms错误抖动。','同步更新标题、顶部版本、设置页版本、AMO_BUILD_VERSION和更新记录为V31.111。']},
+    {version:'V31.110',date:'2026-10-06',items:['答题卡片统一为稳定的屏幕适配高度，选择题、自由填写、填空与拼词共用一个内容滚动区；完成后收起控件不再改变外框高度，长题面和例句完整保留。','操作按钮固定在卡片内底部，开始/下一题保持相同位置；电脑与手机切题均只重置内部滚动，移除旧的完成态页面定位与高度测量冲突。','使用svh减少手机地址栏伸缩导致的高度变化，兼容不支持svh的浏览器；尺寸变化按动画帧合并处理，输入框聚焦不主动滚动整个页面，内容内滚动显示输入框。','拼词错误抖动最大幅度由6px提高到18px、时长由320ms调整为520ms，三次衰减摆动更明显；保留答案标红、错后重试、减少动态效果及切题动画清理。','同步更新标题、顶部版本、设置页版本、AMO_BUILD_VERSION和更新记录为V31.110。']},
+    {version:'V31.109',date:'2026-10-06',items:['词汇卡片、相关词汇搜索结果与短句卡片共用动态透明度；高级效果的白色透明度滑块统一调整，修复壁纸模式固定底色不跟随设置及旧校验器将5–50%截断至10–20%的问题，保留词汇的背景模糊。','拼词闯关选完最后一个字母立即判题；错误时整条答案标红、错误位置加下划线并轻微抖动，可撤回或清空后重试；直接填写保留提交操作与输入法保护。','答对或显示完整答案后，自动隐藏字母池、填写方式切换、说明及撤回/清空/提交操作区，保留答案与例句；下一题恢复完整界面，完成记录回看不重复判题或统计。','电脑与手机同步处理，开始/下一题按钮文字在未完成和完成状态都居中；抖动仅使用transform，尊重减少动态效果，切题清理动画与待保存计时器。','同步更新标题、顶部版本、设置页版本、AMO_BUILD_VERSION和更新记录为V31.109。']},
     {version:'V31.108',date:'2026-10-05',items:['答题方式新增“拼词闯关”，沿用当前词汇、分类、20题轮次及统计；支持字母块拼词、直接填写、撤回、清空、两阶段提示和错后重试。','拼词闯关使用中文题目，不接入语音；桌面中文大字，手机按比例适配；越南语声调按完整字素处理，支持重复字母、空格、Unicode规范化和多答案词条。','拼词草稿随当前轮次保存，刷新可恢复；完成题目回看不会重复统计，防重复提交与长按回车跳题，输入法组合期间不判题。','词汇卡片和相关搜索结果增加同一玻璃模糊层，桌面24px、手机20px，并增加底色保证壁纸上的文字清晰；提供不支持模糊和减少透明度的实底回退。','清理6个无执行行为的脚本块、2个废弃填空判分辅助、2个无调用函数和1个未安装的填空包装分支；修复重复整理时误删当前填空提交按钮的问题，保留词库、学习记录、导入导出及原有功能。','同步更新标题、顶部版本、设置页版本、AMO_BUILD_VERSION和更新记录为V31.108。']},
     {version:'V31.107',date:'2026-10-05',items:['批量添加词汇与短句的说明支持展开/收起，默认收起；分类和默认词性选择保持可见，原格式与业务功能保留。','设置页 TXT 新增导出范围：全部词汇 / 仅没有例句的词汇；中文或越南语例句任一非空即排除，空结果不下载，支持重复点击保护与条数反馈，短句与 JSON 备份不受影响。','夜间主题统一为深青灰底色、暖白文字、柔和青绿强调色；整合重复主题变量，协调弹窗、说明、下拉、正确/错误状态及浏览器主题色，保留用户自定义文字配色。','说明交互采用原生 details，动画仅使用 transform / opacity，支持键盘、减少动态效果和手机布局。','同步更新页面标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION 和历史更新记录为 V31.107。']},
     {version:'V31.106',items:['按答题页截图重新整理五种提示语与题目：提示语和题目使用同一水平中心轴，语音按钮出现时题目仍保持真正居中。','整体上移提示语与题目，减少题卡顶部空耗；在题目与答案选项之间为例句/答题反馈预留稳定留白，答对后例句直接占用该区域，不再挤压题目。','桌面与手机端分别设置合适的顶部间距和例句预留高度，保持现有答题逻辑、题库与统计不变。','同步更新页面标题、顶部版本徽标、设置页版本与 AMO_BUILD_VERSION 为 V31.106。']},
@@ -17379,8 +17546,8 @@ html.amo-initial-night body select option,html.amo-initial-night body select opt
 </style>
 
 
-<script id="amo-v31108-spelling-game">
-/* V31.108 拼词闯关：共用现有题库/20题轮次；独立原生模块，无语音或第三方依赖。 */
+<script id="amo-v31110-spelling-game">
+/* V31.110 拼词闯关：共用现有题库/20题轮次；独立原生模块，无语音或第三方依赖。 */
 const AmoSpellingGame=(()=>{
   'use strict';
   const MODE='spell-zh-vi',MAX_TILES=48;
@@ -17388,7 +17555,7 @@ const AmoSpellingGame=(()=>{
   const letter=char=>/[\p{L}\p{N}]/u.test(char);
   const text=(zh,vi)=>settings.uiLanguage==='vi'?vi:zh;
   const el=id=>document.getElementById(id);
-  let state=null,saveTimer=0;
+  let state=null,saveTimer=0,feedbackAnimation=null;
 
   function graphemes(value){
     const source=String(value??'').normalize('NFC');
@@ -17414,7 +17581,7 @@ const AmoSpellingGame=(()=>{
       if(Number.isInteger(index)&&index>=0&&index<bank.length&&!selected.includes(index))selected.push(index);
     }
     const long=letters.length>MAX_TILES;
-    return {answer,units,letters,bank,selected,long,entry:long||reusable&&draft.entry==='input'?'input':'tiles',typed:reusable&&typeof draft.typed==='string'?draft.typed.slice(0,1500):'',hintStage:reusable&&draft.hintStage===1?1:0,lastAttempt:reusable&&typeof draft.lastAttempt==='string'?draft.lastAttempt:'',composing:false,slotNodes:[],bankNodes:[]};
+    return {answer,units,letters,bank,selected,long,entry:long||reusable&&draft.entry==='input'?'input':'tiles',typed:reusable&&typeof draft.typed==='string'?draft.typed.slice(0,1500):'',hintStage:reusable&&draft.hintStage===1?1:0,lastAttempt:reusable&&typeof draft.lastAttempt==='string'?draft.lastAttempt:'',invalid:reusable&&draft.invalid===true,composing:false,slotNodes:[],bankNodes:[]};
   }
   function active(){return !!state&&quizCurrent?.mode===MODE&&state.item===quizCurrent.item;}
   function assembled(){
@@ -17425,12 +17592,12 @@ const AmoSpellingGame=(()=>{
     if(!active())return;
     const row=quizBatchResults?.[quizBatchIndex];
     if(!row)return;
-    row.spellingDraft={answer:state.answer,bank:state.bank.slice(),selected:state.selected.slice(),entry:state.entry,typed:state.typed,hintStage:state.hintStage,lastAttempt:state.lastAttempt};
+    row.spellingDraft={answer:state.answer,bank:state.bank.slice(),selected:state.selected.slice(),entry:state.entry,typed:state.typed,hintStage:state.hintStage,lastAttempt:state.lastAttempt,invalid:state.invalid};
     // 输入法组合期间只更新内存，compositionend 时一次性持久化。
     if(persist&&!state.composing)saveQuizSession();
   }
   function status(message){
-    const node=el('amoSpellStatus');if(node)node.textContent=message;
+    const node=el('amoSpellStatus');if(node&&node.textContent!==message)node.textContent=message;
   }
   function button(label,action,className){
     const node=document.createElement('button');node.type='button';node.className=className;node.dataset.spellAction=action;node.textContent=label;return node;
@@ -17467,13 +17634,18 @@ const AmoSpellingGame=(()=>{
   function sync(){
     if(!active())return;
     const locked=!!quizCurrent.answered,tiles=state.entry==='tiles';
-    el('amoSpellSlots').hidden=!tiles;el('amoSpellBank').hidden=!tiles;
-    const input=el('amoSpellInput');input.hidden=tiles;input.disabled=locked;
+    // V31.109: 完成后保留答案栏，收起字母池、填写切换和操作区；下一题重新生成。
+    const game=el('quizOptions').querySelector('.amo-spell-game');
+    game.classList.toggle('is-complete',locked);
+    game.classList.toggle('is-invalid',!locked&&state.invalid);
+    game.querySelectorAll('.amo-spell-tabs,.amo-spell-tools,.amo-spell-caption').forEach(node=>node.hidden=locked);
+    el('amoSpellSlots').hidden=!tiles;el('amoSpellBank').hidden=locked||!tiles;
+    const input=el('amoSpellInput');input.hidden=tiles;input.disabled=locked;input.setAttribute('aria-invalid',String(!locked&&state.invalid));
     if(input.value!==state.typed)input.value=state.typed;
     const used=new Set(state.selected);
     state.bankNodes.forEach((tile,index)=>{tile.disabled=locked||used.has(index);tile.classList.toggle('is-used',used.has(index));tile.setAttribute('aria-pressed',String(used.has(index)));});
     state.slotNodes.forEach((slot,index)=>{
-      slot.textContent=state.bank[state.selected[index]]||'';slot.classList.toggle('is-current',!locked&&index===state.selected.length);slot.classList.toggle('is-error',false);
+      const value=state.bank[state.selected[index]]||'';if(slot.textContent!==value)slot.textContent=value;slot.classList.toggle('is-current',!locked&&index===state.selected.length);slot.classList.toggle('is-error',!locked&&state.invalid&&!!slot.textContent&&normalizeQuizAnswerText(slot.textContent)!==normalizeQuizAnswerText(state.letters[index]));
     });
     el('quizOptions').querySelectorAll('[data-spell-action]').forEach(node=>{
       const action=node.dataset.spellAction;
@@ -17481,7 +17653,8 @@ const AmoSpellingGame=(()=>{
         node.disabled=locked||action==='tiles'&&state.long;node.setAttribute('aria-pressed',String(action===(tiles?'tiles':'input')));
       }else if(action!=='pick')node.disabled=locked;
     });
-    el('quizOptions').querySelector('.amo-spell-submit').textContent=locked?text('本题已完成','Đã hoàn thành'):text('提交答案','Nộp đáp án');
+    const submit=el('quizOptions').querySelector('.amo-spell-submit'),label=locked?text('本题已完成','Đã hoàn thành'):text('提交答案','Nộp đáp án');
+    if(submit.textContent!==label)submit.textContent=label;
   }
   function render(item){
     leave();setMobileQuizCompletedLayout(false);setQuizResetRememberMode('reset');
@@ -17507,7 +17680,7 @@ const AmoSpellingGame=(()=>{
   function restore(statusValue){
     if(!active())return;
     quizCurrent.answered=true;quizCurrent.answerRevealStage=statusValue==='revealed'?2:state.hintStage;
-    fillReference();setQuizInlineMeaning(state.item,true);
+    clearFeedback();fillReference();setQuizInlineMeaning(state.item,true);
     const result=el('quizResult');result.classList.toggle('quiz-revealed-answer',statusValue==='revealed');
     result.innerHTML=quizCorrectDetailsHTML(state.item)+`<div class="quiz-answer-status">${statusValue==='correct'?text('✅ 回答正确','✅ Chính xác'):text('已显示答案','Đã hiện đáp án')}</div>`;
     result.style.color='var(--primary-dark)';setMobileQuizCompletedLayout(true);showPermanentRememberQuizButton();sync();save();
@@ -17518,7 +17691,20 @@ const AmoSpellingGame=(()=>{
     if(!active())return;
     state.hintStage=stage;if(stage===2)restore('revealed');else save();
   }
-  function changed(){state.lastAttempt='';status('');sync();save();}
+  function clearFeedback(){
+    feedbackAnimation?.cancel();feedbackAnimation=null;
+    if(state)state.invalid=false;
+  }
+  function shakeAnswer(){
+    // Web Animations 只改变 transform，无强制重排；减少动态效果时仅显示红色/错误文案。
+    feedbackAnimation?.cancel();feedbackAnimation=null;
+    const target=el(state.entry==='tiles'?'amoSpellSlots':'amoSpellInput');
+    if(!target?.animate||window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)return;
+    const animation=target.animate([0,-18,16,-14,11,-7,4,0].map((x,i)=>({transform:`translateX(${x}px)`,offset:[0,.12,.25,.38,.52,.66,.82,1][i]})),{duration:520,easing:'ease-in-out'});
+    feedbackAnimation=animation;
+    animation.onfinish=()=>{if(feedbackAnimation===animation)feedbackAnimation=null;};
+  }
+  function changed(){clearFeedback();state.lastAttempt='';status('');sync();save();}
   function submit(){
     if(!active()||quizCurrent.answered||state.composing)return;
     const answer=state.entry==='tiles'?assembled():state.typed;
@@ -17526,12 +17712,15 @@ const AmoSpellingGame=(()=>{
     if(state.entry==='tiles'&&state.selected.length!==state.letters.length){status(text('请先把字母栏填写完整。','Hãy điền đủ các chữ.'));return;}
     const normalized=normalizeQuizAnswerText(answer);
     if(state.lastAttempt===normalized){status(text('请修改答案后再提交。','Hãy sửa đáp án rồi nộp lại.'));return;}
-    state.lastAttempt=normalized;el('amoSpellInput').value=answer;
+    clearTimeout(saveTimer);saveTimer=0;state.lastAttempt=normalized;el('amoSpellInput').value=answer;
     const correct=isAcceptedQuizAnswer(answer,state.item.vi),submitButton=el('quizOptions').querySelector('.amo-spell-submit');
     checkAnswer(submitButton,correct,state.item);
-    if(correct)restore('correct');
+    if(correct){
+      restore('correct');
+      if(el('quiz').classList.contains('active'))el('quiz').querySelector('.quiz-next-btn')?.focus({preventScroll:true});
+    }
     else{
-      sync();state.slotNodes.forEach((slot,index)=>slot.classList.toggle('is-error',!!slot.textContent&&normalizeQuizAnswerText(slot.textContent)!==normalizeQuizAnswerText(state.letters[index])));
+      state.invalid=true;sync();shakeAnswer();
       status(state.entry==='tiles'?text('还差一点，红色字母的位置需要调整；可以继续修改。','Chưa đúng; hãy sửa các chữ được đánh dấu.'):text('答案还不正确，请检查拼写、声调和 đ/d 后重试。','Chưa đúng; kiểm tra chính tả, dấu thanh và đ/d.'));save();
     }
   }
@@ -17540,6 +17729,8 @@ const AmoSpellingGame=(()=>{
     if(name==='pick'){
       if(state.entry!=='tiles'||!Number.isInteger(index)||index<0||index>=state.bank.length||state.selected.includes(index)||state.selected.length>=state.letters.length)return;
       state.selected.push(index);changed();
+      // V31.109: 仅在一次有效选字填满答案时自动判题；重复点击和恢复草稿不触发。
+      if(state.selected.length===state.letters.length)submit();
     }else if(name==='undo'){
       if(state.entry==='tiles')state.selected.pop();else state.typed=graphemes(state.typed).slice(0,-1).join('');changed();
     }else if(name==='clear'){
@@ -17559,7 +17750,7 @@ const AmoSpellingGame=(()=>{
       if(name==='input')el('amoSpellInput').focus({preventScroll:true});
     }else if(name==='submit')submit();
   }
-  function leave(){clearTimeout(saveTimer);saveTimer=0;state=null;el('quiz')?.classList.remove('quiz-spell-mode');}
+  function leave(){clearTimeout(saveTimer);saveTimer=0;clearFeedback();state=null;el('quiz')?.classList.remove('quiz-spell-mode');}
   // 仅注册一组委托监听器；题目替换不会堆积点击/输入事件或保留旧 DOM。
   const options=el('quizOptions');
   options.addEventListener('click',event=>{
@@ -17568,12 +17759,12 @@ const AmoSpellingGame=(()=>{
   });
   options.addEventListener('input',event=>{
     if(active()&&!quizCurrent.answered&&event.target.id==='amoSpellInput'){
-      state.typed=event.target.value;state.lastAttempt='';status('');save(false);
+      clearFeedback();state.typed=event.target.value;state.lastAttempt='';status('');sync();save(false);
       clearTimeout(saveTimer);if(!state.composing)saveTimer=setTimeout(()=>save(),160);
     }
   });
   options.addEventListener('compositionstart',event=>{if(active()&&event.target.id==='amoSpellInput'){state.composing=true;clearTimeout(saveTimer);}});
-  options.addEventListener('compositionend',event=>{if(active()&&event.target.id==='amoSpellInput'){state.composing=false;state.typed=event.target.value;state.lastAttempt='';clearTimeout(saveTimer);save();}});
+  options.addEventListener('compositionend',event=>{if(active()&&event.target.id==='amoSpellInput'){state.composing=false;clearFeedback();state.typed=event.target.value;state.lastAttempt='';sync();clearTimeout(saveTimer);save();}});
   window.addEventListener('pagehide',()=>save());
   document.addEventListener('keydown',event=>{
     if(!active()||!el('quiz').classList.contains('active')||event.ctrlKey||event.altKey||event.metaKey||event.shiftKey)return;
@@ -17629,35 +17820,45 @@ syncStudyBankControls=function(){
   oldSyncStudyBankControls();
   const mode=document.getElementById('quizMode');
   const saved=MODES.includes(settings.quizAnswerMode)?settings.quizAnswerMode:'vi-zh';
-  if(mode&&mode.querySelector(`option[value="${saved}"]`))mode.value=saved;
+  if(mode&&mode.value!==saved&&mode.querySelector(`option[value="${saved}"]`))mode.value=saved;
   const bank=document.getElementById('quizBankLanguage');
-  if(bank)bank.value=quizBankFromMode(saved);
+  if(bank&&bank.value!==quizBankFromMode(saved))bank.value=quizBankFromMode(saved);
   syncFillDifficultyControl();
 };
 
-/* 切换答题方向只改后续题型，当前轮和当前题都保留。 */
+/* V31.114：未完成轮次立即切换当前题；完成后进入新轮，偏好写入合并到渲染之后。 */
+let quizModeSaveTimer=0;
+function flushQuizModeSettings(){
+  if(!quizModeSaveTimer)return;
+  clearTimeout(quizModeSaveTimer);quizModeSaveTimer=0;
+  try{saveJSON(KEY_SETTINGS,settings);}catch(error){reportQuizStorageError(error);}
+}
+function queueQuizModeSettings(){
+  clearTimeout(quizModeSaveTimer);
+  quizModeSaveTimer=setTimeout(flushQuizModeSettings,120);
+}
+window.addEventListener('pagehide',flushQuizModeSettings);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)flushQuizModeSettings();});
 changeQuizAnswerMode=function(mode){
   if(!MODES.includes(mode))return;
+  const unchanged=settings.quizAnswerMode===mode&&quizBatchReady&&!quizBatchFinished&&quizCurrent?.mode===mode;
   settings.quizAnswerMode=mode;
   settings.quizBankLanguage=quizBankFromMode(mode);
-  saveJSON(KEY_SETTINGS,settings);
   syncStudyBankControls();
-  saveQuizSession();
+  if(unchanged)return;
+  // 不先写空会话，以免覆盖尚未恢复的答题进度。
+  queueQuizModeSettings();
   if(quizBatchReady&&!quizBatchFinished){
-    // V31.81：切换答题方式（如选择“中文 → 越南语填空”）立即以新方式渲染当前题，无需等下一题。
-    if(!quizCurrent){showCurrentQuizBatchItem();return;}
     quizCurrent=null;
     resetQuizAnswerToggle();
     setMobileQuizCompletedLayout(false);
-    if(quizBatchKeys?.[quizBatchIndex]){
-      showCurrentQuizBatchItem();
-      showToast('答题方式已切换');
-    }else{
-      showToast('答题方式已更新，将从下一题开始使用');
-    }
+    showCurrentQuizBatchItem();
+    showToast(settings.uiLanguage==='vi'?'Đã đổi dạng bài':'答题方式已切换');
     return;
   }
-  startQuiz(false);
+  if(!quizBatchReady&&restoreQuizSession({modeOverride:mode,restartFinished:true}))return;
+  // startQuiz(false) 会再次展示已完成成绩页；主动选择题型必须开启新轮。
+  startQuiz(true);
 };
 
 function parseEmbeddedExample(line){
@@ -17725,8 +17926,10 @@ function currentFillSpec(item){
 }
 function findCompatibleFillItemFromCurrent(item){
   let spec=currentFillSpec(item);if(spec)return {item,spec};
+  // V31.114：本次查找共用索引，不为每个后备题重复合并/排序词库。
+  const byKey=new Map(allWords().map(w=>[quizItemKey(w),w]));
   for(let i=quizBatchIndex+1;i<quizBatchKeys.length;i++){
-    const candidate=allWords().find(w=>quizItemKey(w)===normalize(quizBatchKeys[i]));if(!candidate)continue;
+    const candidate=byKey.get(normalize(quizBatchKeys[i]));if(!candidate)continue;
     const candidateSpec=buildFillSpec(candidate,settings.quizFillDifficulty||'standard');if(!candidateSpec)continue;
     [quizBatchKeys[quizBatchIndex],quizBatchKeys[i]]=[quizBatchKeys[i],quizBatchKeys[quizBatchIndex]];
     [quizBatchResults[quizBatchIndex],quizBatchResults[i]]=[quizBatchResults[i],quizBatchResults[quizBatchIndex]];
@@ -17747,7 +17950,7 @@ function fillLineDOM(spec){
   // 否则 value 还缺最后几个字符（组合文本尚未落入输入框），会把正确答案判错。
   const submitFillDelayed=()=>{
     requestAnimationFrame(()=>{
-      if(quizCurrent?.answered)return;
+      if(quizCurrent?.answered||quizCurrent?.mode!=='fill-zh-vi'||!document.getElementById('quizOptions')?.contains(input))return;
       if(ev_composing_now()){input.dataset.fillPendingSubmit='1';return;}
       window.submitFillAnswer(input.value,input);
     });
@@ -17783,7 +17986,6 @@ function renderFillQuiz(item){
   }
   item=compatible.item;const spec=compatible.spec;
   quizCurrent={item,mode:'fill-zh-vi',answered:false,statsWrongRecorded:false,statsCorrectRecorded:false,fillSpec:spec,answerRevealStage:0,hintRecorded:false};
-  if(matchMedia('(min-width:701px)').matches){const region=document.getElementById('quizScrollContent');if(region)region.scrollTop=0;}
   updateQuizReinforceButton(item);
   const label=document.getElementById('quizLabel'),wordEl=document.getElementById('quizWord'),options=document.getElementById('quizOptions'),result=document.getElementById('quizResult');
   label.textContent=`根据中文补全越南语例句 · ${difficultyLabel(spec.difficulty)}`;
@@ -17792,10 +17994,10 @@ function renderFillQuiz(item){
   const {line,input}=fillLineDOM(spec);options.appendChild(line);
   const submit=document.createElement('button');submit.type='button';submit.className='btn btn-primary quiz-submit-btn quiz-fill-submit';submit.textContent='提交';submit.onclick=()=>window.submitFillAnswer(input.value,input);options.appendChild(submit);
   resetQuizAnswerToggle();quizCurrent.answerRevealStage=0;quizCurrent.fillSpec=spec;
-  setTimeout(()=>input.focus({preventScroll:true}),0);
+  scheduleQuizInputFocus(input);
 }
 const oldRenderSpecificQuizItem=renderSpecificQuizItem;
-renderSpecificQuizItem=function(item,mode){if(mode!=='spell-zh-vi')window.AmoSpellingGame?.leave();if(mode==='fill-zh-vi')return renderFillQuiz(item);return oldRenderSpecificQuizItem(item,mode);};
+renderSpecificQuizItem=function(item,mode){fillInputComposing=false;if(mode!=='spell-zh-vi')window.AmoSpellingGame?.leave();if(mode==='fill-zh-vi')return renderFillQuiz(item);return oldRenderSpecificQuizItem(item,mode);};
 
 function addFillHistory(item,spec,answer,status){
   quizHistoryEntries.push({n:Math.min(20,quizBatchIndex+1),question:String(spec.zh||item.zh||''),answer:String(answer||''),correct:String(spec.answer||''),status,time:Date.now()});
@@ -17806,13 +18008,14 @@ function recordFillAdaptive(item,status,userAnswer,spec){
 }
 function submitFillAnswer(value,inputEl){
   if(!quizCurrent||quizCurrent.mode!=='fill-zh-vi'||quizCurrent.answered)return;
+  if(inputEl&&!document.getElementById('quizOptions')?.contains(inputEl))return;
   const result=document.getElementById('quizResult');
   const liveInput=inputEl||document.querySelector('#quizOptions .quiz-fill-input');
   // 输入法仍在组合阶段时，不立即判题，避免最后一个越南语字符尚未提交就被读取。
   if(fillInputComposing || liveInput?.dataset.fillComposing==='1'){
     liveInput?.blur();
     requestAnimationFrame(()=>{
-      if(!quizCurrent?.answered) submitFillAnswer(liveInput?.value ?? value,liveInput);
+      if(!quizCurrent?.answered&&liveInput&&document.getElementById('quizOptions')?.contains(liveInput))submitFillAnswer(liveInput.value,liveInput);
     });
     return;
   }
@@ -17893,6 +18096,7 @@ const oldHandleQuizEnterKey=handleQuizEnterKey;
 document.removeEventListener('keydown',oldHandleQuizEnterKey);
 handleQuizEnterKey=function(e){
   if(e.key!=='Enter'||e.shiftKey||e.ctrlKey||e.altKey||e.metaKey)return;
+  if(isQuizControlEnter(e))return;
   if(quizCurrent?.mode==='fill-zh-vi'||quizCurrent?.mode==='spell-zh-vi')return;
   if(e.isComposing || fillInputComposing)return;
   const modal=document.getElementById('wordActionModal');if(modal?.classList.contains('show'))return;
@@ -18357,6 +18561,12 @@ body.amo-glass-off #quiz.quiz-fill-mode .quiz-main-actions{
 <script id="amo-v3175-fill-quiz-engine">
 (function(){
   'use strict';
+  /* V31.114：异步界面更新绑定题目对象；旧题回调在切换后失效。 */
+  function scheduleFillUpdate(callback){
+    const current=quizCurrent;
+    requestAnimationFrame(()=>{if(current&&quizCurrent===current&&current.mode==='fill-zh-vi')callback();});
+  }
+
 
   function getQuiz(){return document.getElementById('quiz');}
   function isFill(){return typeof quizCurrent!=='undefined' && !!quizCurrent && quizCurrent.mode==='fill-zh-vi';}
@@ -18405,7 +18615,7 @@ body.amo-glass-off #quiz.quiz-fill-mode .quiz-main-actions{
   }
 
   function syncFillFresh(){
-    if(!isFill())return;
+    if(!isFill()||quizCurrent.answered)return;
     const q=getQuiz();q?.classList.add('quiz-fill-mode');q?.classList.remove('quiz-answer-complete');
     enforceCenteredProgress();
     const line=fillLine();
@@ -18458,16 +18668,10 @@ body.amo-glass-off #quiz.quiz-fill-mode .quiz-main-actions{
   const originalRenderSpecific=window.renderSpecificQuizItem;
   if(typeof originalRenderSpecific==='function'){
     window.renderSpecificQuizItem=function(item,mode){
-      const q=getQuiz();
+      resetQuizModeControls(mode);
       enforceCenteredProgress();
-      if(mode!=='fill-zh-vi'){
-        q?.classList.remove('quiz-fill-mode','quiz-answer-complete');
-        document.querySelector('#quiz .quiz-fill-submit')?.remove();
-      }else{
-        q?.classList.add('quiz-fill-mode');
-      }
       const result=originalRenderSpecific.apply(this,arguments);
-      if(mode==='fill-zh-vi')requestAnimationFrame(syncFillFresh);
+      if(mode==='fill-zh-vi')scheduleFillUpdate(syncFillFresh);
       return result;
     };
   }
@@ -18477,7 +18681,7 @@ body.amo-glass-off #quiz.quiz-fill-mode .quiz-main-actions{
     window.submitFillAnswer=function(value){
       const result=originalSubmit.apply(this,arguments);
       if(isFill() && quizCurrent.answered){
-        requestAnimationFrame(()=>showFillAnswerVisual(true));
+        scheduleFillUpdate(()=>showFillAnswerVisual(true));
       }
       return result;
     };
@@ -18489,8 +18693,8 @@ body.amo-glass-off #quiz.quiz-fill-mode .quiz-main-actions{
       const beforeMode=quizCurrent?.mode;
       const result=originalShow.apply(this,arguments);
       if(beforeMode==='fill-zh-vi' && isFill()){
-        if(quizCurrent.answerRevealStage===2)requestAnimationFrame(()=>showFillAnswerVisual(true));
-        else requestAnimationFrame(syncFillFresh);
+        if(quizCurrent.answerRevealStage===2)scheduleFillUpdate(()=>showFillAnswerVisual(true));
+        else scheduleFillUpdate(syncFillFresh);
       }
       return result;
     };
@@ -18500,7 +18704,7 @@ body.amo-glass-off #quiz.quiz-fill-mode .quiz-main-actions{
   if(typeof originalReset==='function'){
     window.resetQuizAnswerToggle=function(){
       const result=originalReset.apply(this,arguments);
-      if(isFill())requestAnimationFrame(syncFillFresh);
+      if(isFill())scheduleFillUpdate(syncFillFresh);
       return result;
     };
   }
@@ -18509,14 +18713,14 @@ body.amo-glass-off #quiz.quiz-fill-mode .quiz-main-actions{
   if(typeof originalRestore==='function'){
     window.restoreCompletedQuizUI=function(status){
       const result=originalRestore.apply(this,arguments);
-      if(isFill())requestAnimationFrame(()=>showFillAnswerVisual(false));
+      if(isFill())scheduleFillUpdate(()=>showFillAnswerVisual(false));
       return result;
     };
   }
 
   document.addEventListener('DOMContentLoaded',()=>{
     enforceCenteredProgress();
-    if(isFill())requestAnimationFrame(syncFillFresh);
+    if(isFill())scheduleFillUpdate(syncFillFresh);
   },{once:true});
 })();
 </script>
@@ -18689,6 +18893,12 @@ body.amo-glass-off #quiz.quiz-fill-mode .quiz-main-actions{
 <script id="amo-v3177-fill-authoritative-engine">
 (function(){
   'use strict';
+  /* V31.114：异步界面更新绑定题目对象；旧题回调在切换后失效。 */
+  function scheduleFillUpdate(callback){
+    const current=window.quizCurrent;
+    requestAnimationFrame(()=>{if(current&&window.quizCurrent===current&&current.mode==='fill-zh-vi')callback();});
+  }
+
   // V31.79：quizCurrent 是页面顶层 let 绑定，不在 window 对象上。
   // 通过访问器属性把 window.quizCurrent 代理到页面内真实 quizCurrent，
   // 使本引擎（及旧逻辑）始终读到实际答题状态。
@@ -18744,7 +18954,7 @@ body.amo-glass-off #quiz.quiz-fill-mode .quiz-main-actions{
   }
 
   function renderCompletedSentence(animate){
-    if(!isFillMode() || !window.quizCurrent?.fillSpec)return;
+    if(!isFillMode() || !window.quizCurrent?.answered || !window.quizCurrent?.fillSpec)return;
     const options=optionsEl(),spec=window.quizCurrent.fillSpec;
     if(!options)return;
     const line=options.querySelector('.quiz-fill-line');
@@ -18799,7 +19009,7 @@ body.amo-glass-off #quiz.quiz-fill-mode .quiz-main-actions{
       const result=oldSubmit.apply(this,arguments);
       if(before && isFillMode()){
         markFillState(true);
-        requestAnimationFrame(()=>renderCompletedSentence(true));
+        scheduleFillUpdate(()=>renderCompletedSentence(true));
       }
       return result;
     };
@@ -18813,7 +19023,7 @@ body.amo-glass-off #quiz.quiz-fill-mode .quiz-main-actions{
       const result=oldShow.apply(this,arguments);
       if(before && isFillMode() && window.quizCurrent?.answerRevealStage===2){
         markFillState(true);
-        requestAnimationFrame(()=>renderCompletedSentence(true));
+        scheduleFillUpdate(()=>renderCompletedSentence(true));
       }
       return result;
     };
@@ -18825,7 +19035,7 @@ body.amo-glass-off #quiz.quiz-fill-mode .quiz-main-actions{
     window.goNextQuizBatchItem=function(){
       markFillState(false);
       const result=oldNext.apply(this,arguments);
-      requestAnimationFrame(()=>{if(isFillMode())markFillState(true);});
+      scheduleFillUpdate(()=>{if(isFillMode())markFillState(true);});
       return result;
     };
   }
@@ -18837,6 +19047,8 @@ body.amo-glass-off #quiz.quiz-fill-mode .quiz-main-actions{
   document.addEventListener('keydown',function(e){
     if(e.key!=='Enter'||e.shiftKey||e.ctrlKey||e.altKey||e.metaKey)return;
     if(!isFillMode())return;
+    // V31.115：捕获阶段不能抢走下拉框确认键，或将原生按钮回车重复提交。
+    if(isQuizControlEnter(e))return;
 
     // 输入法正在组合文字时，Enter 应交给输入法；部分 Windows 输入法即使 isComposing=false 也会返回 keyCode=229。
     if(e.isComposing || e.keyCode===229 || e.which===229)return;
@@ -18875,7 +19087,7 @@ body.amo-glass-off #quiz.quiz-fill-mode .quiz-main-actions{
   function init(){
     if(isFillMode()){
       markFillState(true);
-      requestAnimationFrame(()=>{placeSubmitButton();setActionState(!!window.quizCurrent?.answered);});
+      scheduleFillUpdate(()=>{placeSubmitButton();setActionState(!!window.quizCurrent?.answered);});
     }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
@@ -19297,8 +19509,8 @@ body.theme-night :is(button,input,select,textarea,summary,a):focus-visible{outli
   #add .amo-batch-instructions[open] .amo-help-content{animation:none}
 }
 </style>
-<style id="amo-v31108-spelling-and-word-glass">
-/* V31.108：与现有答题卡共用布局，中文题面不显示拼音/语音。 */
+<style id="amo-v31109-spelling-and-word-glass">
+/* V31.109：与现有答题卡共用布局，中文题面不显示拼音/语音。 */
 .app #quiz.quiz-spell-mode .quiz-question-phrase{grid-template-columns:minmax(0,1fr)!important}
 .app #quiz.quiz-spell-mode .quiz-question #quizWord{grid-column:1!important;font-size:clamp(36px,calc(var(--amo-question-px,36px) * 1.3),64px)!important;line-height:1.35!important;color:var(--study-zh-color,var(--text));overflow-wrap:anywhere}
 .app #quiz.quiz-spell-mode :is(#quizQuestionSpeechBtn,.mini-speech-btn){display:none!important}
@@ -19341,16 +19553,120 @@ body.theme-night :is(button,input,select,textarea,summary,a):focus-visible{outli
 }
 @media(prefers-reduced-motion:reduce){.app #quiz.quiz-spell-mode .amo-spell-tile{transition:none}}
 
-/* V31.108 词汇玻璃层：卡片与相关结果均模糊背景，文字不参与 filter。 */
-body.amo-glass-all #words{--amo-word-reading-bg:rgba(226,237,241,.26);--amo-word-reading-blur:24px}
-body.theme-wallpaper.amo-glass-all #words{--amo-word-reading-bg:rgba(229,238,240,.26)}
-body.theme-night.amo-glass-all #words{--amo-word-reading-bg:rgba(27,44,50,.82)}
-body.amo-glass-all #words :is(.word-card,.amo-related-search-results){background:var(--amo-word-reading-bg)!important;-webkit-backdrop-filter:blur(var(--amo-word-reading-blur)) saturate(135%)!important;backdrop-filter:blur(var(--amo-word-reading-blur)) saturate(135%)!important;border:1px solid var(--border-normal)!important;filter:none!important}
+/* V31.109: 词汇与短句共用动态底色；透明度滑块只需更新原有 CSS 变量。 */
+body.amo-glass-all :is(#words,#sentences){--amo-study-card-bg:var(--glass-bg-elevated)}
+body.theme-wallpaper{--glass-bg-elevated:rgba(255,255,255,calc(.08 + var(--header-glass-alpha,.20)))}
+/* 夜间保留青灰底色，5–50% 整段调整不会提前达到不透明上限。 */
+body.theme-night.amo-glass-all :is(#words,#sentences){--amo-study-card-bg:rgba(33,53,59,calc(.46 + var(--header-glass-alpha,.20)))}
+body.amo-glass-all #words{--amo-word-reading-blur:24px}
+body.amo-glass-all #words :is(.word-card,.amo-related-search-results){background:var(--amo-study-card-bg)!important;-webkit-backdrop-filter:blur(var(--amo-word-reading-blur)) saturate(135%)!important;backdrop-filter:blur(var(--amo-word-reading-blur)) saturate(135%)!important;border:1px solid var(--border-normal)!important;filter:none!important}
+body.amo-glass-all #sentences .sentence-card{background:var(--amo-study-card-bg)!important}
 body.amo-glass-all #words .amo-related-search-results{isolation:isolate}
 @media(max-width:700px){body.amo-glass-all #words{--amo-word-reading-blur:20px}}
-@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){body.amo-glass-all #words :is(.word-card,.amo-related-search-results){background:var(--solid-surface)!important}}
-@media(prefers-reduced-transparency:reduce){body.amo-glass-all #words :is(.word-card,.amo-related-search-results){background:var(--solid-surface)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){body.amo-glass-all :is(#words .word-card,#words .amo-related-search-results,#sentences .sentence-card){background:var(--solid-surface)!important}}
+@media(prefers-reduced-transparency:reduce){body.amo-glass-all :is(#words .word-card,#words .amo-related-search-results,#sentences .sentence-card){background:var(--solid-surface)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}}
 
+/* V31.109: 错误文字覆盖自定义学习颜色；错误状态同时提供文案及下划线。 */
+.app #quiz.quiz-spell-mode .amo-spell-game.is-invalid :is(.amo-spell-slot,.amo-spell-input,.amo-spell-punctuation){color:var(--danger)!important}
+.app #quiz.quiz-spell-mode .amo-spell-game.is-invalid .amo-spell-input{border-color:var(--danger)!important}
+.app #quiz.quiz-spell-mode .amo-spell-game.is-invalid .amo-spell-status{color:var(--danger)!important}
+.app #quiz.quiz-spell-mode .amo-spell-game.is-complete .amo-spell-status{margin-top:0}
+/* 开始与完成两种状态都居中，覆盖旧版手机按钮的排列规则。 */
+.app #quiz.quiz-spell-mode .quiz-main-actions .quiz-next-btn{display:inline-flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;white-space:normal!important;line-height:1.4!important}
+
+</style>
+<style id="amo-v31112-quiz-finish-surfaces">
+/* V31.112: 卡片按内容收拢；仅外层保留玻璃底板，内层全部透明。 */
+.app #quiz.amo-stable-quiz .quiz-desktop-layout>.quiz-box{
+  display:block!important;height:auto!important;min-height:0!important;max-height:none!important;
+  overflow:visible!important;padding:0!important;box-sizing:border-box!important;transition:none!important;overflow-anchor:none!important;
+}
+.app #quiz.amo-stable-quiz .quiz-box>.quiz-question{
+  display:block!important;flex:none!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;
+  margin:0!important;padding:18px 20px!important;overflow:visible!important;box-sizing:border-box!important;
+}
+.app #quiz.amo-stable-quiz .quiz-question>#quizScrollContent.quiz-scroll-content{
+  display:block!important;flex:none!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;
+  overflow:visible!important;overscroll-behavior:auto!important;scrollbar-gutter:auto!important;
+  margin:0!important;padding:6px 20px 0!important;box-sizing:border-box!important;overflow-anchor:none!important;
+}
+.app #quiz.amo-stable-quiz #quizScrollContent :is(#quizResult,.quiz-correct-details,#quizOptions,#quizBatchSummary){height:auto!important;max-height:none!important;overflow:visible!important}
+.app #quiz.amo-stable-quiz .quiz-question>.quiz-main-actions{
+  position:static!important;inset:auto!important;transform:none!important;flex:none!important;
+  width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;
+  margin:12px 0 0!important;padding:8px 0 0!important;box-sizing:border-box!important;
+  background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;
+}
+.app #quiz.amo-stable-quiz:not(.quiz-fill-mode) .quiz-question>.quiz-main-actions:not([style*="display: none"]):not([style*="display:none"]){display:flex!important;flex-wrap:wrap!important;align-items:center!important;justify-content:center!important;gap:8px!important}
+.app #quiz.amo-stable-quiz .quiz-question>.quiz-main-actions:is([style*="display: none"],[style*="display:none"]){display:none!important}
+.app #quiz.amo-stable-quiz .quiz-main-actions :is(.quiz-next-btn,.quiz-show-answer-btn,.quiz-fill-submit,#quizResetRememberBtn){
+  position:static!important;inset:auto!important;transform:none!important;float:none!important;
+  height:auto!important;min-height:44px!important;min-width:0!important;max-width:100%!important;
+  align-items:center!important;justify-content:center!important;text-align:center!important;white-space:normal!important;line-height:1.4!important;
+}
+.app #quiz.amo-stable-quiz .quiz-main-actions::before,.app #quiz.amo-stable-quiz .quiz-main-actions::after{display:none!important;content:none!important}
+@media(max-width:700px){
+  .app #quiz.amo-stable-quiz .quiz-box>.quiz-question{padding:12px 10px calc(12px + env(safe-area-inset-bottom,0px))!important}
+  .app #quiz.amo-stable-quiz .quiz-question>#quizScrollContent.quiz-scroll-content{padding:6px 20px 0!important}
+}
+
+/* 移除内层背景、模糊、边框和阴影，避免透明背景仍留下可见底板边缘。 */
+.app #quiz.amo-stable-quiz .quiz-box :is(.quiz-question,.quiz-scroll-content,#quizBatchSummary,.quiz-main-actions){
+  background:transparent!important;background-image:none!important;
+  border:0!important;outline:0!important;box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+}
+.app #quiz.amo-stable-quiz #quizBatchSummary.quiz-batch-summary{
+  width:100%!important;max-width:none!important;min-height:0!important;
+  margin:12px auto 0!important;padding:12px 0 4px!important;box-sizing:border-box!important;
+}
+@media(max-width:700px){
+  /* 完成标题稍左移，同时给右上角的 20/20 与正确/错误数量留出空间。 */
+  .app #quiz.amo-stable-quiz.quiz-batch-complete .quiz-question-row{
+    min-height:72px!important;
+  }
+  .app #quiz.amo-stable-quiz.quiz-batch-complete .quiz-question-row .quiz-question-phrase{
+    display:block!important;width:calc(100% - 64px)!important;max-width:none!important;
+    margin:0 auto 0 0!important;padding:4px 0 0!important;box-sizing:border-box!important;
+  }
+  .app #quiz.amo-stable-quiz.quiz-batch-complete .quiz-question-row .quiz-question-phrase #quizWord{
+    width:100%!important;min-width:0!important;margin:0!important;padding:0!important;
+    font-size:clamp(20px,6vw,30px)!important;line-height:1.4!important;
+    text-align:center!important;white-space:normal!important;overflow-wrap:anywhere;
+  }
+}
+</style>
+<style id="amo-v31113-desktop-spelling-compact">
+/* V31.113: 仅电脑拼词模式，将填写方式放到卡片左上角并压缩中间留白。 */
+@media(min-width:701px){
+  .app #quiz.amo-stable-quiz.quiz-spell-mode .quiz-box>.quiz-question{position:relative!important}
+  /* 明确绝对定位参照；无需移动 DOM、绑定额外事件或监听窗口尺寸。 */
+  .app #quiz.amo-stable-quiz.quiz-spell-mode :is(#quizScrollContent,#quizOptions,.amo-spell-game){position:static!important}
+  .app #quiz.amo-stable-quiz.quiz-spell-mode .amo-spell-tabs{
+    position:absolute!important;top:10px!important;left:20px!important;right:auto!important;
+    justify-content:flex-start!important;gap:6px!important;margin:0!important;z-index:5;
+  }
+  .app #quiz.amo-stable-quiz.quiz-spell-mode .amo-spell-tab{padding:7px 12px;min-height:42px}
+  /* 顶部留一行给切换按钮，长的界面语言提示也不会与按钮相撞。 */
+  .app #quiz.amo-stable-quiz.quiz-spell-mode .quiz-question #quizLabel{
+    margin:max(38px,calc(var(--amo-ui-font-px,16px) * 1.5 + 6px)) auto 4px!important;
+  }
+  .app #quiz.amo-stable-quiz.quiz-spell-mode.quiz-answer-complete .quiz-question #quizLabel{margin:0 auto 4px!important}
+  .app #quiz.amo-stable-quiz.quiz-spell-mode #quizResult.quiz-result{
+    min-height:0!important;margin:3px auto!important;padding:4px 6px!important;
+  }
+  .app #quiz.amo-stable-quiz.quiz-spell-mode #quizResult.quiz-result:empty{
+    display:none!important;min-height:0!important;margin:0!important;padding:0!important;
+  }
+  .app #quiz.amo-stable-quiz.quiz-spell-mode #quizOptions.quiz-options{margin-top:8px!important}
+  .app #quiz.amo-stable-quiz.quiz-spell-mode .amo-spell-slots{min-height:0;padding:4px 0 10px;gap:10px 16px}
+  .app #quiz.amo-stable-quiz.quiz-spell-mode .amo-spell-bank{padding:12px 14px;gap:8px}
+  .app #quiz.amo-stable-quiz.quiz-spell-mode .amo-spell-input{margin-bottom:8px!important}
+  .app #quiz.amo-stable-quiz.quiz-spell-mode .amo-spell-caption{margin:6px 0}
+  .app #quiz.amo-stable-quiz.quiz-spell-mode .amo-spell-tools{margin-top:8px}
+  .app #quiz.amo-stable-quiz.quiz-spell-mode .amo-spell-status{margin-top:6px}
+  .app #quiz.amo-stable-quiz.quiz-spell-mode .amo-spell-status:empty{display:none}
+}
 </style>
 </body>
 </html>
