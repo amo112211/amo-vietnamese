@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.118</title>
+<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.121</title>
 <meta name="theme-color" content="#f0f4f8" id="amo-browser-theme-color">
 
 
@@ -5979,7 +5979,7 @@ body select optgroup{
   document.body.classList.add(initial.glass==='off'?'amo-glass-off':initial.glass==='header'?'amo-glass-header':'amo-glass-all');
 })();
 </script>
-<!-- Build: V31.118 -->
+<!-- Build: V31.121 -->
 <!--
   阿莫 V30 兼容架构 / 扩展入口
   数据源：builtInWords/builtInSentences/vietnameseGrammar/chineseGrammar（原有内容未经改写）。
@@ -5994,7 +5994,7 @@ body select optgroup{
         <div class="logo">
             <div class="logo-icon">🇻🇳</div>
             <div>
-                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.118">V31.118</span></div>
+                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.121">V31.121</span></div>
                 <div class="logo-sub">中文母语者 · 零基础学习</div>
             </div>
         </div>
@@ -6080,7 +6080,7 @@ body select optgroup{
         <button type="button" class="amo-reset-effects" id="amoResetDrawerSettingsBtn" onclick="resetAmoDrawerSettings()">↺ 恢复默认抽屉动效</button>
       </div>
     </details>
-    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.118</strong></div>
+    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.121</strong></div>
 </section>
 </div>
 
@@ -8029,31 +8029,94 @@ function deleteSelectedSentenceCategory(){
     renderSentenceCategoryControls(); renderSentences();
     showToast("分类已删除，短句仍然保留");
 }
-function sentenceVietnameseWithWordHints(sentence){
-    const raw=String(sentence||"");
-    if(!shouldShowSentenceWordHints()) return escapeHTML(raw);
-    const words=allWords().slice().sort((a,b)=>String(b.vi).length-String(a.vi).length);
-    const lower=raw.toLocaleLowerCase();
-    const matches=[];
-    for(const w of words){
-        const term=String(w.vi||"").trim(); if(!term) continue;
-        const t=term.toLocaleLowerCase(); let from=0;
-        while(true){
-            const idx=lower.indexOf(t,from); if(idx<0) break;
-            const end=idx+term.length;
-            if(!matches.some(x=>idx<x.end && end>x.start)) matches.push({start:idx,end,word:w});
-            from=idx+Math.max(1,term.length);
+/* ====================== V31.120 短句词组提示：词库 + 常用搭配/相关词共享索引 ====================== */
+let __amoWordHintMatcherCache=null;
+function getWordHintMatcherIndex(){
+    const runtime=getRelationRuntimeCache();
+    if(__amoWordHintMatcherCache?.runtime===runtime) return __amoWordHintMatcherCache;
+    const buckets=new Map(),terms=new Map();
+    const addCandidate=(vi,zh,source="word")=>{
+        const term=String(vi||"").trim().normalize("NFC");
+        if(!term) return;
+        const key=coreVocabularyKey(term);
+        if(!key) return;
+        const meaning=String(zh||"").trim();
+        const priority=source==="collocation"?3:source==="related"?2:1;
+        const previous=terms.get(key);
+        // 常用搭配/相关词中保存的完整释义优先；没有释义时保留已有词库释义。
+        if(previous && (previous.priority>priority || (previous.priority===priority && previous.zh && !meaning))) return;
+        terms.set(key,{vi:term,zh:meaning||(previous?.zh||""),priority,source});
+    };
+    // 先收录正式词汇，再覆盖为已有“常用搭配 / 相关词”中的完整短语释义。
+    for(const word of runtime.words||[]) addCandidate(word?.vi,word?.zh,"word");
+    for(const rel of runtime.relations||[]){
+        if(rel?.type==="collocation" && rel?.pair?.vi){
+            addCandidate(rel.pair.vi,rel.pair.zh,"collocation");
         }
     }
-    matches.sort((a,b)=>a.start-b.start);
+    for(const entries of runtime.adjacency?.values?.()||[]){
+        for(const entry of entries||[]){
+            if(!entry?.vi) continue;
+            addCandidate(entry.vi,entry.zh,entry.type==="collocation"?"collocation":"related");
+        }
+    }
+    for(const item of terms.values()){
+        // 关系数据若没有任何释义且也不是正式词条，不单独生成误导性的空提示。
+        if(!item.zh && item.source!=="word") continue;
+        const chars=Array.from(item.vi.toLocaleLowerCase("vi"));
+        if(!chars.length) continue;
+        const first=chars[0];
+        if(!buckets.has(first)) buckets.set(first,[]);
+        buckets.get(first).push({word:{vi:item.vi,zh:item.zh,__hintSource:item.source},chars,length:chars.length,priority:item.priority});
+    }
+    for(const list of buckets.values()){
+        list.sort((a,b)=>b.length-a.length || b.priority-a.priority || String(a.word.vi||"").localeCompare(String(b.word.vi||""),"vi"));
+    }
+    __amoWordHintMatcherCache={runtime,buckets,termCount:terms.size};
+    return __amoWordHintMatcherCache;
+}
+function isWordHintBoundaryChar(ch){
+    return !ch || !/[\p{L}\p{M}\p{N}]/u.test(ch);
+}
+function matchSentenceVocabularyPhrases(sentence){
+    const raw=String(sentence||"").normalize("NFC");
+    const chars=Array.from(raw);
+    const lower=chars.map(ch=>ch.toLocaleLowerCase("vi"));
+    const {buckets}=getWordHintMatcherIndex();
+    const matches=[];
+    let i=0;
+    while(i<chars.length){
+        const candidates=buckets.get(lower[i])||[];
+        let chosen=null;
+        // 左到右扫描；同一起点只取最长有效词组。命中后锁定区间，后续候选不得跨越。
+        for(const candidate of candidates){
+            const end=i+candidate.length;
+            if(end>chars.length) continue;
+            if(i>0 && !isWordHintBoundaryChar(chars[i-1])) continue;
+            if(end<chars.length && !isWordHintBoundaryChar(chars[end])) continue;
+            let ok=true;
+            for(let j=0;j<candidate.length;j++){
+                if(lower[i+j]!==candidate.chars[j]){ok=false;break;}
+            }
+            if(ok){chosen={start:i,end,word:candidate.word};break;}
+        }
+        if(chosen){matches.push(chosen);i=chosen.end;}
+        else i++;
+    }
+    return {raw,chars,matches};
+}
+function sentenceVietnameseWithWordHints(sentence){
+    const raw=String(sentence||"").normalize("NFC");
+    if(!shouldShowSentenceWordHints()) return escapeHTML(raw);
+    const {chars,matches}=matchSentenceVocabularyPhrases(raw);
     let out="",pos=0;
     for(const x of matches){
-        out+=escapeHTML(raw.slice(pos,x.start));
-        const shown=raw.slice(x.start,x.end);
-        out+=`<span class="known-word-hint" data-word="${escapeHTML(shown)}" data-tip="${escapeHTML(x.word.zh)}" tabindex="0">${escapeHTML(shown)}</span>`;
+        out+=escapeHTML(chars.slice(pos,x.start).join(""));
+        const shown=chars.slice(x.start,x.end).join("");
+        out+=`<span class="known-word-hint" data-word="${escapeHTML(x.word.vi||shown)}" data-tip="${escapeHTML(x.word.zh||"")}" tabindex="0">${escapeHTML(shown)}</span>`;
         pos=x.end;
     }
-    return out+escapeHTML(raw.slice(pos));
+    return out+escapeHTML(chars.slice(pos).join(""));
 }
 
 /* ====================== 数据合并 ====================== */
@@ -8127,7 +8190,7 @@ function getAllRelatedRelations(){
 /* ====================== V31.27 词汇/关联运行时索引 ====================== */
 let __amoRelationRuntimeCache=null;
 let __amoRelationRuntimeStamp='';
-function invalidateRelationRuntimeCache(){__amoRelationRuntimeCache=null;__amoRelationRuntimeStamp='';}
+function invalidateRelationRuntimeCache(){__amoRelationRuntimeCache=null;__amoRelationRuntimeStamp='';if(typeof __amoWordHintMatcherCache!=='undefined')__amoWordHintMatcherCache=null;}
 function relationRuntimeStamp(words){
     // V31.118: lightweight relation fingerprint; avoids rebuilding all adjacency maps on every filter/search render.
     let h=2166136261>>>0,count=0;
@@ -8393,7 +8456,10 @@ function openWordHintPopover(el){
     document.getElementById("wordHintPopoverMeaning").textContent=el.dataset.tip || "";
     const relations=document.getElementById("wordHintPopoverRelations");
     if(relations){
-        const entries=getRelatedEntriesForWord(shownWord).slice(0,6);
+        // V31.120: reuse the shared relation runtime adjacency index; opening a bubble never rescans the full vocabulary.
+        const entries=getRelatedEntriesForWord(shownWord)
+            .sort((a,b)=>(a.type==='collocation'?0:1)-(b.type==='collocation'?0:1))
+            .slice(0,6);
         if(entries.length){
             relations.hidden=false;
             relations.innerHTML=`<div class="hint-related-title">相关词 / 常用搭配</div><div class="hint-related-list">${entries.map(entry=>`<div class="hint-related-item"><span class="hint-related-vi">${escapeHTML(entry.vi)}</span><span class="hint-related-zh">${escapeHTML(entry.zh||'')}</span><small>${entry.type==='collocation'?'常用搭配':'相关词'}</small></div>`).join('')}</div>`;
@@ -12305,14 +12371,8 @@ function sentenceVietnameseDiffWithWordHints(userText, expectedText){
     Array.from(raw).forEach((ch,ri)=>{ if(!/^[\p{P}\p{S}\s]$/u.test(ch)){ if(!matched.has(ci)) wrongRawIndexes.add(ri); ci++; } });
     const renderRange=(start,end)=>Array.from(raw).slice(start,end).map((ch,k)=>{const safe=escapeHTML(ch);return wrongRawIndexes.has(start+k)?`<span class="sentence-answer-error-char">${safe}</span>`:safe;}).join("");
     if(!shouldShowSentenceWordHints()) return renderRange(0,Array.from(raw).length);
-    const chars=Array.from(raw), lower=raw.toLocaleLowerCase();
-    const words=allWords().slice().sort((a,b)=>String(b.vi).length-String(a.vi).length), matches=[];
-    for(const w of words){
-        const term=String(w.vi||"").trim(); if(!term) continue;
-        const t=term.toLocaleLowerCase(); let from=0;
-        while(true){ const idx=lower.indexOf(t,from); if(idx<0) break; const end=idx+term.length; if(!matches.some(x=>idx<x.end&&end>x.start)) matches.push({start:idx,end,word:w}); from=idx+Math.max(1,term.length); }
-    }
-    matches.sort((a,b)=>a.start-b.start); let out="",pos=0;
+    const {chars,matches}=matchSentenceVocabularyPhrases(raw);
+    let out="",pos=0;
     for(const x of matches){
         out+=renderRange(pos,x.start);
         const shown=chars.slice(x.start,x.end).join("");
@@ -14533,7 +14593,7 @@ const AmoTextIO=(()=>{
 </script>
 
 <script id="amo-v3118-pos-version">
-window.AMO_BUILD_VERSION="V31.118";
+window.AMO_BUILD_VERSION="V31.121";
 </script>
 
 <script id="amo-v3126-enhancements">
@@ -14751,13 +14811,39 @@ document.addEventListener('DOMContentLoaded',()=>{initAmoSystemTheme();enhanceAm
       if(!best)break;
       counts[best]++;
     }
-    // 防止新用户被大量翻译题压住；若数据很少，保持识别/回忆为主。
-    if(rows.length&&rows.every(x=>x.d.stage==='new')&&counts.translation>1){const move=counts.translation-1;counts.translation=1;counts.choice=Math.min(caps.choice,counts.choice+Math.ceil(move*.6));counts.input=Math.min(caps.input,counts.input+Math.floor(move*.4));}
+    // V31.121：智能综合考试只要存在合格翻译题源，就保留最低翻译覆盖。
+    // 20题及以上尽量保留2道；较小题量至少1道。新词很多时仍限制翻译题上限，避免难度失衡。
+    const translationReserve=Math.min(caps.translation,target>=20?2:1);
+    const allNew=rows.length&&rows.every(x=>x.d.stage==='new');
+    const newTranslationCap=allNew?Math.min(caps.translation,target>=20?2:1):caps.translation;
+    if(counts.translation>newTranslationCap){
+      let move=counts.translation-newTranslationCap;counts.translation=newTranslationCap;
+      while(move>0){
+        let best=null,bestScore=-1;
+        for(const t of ['choice','input','fill']){
+          if(counts[t]>=caps[t])continue;
+          const score=weights[t]/(1+counts[t]*.72);
+          if(score>bestScore){bestScore=score;best=t;}
+        }
+        if(!best)break;counts[best]++;move--;
+      }
+    }
+    // 如果权重分配把翻译题挤到0/1道，从边际价值最低的普通题型让出名额，保持总题数不变。
+    while(counts.translation<translationReserve){
+      let donor=null,donorValue=Infinity;
+      for(const t of ['choice','input','fill']){
+        if(counts[t]<=0)continue;
+        const lastSlotValue=weights[t]/(1+Math.max(0,counts[t]-1)*.72);
+        if(lastSlotValue<donorValue){donorValue=lastSlotValue;donor=t;}
+      }
+      if(!donor)break;
+      counts[donor]--;counts.translation++;
+    }
     const total=Object.values(counts).reduce((a,b)=>a+b,0);
     const max=Object.entries(counts).reduce((sum,[t,n])=>sum+n*POINTS[t],0);
     const mainStages=Object.entries(stageCount).filter(([,n])=>n>0).sort((a,b)=>b[1]-a[1]).slice(0,2).map(([k,n])=>`${AI_STAGE_LABEL[k]} ${n}`).join('、')||'暂无历史';
     const weakest=Object.entries(avgAbility).sort((a,b)=>a[1]-b[1]).slice(0,2).map(([t,v])=>`${TYPE_LABEL[t]} ${Math.round(v)}%`).join('、');
-    return {counts,total,max,avgRisk:Math.round(avgRisk),stageCount,mainStages,weakest,caps,rows:rows.length};
+    return {counts,total,max,avgRisk:Math.round(avgRisk),stageCount,mainStages,weakest,caps,rows:rows.length,translationReserve};
   }
   function selectedConfig(){const cfg=baseSelectedConfig();if(cfg.autoCompose){const plan=adaptiveComposePlan(cfg);cfg.counts=plan.counts;cfg.aiPlan=plan;cfg.mode=cfg.mode==='wrong'?'wrong':'smart';}return cfg;}
 
@@ -14787,10 +14873,14 @@ document.addEventListener('DOMContentLoaded',()=>{initAmoSystemTheme();enhanceAm
       translationBase=ExamQuestionBank.translationCandidates(pools),
       questions=[],usedPairs=new Set();
     let seq=0;
+    // V31.121：AI组卷先为翻译题预留题源，避免同一例句先被选择/输入/填空消耗，导致计划有翻译题但实际生成0道。
+    const reservedTranslationPairs=cfg.autoCompose&&cfg.counts.translation>0
+      ?new Set(ExamQuestionBank.select(translationBase,cfg.counts.translation,cfg.mode,'translation').slice(0,cfg.counts.translation).map(pairKey))
+      :new Set();
 
     function addType(type,count,base,allowedDirs=cfg.dirs){
       if(!count)return null;
-      const available=base.filter(x=>!usedPairs.has(pairKey(x)));
+      const available=base.filter(x=>!usedPairs.has(pairKey(x))&&(!cfg.autoCompose||type==='translation'||!reservedTranslationPairs.has(pairKey(x))));
       let chosen=ExamQuestionBank.select(available,count,cfg.mode,type);
       if(chosen.length<count&&!cfg.autoCompose)return `${TYPE_LABEL[type]}需要 ${count} 道，但去除重复题后当前只有 ${chosen.length} 道可用`;
       chosen=shuffle(chosen);
@@ -14874,7 +14964,7 @@ document.addEventListener('DOMContentLoaded',()=>{initAmoSystemTheme();enhanceAm
       if(cfg.autoCompose&&cfg.aiPlan){
         const p=cfg.aiPlan;
         if(planBox)planBox.innerHTML=['choice','input','fill','translation'].map(t=>`<div class="exam-ai-plan-item"><strong>${p.counts[t]}</strong><span>${TYPE_LABEL[t]}</span></div>`).join('');
-        if(reason)reason.textContent=`分析 ${p.rows} 个词汇 · 主要阶段：${p.mainStages} · 当前薄弱：${p.weakest} · 平均遗忘风险 ${p.avgRisk}%。AI 会按可用例句/短句自动避开无法生成的题型。`;
+        if(reason)reason.textContent=`分析 ${p.rows} 个词汇 · 主要阶段：${p.mainStages} · 当前薄弱：${p.weakest} · 平均遗忘风险 ${p.avgRisk}% · 翻译候选 ${p.caps.translation} 条${p.caps.translation?`，本轮保留 ${p.translationReserve} 道`:''}。AI 会按可用例句/短句自动避开无法生成的题型。`;
       }else{
         if(planBox)planBox.innerHTML=['choice','input','fill','translation'].map(t=>`<div class="exam-ai-plan-item"><strong>${cfg.counts[t]}</strong><span>${TYPE_LABEL[t]}</span></div>`).join('');
         if(reason)reason.textContent='AI 智能组卷已关闭，当前使用手动设置的各题型数量。';
@@ -14938,6 +15028,9 @@ document.addEventListener('DOMContentLoaded',()=>{initAmoSystemTheme();enhanceAm
 <script id="amo-v3131-update-history">
 (function(){
   const AMO_UPDATE_HISTORY = [
+    {version:'V31.121',date:'2026-10-07',items:['智能考试增加翻译题最低覆盖：只要存在合格翻译题源，较小题量至少保留1道，20题及以上尽量保留2道；即使当前以新词/薄弱强化为主，也不会再因为权重过低长期显示0道翻译题。','保留自适应权重与新词难度保护：翻译题只保证1–2道基础覆盖，其余名额仍按学习阶段、题型能力、近期错误和遗忘风险动态分配。','AI组卷在生成普通题前预留本轮翻译题对应的例句/短句，避免同一题源先被选择题、输入题或填空题占用后出现“计划有翻译题、实际生成0道”的冲突。','智能组卷说明新增“翻译候选数量 / 本轮保留数量”，可以直接判断是题源不足还是AI分配结果；原翻译候选条件、评分、考试历史及其他题型逻辑保持不变。','同步更新标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION和更新记录为V31.121。']},
+    {version:'V31.120',date:'2026-10-07',items:['短句词汇提示索引扩展为“正式词库 + 常用搭配 + 相关词”共享来源：像 khá tốt 这类只要已经存在于常用搭配/相关词数据并带有释义，就会作为完整可点击词组直接显示对应中文意思。','匹配仍使用同一起点最长有效词组优先、区间锁定和Unicode词边界；当 khá、tốt、khá tốt 同时存在时优先锁定 khá tốt，不拆成两个单词，也不会跨越已命中的词组边界。','提示匹配索引继续绑定关系运行时缓存：只在词汇/搭配/关系数据真正变化后重建；打开浮动提示框仍直接读取已有邻接索引，不执行全词库扫描。','常用搭配释义优先于相关词与普通词条的同名候选，缺少释义的纯关系占位不会生成空白提示；保留V31.119相关词/搭配气泡列表、搜索排序和全部原业务功能。','同步更新标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION和更新记录为V31.120。']},
+    {version:'V31.119',date:'2026-10-07',items:['单词浮动提示框复用现有关系运行时邻接索引，直接显示“常用搭配 / 相关词”，常用搭配优先；打开气泡不重新扫描整套词库，只有词汇或关系数据变更后才随共享缓存重建。','重写短句词汇提示匹配器：按句子从左到右解析，同一起点最长有效词组优先，命中后锁定区间并禁止后续词组跨越已占用范围。','新增Unicode词边界校验，避免词条匹配到另一个单词内部；“hoàn thành công việc”会稳定解析为“hoàn thành” + “công việc”，不会再错误识别为跨边界的“thành công”。','正确答案与错误答案高亮共用同一词组匹配器，避免两个答题状态出现不同切词结果；匹配索引按首字符分桶并缓存，减少重复全词库排序与扫描。','保留V31.118搜索相关度排序、相关结果折叠、词汇详情、语音、分类、批量添加、导入导出、主题与透明度设置；同步更新版本号与更新记录。']},
     {version:'V31.118',date:'2026-10-06',items:['词汇搜索新增相关度排序：精确匹配优先，其次为词首匹配、词边界匹配和包含匹配；越南语与中文都会参与排序。','新增越南语无声调兜底搜索：输入不带声调的文本也可匹配带声调词汇，但其优先级低于原字符精确匹配，避免模糊结果抢到最前。','有搜索词时，相关度始终作为第一排序依据；“越南语排序/已记住优先”等原排序仅作为同级结果的次级排序，搜索为空时完全保持原排序逻辑。','搜索排序只进行轻量字符串比较，不新增监听器或全量索引重建；保留V31.117的相关结果折叠、弹窗层级修复和关系缓存优化，并同步更新版本号与更新记录。']},
     {version:'V31.117',date:'2026-10-06',items:['词汇搜索的“相关结果”右侧新增展开/折叠按钮，默认展开；折叠状态只在当前搜索词内保留，输入新的搜索词会自动恢复展开，键盘焦点与ARIA状态同步。','修复点击相关搜索词后普通词汇弹窗层级低于桌面粘性搜索工具栏的问题：wordActionModal显示时提升到统一弹窗层级，搜索栏和筛选栏不再盖住弹窗及遮罩。','优化词汇页关系数据缓存：搜索、筛选和翻页时先用轻量指纹判断词汇/搭配/关联数据是否变化，未变化时复用关系索引，避免每次renderWords都重建完整关联图，降低大词库下输入搜索和切换筛选的卡顿。','保留词汇详情、关联词多级返回、分类筛选、语音、批量增加、导入导出和原有主题/透明度设置；同步更新标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION与更新记录为V31.117。']},
     {version:'V31.116',date:'2026-10-06',items:['修复云词库和管理员语言包装未透传局部根节点的问题：动态更新恢复为只处理变化区域，避免再次扩展成全页扫描；显式切换中越界面语言仍更新全页。','云同步、管理员标签和统计预览只在文字发生变化时写入，修复相同文字反复替换节点造成的语言观察器持续循环；相关模块只响应自身区域或全页语言切换。','进入批量增加时，未变化的分类选项和管理列表复用原节点，保留选择值、添加/删除分类和批量添加逻辑；页面导航只改变实际切换的 active 状态，减少隐藏页面的观察器回调。','保留词汇/短句双向批量格式、默认收起的说明、自定义拼音、导入导出、题型切换、拼词及原有配色布局；同步更新标题、版本徽标、设置页版本、AMO_BUILD_VERSION与更新记录为V31.116。']},
