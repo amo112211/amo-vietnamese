@@ -4,6 +4,97 @@
   "appName": "阿莫自学助手",
   "allWordsSnapshot": [
     {
+      "vi": "nói",
+      "zh": "说/讲话",
+      "category": "动词",
+      "createdAt": 1791637618465,
+      "custom": true
+    },
+    {
+      "vi": "chế độ",
+      "zh": "模式/制度/机制",
+      "category": "名词",
+      "createdAt": 1791636227927,
+      "custom": true
+    },
+    {
+      "vi": "thông thường",
+      "zh": "一般/通常",
+      "category": "形容词/副词",
+      "createdAt": 1791633651821,
+      "custom": true
+    },
+    {
+      "vi": "kéo",
+      "zh": "拉/拖",
+      "category": "动词",
+      "createdAt": 1791554747839,
+      "custom": true
+    },
+    {
+      "vi": "tiếp tục",
+      "zh": "继续/持续",
+      "category": "动词",
+      "createdAt": 1791554646304,
+      "custom": true
+    },
+    {
+      "vi": "tôi nghĩ",
+      "zh": "我觉得",
+      "category": "口语表达",
+      "createdAt": 1791553974928,
+      "custom": true
+    },
+    {
+      "vi": "niềm tin",
+      "zh": "信念/信任",
+      "category": "名词",
+      "createdAt": 1791548475582,
+      "custom": true
+    },
+    {
+      "vi": "nhớ",
+      "zh": "想念/思念",
+      "category": "动词",
+      "createdAt": 1791546694025,
+      "custom": true
+    },
+    {
+      "vi": "chuyên nghiệp",
+      "zh": "专业",
+      "category": "形容词",
+      "createdAt": 1791535641009,
+      "custom": true
+    },
+    {
+      "vi": "luồng khí",
+      "zh": "气流",
+      "category": "名词",
+      "createdAt": 1791468317216,
+      "custom": true
+    },
+    {
+      "vi": "tư tưởng",
+      "zh": "思想/观念/想法",
+      "category": "名词",
+      "createdAt": 1791466640883,
+      "custom": true
+    },
+    {
+      "vi": "lực lượng",
+      "zh": "力量/部队/人员",
+      "category": "名词",
+      "createdAt": 1791466463044,
+      "custom": true
+    },
+    {
+      "vi": "vật",
+      "zh": "物",
+      "category": "名词/动词",
+      "createdAt": 1791465032055,
+      "custom": true
+    },
+    {
       "vi": "huống hồ",
       "zh": "何况/况且",
       "category": "连词/副词",
@@ -3301,6 +3392,13 @@
       "custom": true
     },
     {
+      "vi": "này",
+      "zh": "这个 / 喂",
+      "category": "指示词/感叹词",
+      "createdAt": 1790228916079,
+      "custom": true
+    },
+    {
       "vi": "gì",
       "zh": "什么",
       "category": "疑问代词",
@@ -3311,13 +3409,6 @@
       "vi": "ai",
       "zh": "谁",
       "category": "疑问代词",
-      "createdAt": 1790228916079,
-      "custom": true
-    },
-    {
-      "vi": "này",
-      "zh": "这个 / 喂",
-      "category": "指示词/感叹词",
       "createdAt": 1790228916079,
       "custom": true
     },
@@ -3805,6 +3896,13 @@
       "custom": true
     },
     {
+      "vi": "hiểu",
+      "zh": "明白 / 理解",
+      "category": "动词",
+      "createdAt": 1790228916059,
+      "custom": true
+    },
+    {
       "vi": "không biết",
       "zh": "不知道",
       "category": "动词短语",
@@ -3815,13 +3913,6 @@
       "vi": "không hiểu",
       "zh": "不明白",
       "category": "动词短语",
-      "createdAt": 1790228916059,
-      "custom": true
-    },
-    {
-      "vi": "hiểu",
-      "zh": "明白 / 理解",
-      "category": "动词",
       "createdAt": 1790228916059,
       "custom": true
     },
@@ -4596,6 +4687,20 @@
       "custom": true
     },
     {
+      "vi": "phát",
+      "zh": "发放/发",
+      "category": "动词",
+      "createdAt": "2026-09-07T06:55:06.200Z",
+      "custom": true
+    },
+    {
+      "vi": "thua",
+      "zh": "输",
+      "category": "动词",
+      "createdAt": "2026-09-07T06:55:06.200Z",
+      "custom": true
+    },
+    {
       "vi": "vẫn",
       "zh": "仍然",
       "category": "副词",
@@ -4757,13 +4862,6 @@
       "custom": true
     },
     {
-      "vi": "thua",
-      "zh": "输",
-      "category": "动词",
-      "createdAt": "2026-09-07T06:55:06.200Z",
-      "custom": true
-    },
-    {
       "vi": "thắng",
       "zh": "赢",
       "category": "动词",
@@ -4795,13 +4893,6 @@
       "vi": "chi tiêu",
       "zh": "花钱/支出",
       "category": "名词",
-      "createdAt": "2026-09-07T06:55:06.200Z",
-      "custom": true
-    },
-    {
-      "vi": "phát",
-      "zh": "发放",
-      "category": "动词",
       "createdAt": "2026-09-07T06:55:06.200Z",
       "custom": true
     },
@@ -5205,6 +5296,13 @@
       "custom": true
     },
     {
+      "vi": "thường",
+      "zh": "经常",
+      "category": "副词",
+      "createdAt": "2026-09-07T06:53:47.939Z",
+      "custom": true
+    },
+    {
       "vi": "tin tức",
       "zh": "新闻/消息",
       "category": "名词",
@@ -5284,13 +5382,6 @@
     {
       "vi": "ít khi",
       "zh": "很少",
-      "category": "副词",
-      "createdAt": "2026-09-07T06:53:47.939Z",
-      "custom": true
-    },
-    {
-      "vi": "thường",
-      "zh": "经常",
       "category": "副词",
       "createdAt": "2026-09-07T06:53:47.939Z",
       "custom": true
@@ -5758,6 +5849,13 @@
       "custom": true
     },
     {
+      "vi": "gió",
+      "zh": "风",
+      "category": "名词",
+      "createdAt": "2026-09-07T06:52:00.990Z",
+      "custom": true
+    },
+    {
       "vi": "giữa",
       "zh": "中间",
       "category": "介词/方位名词",
@@ -6034,13 +6132,6 @@
       "vi": "nắng",
       "zh": "晴/有阳光",
       "category": "名词/形容词",
-      "createdAt": "2026-09-07T06:52:00.990Z",
-      "custom": true
-    },
-    {
-      "vi": "gió",
-      "zh": "风",
-      "category": "名词",
       "createdAt": "2026-09-07T06:52:00.990Z",
       "custom": true
     },
@@ -8253,12 +8344,6 @@
       "custom": true
     },
     {
-      "vi": "chuyên nghiệp",
-      "zh": "专业的",
-      "category": "形容词",
-      "custom": true
-    },
-    {
       "vi": "nghiêm túc",
       "zh": "认真/严肃",
       "category": "形容词",
@@ -8549,12 +8634,6 @@
     {
       "vi": "xử lý",
       "zh": "处理",
-      "category": "动词",
-      "custom": true
-    },
-    {
-      "vi": "tiếp tục",
-      "zh": "继续",
       "category": "动词",
       "custom": true
     },
@@ -10833,12 +10912,6 @@
       "custom": true
     },
     {
-      "vi": "nói",
-      "zh": "说/讲话",
-      "category": "动词",
-      "custom": true
-    },
-    {
       "vi": "nghe",
       "zh": "听",
       "category": "动词",
@@ -12681,12 +12754,6 @@
       "custom": true
     },
     {
-      "vi": "nhớ",
-      "zh": "想念/思念",
-      "category": "动词",
-      "custom": true
-    },
-    {
       "vi": "yên tâm",
       "zh": "安心/放心",
       "category": "动词短语",
@@ -13164,12 +13231,6 @@
       "vi": "đá",
       "zh": "石头/冰/踢",
       "category": "名词/动词",
-      "custom": true
-    },
-    {
-      "vi": "kéo",
-      "zh": "拉/拖",
-      "category": "动词",
       "custom": true
     },
     {
@@ -13995,12 +14056,6 @@
       "custom": true
     },
     {
-      "vi": "tôi nghĩ là",
-      "zh": "我觉得",
-      "category": "口语表达",
-      "custom": true
-    },
-    {
       "vi": "để",
       "zh": "放/搁/为了/用来/让",
       "category": "动词/连词",
@@ -14663,12 +14718,6 @@
     {
       "vi": "niềm vui",
       "zh": "快乐/喜悦",
-      "category": "名词",
-      "custom": true
-    },
-    {
-      "vi": "niềm tin",
-      "zh": "信任/信念",
       "category": "名词",
       "custom": true
     },
@@ -15203,6 +15252,41 @@
   ],
   "allSentencesSnapshot": [
     {
+      "vi": "Tôi vừa gửi rồi, bạn kiểm tra giúp Tôi nhé.",
+      "zh": "我刚刚发了，你帮我检查一下吧。",
+      "category": "",
+      "createdAt": 1791609353767,
+      "custom": true
+    },
+    {
+      "vi": "Tôi đã kiểm tra hai lần rồi, dữ liệu không có vấn đề gì.",
+      "zh": "我已经检查两遍了，数据没有问题。",
+      "category": "",
+      "createdAt": 1791551727794,
+      "custom": true
+    },
+    {
+      "vi": "Bạn làm ở bộ phận nào?",
+      "zh": "你在哪个部门工作？",
+      "category": "",
+      "createdAt": 1791551469036,
+      "custom": true
+    },
+    {
+      "vi": "Mỗi người có một suy nghĩ khác nhau, tôi tôn trọng ý kiến của bạn.",
+      "zh": "每个人都有不同的想法，我尊重你的意见。",
+      "category": "",
+      "createdAt": 1791549900038,
+      "custom": true
+    },
+    {
+      "vi": "Mỗi ngày tôi cố gắng học một ít, không cần học quá nhiều nhưng phải kiên trì học tập.",
+      "zh": "我每天尽量学一点，不需要学太多，但是要坚持学习。",
+      "category": "",
+      "createdAt": 1791529531672,
+      "custom": true
+    },
+    {
       "vi": "Tôi chuẩn bị gần xong rồi, chỉ cần kiểm tra lại một lần nữa.",
       "zh": "我准备得差不多了，只需要再检查一遍。",
       "category": "",
@@ -15224,7 +15308,7 @@
       "custom": true
     },
     {
-      "vi": "Nếu câu Tôi nói nghe không tự nhiên, bạn cứ sửa trực tiếp cho Tôi nhé.",
+      "vi": "Nếu câu Tôi nói nghe không tự nhiên, bạn cứ sửa trực tiếp cho tôi nhé.",
       "zh": "如果我说的句子听起来不自然，你直接帮我纠正就好。",
       "category": "",
       "createdAt": 1791355223256,
@@ -15400,7 +15484,7 @@
     },
     {
       "vi": "tôi ăn no rồi, bạn cứ ăn từ từ, không cần phải vội.",
-      "zh": "我已经吃饱了，你慢慢吃，不用着急。",
+      "zh": "我吃饱了，你慢慢吃，不用着急。",
       "category": "",
       "createdAt": 1791354986590,
       "custom": true
@@ -16385,11 +16469,6 @@
       "custom": true
     },
     {
-      "vi": "Tôi đã kiểm tra hai lần rồi, số liệu không có vấn đề gì.",
-      "zh": "我已经检查两遍了，数据没有问题。",
-      "custom": true
-    },
-    {
       "vi": "Số liệu trong báo cáo này có chính xác không?",
       "zh": "这份报告里的数据准确吗？",
       "custom": true
@@ -16407,11 +16486,6 @@
     {
       "vi": "Tôi nhận được rồi, lát nữa Tôi sẽ trả lời.",
       "zh": "我收到了，等一下我会回复。",
-      "custom": true
-    },
-    {
-      "vi": "Tôi vừa gửi rồi, em kiểm tra giúp Tôi nhé.",
-      "zh": "我刚刚发了，你帮我检查一下吧。",
       "custom": true
     },
     {
@@ -16472,11 +16546,6 @@
     {
       "vi": "Tôi làm ở bộ phận kinh doanh.",
       "zh": "我在销售部门工作。",
-      "custom": true
-    },
-    {
-      "vi": "Em làm ở bộ phận nào?",
-      "zh": "你在哪个部门工作？",
       "custom": true
     },
     {
@@ -16810,11 +16879,6 @@
       "custom": true
     },
     {
-      "vi": "Mỗi ngày tôi cố gắng học một ít, không cần học quá nhiều nhưng phải học đều.",
-      "zh": "我每天尽量学一点，不需要学太多，但是要坚持学习。",
-      "custom": true
-    },
-    {
       "vi": "tôi muốn luyện nói nhiều hơn để có thể giao tiếp tự nhiên với người Việt.",
       "zh": "我想多练习口语，这样才能更自然地和越南人交流。",
       "custom": true
@@ -16877,11 +16941,6 @@
     {
       "vi": "tôi không có ý đó, có lẽ em đã hiểu nhầm lời tôi nói rồi.",
       "zh": "我不是那个意思，可能你误会我说的话了。",
-      "custom": true
-    },
-    {
-      "vi": "Mỗi người có một suy nghĩ khác nhau, tôi tôn trọng ý kiến của em.",
-      "zh": "每个人都有不同的想法，我尊重你的意见。",
       "custom": true
     },
     {
@@ -17201,6 +17260,97 @@
     }
   ],
   "customWords": [
+    {
+      "vi": "nói",
+      "zh": "说/讲话",
+      "category": "动词",
+      "createdAt": 1791637618465,
+      "custom": true
+    },
+    {
+      "vi": "chế độ",
+      "zh": "模式/制度/机制",
+      "category": "名词",
+      "createdAt": 1791636227927,
+      "custom": true
+    },
+    {
+      "vi": "thông thường",
+      "zh": "一般/通常",
+      "category": "形容词/副词",
+      "createdAt": 1791633651821,
+      "custom": true
+    },
+    {
+      "vi": "kéo",
+      "zh": "拉/拖",
+      "category": "动词",
+      "createdAt": 1791554747839,
+      "custom": true
+    },
+    {
+      "vi": "tiếp tục",
+      "zh": "继续/持续",
+      "category": "动词",
+      "createdAt": 1791554646304,
+      "custom": true
+    },
+    {
+      "vi": "tôi nghĩ",
+      "zh": "我觉得",
+      "category": "口语表达",
+      "createdAt": 1791553974928,
+      "custom": true
+    },
+    {
+      "vi": "niềm tin",
+      "zh": "信念/信任",
+      "category": "名词",
+      "createdAt": 1791548475582,
+      "custom": true
+    },
+    {
+      "vi": "nhớ",
+      "zh": "想念/思念",
+      "category": "动词",
+      "createdAt": 1791546694025,
+      "custom": true
+    },
+    {
+      "vi": "chuyên nghiệp",
+      "zh": "专业",
+      "category": "形容词",
+      "createdAt": 1791535641009,
+      "custom": true
+    },
+    {
+      "vi": "luồng khí",
+      "zh": "气流",
+      "category": "名词",
+      "createdAt": 1791468317216,
+      "custom": true
+    },
+    {
+      "vi": "tư tưởng",
+      "zh": "思想/观念/想法",
+      "category": "名词",
+      "createdAt": 1791466640883,
+      "custom": true
+    },
+    {
+      "vi": "lực lượng",
+      "zh": "力量/部队/人员",
+      "category": "名词",
+      "createdAt": 1791466463044,
+      "custom": true
+    },
+    {
+      "vi": "vật",
+      "zh": "物",
+      "category": "名词/动词",
+      "createdAt": 1791465032055,
+      "custom": true
+    },
     {
       "vi": "huống hồ",
       "zh": "何况/况且",
@@ -20499,6 +20649,13 @@
       "custom": true
     },
     {
+      "vi": "này",
+      "zh": "这个 / 喂",
+      "category": "指示词/感叹词",
+      "createdAt": 1790228916079,
+      "custom": true
+    },
+    {
       "vi": "gì",
       "zh": "什么",
       "category": "疑问代词",
@@ -20509,13 +20666,6 @@
       "vi": "ai",
       "zh": "谁",
       "category": "疑问代词",
-      "createdAt": 1790228916079,
-      "custom": true
-    },
-    {
-      "vi": "này",
-      "zh": "这个 / 喂",
-      "category": "指示词/感叹词",
       "createdAt": 1790228916079,
       "custom": true
     },
@@ -21003,6 +21153,13 @@
       "custom": true
     },
     {
+      "vi": "hiểu",
+      "zh": "明白 / 理解",
+      "category": "动词",
+      "createdAt": 1790228916059,
+      "custom": true
+    },
+    {
       "vi": "không biết",
       "zh": "不知道",
       "category": "动词短语",
@@ -21013,13 +21170,6 @@
       "vi": "không hiểu",
       "zh": "不明白",
       "category": "动词短语",
-      "createdAt": 1790228916059,
-      "custom": true
-    },
-    {
-      "vi": "hiểu",
-      "zh": "明白 / 理解",
-      "category": "动词",
       "createdAt": 1790228916059,
       "custom": true
     },
@@ -21794,6 +21944,20 @@
       "custom": true
     },
     {
+      "vi": "phát",
+      "zh": "发放/发",
+      "category": "动词",
+      "createdAt": "2026-09-07T06:55:06.200Z",
+      "custom": true
+    },
+    {
+      "vi": "thua",
+      "zh": "输",
+      "category": "动词",
+      "createdAt": "2026-09-07T06:55:06.200Z",
+      "custom": true
+    },
+    {
       "vi": "vẫn",
       "zh": "仍然",
       "category": "副词",
@@ -21955,13 +22119,6 @@
       "custom": true
     },
     {
-      "vi": "thua",
-      "zh": "输",
-      "category": "动词",
-      "createdAt": "2026-09-07T06:55:06.200Z",
-      "custom": true
-    },
-    {
       "vi": "thắng",
       "zh": "赢",
       "category": "动词",
@@ -21993,13 +22150,6 @@
       "vi": "chi tiêu",
       "zh": "花钱/支出",
       "category": "名词",
-      "createdAt": "2026-09-07T06:55:06.200Z",
-      "custom": true
-    },
-    {
-      "vi": "phát",
-      "zh": "发放",
-      "category": "动词",
       "createdAt": "2026-09-07T06:55:06.200Z",
       "custom": true
     },
@@ -22403,6 +22553,13 @@
       "custom": true
     },
     {
+      "vi": "thường",
+      "zh": "经常",
+      "category": "副词",
+      "createdAt": "2026-09-07T06:53:47.939Z",
+      "custom": true
+    },
+    {
       "vi": "tin tức",
       "zh": "新闻/消息",
       "category": "名词",
@@ -22482,13 +22639,6 @@
     {
       "vi": "ít khi",
       "zh": "很少",
-      "category": "副词",
-      "createdAt": "2026-09-07T06:53:47.939Z",
-      "custom": true
-    },
-    {
-      "vi": "thường",
-      "zh": "经常",
       "category": "副词",
       "createdAt": "2026-09-07T06:53:47.939Z",
       "custom": true
@@ -22956,6 +23106,13 @@
       "custom": true
     },
     {
+      "vi": "gió",
+      "zh": "风",
+      "category": "名词",
+      "createdAt": "2026-09-07T06:52:00.990Z",
+      "custom": true
+    },
+    {
       "vi": "giữa",
       "zh": "中间",
       "category": "介词/方位名词",
@@ -23232,13 +23389,6 @@
       "vi": "nắng",
       "zh": "晴/有阳光",
       "category": "名词/形容词",
-      "createdAt": "2026-09-07T06:52:00.990Z",
-      "custom": true
-    },
-    {
-      "vi": "gió",
-      "zh": "风",
-      "category": "名词",
       "createdAt": "2026-09-07T06:52:00.990Z",
       "custom": true
     },
@@ -25451,12 +25601,6 @@
       "custom": true
     },
     {
-      "vi": "chuyên nghiệp",
-      "zh": "专业的",
-      "category": "形容词",
-      "custom": true
-    },
-    {
       "vi": "nghiêm túc",
       "zh": "认真/严肃",
       "category": "形容词",
@@ -25747,12 +25891,6 @@
     {
       "vi": "xử lý",
       "zh": "处理",
-      "category": "动词",
-      "custom": true
-    },
-    {
-      "vi": "tiếp tục",
-      "zh": "继续",
       "category": "动词",
       "custom": true
     },
@@ -28031,12 +28169,6 @@
       "custom": true
     },
     {
-      "vi": "nói",
-      "zh": "说/讲话",
-      "category": "动词",
-      "custom": true
-    },
-    {
       "vi": "nghe",
       "zh": "听",
       "category": "动词",
@@ -29879,12 +30011,6 @@
       "custom": true
     },
     {
-      "vi": "nhớ",
-      "zh": "想念/思念",
-      "category": "动词",
-      "custom": true
-    },
-    {
       "vi": "yên tâm",
       "zh": "安心/放心",
       "category": "动词短语",
@@ -30362,12 +30488,6 @@
       "vi": "đá",
       "zh": "石头/冰/踢",
       "category": "名词/动词",
-      "custom": true
-    },
-    {
-      "vi": "kéo",
-      "zh": "拉/拖",
-      "category": "动词",
       "custom": true
     },
     {
@@ -31193,12 +31313,6 @@
       "custom": true
     },
     {
-      "vi": "tôi nghĩ là",
-      "zh": "我觉得",
-      "category": "口语表达",
-      "custom": true
-    },
-    {
       "vi": "để",
       "zh": "放/搁/为了/用来/让",
       "category": "动词/连词",
@@ -31865,12 +31979,6 @@
       "custom": true
     },
     {
-      "vi": "niềm tin",
-      "zh": "信任/信念",
-      "category": "名词",
-      "custom": true
-    },
-    {
       "vi": "ảo tưởng",
       "zh": "幻想",
       "category": "名词",
@@ -32401,6 +32509,41 @@
   ],
   "customSentences": [
     {
+      "vi": "Tôi vừa gửi rồi, bạn kiểm tra giúp Tôi nhé.",
+      "zh": "我刚刚发了，你帮我检查一下吧。",
+      "category": "",
+      "createdAt": 1791609353767,
+      "custom": true
+    },
+    {
+      "vi": "Tôi đã kiểm tra hai lần rồi, dữ liệu không có vấn đề gì.",
+      "zh": "我已经检查两遍了，数据没有问题。",
+      "category": "",
+      "createdAt": 1791551727794,
+      "custom": true
+    },
+    {
+      "vi": "Bạn làm ở bộ phận nào?",
+      "zh": "你在哪个部门工作？",
+      "category": "",
+      "createdAt": 1791551469036,
+      "custom": true
+    },
+    {
+      "vi": "Mỗi người có một suy nghĩ khác nhau, tôi tôn trọng ý kiến của bạn.",
+      "zh": "每个人都有不同的想法，我尊重你的意见。",
+      "category": "",
+      "createdAt": 1791549900038,
+      "custom": true
+    },
+    {
+      "vi": "Mỗi ngày tôi cố gắng học một ít, không cần học quá nhiều nhưng phải kiên trì học tập.",
+      "zh": "我每天尽量学一点，不需要学太多，但是要坚持学习。",
+      "category": "",
+      "createdAt": 1791529531672,
+      "custom": true
+    },
+    {
       "vi": "Tôi chuẩn bị gần xong rồi, chỉ cần kiểm tra lại một lần nữa.",
       "zh": "我准备得差不多了，只需要再检查一遍。",
       "category": "",
@@ -32422,7 +32565,7 @@
       "custom": true
     },
     {
-      "vi": "Nếu câu Tôi nói nghe không tự nhiên, bạn cứ sửa trực tiếp cho Tôi nhé.",
+      "vi": "Nếu câu Tôi nói nghe không tự nhiên, bạn cứ sửa trực tiếp cho tôi nhé.",
       "zh": "如果我说的句子听起来不自然，你直接帮我纠正就好。",
       "category": "",
       "createdAt": 1791355223256,
@@ -32598,7 +32741,7 @@
     },
     {
       "vi": "tôi ăn no rồi, bạn cứ ăn từ từ, không cần phải vội.",
-      "zh": "我已经吃饱了，你慢慢吃，不用着急。",
+      "zh": "我吃饱了，你慢慢吃，不用着急。",
       "category": "",
       "createdAt": 1791354986590,
       "custom": true
@@ -33583,11 +33726,6 @@
       "custom": true
     },
     {
-      "vi": "Tôi đã kiểm tra hai lần rồi, số liệu không có vấn đề gì.",
-      "zh": "我已经检查两遍了，数据没有问题。",
-      "custom": true
-    },
-    {
       "vi": "Số liệu trong báo cáo này có chính xác không?",
       "zh": "这份报告里的数据准确吗？",
       "custom": true
@@ -33605,11 +33743,6 @@
     {
       "vi": "Tôi nhận được rồi, lát nữa Tôi sẽ trả lời.",
       "zh": "我收到了，等一下我会回复。",
-      "custom": true
-    },
-    {
-      "vi": "Tôi vừa gửi rồi, em kiểm tra giúp Tôi nhé.",
-      "zh": "我刚刚发了，你帮我检查一下吧。",
       "custom": true
     },
     {
@@ -33670,11 +33803,6 @@
     {
       "vi": "Tôi làm ở bộ phận kinh doanh.",
       "zh": "我在销售部门工作。",
-      "custom": true
-    },
-    {
-      "vi": "Em làm ở bộ phận nào?",
-      "zh": "你在哪个部门工作？",
       "custom": true
     },
     {
@@ -34008,11 +34136,6 @@
       "custom": true
     },
     {
-      "vi": "Mỗi ngày tôi cố gắng học một ít, không cần học quá nhiều nhưng phải học đều.",
-      "zh": "我每天尽量学一点，不需要学太多，但是要坚持学习。",
-      "custom": true
-    },
-    {
       "vi": "tôi muốn luyện nói nhiều hơn để có thể giao tiếp tự nhiên với người Việt.",
       "zh": "我想多练习口语，这样才能更自然地和越南人交流。",
       "custom": true
@@ -34075,11 +34198,6 @@
     {
       "vi": "tôi không có ý đó, có lẽ em đã hiểu nhầm lời tôi nói rồi.",
       "zh": "我不是那个意思，可能你误会我说的话了。",
-      "custom": true
-    },
-    {
-      "vi": "Mỗi người có một suy nghĩ khác nhau, tôi tôn trọng ý kiến của em.",
-      "zh": "每个人都有不同的想法，我尊重你的意见。",
       "custom": true
     },
     {
@@ -34572,7 +34690,6 @@
     "gọi lại": "动词短语",
     "có vấn đề": "动词短语",
     "không cần": "动词短语",
-    "thường": "副词",
     "ít khi": "副词",
     "khám bệnh": "动词短语",
     "cho thuê": "动词短语",
@@ -34690,13 +34807,11 @@
     "đúng": "形容词/副词",
     "sai": "形容词/副词",
     "biết": "动词",
-    "hiểu": "动词",
     "có thể": "助动词",
     "muốn": "动词",
     "thích": "动词",
     "yêu": "动词",
     "ghét": "动词",
-    "nhớ": "动词",
     "quên": "动词",
     "ăn": "动词",
     "uống": "动词",
@@ -34705,7 +34820,6 @@
     "đến": "动词/介词",
     "làm": "动词",
     "học": "动词",
-    "nói": "动词",
     "nghe": "动词",
     "nhìn": "动词",
     "xem": "动词",
@@ -34801,7 +34915,6 @@
     "chị": "名词/代词",
     "đây": "代词/副词",
     "đó": "代词/副词",
-    "này": "指示词/感叹词",
     "ai": "疑问代词",
     "ở đâu": "疑问短语",
     "khi nào": "疑问短语",
@@ -34960,7 +35073,6 @@
     "mặt trăng": "名词",
     "sao": "名词/疑问副词",
     "mưa": "名词/动词",
-    "gió": "名词",
     "nắng": "名词/形容词",
     "đường phố": "名词",
     "siêu thị": "名词",
@@ -35122,13 +35234,11 @@
     "mời": "动词",
     "thuê": "动词",
     "trao": "动词",
-    "phát": "动词",
     "chi tiêu": "名词",
     "kiếm tiền": "动词",
     "tiết kiệm": "动词",
     "đầu tư": "名词/动词",
     "thắng": "动词",
-    "thua": "动词",
     "thi đấu": "动词",
     "luyện tập": "名词/动词",
     "nghỉ ngơi": "动词",
@@ -35330,7 +35440,6 @@
     "bản chất": "名词",
     "sự thật": "名词",
     "ảo tưởng": "名词",
-    "niềm tin": "名词",
     "niềm vui": "名词",
     "nỗi đau": "名词",
     "nỗi sầu": "名词",
@@ -35546,7 +35655,6 @@
     "vươn": "动词",
     "ném": "动词",
     "đẩy": "动词",
-    "kéo": "动词",
     "đá": "名词/动词",
     "liên lạc": "名词/动词",
     "cuối cùng": "副词/形容词",
@@ -36181,7 +36289,6 @@
     "chuẩn bị": "动词",
     "bắt đầu": "动词",
     "kết thúc": "动词",
-    "tiếp tục": "动词",
     "xử lý": "动词",
     "giải quyết": "动词",
     "xác nhận": "动词",
@@ -36227,7 +36334,6 @@
     "tiện": "形容词",
     "bất tiện": "形容词",
     "nghiêm túc": "形容词",
-    "chuyên nghiệp": "形容词",
     "chính thức": "形容词",
     "hợp lý": "形容词",
     "tiếc": "形容词",
@@ -36648,7 +36754,27 @@
     "tuyển": "动词",
     "trông": "动词",
     "sửa": "动词",
-    "huống hồ": "连词/副词"
+    "huống hồ": "连词/副词",
+    "vật": "名词/动词",
+    "thua": "动词",
+    "lực lượng": "名词",
+    "tư tưởng": "名词",
+    "gió": "名词",
+    "luồng khí": "名词",
+    "chuyên nghiệp": "形容词",
+    "này": "指示词/感叹词",
+    "nhớ": "动词",
+    "niềm tin": "名词",
+    "tôi nghĩ": "口语表达",
+    "tiếp tục": "动词",
+    "kéo": "动词",
+    "phát": "动词",
+    "hiểu": "动词",
+    "thường": "副词",
+    "thông thường": "形容词/副词",
+    "khám sức khỏe": "身体",
+    "chế độ": "名词",
+    "nói": "动词"
   },
   "sentenceCategoryMap": {
     "mười điểm không có nhưng": "夸人",
@@ -36721,5 +36847,5 @@
     "倒": "dǎo",
     "地": "dì"
   },
-  "exportTime": "2026-10-08T13:01:47.532Z"
+  "exportTime": "2026-10-10T14:19:48.273Z"
 }
