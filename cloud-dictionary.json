@@ -4,17 +4,136 @@
   "appName": "阿莫自学助手",
   "allWordsSnapshot": [
     {
-      "vi": "đồn",
-      "zh": "传",
-      "category": "动词",
-      "createdAt": 1792064811559,
+      "vi": "phản ứng",
+      "zh": "反应",
+      "category": "名词",
+      "createdAt": 1792244198726,
       "custom": true
     },
     {
-      "vi": "chia thành",
-      "zh": "分成",
-      "category": "动词短语",
-      "createdAt": 1792064664722,
+      "vi": "tệ",
+      "zh": "差/糟糕",
+      "category": "感叹句",
+      "createdAt": 1792235394016,
+      "custom": true
+    },
+    {
+      "vi": "biện pháp",
+      "zh": "办法/措施",
+      "category": "名词",
+      "createdAt": 1792233826757,
+      "custom": true
+    },
+    {
+      "vi": "kế sách",
+      "zh": "办法/计策",
+      "category": "名词",
+      "createdAt": 1792233703864,
+      "custom": true
+    },
+    {
+      "vi": "tiếp theo",
+      "zh": "接下来",
+      "category": "副词短语",
+      "createdAt": 1792233458440,
+      "custom": true
+    },
+    {
+      "vi": "giông",
+      "zh": "雷雨/暴风雨",
+      "category": "名词",
+      "createdAt": 1792232863722,
+      "custom": true
+    },
+    {
+      "vi": "nấu",
+      "zh": "做饭/煮",
+      "category": "动词",
+      "createdAt": 1792232565361,
+      "custom": true
+    },
+    {
+      "vi": "giá",
+      "zh": "价格",
+      "category": "名词",
+      "createdAt": 1792224139381,
+      "custom": true
+    },
+    {
+      "vi": "đông",
+      "zh": "多/拥挤/东",
+      "category": "动词/形容词",
+      "createdAt": 1792223412574,
+      "custom": true
+    },
+    {
+      "vi": "thăm hỏi",
+      "zh": "问候/探望",
+      "category": "动词",
+      "createdAt": 1792223243818,
+      "custom": true
+    },
+    {
+      "vi": "cách",
+      "zh": "方法/办法/距离",
+      "category": "名词",
+      "createdAt": 1792223011012,
+      "custom": true
+    },
+    {
+      "vi": "tính",
+      "zh": "计算；打算",
+      "category": "动词",
+      "createdAt": 1792222668630,
+      "custom": true
+    },
+    {
+      "vi": "chia sẻ",
+      "zh": "分享",
+      "category": "名词/动词",
+      "createdAt": 1792222577809,
+      "custom": true
+    },
+    {
+      "vi": "rộng rãi",
+      "zh": "宽敞/宽大",
+      "category": "形容词",
+      "createdAt": 1792222033407,
+      "custom": true
+    },
+    {
+      "vi": "quý",
+      "zh": "喜爱/珍惜/珍贵",
+      "category": "形容词/动词",
+      "createdAt": 1792222017091,
+      "custom": true
+    },
+    {
+      "vi": "dạy dỗ",
+      "zh": "教导/教育",
+      "category": "动词",
+      "createdAt": 1792221242265,
+      "custom": true
+    },
+    {
+      "vi": "dỗ",
+      "zh": "哄、安慰",
+      "category": "动词",
+      "createdAt": 1792221115372,
+      "custom": true
+    },
+    {
+      "vi": "nổi tiếng",
+      "zh": "有名/著名/出名",
+      "category": "形容词",
+      "createdAt": 1792160873807,
+      "custom": true
+    },
+    {
+      "vi": "ngắm",
+      "zh": "看/欣赏",
+      "category": "动词",
+      "createdAt": 1792159881201,
       "custom": true
     },
     {
@@ -852,7 +971,7 @@
     },
     {
       "vi": "chúng ta",
-      "zh": "我们",
+      "zh": "我们/咱们",
       "category": "",
       "createdAt": 1790661373602,
       "custom": true
@@ -3812,6 +3931,13 @@
       "custom": true
     },
     {
+      "vi": "đẹp",
+      "zh": "漂亮/美",
+      "category": "感叹句",
+      "createdAt": 1790228916071,
+      "custom": true
+    },
+    {
       "vi": "dễ thương",
       "zh": "可爱",
       "category": "感叹句",
@@ -3828,13 +3954,6 @@
     {
       "vi": "mệt quá",
       "zh": "累死了 / 好累",
-      "category": "感叹句",
-      "createdAt": 1790228916071,
-      "custom": true
-    },
-    {
-      "vi": "đẹp quá",
-      "zh": "太漂亮了",
       "category": "感叹句",
       "createdAt": 1790228916071,
       "custom": true
@@ -4050,6 +4169,13 @@
       "custom": true
     },
     {
+      "vi": "sáng",
+      "zh": "早上",
+      "category": "名词/形容词",
+      "createdAt": 1790228916062,
+      "custom": true
+    },
+    {
       "vi": "tối",
       "zh": "晚上",
       "category": "名词/形容词",
@@ -4067,13 +4193,6 @@
       "vi": "trưa",
       "zh": "中午",
       "category": "名词",
-      "createdAt": 1790228916062,
-      "custom": true
-    },
-    {
-      "vi": "sáng",
-      "zh": "早上",
-      "category": "名词/形容词",
       "createdAt": 1790228916062,
       "custom": true
     },
@@ -4229,6 +4348,13 @@
       "zh": "好听",
       "category": "形容词短语",
       "createdAt": 1790013096172,
+      "custom": true
+    },
+    {
+      "vi": "báo chí",
+      "zh": "报纸/报刊",
+      "category": "名词",
+      "createdAt": "2026-09-07T06:56:24.769Z",
       "custom": true
     },
     {
@@ -4479,13 +4605,6 @@
     {
       "vi": "tạp chí",
       "zh": "杂志",
-      "category": "名词",
-      "createdAt": "2026-09-07T06:56:24.769Z",
-      "custom": true
-    },
-    {
-      "vi": "báo chí",
-      "zh": "报刊",
       "category": "名词",
       "createdAt": "2026-09-07T06:56:24.769Z",
       "custom": true
@@ -5527,6 +5646,20 @@
       "custom": true
     },
     {
+      "vi": "dở",
+      "zh": "难吃/差/菜",
+      "category": "形容词",
+      "createdAt": "2026-09-07T06:53:47.939Z",
+      "custom": true
+    },
+    {
+      "vi": "không khí",
+      "zh": "空气/气氛",
+      "category": "名词",
+      "createdAt": "2026-09-07T06:53:47.939Z",
+      "custom": true
+    },
+    {
       "vi": "luôn",
       "zh": "总是/直接/经常/马上",
       "category": "副词",
@@ -5558,13 +5691,6 @@
       "vi": "tin tức",
       "zh": "新闻/消息",
       "category": "名词",
-      "createdAt": "2026-09-07T06:53:47.939Z",
-      "custom": true
-    },
-    {
-      "vi": "dở",
-      "zh": "难吃",
-      "category": "形容词",
       "createdAt": "2026-09-07T06:53:47.939Z",
       "custom": true
     },
@@ -5870,13 +5996,6 @@
       "custom": true
     },
     {
-      "vi": "không khí",
-      "zh": "空气/气氛",
-      "category": "名词",
-      "createdAt": "2026-09-07T06:53:47.939Z",
-      "custom": true
-    },
-    {
       "vi": "đất",
       "zh": "土地/土",
       "category": "名词",
@@ -6077,6 +6196,20 @@
       "zh": "空调",
       "category": "名词",
       "createdAt": "2026-09-07T06:53:47.939Z",
+      "custom": true
+    },
+    {
+      "vi": "trường học",
+      "zh": "学校",
+      "category": "名词",
+      "createdAt": "2026-09-07T06:52:00.990Z",
+      "custom": true
+    },
+    {
+      "vi": "cây",
+      "zh": "树/植物",
+      "category": "名词",
+      "createdAt": "2026-09-07T06:52:00.990Z",
       "custom": true
     },
     {
@@ -6339,13 +6472,6 @@
       "custom": true
     },
     {
-      "vi": "trường học",
-      "zh": "学校",
-      "category": "名词",
-      "createdAt": "2026-09-07T06:52:00.990Z",
-      "custom": true
-    },
-    {
       "vi": "siêu thị",
       "zh": "超市",
       "category": "名词",
@@ -6404,13 +6530,6 @@
     {
       "vi": "lá",
       "zh": "叶子",
-      "category": "名词",
-      "createdAt": "2026-09-07T06:52:00.990Z",
-      "custom": true
-    },
-    {
-      "vi": "cây",
-      "zh": "树/植物",
       "category": "名词",
       "createdAt": "2026-09-07T06:52:00.990Z",
       "custom": true
@@ -6556,12 +6675,6 @@
       "vi": "giàu",
       "zh": "富有、有钱",
       "category": "形容词",
-      "custom": true
-    },
-    {
-      "vi": "phá hoại：破坏、捣乱",
-      "zh": "动词",
-      "category": "待确认分类",
       "custom": true
     },
     {
@@ -7549,12 +7662,6 @@
       "custom": true
     },
     {
-      "vi": "tính",
-      "zh": "计算；打算",
-      "category": "动词",
-      "custom": true
-    },
-    {
       "vi": "đếm",
       "zh": "数/数数",
       "category": "动词",
@@ -7761,12 +7868,6 @@
     {
       "vi": "chật chội",
       "zh": "狭窄/拥挤",
-      "category": "形容词",
-      "custom": true
-    },
-    {
-      "vi": "rộng rãi",
-      "zh": "宽敞",
       "category": "形容词",
       "custom": true
     },
@@ -8152,12 +8253,6 @@
       "vi": "không tệ",
       "zh": "不错 / 不差",
       "category": "形容词短语",
-      "custom": true
-    },
-    {
-      "vi": "tệ quá",
-      "zh": "太差了 / 太糟了",
-      "category": "感叹句",
       "custom": true
     },
     {
@@ -9913,12 +10008,6 @@
       "custom": true
     },
     {
-      "vi": "giá",
-      "zh": "价格",
-      "category": "名词",
-      "custom": true
-    },
-    {
       "vi": "mật khẩu",
       "zh": "密码",
       "category": "名词",
@@ -10023,12 +10112,6 @@
     {
       "vi": "lời hứa",
       "zh": "承诺/诺言",
-      "category": "名词",
-      "custom": true
-    },
-    {
-      "vi": "cách",
-      "zh": "方法/方式",
       "category": "名词",
       "custom": true
     },
@@ -11179,12 +11262,6 @@
       "custom": true
     },
     {
-      "vi": "nấu",
-      "zh": "做饭/煮",
-      "category": "动词",
-      "custom": true
-    },
-    {
       "vi": "cạo râu",
       "zh": "刮胡子",
       "category": "动词短语",
@@ -11782,12 +11859,6 @@
       "vi": "mến",
       "zh": "喜爱/有好感",
       "category": "动词",
-      "custom": true
-    },
-    {
-      "vi": "quý",
-      "zh": "喜爱/珍惜/重视",
-      "category": "形容词/动词",
       "custom": true
     },
     {
@@ -12567,12 +12638,6 @@
     {
       "vi": "sương mù",
       "zh": "雾/大雾",
-      "category": "名词",
-      "custom": true
-    },
-    {
-      "vi": "giông",
-      "zh": "雷雨/暴风雨",
       "category": "名词",
       "custom": true
     },
@@ -13501,12 +13566,6 @@
       "custom": true
     },
     {
-      "vi": "thăm hỏi",
-      "zh": "问候",
-      "category": "动词",
-      "custom": true
-    },
-    {
       "vi": "hội thoại",
       "zh": "会话",
       "category": "名词",
@@ -13897,12 +13956,6 @@
       "custom": true
     },
     {
-      "vi": "tiếp theo",
-      "zh": "接下来",
-      "category": "副词短语",
-      "custom": true
-    },
-    {
       "vi": "sau đó",
       "zh": "然后/之后",
       "category": "副词",
@@ -14146,12 +14199,6 @@
       "vi": "liên hệ",
       "zh": "联系",
       "category": "名词/动词",
-      "custom": true
-    },
-    {
-      "vi": "dạy dỗ",
-      "zh": "教导",
-      "category": "动词",
       "custom": true
     },
     {
@@ -15262,12 +15309,6 @@
       "vi": "lợi ích",
       "zh": "好处/利益",
       "category": "名词",
-      "custom": true
-    },
-    {
-      "vi": "chia sẻ",
-      "zh": "分享",
-      "category": "名词/动词",
       "custom": true
     },
     {
@@ -19564,17 +19605,136 @@
   ],
   "customWords": [
     {
-      "vi": "đồn",
-      "zh": "传",
-      "category": "动词",
-      "createdAt": 1792064811559,
+      "vi": "phản ứng",
+      "zh": "反应",
+      "category": "名词",
+      "createdAt": 1792244198726,
       "custom": true
     },
     {
-      "vi": "chia thành",
-      "zh": "分成",
-      "category": "动词短语",
-      "createdAt": 1792064664722,
+      "vi": "tệ",
+      "zh": "差/糟糕",
+      "category": "感叹句",
+      "createdAt": 1792235394016,
+      "custom": true
+    },
+    {
+      "vi": "biện pháp",
+      "zh": "办法/措施",
+      "category": "名词",
+      "createdAt": 1792233826757,
+      "custom": true
+    },
+    {
+      "vi": "kế sách",
+      "zh": "办法/计策",
+      "category": "名词",
+      "createdAt": 1792233703864,
+      "custom": true
+    },
+    {
+      "vi": "tiếp theo",
+      "zh": "接下来",
+      "category": "副词短语",
+      "createdAt": 1792233458440,
+      "custom": true
+    },
+    {
+      "vi": "giông",
+      "zh": "雷雨/暴风雨",
+      "category": "名词",
+      "createdAt": 1792232863722,
+      "custom": true
+    },
+    {
+      "vi": "nấu",
+      "zh": "做饭/煮",
+      "category": "动词",
+      "createdAt": 1792232565361,
+      "custom": true
+    },
+    {
+      "vi": "giá",
+      "zh": "价格",
+      "category": "名词",
+      "createdAt": 1792224139381,
+      "custom": true
+    },
+    {
+      "vi": "đông",
+      "zh": "多/拥挤/东",
+      "category": "动词/形容词",
+      "createdAt": 1792223412574,
+      "custom": true
+    },
+    {
+      "vi": "thăm hỏi",
+      "zh": "问候/探望",
+      "category": "动词",
+      "createdAt": 1792223243818,
+      "custom": true
+    },
+    {
+      "vi": "cách",
+      "zh": "方法/办法/距离",
+      "category": "名词",
+      "createdAt": 1792223011012,
+      "custom": true
+    },
+    {
+      "vi": "tính",
+      "zh": "计算；打算",
+      "category": "动词",
+      "createdAt": 1792222668630,
+      "custom": true
+    },
+    {
+      "vi": "chia sẻ",
+      "zh": "分享",
+      "category": "名词/动词",
+      "createdAt": 1792222577809,
+      "custom": true
+    },
+    {
+      "vi": "rộng rãi",
+      "zh": "宽敞/宽大",
+      "category": "形容词",
+      "createdAt": 1792222033407,
+      "custom": true
+    },
+    {
+      "vi": "quý",
+      "zh": "喜爱/珍惜/珍贵",
+      "category": "形容词/动词",
+      "createdAt": 1792222017091,
+      "custom": true
+    },
+    {
+      "vi": "dạy dỗ",
+      "zh": "教导/教育",
+      "category": "动词",
+      "createdAt": 1792221242265,
+      "custom": true
+    },
+    {
+      "vi": "dỗ",
+      "zh": "哄、安慰",
+      "category": "动词",
+      "createdAt": 1792221115372,
+      "custom": true
+    },
+    {
+      "vi": "nổi tiếng",
+      "zh": "有名/著名/出名",
+      "category": "形容词",
+      "createdAt": 1792160873807,
+      "custom": true
+    },
+    {
+      "vi": "ngắm",
+      "zh": "看/欣赏",
+      "category": "动词",
+      "createdAt": 1792159881201,
       "custom": true
     },
     {
@@ -20412,7 +20572,7 @@
     },
     {
       "vi": "chúng ta",
-      "zh": "我们",
+      "zh": "我们/咱们",
       "category": "",
       "createdAt": 1790661373602,
       "custom": true
@@ -23372,6 +23532,13 @@
       "custom": true
     },
     {
+      "vi": "đẹp",
+      "zh": "漂亮/美",
+      "category": "感叹句",
+      "createdAt": 1790228916071,
+      "custom": true
+    },
+    {
       "vi": "dễ thương",
       "zh": "可爱",
       "category": "感叹句",
@@ -23388,13 +23555,6 @@
     {
       "vi": "mệt quá",
       "zh": "累死了 / 好累",
-      "category": "感叹句",
-      "createdAt": 1790228916071,
-      "custom": true
-    },
-    {
-      "vi": "đẹp quá",
-      "zh": "太漂亮了",
       "category": "感叹句",
       "createdAt": 1790228916071,
       "custom": true
@@ -23610,6 +23770,13 @@
       "custom": true
     },
     {
+      "vi": "sáng",
+      "zh": "早上",
+      "category": "名词/形容词",
+      "createdAt": 1790228916062,
+      "custom": true
+    },
+    {
       "vi": "tối",
       "zh": "晚上",
       "category": "名词/形容词",
@@ -23627,13 +23794,6 @@
       "vi": "trưa",
       "zh": "中午",
       "category": "名词",
-      "createdAt": 1790228916062,
-      "custom": true
-    },
-    {
-      "vi": "sáng",
-      "zh": "早上",
-      "category": "名词/形容词",
       "createdAt": 1790228916062,
       "custom": true
     },
@@ -23789,6 +23949,13 @@
       "zh": "好听",
       "category": "形容词短语",
       "createdAt": 1790013096172,
+      "custom": true
+    },
+    {
+      "vi": "báo chí",
+      "zh": "报纸/报刊",
+      "category": "名词",
+      "createdAt": "2026-09-07T06:56:24.769Z",
       "custom": true
     },
     {
@@ -24039,13 +24206,6 @@
     {
       "vi": "tạp chí",
       "zh": "杂志",
-      "category": "名词",
-      "createdAt": "2026-09-07T06:56:24.769Z",
-      "custom": true
-    },
-    {
-      "vi": "báo chí",
-      "zh": "报刊",
       "category": "名词",
       "createdAt": "2026-09-07T06:56:24.769Z",
       "custom": true
@@ -25087,6 +25247,20 @@
       "custom": true
     },
     {
+      "vi": "dở",
+      "zh": "难吃/差/菜",
+      "category": "形容词",
+      "createdAt": "2026-09-07T06:53:47.939Z",
+      "custom": true
+    },
+    {
+      "vi": "không khí",
+      "zh": "空气/气氛",
+      "category": "名词",
+      "createdAt": "2026-09-07T06:53:47.939Z",
+      "custom": true
+    },
+    {
       "vi": "luôn",
       "zh": "总是/直接/经常/马上",
       "category": "副词",
@@ -25118,13 +25292,6 @@
       "vi": "tin tức",
       "zh": "新闻/消息",
       "category": "名词",
-      "createdAt": "2026-09-07T06:53:47.939Z",
-      "custom": true
-    },
-    {
-      "vi": "dở",
-      "zh": "难吃",
-      "category": "形容词",
       "createdAt": "2026-09-07T06:53:47.939Z",
       "custom": true
     },
@@ -25430,13 +25597,6 @@
       "custom": true
     },
     {
-      "vi": "không khí",
-      "zh": "空气/气氛",
-      "category": "名词",
-      "createdAt": "2026-09-07T06:53:47.939Z",
-      "custom": true
-    },
-    {
       "vi": "đất",
       "zh": "土地/土",
       "category": "名词",
@@ -25637,6 +25797,20 @@
       "zh": "空调",
       "category": "名词",
       "createdAt": "2026-09-07T06:53:47.939Z",
+      "custom": true
+    },
+    {
+      "vi": "trường học",
+      "zh": "学校",
+      "category": "名词",
+      "createdAt": "2026-09-07T06:52:00.990Z",
+      "custom": true
+    },
+    {
+      "vi": "cây",
+      "zh": "树/植物",
+      "category": "名词",
+      "createdAt": "2026-09-07T06:52:00.990Z",
       "custom": true
     },
     {
@@ -25899,13 +26073,6 @@
       "custom": true
     },
     {
-      "vi": "trường học",
-      "zh": "学校",
-      "category": "名词",
-      "createdAt": "2026-09-07T06:52:00.990Z",
-      "custom": true
-    },
-    {
       "vi": "siêu thị",
       "zh": "超市",
       "category": "名词",
@@ -25964,13 +26131,6 @@
     {
       "vi": "lá",
       "zh": "叶子",
-      "category": "名词",
-      "createdAt": "2026-09-07T06:52:00.990Z",
-      "custom": true
-    },
-    {
-      "vi": "cây",
-      "zh": "树/植物",
       "category": "名词",
       "createdAt": "2026-09-07T06:52:00.990Z",
       "custom": true
@@ -26116,12 +26276,6 @@
       "vi": "giàu",
       "zh": "富有、有钱",
       "category": "形容词",
-      "custom": true
-    },
-    {
-      "vi": "phá hoại：破坏、捣乱",
-      "zh": "动词",
-      "category": "待确认分类",
       "custom": true
     },
     {
@@ -27109,12 +27263,6 @@
       "custom": true
     },
     {
-      "vi": "tính",
-      "zh": "计算；打算",
-      "category": "动词",
-      "custom": true
-    },
-    {
       "vi": "đếm",
       "zh": "数/数数",
       "category": "动词",
@@ -27321,12 +27469,6 @@
     {
       "vi": "chật chội",
       "zh": "狭窄/拥挤",
-      "category": "形容词",
-      "custom": true
-    },
-    {
-      "vi": "rộng rãi",
-      "zh": "宽敞",
       "category": "形容词",
       "custom": true
     },
@@ -27712,12 +27854,6 @@
       "vi": "không tệ",
       "zh": "不错 / 不差",
       "category": "形容词短语",
-      "custom": true
-    },
-    {
-      "vi": "tệ quá",
-      "zh": "太差了 / 太糟了",
-      "category": "感叹句",
       "custom": true
     },
     {
@@ -29473,12 +29609,6 @@
       "custom": true
     },
     {
-      "vi": "giá",
-      "zh": "价格",
-      "category": "名词",
-      "custom": true
-    },
-    {
       "vi": "mật khẩu",
       "zh": "密码",
       "category": "名词",
@@ -29583,12 +29713,6 @@
     {
       "vi": "lời hứa",
       "zh": "承诺/诺言",
-      "category": "名词",
-      "custom": true
-    },
-    {
-      "vi": "cách",
-      "zh": "方法/方式",
       "category": "名词",
       "custom": true
     },
@@ -30739,12 +30863,6 @@
       "custom": true
     },
     {
-      "vi": "nấu",
-      "zh": "做饭/煮",
-      "category": "动词",
-      "custom": true
-    },
-    {
       "vi": "cạo râu",
       "zh": "刮胡子",
       "category": "动词短语",
@@ -31342,12 +31460,6 @@
       "vi": "mến",
       "zh": "喜爱/有好感",
       "category": "动词",
-      "custom": true
-    },
-    {
-      "vi": "quý",
-      "zh": "喜爱/珍惜/重视",
-      "category": "形容词/动词",
       "custom": true
     },
     {
@@ -32127,12 +32239,6 @@
     {
       "vi": "sương mù",
       "zh": "雾/大雾",
-      "category": "名词",
-      "custom": true
-    },
-    {
-      "vi": "giông",
-      "zh": "雷雨/暴风雨",
       "category": "名词",
       "custom": true
     },
@@ -33061,12 +33167,6 @@
       "custom": true
     },
     {
-      "vi": "thăm hỏi",
-      "zh": "问候",
-      "category": "动词",
-      "custom": true
-    },
-    {
       "vi": "hội thoại",
       "zh": "会话",
       "category": "名词",
@@ -33457,12 +33557,6 @@
       "custom": true
     },
     {
-      "vi": "tiếp theo",
-      "zh": "接下来",
-      "category": "副词短语",
-      "custom": true
-    },
-    {
       "vi": "sau đó",
       "zh": "然后/之后",
       "category": "副词",
@@ -33706,12 +33800,6 @@
       "vi": "liên hệ",
       "zh": "联系",
       "category": "名词/动词",
-      "custom": true
-    },
-    {
-      "vi": "dạy dỗ",
-      "zh": "教导",
-      "category": "动词",
       "custom": true
     },
     {
@@ -34822,12 +34910,6 @@
       "vi": "lợi ích",
       "zh": "好处/利益",
       "category": "名词",
-      "custom": true
-    },
-    {
-      "vi": "chia sẻ",
-      "zh": "分享",
-      "category": "名词/动词",
       "custom": true
     },
     {
@@ -39435,7 +39517,6 @@
     "mua": "动词",
     "bán": "动词",
     "tiền": "名词",
-    "giá": "名词",
     "đắt": "形容词",
     "rẻ": "形容词",
     "nhà": "名词",
@@ -39458,7 +39539,6 @@
     "ngày mai": "时间词",
     "hôm qua": "时间词",
     "bây giờ": "时间词",
-    "sáng": "名词/形容词",
     "trưa": "名词",
     "chiều": "名词/动词",
     "tối": "名词/形容词",
@@ -39494,7 +39574,6 @@
     "trời ơi": "感叹句",
     "hay quá": "感叹句",
     "tốt quá": "感叹句",
-    "đẹp quá": "感叹句",
     "mệt quá": "感叹句",
     "buồn quá": "感叹句",
     "vui quá": "感叹句",
@@ -39667,7 +39746,6 @@
     "bò": "名词/动词",
     "lợn": "名词",
     "hoa": "名词",
-    "cây": "名词",
     "lá": "名词",
     "trời": "名词",
     "mặt trời": "名词",
@@ -39677,7 +39755,6 @@
     "nắng": "名词/形容词",
     "đường phố": "名词",
     "siêu thị": "名词",
-    "trường học": "名词",
     "phòng tắm": "名词",
     "phòng ngủ": "名词",
     "phòng khách": "名词",
@@ -39739,7 +39816,6 @@
     "đảo": "名词",
     "cát": "名词",
     "đất": "名词",
-    "không khí": "名词",
     "mùi hương": "名词",
     "mùi hôi": "名词",
     "tuổi": "名词",
@@ -39779,7 +39855,6 @@
     "mùa thu": "名词",
     "mùa đông": "名词",
     "nhẹ": "形容词",
-    "dở": "形容词",
     "khuôn mặt": "名词",
     "mắt": "名词",
     "mũi": "名词",
@@ -39914,7 +39989,6 @@
     "vở kịch": "名词",
     "thơ": "名词",
     "tiểu thuyết": "名词",
-    "báo chí": "名词",
     "tạp chí": "名词",
     "mạng internet": "名词",
     "trang web": "名词",
@@ -39972,7 +40046,6 @@
     "đàm phán": "名词/动词",
     "hợp tác": "名词/动词",
     "xung đột": "名词/动词",
-    "chia sẻ": "名词/动词",
     "lợi ích": "名词",
     "thiệt hại": "名词/动词",
     "thách thức": "名词/动词",
@@ -40149,7 +40222,6 @@
     "thì ra là vậy": "口语表达",
     "hành lý": "名词",
     "gọi điện": "动词",
-    "dạy dỗ": "动词",
     "liên hệ": "名词/动词",
     "lén lút": "副词短语",
     "lề mề": "形容词",
@@ -40188,7 +40260,6 @@
     "khác với": "形容词短语",
     "giống như": "介词短语",
     "hơn": "副词/介词",
-    "tiếp theo": "副词短语",
     "rồi mới": "连接短语",
     "vừa... vừa...": "关联词",
     "vì vậy": "连词",
@@ -40242,7 +40313,6 @@
     "cây leo": "名词",
     "gần gũi": "形容词",
     "hội thoại": "名词",
-    "thăm hỏi": "动词",
     "tuy nhiên": "连词/副词",
     "vẫn cứ": "副词短语",
     "thế mà": "连词",
@@ -40381,7 +40451,6 @@
     "sấm": "名词",
     "sét": "名词",
     "sấm sét": "名词",
-    "giông": "名词",
     "sương mù": "名词",
     "nóng": "形容词",
     "oi bức": "形容词",
@@ -40501,7 +40570,6 @@
     "do dự": "动词",
     "phân vân": "动词",
     "thương": "动词",
-    "quý": "形容词/动词",
     "mến": "动词",
     "si mê": "动词",
     "say mê": "动词",
@@ -40587,7 +40655,6 @@
     "đánh răng": "动词",
     "rửa mặt": "动词",
     "tắm": "动词",
-    "nấu": "动词",
     "chiên": "动词",
     "nướng": "动词",
     "liếm": "动词",
@@ -40692,7 +40759,6 @@
     "kinh nghiệm": "名词",
     "lý do": "名词",
     "vấn đề": "名词",
-    "cách": "名词",
     "lời hứa": "名词",
     "ước mơ": "名词",
     "tình yêu": "名词",
@@ -40983,7 +41049,6 @@
     "phong cách sống": "名词短语",
     "phong cách hiện đại": "名词短语",
     "rất tệ": "形容词短语",
-    "tệ quá": "感叹句",
     "không tệ": "形容词短语",
     "bên trong": "方位短语",
     "bên ngoài": "方位短语",
@@ -41037,7 +41102,6 @@
     "lạc đường": "动词",
     "quay về": "动词",
     "xin phép": "动词",
-    "rộng rãi": "形容词",
     "chật chội": "形容词",
     "gọn gàng": "形容词",
     "bừa bộn": "形容词",
@@ -41073,7 +41137,6 @@
     "chê": "动词",
     "đoán": "动词",
     "đếm": "动词",
-    "tính": "动词",
     "lát nữa": "时间短语",
     "thay vì": "连词",
     "lúc nào": "疑问短语",
@@ -41346,7 +41409,6 @@
     "tư tưởng": "名词",
     "gió": "名词",
     "luồng khí": "名词",
-    "chuyên nghiệp": "形容词",
     "này": "指示词/感叹词",
     "nhớ": "动词",
     "niềm tin": "名词",
@@ -41400,8 +41462,34 @@
     "liên quan": "形容词/动词",
     "cả": "副词/限定词",
     "xỉu": "形容词/动词",
-    "chia thành": "动词短语",
-    "đồn": "动词"
+    "báo chí": "名词",
+    "ngắm": "动词",
+    "nổi tiếng": "形容词",
+    "dỗ": "动词",
+    "dạy dỗ": "动词",
+    "cây": "名词",
+    "trường học": "名词",
+    "đẹp": "感叹句",
+    "quý": "形容词/动词",
+    "rộng rãi": "形容词",
+    "sáng": "名词/形容词",
+    "không khí": "名词",
+    "chia sẻ": "名词/动词",
+    "chuyên nghiệp": "形容词",
+    "tính": "动词",
+    "thăm hỏi": "动词",
+    "đông": "动词/形容词",
+    "giá": "名词",
+    "dở": "形容词",
+    "nấu": "动词",
+    "giông": "名词",
+    "tiếp theo": "副词短语",
+    "bên cạnh": "待确认分类",
+    "kế sách": "名词",
+    "cách": "名词",
+    "biện pháp": "名词",
+    "tệ": "感叹句",
+    "phản ứng": "名词"
   },
   "sentenceCategoryMap": {
     "mười điểm không có nhưng": "夸人",
@@ -41803,5 +41891,5 @@
     "倒": "dǎo",
     "地": "dì"
   },
-  "exportTime": "2026-10-15T11:49:44.476Z"
+  "exportTime": "2026-10-17T14:40:10.225Z"
 }
