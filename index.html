@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.121</title>
+<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.122</title>
 <meta name="theme-color" content="#f0f4f8" id="amo-browser-theme-color">
 
 
@@ -1576,6 +1576,7 @@ body.theme-night #quiz #quizBatchCounter.quiz-batch-counter{
 #sentenceReadingInput.sentence-reading-input{
     display:block;
     width:100%;
+    text-align:center;
     max-width:100%;
     min-height:44px;
     height:44px;
@@ -2604,6 +2605,12 @@ body #quiz .quiz-pinyin, body #quiz .quiz-zh-wrap .quiz-pinyin, body #sentenceRe
     height:17px;
     flex:0 0 auto;
     accent-color:var(--primary)
+}
+#sentenceReading .sentence-reading-no-repeat{
+    user-select:none
+}
+#sentenceReadingInput.sentence-reading-input::placeholder{
+    text-align:center
 }
 @media (max-width:430px) {
     .page-jump-control input{
@@ -5979,7 +5986,7 @@ body select optgroup{
   document.body.classList.add(initial.glass==='off'?'amo-glass-off':initial.glass==='header'?'amo-glass-header':'amo-glass-all');
 })();
 </script>
-<!-- Build: V31.121 -->
+<!-- Build: V31.122 -->
 <!--
   阿莫 V30 兼容架构 / 扩展入口
   数据源：builtInWords/builtInSentences/vietnameseGrammar/chineseGrammar（原有内容未经改写）。
@@ -5994,7 +6001,7 @@ body select optgroup{
         <div class="logo">
             <div class="logo-icon">🇻🇳</div>
             <div>
-                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.121">V31.121</span></div>
+                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.122">V31.122</span></div>
                 <div class="logo-sub">中文母语者 · 零基础学习</div>
             </div>
         </div>
@@ -6080,7 +6087,7 @@ body select optgroup{
         <button type="button" class="amo-reset-effects" id="amoResetDrawerSettingsBtn" onclick="resetAmoDrawerSettings()">↺ 恢复默认抽屉动效</button>
       </div>
     </details>
-    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.121</strong></div>
+    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.122</strong></div>
 </section>
 </div>
 
@@ -6233,6 +6240,10 @@ body select optgroup{
         <label class="remembered-sentence-visibility">
           <input type="checkbox" id="sentenceReadingIncludeRemembered" onchange="changeSentenceReadingRememberedVisibility(this.checked)">
           显示已记住的短句（加入练习）
+        </label>
+        <label class="remembered-sentence-visibility sentence-reading-no-repeat" title="开启后，同一轮题库未走完前不会重复出题">
+          <input type="checkbox" id="sentenceReadingNoRepeat" onchange="changeSentenceReadingNoRepeat(this.checked)">
+          <span id="sentenceReadingNoRepeatLabel">本轮不重复出题</span>
         </label>
         <span id="sentenceReadingPoolNotice" class="bank-pool-notice" role="status" hidden></span>
     </div>
@@ -11367,6 +11378,10 @@ function syncStudyBankControls(){
         if(quizMode.value!==saved)quizMode.value=saved;
     }
     if(sentenceBank)sentenceBank.value=settings.sentenceBankLanguage==="zh"?"zh":"vi";
+    const sentenceNoRepeat=document.getElementById("sentenceReadingNoRepeat");
+    if(sentenceNoRepeat)sentenceNoRepeat.checked=settings.sentenceReadingNoRepeat===true;
+    const noRepeatLabel=document.getElementById("sentenceReadingNoRepeatLabel");
+    if(noRepeatLabel)noRepeatLabel.textContent=settings.uiLanguage==="vi"?"Không lặp câu trong lượt này":"本轮不重复出题";
 }
 function changeQuizBank(lang){
     settings.quizBankLanguage=lang==="zh"?"zh":"vi";
@@ -12187,8 +12202,19 @@ let sentenceReadingOrder = [];
 let sentenceReadingIndex = -1;
 let sentenceReadingHistory = [];
 let sentenceReadingHistoryIndex = -1;
+// V31.122：可选“本轮不重复”。只记录当前轮已出过的短句；默认关闭，不改变旧版随机逻辑。
+let sentenceReadingRoundSeen = new Set();
 // V31.68：记录练习短句历史中哪些题已经真正提交过答案；答对/答错都算已作答。
 let sentenceReadingAttemptedHistory = new Set();
+function sentenceReadingNoRepeatEnabled(){
+    return !!document.getElementById("sentenceReadingNoRepeat")?.checked;
+}
+function changeSentenceReadingNoRepeat(checked){
+    settings.sentenceReadingNoRepeat=checked===true;
+    saveJSON(KEY_SETTINGS,settings);
+    sentenceReadingRoundSeen.clear();
+    restartSentenceReading();
+}
 
 function openSentenceReading(){
     showPage("sentenceReading");
@@ -12204,7 +12230,7 @@ function restartSentenceReading(){
             ? "当前分类暂无可练习的短句，请选择其他分类或添加短句。"
             : "暂无可练习的短句，请先添加短句或取消已记住状态。";
         setStudyBankNotice("sentenceReadingPoolNotice",msg);
-        sentenceReadingCurrent=null;sentenceReadingHistory=[];sentenceReadingHistoryIndex=-1;sentenceReadingAttemptedHistory.clear();
+        sentenceReadingCurrent=null;sentenceReadingHistory=[];sentenceReadingHistoryIndex=-1;sentenceReadingRoundSeen.clear();sentenceReadingAttemptedHistory.clear();
         document.getElementById("sentenceReadingQuestion").textContent=msg;
         document.getElementById("sentenceReadingAnswer").replaceChildren();
         document.getElementById("sentenceReadingInput").value="";
@@ -12220,6 +12246,7 @@ function restartSentenceReading(){
     sentenceReadingIndex=-1;
     sentenceReadingHistory=[];
     sentenceReadingHistoryIndex=-1;
+    sentenceReadingRoundSeen.clear();
     sentenceReadingAttemptedHistory.clear();
     nextSentenceReading();
 }
@@ -12273,10 +12300,22 @@ function randomSentenceReading(){
     setStudyBankNotice("sentenceReadingPoolNotice","");
     const currentKey = sentenceReadingCurrent ? sentenceKey(sentenceReadingCurrent) : "";
     let candidates = available;
-    if(available.length > 1 && currentKey){
+    if(sentenceReadingNoRepeatEnabled()){
+        // V31.122：同一轮先排除全部已出现题目；题库走完后自动开启新一轮。
+        candidates=available.filter(s=>!sentenceReadingRoundSeen.has(sentenceKey(s)));
+        if(!candidates.length){
+            sentenceReadingRoundSeen.clear();
+            candidates=available;
+            if(available.length>1 && currentKey)candidates=available.filter(s=>sentenceKey(s)!==currentKey);
+            showToast(settings.uiLanguage==="vi"?"Đã hết một lượt, bắt đầu lượt mới":"本轮题目已完成，开始新一轮");
+        }
+    }else if(available.length > 1 && currentKey){
         candidates = available.filter(s => sentenceKey(s) !== currentKey);
     }
     sentenceReadingCurrent = candidates[Math.floor(Math.random() * candidates.length)];
+    if(sentenceReadingNoRepeatEnabled() && sentenceReadingCurrent){
+        sentenceReadingRoundSeen.add(sentenceKey(sentenceReadingCurrent));
+    }
     // 随机/下一题产生新题时写入历史；若之前回退过，则丢弃旧的“前进”分支。
     if(sentenceReadingHistoryIndex < sentenceReadingHistory.length - 1){
         sentenceReadingHistory = sentenceReadingHistory.slice(0, sentenceReadingHistoryIndex + 1);
@@ -13075,6 +13114,7 @@ function prepareBackupRestore(data){
         restoredSettings.customPinyin,settings.customPinyin].find(x=>x!==undefined && x!==null);
     next.settings.customPinyin=normalizeBackupPinyin(pySource);
     if(typeof next.settings.quizRandomMode!=="boolean")next.settings.quizRandomMode=false;
+    if(typeof next.settings.sentenceReadingNoRepeat!=="boolean")next.settings.sentenceReadingNoRepeat=false;
     if(typeof next.settings.showChinesePinyin!=="boolean")next.settings.showChinesePinyin=true;
     if(typeof next.settings.showSentenceWordHints!=="boolean")next.settings.showSentenceWordHints=true;
     for(const k of ["uiFontSize","viFontSize","zhFontSize","pyFontSize"])if(!next.settings[k])next.settings[k]="100";
@@ -13136,6 +13176,8 @@ function persistBackupRestore(next){
     deletedWords=next.deletedWords;deletedSentences=next.deletedSentences;
     hideBuiltInWords=next.hideBuiltInWords;hideBuiltInSentences=next.hideBuiltInSentences;
     settings=next.settings;pageScrollPositions=next.pageScrollPositions;
+    // V31.122：导入词汇/搭配/相关词后立即失效共享索引，避免随后打开短句提示仍读取导入前缓存。
+    if(typeof invalidateRelationRuntimeCache==="function")invalidateRelationRuntimeCache();
     quizBatchReady=false;quizCurrent=null;quizBatchKeys=[];quizBatchIndex=0;
     quizBatchResults=[];quizBatchFinished=false;quizReplayRoundIndex=null;quizCorrectHidden.clear();
 }
@@ -13298,7 +13340,7 @@ function clearAllData(){
     customCategories = [];
     wordCategoryMap = {};
     window.deletedCategories = [];
-    settings = {wordFilter:"new",wordSort:"default",showChinesePinyin:true,showSentenceWordHints:true,customPinyin:{},quizRandomMode:false,quizBankLanguage:"vi",sentenceBankLanguage:"vi",quizAnswerMode:"vi-zh",quizFillDifficulty:"standard",uiLanguage:"zh",uiFontSize:"100",viFontSize:"100",zhFontSize:"100",pyFontSize:"100",themeMode:"normal"};
+    settings = {wordFilter:"new",wordSort:"default",showChinesePinyin:true,showSentenceWordHints:true,customPinyin:{},quizRandomMode:false,quizBankLanguage:"vi",sentenceBankLanguage:"vi",sentenceReadingNoRepeat:false,quizAnswerMode:"vi-zh",quizFillDifficulty:"standard",uiLanguage:"zh",uiFontSize:"100",viFontSize:"100",zhFontSize:"100",pyFontSize:"100",themeMode:"normal"};
     loadCustomPinyinInput();syncQuizRandomUI();syncStudyBankControls();applyDisplaySettings();applyUILanguage();
     hideBuiltInWords = false;
     hideBuiltInSentences = false;
@@ -13508,6 +13550,7 @@ Object.assign(UI_ZH_VI,{"请根据中文写出越南语拼音":"Hãy viết piny
 Object.assign(UI_ZH_VI,{
     "🎲 随机出题（本轮不重复）":"🎲 Câu hỏi ngẫu nhiên (không lặp trong lượt)",
     "本轮随机出题，不重复":"Ra câu hỏi ngẫu nhiên, không lặp trong lượt",
+    "本轮不重复出题":"Không lặp câu trong lượt này",
     "字体颜色":"Màu chữ",
     "越南语颜色":"Màu chữ tiếng Việt",
     "中文颜色":"Màu chữ tiếng Trung",
@@ -14027,8 +14070,36 @@ function amoCloudPrepare(data){
  if(!words.length&&!sentences.length)throw new Error(amoCloudT('云存档中没有有效的词汇或短句','Bản lưu đám mây không có từ vựng hoặc câu ngắn hợp lệ'));
  const mergedWords=amoCloudMergeItems(customWords,words);
  const mergedSentences=amoCloudMergeItems(customSentences,sentences);
+ const cloudWordKeys=new Set(words.map(w=>normalize(w.vi)));
+ const mergeCloudExamples=(local,incoming)=>{
+   const result={...(local||{})};let imported=0;
+   if(incoming===undefined)return {items:result,imported};
+   if(!isPlainBackupObject(incoming))throw new Error(amoCloudT('云端例句格式错误','Định dạng ví dụ trên đám mây không hợp lệ'));
+   for(const [key,value] of Object.entries(incoming)){
+     const normalized=normalize(key);if(!normalized||!cloudWordKeys.has(normalized))continue;
+     if(!isPlainBackupObject(value))continue;
+     const vi=typeof value.vi==='string'?value.vi.trim():'';const zh=typeof value.zh==='string'?value.zh.trim():'';
+     if(!vi&&!zh)continue;
+     result[normalized]={...(result[normalized]||{}),...(vi?{vi}:{}),...(zh?{zh}:{})};imported++;
+   }
+   return {items:result,imported};
+ };
+ const mergedExamples=mergeCloudExamples(examples,data.examples);
+ const mergeCloudRelations=(local,incoming)=>{
+   const map=new Map(normalizeRelatedRelations(local||[]).map(r=>[relationId(r.wordA,r.wordB,r.type),r]));let imported=0;
+   if(incoming===undefined)return {items:Array.from(map.values()),imported};
+   if(!Array.isArray(incoming))throw new Error(amoCloudT('云端相关词格式错误','Định dạng quan hệ từ liên quan trên đám mây không hợp lệ'));
+   for(const rel of normalizeRelatedRelations(incoming)){
+     if(!cloudWordKeys.has(normalize(rel.wordA))||!cloudWordKeys.has(normalize(rel.wordB)))continue;
+     map.set(relationId(rel.wordA,rel.wordB,rel.type),rel);imported++;
+   }
+   return {items:Array.from(map.values()),imported};
+ };
+ const mergedRelations=mergeCloudRelations(relatedRelations,data.relatedRelations);
  // 从当前内存构造完整快照，不拷贝云端的已记住、测验历史或设置。
  const next=prepareBackupRestore({customWords:mergedWords.items,customSentences:mergedSentences.items});
+ next.examples=mergedExamples.items;
+ next.relatedRelations=mergedRelations.items;
  next.quizSession=loadJSON(KEY_QUIZ_SESSION,null);
  const addCategories=(current,incoming)=>{
    if(incoming===undefined)return [...current];
@@ -14053,8 +14124,9 @@ function amoCloudPrepare(data){
  const sentenceKeys=new Set(sentences.map(w=>normalize(w.vi)));
  next.deletedWords=deletedWords.filter(x=>!wordKeys.has(normalize(typeof x==='string'?x:x?.vi)));
  next.deletedSentences=deletedSentences.filter(x=>!sentenceKeys.has(normalize(typeof x==='string'?x:x?.vi)));
+ const collocations=words.reduce((sum,w)=>sum+(Array.isArray(w.collocations)?w.collocations.length:0),0);
  return {next,summary:{wordNew:mergedWords.added,wordUpdated:mergedWords.overwritten,
- sentenceNew:mergedSentences.added,sentenceUpdated:mergedSentences.overwritten,pinyin:Object.keys(py).length}};
+ sentenceNew:mergedSentences.added,sentenceUpdated:mergedSentences.overwritten,examples:mergedExamples.imported,collocations,relations:mergedRelations.imported,pinyin:Object.keys(py).length}};
 }
 async function amoDownloadCloudBank(){
  if(amoCloudBusy)return;
@@ -14075,12 +14147,14 @@ async function amoDownloadCloudBank(){
      'Tệp GitHub: '+file.name,
      'Từ vựng mới: '+summary.wordNew+' · Ghi đè: '+summary.wordUpdated,
      'Câu ngắn mới: '+summary.sentenceNew+' · Ghi đè: '+summary.sentenceUpdated,
+     'Ví dụ: '+summary.examples+' · Cụm từ: '+summary.collocations+' · Quan hệ: '+summary.relations,
      'Phiên âm đồng bộ: '+summary.pinyin,
      'Giữ nguyên tiến độ học, trạng thái đã nhớ và cài đặt cá nhân.'
    ]:[
      'GitHub 文件：'+file.name,
      '词汇：新增 '+summary.wordNew+' 条，覆盖 '+summary.wordUpdated+' 条',
      '短句：新增 '+summary.sentenceNew+' 条，覆盖 '+summary.sentenceUpdated+' 条',
+     '同步例句：'+summary.examples+' 个词条 · 常用搭配：'+summary.collocations+' 条 · 相关词关系：'+summary.relations+' 条',
      '同步自定义拼音：'+summary.pinyin+' 条',
      '保留本机记忆状态、答题记录与个人设置。'
    ];
@@ -14106,7 +14180,7 @@ function amoConfirmCloudBank(){
 // 继承原有中越界面翻译系统。
 Object.assign(UI_ZH_VI,{
  'GitHub 云词库同步':'Đồng bộ từ vựng GitHub',
- '从 amo112211/amo-vietnamese 下载最新的 JSON 词库，与本机词汇、短句和自定义拼音合并。同名词句以云端内容覆盖，本机已记住状态、答题记录和个人设置保留。':'Tải tệp JSON mới nhất từ amo112211/amo-vietnamese và gộp từ vựng, câu ngắn, phiên âm tùy chỉnh. Các mục trùng được thay bằng bản trên GitHub; giữ nguyên trạng thái đã nhớ, kết quả làm bài và cài đặt cá nhân.',
+ '从 amo112211/amo-vietnamese 下载最新的 JSON 词库，与本机词汇、例句、短句、常用搭配、相关词和自定义拼音合并。同名内容以云端版本覆盖，本机已记住状态、答题记录和个人设置保留。':'Tải JSON mới nhất từ amo112211/amo-vietnamese và gộp từ vựng, ví dụ, câu ngắn, cụm từ thường dùng, từ liên quan và phiên âm tùy chỉnh. Nội dung trùng dùng bản GitHub; giữ nguyên tiến độ học, kết quả và cài đặt cá nhân.',
  '下载云存档':'Tải bản lưu đám mây','确认合并云词库':'Xác nhận gộp từ vựng đám mây'
 });
 // 原页面的翻译正则在本模块加载前编译，因此新增区域独立同步文案。
@@ -14115,7 +14189,7 @@ function amoCloudApplyLabels(){
  const vi=settings.uiLanguage==='vi';
  const entries=[
   ['h4','GitHub 云词库同步','Đồng bộ từ vựng GitHub'],
-  ['p','从 amo112211/amo-vietnamese 下载最新的 JSON 词库，与本机词汇、短句和自定义拼音合并。同名词句以云端内容覆盖，本机已记住状态、答题记录和个人设置保留。','Tải bản JSON mới nhất từ amo112211/amo-vietnamese để gộp từ vựng, câu ngắn và phiên âm tùy chỉnh. Mục trùng được thay bằng bản trên GitHub; tiến độ học và cài đặt cá nhân vẫn được giữ nguyên.'],
+  ['p','从 amo112211/amo-vietnamese 下载最新的 JSON 词库，与本机词汇、例句、短句、常用搭配、相关词和自定义拼音合并。同名内容以云端版本覆盖，本机已记住状态、答题记录和个人设置保留。','Tải JSON mới nhất từ amo112211/amo-vietnamese để gộp từ vựng, ví dụ, câu ngắn, cụm từ thường dùng, từ liên quan và phiên âm tùy chỉnh. Nội dung trùng dùng bản GitHub; tiến độ học và cài đặt cá nhân vẫn được giữ nguyên.'],
   ['#amoCloudDownloadBtn','下载云存档','Tải bản lưu đám mây'],
   ['#amoCloudConfirmBtn','确认合并云词库','Xác nhận gộp từ vựng đám mây']
  ];
@@ -14165,10 +14239,25 @@ function amoAdminLogin(event){
 }
 function amoAdminLogout(){amoAdminAuthorized=false;document.getElementById('amoAdminLoginForm').reset();amoAdminRefresh();}
 function amoAdminPublicData(){
- const wordFields=['vi','zh','category','createdAt','custom'];
+ const wordFields=['vi','zh','category','createdAt','custom','pos','collocations'];
  const sentFields=['vi','zh','category','createdAt','custom'];
+ const cleanCollocations=input=>Array.isArray(input)?input.map(pair=>{
+   if(!pair||typeof pair!=='object'||Array.isArray(pair))return null;
+   const vi=String(pair.vi||'').trim(),zh=String(pair.zh||'').trim();if(!vi||!zh)return null;
+   const out={vi,zh};
+   if(pair.id!=null)out.id=String(pair.id);
+   if(Array.isArray(pair.examples)){
+     const rows=pair.examples.map(ex=>ex&&typeof ex==='object'?{vi:String(ex.vi||'').trim(),zh:String(ex.zh||'').trim()}:null).filter(ex=>ex&&ex.vi&&ex.zh);
+     if(rows.length)out.examples=rows;
+   }
+   return out;
+ }).filter(Boolean):[];
  const safeItems=(items,fields)=>items.map(entry=>{
-  const output={};for(const key of fields)if(Object.prototype.hasOwnProperty.call(entry,key))output[key]=entry[key];
+  const output={};for(const key of fields){
+    if(!Object.prototype.hasOwnProperty.call(entry,key))continue;
+    if(key==='collocations')output.collocations=cleanCollocations(entry.collocations);
+    else output[key]=entry[key];
+  }
   return output;
  }).filter(x=>typeof x.vi==='string'&&x.vi.trim()&&typeof x.zh==='string'&&x.zh.trim());
  const cleanStrings=a=>Array.isArray(a)?a.filter(x=>typeof x==='string'&&x.trim()):[];
@@ -14181,11 +14270,19 @@ function amoAdminPublicData(){
  };
  const validWords=new Set(words.map(w=>normalize(w.vi)));
  const validSentences=new Set(sentences.map(w=>normalize(w.vi)));
+ const publicExamples={};
+ for(const [key,value] of Object.entries(examples||{})){
+   const normalized=normalize(key);if(!validWords.has(normalized)||!value||typeof value!=='object'||Array.isArray(value))continue;
+   const vi=typeof value.vi==='string'?value.vi.trim():'';
+   const zh=typeof value.zh==='string'?value.zh.trim():'';
+   if(vi||zh)publicExamples[normalized]={...(vi?{vi}:{}),...(zh?{zh}:{})};
+ }
+ const publicRelations=normalizeRelatedRelations(relatedRelations).filter(rel=>validWords.has(normalize(rel.wordA))&&validWords.has(normalize(rel.wordB)));
  const pinyin=getBackupPinyin();
- // Word/category metadata is exported without personal learning records.
- return {backupVersion:6,backupType:'public-dictionary',appName:'阿莫自学助手',
+ // V31.122：公共 GitHub 词库只包含可共享学习内容，不包含任何个人学习状态。
+ return {backupVersion:8,backupType:'public-dictionary',appName:'阿莫自学助手',
    allWordsSnapshot:words,allSentencesSnapshot:sentences,
-   customWords:words,customSentences:sentences,
+   customWords:words,customSentences:sentences,examples:publicExamples,relatedRelations:publicRelations,
    customCategories:cleanStrings(customCategories),sentenceCategories:cleanStrings(sentenceCategories),
    wordCategoryMap:onlyKeys(wordCategoryMap,validWords),sentenceCategoryMap:onlyKeys(sentenceCategoryMap,validSentences),
    customPinyin:{...pinyin},exportTime:new Date().toISOString()};
@@ -14196,9 +14293,9 @@ function amoAdminRefresh(){
  if(form.hidden!==amoAdminAuthorized)form.hidden=amoAdminAuthorized;
  if(panel.hidden===amoAdminAuthorized)panel.hidden=!amoAdminAuthorized;
  if(amoAdminAuthorized){const data=amoAdminPublicData();const preview=document.getElementById('amoAdminExportPreview');
- const vi=settings.uiLanguage==='vi';const text=vi?
- `Từ vựng: ${data.customWords.length} · Câu ngắn: ${data.customSentences.length} · Phiên âm tùy chỉnh: ${Object.keys(data.customPinyin).length}. Không xuất lịch sử học và cài đặt cá nhân.`:
- `词汇：${data.customWords.length} 条 · 短句：${data.customSentences.length} 条 · 自定义拼音：${Object.keys(data.customPinyin).length} 条。不导出学习记录和个人设置。`;
+ const vi=settings.uiLanguage==='vi';const collocationCount=data.customWords.reduce((sum,w)=>sum+(Array.isArray(w.collocations)?w.collocations.length:0),0);const text=vi?
+ `Từ vựng: ${data.customWords.length} · Ví dụ: ${Object.keys(data.examples||{}).length} · Câu ngắn: ${data.customSentences.length} · Cụm từ: ${collocationCount} · Liên quan: ${(data.relatedRelations||[]).length} · Phiên âm: ${Object.keys(data.customPinyin).length}. Không xuất lịch sử học và cài đặt cá nhân.`:
+ `词汇：${data.customWords.length} 条 · 例句词条：${Object.keys(data.examples||{}).length} 条 · 短句：${data.customSentences.length} 条 · 常用搭配：${collocationCount} 条 · 相关词关系：${(data.relatedRelations||[]).length} 条 · 自定义拼音：${Object.keys(data.customPinyin).length} 条。不导出学习记录和个人设置。`;
  if(preview.textContent!==text)preview.textContent=text;
  }
 }
@@ -14209,7 +14306,8 @@ async function amoAdminExport(){
   if(!data.customWords.length&&!data.customSentences.length)throw new Error(amoAdminText('公共词库为空','Kho từ vựng công khai trống'));
   const payload=JSON.stringify(data,null,2);
   // Only these public keys are ever serialised; no credentials or settings are included.
-  if(!confirm(amoAdminText(`确认导出 ${data.customWords.length} 条词汇与 ${data.customSentences.length} 条短句？请手动上传到 GitHub 并替换 cloud-dictionary.json。`,`Xuất ${data.customWords.length} từ vựng và ${data.customSentences.length} câu ngắn? Hãy tải lên GitHub và thay thế cloud-dictionary.json.`)))return;
+  const collocationCount=data.customWords.reduce((sum,w)=>sum+(Array.isArray(w.collocations)?w.collocations.length:0),0);
+  if(!confirm(amoAdminText(`确认导出完整公共词库：${data.customWords.length} 条词汇、${Object.keys(data.examples||{}).length} 个例句词条、${data.customSentences.length} 条短句、${collocationCount} 条常用搭配、${(data.relatedRelations||[]).length} 条相关关系？请手动上传到 GitHub 并替换 cloud-dictionary.json。`,`Xuất kho công khai đầy đủ: ${data.customWords.length} từ, ${Object.keys(data.examples||{}).length} mục ví dụ, ${data.customSentences.length} câu ngắn, ${collocationCount} cụm từ và ${(data.relatedRelations||[]).length} quan hệ? Hãy thay cloud-dictionary.json trên GitHub.`)))return;
   const filename='cloud-dictionary.json';const blob=new Blob([payload],{type:'application/json'});
   if(navigator.share&&typeof File!=='undefined'){
    try{const file=new File([blob],filename,{type:'application/json'});
@@ -14593,7 +14691,7 @@ const AmoTextIO=(()=>{
 </script>
 
 <script id="amo-v3118-pos-version">
-window.AMO_BUILD_VERSION="V31.121";
+window.AMO_BUILD_VERSION="V31.122";
 </script>
 
 <script id="amo-v3126-enhancements">
@@ -15028,6 +15126,7 @@ document.addEventListener('DOMContentLoaded',()=>{initAmoSystemTheme();enhanceAm
 <script id="amo-v3131-update-history">
 (function(){
   const AMO_UPDATE_HISTORY = [
+    {version:'V31.122',date:'2026-10-18',items:['GitHub 公共词库升级为完整学习内容包：管理员导出的 cloud-dictionary.json 现在包含词汇、词性、词汇例句、短句、常用搭配（含搭配例句）、相关词关系和自定义拼音；继续排除已记住状态、答题记录、考试历史、个人设置与管理员信息。','云词库下载合并同步支持例句、常用搭配和相关词：同名公共内容以 GitHub 版本覆盖，本机独有内容保留；关系按唯一关系键合并，不复制重复关系，学习进度和个人状态保持不变。','练习短句新增“本轮不重复出题”可选项，默认关闭；开启后同一轮内已出现短句不会再次抽到，题库走完自动开始新一轮，普通随机模式和上一题历史逻辑保持原样。','练习短句答案输入框改为水平居中输入：光标从中间开始，文字随输入保持居中向两侧展开；占位文字同步居中，自动高度、Enter 提交和手机输入法逻辑不变。','同步更新页面标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION和更新记录为V31.122。']},
     {version:'V31.121',date:'2026-10-07',items:['智能考试增加翻译题最低覆盖：只要存在合格翻译题源，较小题量至少保留1道，20题及以上尽量保留2道；即使当前以新词/薄弱强化为主，也不会再因为权重过低长期显示0道翻译题。','保留自适应权重与新词难度保护：翻译题只保证1–2道基础覆盖，其余名额仍按学习阶段、题型能力、近期错误和遗忘风险动态分配。','AI组卷在生成普通题前预留本轮翻译题对应的例句/短句，避免同一题源先被选择题、输入题或填空题占用后出现“计划有翻译题、实际生成0道”的冲突。','智能组卷说明新增“翻译候选数量 / 本轮保留数量”，可以直接判断是题源不足还是AI分配结果；原翻译候选条件、评分、考试历史及其他题型逻辑保持不变。','同步更新标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION和更新记录为V31.121。']},
     {version:'V31.120',date:'2026-10-07',items:['短句词汇提示索引扩展为“正式词库 + 常用搭配 + 相关词”共享来源：像 khá tốt 这类只要已经存在于常用搭配/相关词数据并带有释义，就会作为完整可点击词组直接显示对应中文意思。','匹配仍使用同一起点最长有效词组优先、区间锁定和Unicode词边界；当 khá、tốt、khá tốt 同时存在时优先锁定 khá tốt，不拆成两个单词，也不会跨越已命中的词组边界。','提示匹配索引继续绑定关系运行时缓存：只在词汇/搭配/关系数据真正变化后重建；打开浮动提示框仍直接读取已有邻接索引，不执行全词库扫描。','常用搭配释义优先于相关词与普通词条的同名候选，缺少释义的纯关系占位不会生成空白提示；保留V31.119相关词/搭配气泡列表、搜索排序和全部原业务功能。','同步更新标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION和更新记录为V31.120。']},
     {version:'V31.119',date:'2026-10-07',items:['单词浮动提示框复用现有关系运行时邻接索引，直接显示“常用搭配 / 相关词”，常用搭配优先；打开气泡不重新扫描整套词库，只有词汇或关系数据变更后才随共享缓存重建。','重写短句词汇提示匹配器：按句子从左到右解析，同一起点最长有效词组优先，命中后锁定区间并禁止后续词组跨越已占用范围。','新增Unicode词边界校验，避免词条匹配到另一个单词内部；“hoàn thành công việc”会稳定解析为“hoàn thành” + “công việc”，不会再错误识别为跨边界的“thành công”。','正确答案与错误答案高亮共用同一词组匹配器，避免两个答题状态出现不同切词结果；匹配索引按首字符分桶并缓存，减少重复全词库排序与扫描。','保留V31.118搜索相关度排序、相关结果折叠、词汇详情、语音、分类、批量添加、导入导出、主题与透明度设置；同步更新版本号与更新记录。']},
