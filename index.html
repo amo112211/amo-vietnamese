@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.148</title>
+<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.149</title>
 <meta name="theme-color" content="#f0f4f8" id="amo-browser-theme-color">
 
 
@@ -5996,7 +5996,7 @@ body select optgroup{
   document.body.classList.add(initial.glass==='off'?'amo-glass-off':initial.glass==='header'?'amo-glass-header':'amo-glass-all');
 })();
 </script>
-<!-- Build: V31.148 -->
+<!-- Build: V31.149 -->
 <!--
   阿莫 V30 兼容架构 / 扩展入口
   数据源：builtInWords/builtInSentences/vietnameseGrammar/chineseGrammar（原有内容未经改写）。
@@ -6011,7 +6011,7 @@ body select optgroup{
         <div class="logo">
             <div class="logo-icon">🇻🇳</div>
             <div>
-                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.148">V31.148</span></div>
+                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.149">V31.149</span></div>
                 <div class="logo-sub">中文母语者 · 零基础学习</div>
             </div>
         </div>
@@ -6098,7 +6098,7 @@ body select optgroup{
         <button type="button" class="amo-reset-effects" id="amoResetDrawerSettingsBtn" onclick="resetAmoDrawerSettings()">↺ 恢复默认抽屉动效</button>
       </div>
     </details>
-    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.148</strong></div>
+    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.149</strong></div>
 </section>
 </div>
 
@@ -13108,7 +13108,7 @@ async function exportBackup(){
         saveCurrentPageScroll();
         const customPinyin=getBackupPinyin();
         const data={
-            backupVersion:9,backupType:"full",appName:"阿莫自学助手",
+            backupVersion:10,backupType:"full",appName:"阿莫自学助手",
             wordEntryFormats:["vi=zh","zh=vi"],
             allWordsSnapshot:allWords().map(w=>({...w})),
             allSentencesSnapshot:allSentences().map(w=>({...w})),
@@ -13118,7 +13118,7 @@ async function exportBackup(){
             articleCategories:(()=>{try{const v=JSON.parse(localStorage.getItem("amo_reading_categories_v1")||"[]");return Array.isArray(v)?v:[];}catch(_){return[];}})(),
             articleProgress:(()=>{try{const v=JSON.parse(localStorage.getItem("amo_reading_progress_v1")||"{}");return v&&typeof v==="object"&&!Array.isArray(v)?v:{};}catch(_){return{};}})(),
             customGrammar:(()=>{try{const v=JSON.parse(localStorage.getItem("amo_custom_grammar_v1")||"[]");return Array.isArray(v)?v:[];}catch(_){return[];}})(),
-            hanVietEntries:(()=>{try{const v=JSON.parse(localStorage.getItem("amo_han_viet_v1")||"[]");return Array.isArray(v)?v:[];}catch(_){return[];}})(),
+            hanVietEntries:(()=>{try{const live=window.AmoGrammarHanViet?.hanVietEntries?.();if(Array.isArray(live))return live.map(x=>({...x,words:Array.isArray(x.words)?x.words.map(w=>({...w})):[]}));const v=JSON.parse(localStorage.getItem("amo_han_viet_v1")||"[]");return Array.isArray(v)?v:[];}catch(_){return[];}})(),
             coreRememberedWords:dedupeWordKeys(coreRememberedWords),relatedRelations:normalizeRelatedRelations(relatedRelations),
             rememberedSentences,permanentRememberedWords,reinforceWords,
             quizSavedRounds,quizSession:loadJSON(KEY_QUIZ_SESSION,null),
@@ -13412,12 +13412,14 @@ function importBackup(){
             const rows=lang?[
                 `Tệp: ${file.name}`,`Chế độ: ${mode==="merge"?"Gộp dữ liệu":"Thay thế dữ liệu"}`,
                 `Từ vựng tự thêm: ${restored.customWords.length}`,`Câu ngắn tự thêm: ${restored.customSentences.length}`,`Bài đọc: ${(restored.articles||[]).length} · Nhóm bài: ${(restored.articleCategories||[]).length} · Từ vựng bài đọc: ${(restored.articleVocabulary||[]).length}`,
+                `Hán-Việt: ${(restored.hanVietEntries||[]).length} gốc / ${(restored.hanVietEntries||[]).reduce((n,e)=>n+(Array.isArray(e.words)?e.words.length:0),0)} từ · Ngữ pháp tự tạo: ${(restored.customGrammar||[]).length}`,
                 `Phiên âm tùy chỉnh: ${Object.keys(restored.settings.customPinyin||{}).length}`,
                 `Nhóm từ: ${restored.customCategories.length}`,`Nhóm câu: ${restored.sentenceCategories.length}`,
                 `Ngày sao lưu: ${data.exportTime||"Không có thông tin"}`
             ]:[
                 `文件：${file.name}`,`导入方式：${mode==="merge"?"合并现有数据":"替换现有数据"}`,
                 `自定义词汇：${restored.customWords.length} 条`,`自定义短句：${restored.customSentences.length} 条`,`文章：${(restored.articles||[]).length} 篇 · 文章分类：${(restored.articleCategories||[]).length} 个 · 文章词汇：${(restored.articleVocabulary||[]).length} 条`,
+                `汉越词：${(restored.hanVietEntries||[]).length} 个字根 / ${(restored.hanVietEntries||[]).reduce((n,e)=>n+(Array.isArray(e.words)?e.words.length:0),0)} 个词族 · 自定义语法：${(restored.customGrammar||[]).length} 条`,
                 `自定义拼音：${Object.keys(restored.settings.customPinyin||{}).length} 条`,
                 `词汇分类：${restored.customCategories.length} 个`,`短句分类：${restored.sentenceCategories.length} 个`,
                 `备份日期：${data.exportTime||"未提供"}`
@@ -13443,7 +13445,8 @@ function confirmBackupImport(){
         persistBackupRestore(next);resetBackupPreview();
         document.getElementById("backupFile").value="";
         refreshAfterBackupRestore();
-        showToast(customPinyinMessage("备份已导入（包含自定义拼音）","Đã nhập bản sao lưu (gồm phiên âm tùy chỉnh)"));
+        const hvCount=(next.hanVietEntries||[]).length,hvWords=(next.hanVietEntries||[]).reduce((n,e)=>n+(Array.isArray(e.words)?e.words.length:0),0),grammarCount=(next.customGrammar||[]).length;
+        showToast(customPinyinMessage(`备份已导入：汉越词 ${hvCount} 个字根 / ${hvWords} 个词族，自定义语法 ${grammarCount} 条`,`Đã nhập sao lưu: ${hvCount} gốc Hán-Việt / ${hvWords} từ, ${grammarCount} ngữ pháp tự tạo`));
     }catch(e){console.error("备份导入失败：",e);showToast(customPinyinMessage("备份导入失败：","Nhập bản sao lưu thất bại: ")+(e?.message||""));}
 }
 function clearAllData(){
@@ -14277,6 +14280,17 @@ function amoCloudPrepare(data){
  const cloudPinyin=data.customPinyin??data.polyphonicPinyin??data.customPinyinEntries??data.customPinyinText??data.settings?.customPinyin;
  const py=cloudPinyin===undefined?{}:normalizeBackupPinyin(cloudPinyin);
  next.settings={...settings,customPinyin:{...(settings.customPinyin||{}),...py}};
+ // V31.149：公共云词库同步汉越词与自定义语法。云端同字根+汉越音覆盖对应公共内容，本机独有条目保留。
+ const currentHV=(()=>{try{const live=window.AmoGrammarHanViet?.hanVietEntries?.();if(Array.isArray(live))return live;const v=JSON.parse(localStorage.getItem('amo_han_viet_v1')||'[]');return Array.isArray(v)?v:[]}catch(_){return[]}})();
+ const incomingHV=Array.isArray(data.hanVietEntries)?data.hanVietEntries.filter(x=>x&&typeof x==='object'&&!Array.isArray(x)&&String(x.han||x.reading||'').trim()):[];
+ const hvMap=new Map(currentHV.map(x=>[normalize((x.han||'')+'|'+(x.reading||'')),x]));let hvNew=0,hvUpdated=0;
+ for(const row of incomingHV){const key=normalize((row.han||'')+'|'+(row.reading||''));if(!key)continue;if(hvMap.has(key))hvUpdated++;else hvNew++;hvMap.set(key,{...row,words:Array.isArray(row.words)?row.words.filter(w=>w&&typeof w==='object'&&!Array.isArray(w)).map(w=>({...w})):[]});}
+ next.hanVietEntries=[...hvMap.values()];
+ const currentGrammar=(()=>{try{const v=JSON.parse(localStorage.getItem('amo_custom_grammar_v1')||'[]');return Array.isArray(v)?v:[]}catch(_){return[]}})();
+ const incomingGrammar=Array.isArray(data.customGrammar)?data.customGrammar.filter(x=>x&&typeof x==='object'&&!Array.isArray(x)):[];
+ const grammarMap=new Map(currentGrammar.map(x=>[String(x.id||'')||normalize((x.mode||'')+'|'+(x.title||'')),x]));let grammarNew=0,grammarUpdated=0;
+ for(const row of incomingGrammar){const key=String(row.id||'')||normalize((row.mode||'')+'|'+(row.title||''));if(!key)continue;if(grammarMap.has(key))grammarUpdated++;else grammarNew++;grammarMap.set(key,{...row});}
+ next.customGrammar=[...grammarMap.values()];
  // 本机主动删除的词句不再被删除标记遮挡云端对应词条。
  const wordKeys=new Set(words.map(w=>normalize(w.vi)));
  const sentenceKeys=new Set(sentences.map(w=>normalize(w.vi)));
@@ -14284,7 +14298,8 @@ function amoCloudPrepare(data){
  next.deletedSentences=deletedSentences.filter(x=>!sentenceKeys.has(normalize(typeof x==='string'?x:x?.vi)));
  const collocations=words.reduce((sum,w)=>sum+(Array.isArray(w.collocations)?w.collocations.length:0),0);
  return {next,summary:{wordNew:mergedWords.added,wordUpdated:mergedWords.overwritten,
- sentenceNew:mergedSentences.added,sentenceUpdated:mergedSentences.overwritten,examples:mergedExamples.imported,collocations,relations:mergedRelations.imported,pinyin:Object.keys(py).length}};
+ sentenceNew:mergedSentences.added,sentenceUpdated:mergedSentences.overwritten,examples:mergedExamples.imported,collocations,relations:mergedRelations.imported,pinyin:Object.keys(py).length,
+ hanVietNew:hvNew,hanVietUpdated:hvUpdated,hanVietTotal:next.hanVietEntries.length,hanVietWords:next.hanVietEntries.reduce((n,e)=>n+(Array.isArray(e.words)?e.words.length:0),0),grammarNew,grammarUpdated,grammarTotal:next.customGrammar.length}};
 }
 async function amoDownloadCloudBank(){
  if(amoCloudBusy)return;
@@ -14307,6 +14322,7 @@ async function amoDownloadCloudBank(){
      'Câu ngắn mới: '+summary.sentenceNew+' · Ghi đè: '+summary.sentenceUpdated,
      'Ví dụ: '+summary.examples+' · Cụm từ: '+summary.collocations+' · Quan hệ: '+summary.relations,
      'Phiên âm đồng bộ: '+summary.pinyin,
+     'Hán-Việt: +'+summary.hanVietNew+' · cập nhật '+summary.hanVietUpdated+' · tổng '+summary.hanVietTotal+' gốc / '+summary.hanVietWords+' từ · Ngữ pháp: '+summary.grammarTotal,
      'Giữ nguyên tiến độ học, trạng thái đã nhớ và cài đặt cá nhân.'
    ]:[
      'GitHub 文件：'+file.name,
@@ -14314,6 +14330,7 @@ async function amoDownloadCloudBank(){
      '短句：新增 '+summary.sentenceNew+' 条，覆盖 '+summary.sentenceUpdated+' 条',
      '同步例句：'+summary.examples+' 个词条 · 常用搭配：'+summary.collocations+' 条 · 相关词关系：'+summary.relations+' 条',
      '同步自定义拼音：'+summary.pinyin+' 条',
+     '汉越词：新增 '+summary.hanVietNew+' 个字根，更新 '+summary.hanVietUpdated+' 个，共 '+summary.hanVietTotal+' 个字根 / '+summary.hanVietWords+' 个词族 · 自定义语法：'+summary.grammarTotal+' 条',
      '保留本机记忆状态、答题记录与个人设置。'
    ];
    for(const line of lines){const p=document.createElement('p');p.textContent=line;preview.appendChild(p);}preview.hidden=false;
@@ -14330,7 +14347,7 @@ function amoConfirmCloudBank(){
  try{
    persistBackupRestore(next);
    amoCloudReset();refreshAfterBackupRestore();
-   amoCloudStatus(amoCloudT('云词库合并完成：新增 '+(summary.wordNew+summary.sentenceNew)+' 条，覆盖 '+(summary.wordUpdated+summary.sentenceUpdated)+' 条。','Đã gộp xong: thêm '+(summary.wordNew+summary.sentenceNew)+' mục, ghi đè '+(summary.wordUpdated+summary.sentenceUpdated)+' mục.'));
+   amoCloudStatus(amoCloudT('云词库合并完成：词句新增 '+(summary.wordNew+summary.sentenceNew)+' 条，覆盖 '+(summary.wordUpdated+summary.sentenceUpdated)+' 条；汉越词 '+summary.hanVietTotal+' 个字根 / '+summary.hanVietWords+' 个词族。','Đã gộp: thêm '+(summary.wordNew+summary.sentenceNew)+' mục, ghi đè '+(summary.wordUpdated+summary.sentenceUpdated)+'; Hán-Việt '+summary.hanVietTotal+' gốc / '+summary.hanVietWords+' từ.'));
  }catch(err){console.error('云词库合并失败：',err);
    amoCloudStatus(amoCloudT('云词库合并失败：','Gộp từ vựng đám mây thất bại: ')+err.message,true);
  }finally{if(btn)btn.disabled=false;}
@@ -14873,7 +14890,7 @@ const AmoTextIO=(()=>{
 </script>
 
 <script id="amo-v3118-pos-version">
-window.AMO_BUILD_VERSION="V31.148";
+window.AMO_BUILD_VERSION="V31.149";
 </script>
 
 <script id="amo-v3126-enhancements">
@@ -15306,6 +15323,7 @@ document.addEventListener('DOMContentLoaded',()=>{initAmoSystemTheme();enhanceAm
 <script id="amo-v3131-update-history">
 (function(){
   const AMO_UPDATE_HISTORY = [
+{version:'V31.149',date:'2026-11-02',items:['修复管理员公共词库汉越词始终显示0的真实根因：页面后半段旧版 amoAdminPublicData 覆盖了新版导出函数；现已统一为单一完整公共导出结构，包含汉越词、自定义语法、词性映射和完整性审计。','完整备份导出改为优先读取汉越词模块实时数据；备份导入预览新增汉越字根/词族与自定义语法数量，导入成功提示同步显示实际恢复数量。','GitHub 云词库合并新增汉越词与自定义语法：预览显示新增/更新/总数，确认后真正写入本机，公共词库 backupVersion 升至12，完整备份版本升至10。','手机答题控制区重新分组：随机/一直答题两列，AI生词学习与汉越词答题独立上下全宽显示，历史记录与重新答题单独成行，彻底避免逐字竖排和拥挤。','审计完整备份、公共词库、云文章三类导出导入路径；保留文章独立 yuedu.json 机制，修复公共词库与完整备份中的汉越词链路。','同步更新版本为V31.149。']},
 {version:'V31.148',date:'2026-11-02',items:['修复管理员公共词库预览汉越词仍显示0：管理员导出优先复用汉越词页面正在使用的 hanVietEntries() 数据入口，并保留 localStorage 兜底，确保预览、确认框与实际导出数量一致。','手机答题顶部把“AI生词学习”和“汉越词答题”收进专用按钮组；手机端上下排列且文字保持横向显示，桌面端继续并排。','补齐AI生词学习夜间模式：学习面板、候选列表、控件、下拉框、状态文字统一使用夜间主题变量，修复手机夜间仍出现亮白面板。','夜间模式改为完全手动控制：移除自动跟随系统设置入口，启动与运行期间不再自动切换，始终以用户手动选择的普通/夜晚模式为准。','同步更新版本为V31.148。']},
 {version:'V31.147',date:'2026-11-02',items:['修复管理员“导出公共词库”漏出汉越词：hanVietEntries 现在直接由公共导出主函数写入 JSON，不再依赖后置包装补丁。','公共导出完整保留汉越字根、汉越音、字义、备注、创建/更新时间以及词族的越南语、中文、词性、场景和中越例句；自定义语法也由主导出函数直接写入。','管理员导出预览与确认框新增汉越字根数、词族数和自定义语法数，导出前即可核对是否完整；公共词库 backupVersion 升至 11。','同步更新版本为V31.147。']},
 {version:'V31.146',date:'2026-11-02',items:['修复汉越词搜索结果排序：搜索时不再只按最近添加排序，改为先按匹配相关度排序，再以最近添加作为同相关度下的次级排序。','相关度优先级覆盖汉字/字根、汉越音、词族越南语、中文释义及场景等字段；精确命中优先于前缀命中，前缀命中优先于普通包含匹配。','未输入搜索词时继续保持最近新增优先；同步更新版本为V31.146。']},
@@ -20747,7 +20765,23 @@ function useAIArticleResult(){if(!aiArticleResult)return;closeAIArticleGenerator
 // V31.133 管理员公共词库：不受个人隐藏/删除状态过滤，并进行关系完整性审计。
 function amoAdminCompleteWordsV31133(){const map=new Map();for(const w of (Array.isArray(builtInWords)?builtInWords:[])){const k=normalize(w?.vi||'');if(k&&!map.has(k))map.set(k,{...w,custom:false});}for(const w of (Array.isArray(customWords)?customWords:[])){const k=normalize(w?.vi||'');if(k)map.set(k,{...w,custom:true});}for(const [k,w] of map){if(wordCategoryMap?.[k]!==undefined)w.category=wordCategoryMap[k];if(wordPosMap?.[k])w.pos=wordPosMap[k];}return [...map.values()];}
 window.amoAdminExportAudit=function(){const rawWords=amoAdminCompleteWordsV31133(),valid=new Set(rawWords.map(w=>normalize(w.vi)).filter(Boolean)),relations=normalizeRelatedRelations(relatedRelations||[]),validRelations=relations.filter(r=>valid.has(normalize(r.wordA))&&valid.has(normalize(r.wordB))),orphans=relations.filter(r=>!valid.has(normalize(r.wordA))||!valid.has(normalize(r.wordB)));return {builtIn:(builtInWords||[]).length,custom:(customWords||[]).length,merged:rawWords.length,relations:validRelations.length,orphanRelations:orphans,collocations:rawWords.reduce((n,w)=>n+(Array.isArray(w.collocations)?w.collocations.length:0),0)};};
-window.amoAdminPublicData=function(){const wordFields=['vi','zh','category','createdAt','custom','pos','collocations'];const sentFields=['vi','zh','category','createdAt','custom'];const cleanCollocations=input=>Array.isArray(input)?input.map(pair=>{if(!pair||typeof pair!=='object'||Array.isArray(pair))return null;const vi=String(pair.vi||'').trim(),zh=String(pair.zh||'').trim();if(!vi||!zh)return null;const out={vi,zh};if(pair.id!=null)out.id=String(pair.id);if(Array.isArray(pair.examples)){const rows=pair.examples.map(ex=>ex&&typeof ex==='object'?{vi:String(ex.vi||'').trim(),zh:String(ex.zh||'').trim()}:null).filter(ex=>ex&&ex.vi&&ex.zh);if(rows.length)out.examples=rows;}return out;}).filter(Boolean):[];const safeItems=(items,fields)=>items.map(entry=>{const output={};for(const key of fields){if(!Object.prototype.hasOwnProperty.call(entry,key))continue;if(key==='collocations')output.collocations=cleanCollocations(entry.collocations);else output[key]=entry[key];}return output;}).filter(x=>typeof x.vi==='string'&&x.vi.trim()&&typeof x.zh==='string'&&x.zh.trim());const cleanStrings=a=>Array.isArray(a)?a.filter(x=>typeof x==='string'&&x.trim()):[];const words=safeItems(amoAdminCompleteWordsV31133(),wordFields);const sentenceMap=new Map();for(const w of (Array.isArray(builtInSentences)?builtInSentences:[])){const k=normalize(w?.vi||'');if(k&&!sentenceMap.has(k))sentenceMap.set(k,{...w,custom:false});}for(const w of (Array.isArray(customSentences)?customSentences:[])){const k=normalize(w?.vi||'');if(k)sentenceMap.set(k,{...w,custom:true});}for(const [k,w] of sentenceMap)if(sentenceCategoryMap?.[k]!==undefined)w.category=sentenceCategoryMap[k];const sentences=safeItems([...sentenceMap.values()],sentFields);const onlyKeys=(input,valid)=>{const result={};if(!input||typeof input!=='object')return result;for(const [key,value] of Object.entries(input))if(valid.has(normalize(key))&&typeof value==='string')result[key]=value;return result;};const validWords=new Set(words.map(w=>normalize(w.vi))),validSentences=new Set(sentences.map(w=>normalize(w.vi))),publicExamples={};for(const [key,value] of Object.entries(examples||{})){const normalized=normalize(key);if(!validWords.has(normalized)||!value||typeof value!=='object'||Array.isArray(value))continue;const vi=typeof value.vi==='string'?value.vi.trim():'',zh=typeof value.zh==='string'?value.zh.trim():'';if(vi||zh)publicExamples[normalized]={...(vi?{vi}:{}),...(zh?{zh}:{})};}const allRelations=normalizeRelatedRelations(relatedRelations||[]),publicRelations=allRelations.filter(rel=>validWords.has(normalize(rel.wordA))&&validWords.has(normalize(rel.wordB))),orphanRelations=allRelations.filter(rel=>!validWords.has(normalize(rel.wordA))||!validWords.has(normalize(rel.wordB)));const pinyin=getBackupPinyin();return {backupVersion:9,backupType:'public-dictionary',appName:'阿莫自学助手',allWordsSnapshot:words,allSentencesSnapshot:sentences,customWords:words,customSentences:sentences,examples:publicExamples,relatedRelations:publicRelations,customCategories:cleanStrings(customCategories),sentenceCategories:cleanStrings(sentenceCategories),wordCategoryMap:onlyKeys(wordCategoryMap,validWords),wordPosMap:onlyKeys(wordPosMap,validWords),sentenceCategoryMap:onlyKeys(sentenceCategoryMap,validSentences),customPinyin:{...pinyin},exportDiagnostics:{sourceBuiltInWords:(builtInWords||[]).length,sourceCustomWords:(customWords||[]).length,mergedWords:words.length,validRelations:publicRelations.length,skippedOrphanRelations:orphanRelations.length},exportTime:new Date().toISOString()};};
+window.amoAdminPublicData=function(){
+ const wordFields=['vi','zh','category','createdAt','custom','pos','collocations'],sentFields=['vi','zh','category','createdAt','custom'];
+ const cleanCollocations=input=>Array.isArray(input)?input.map(pair=>{if(!pair||typeof pair!=='object'||Array.isArray(pair))return null;const vi=String(pair.vi||'').trim(),zh=String(pair.zh||'').trim();if(!vi||!zh)return null;const out={vi,zh};if(pair.id!=null)out.id=String(pair.id);if(Array.isArray(pair.examples)){const rows=pair.examples.map(ex=>ex&&typeof ex==='object'?{vi:String(ex.vi||'').trim(),zh:String(ex.zh||'').trim()}:null).filter(ex=>ex&&ex.vi&&ex.zh);if(rows.length)out.examples=rows;}return out;}).filter(Boolean):[];
+ const safeItems=(items,fields)=>items.map(entry=>{const output={};for(const key of fields){if(!Object.prototype.hasOwnProperty.call(entry,key))continue;if(key==='collocations')output.collocations=cleanCollocations(entry.collocations);else output[key]=entry[key];}return output;}).filter(x=>typeof x.vi==='string'&&x.vi.trim()&&typeof x.zh==='string'&&x.zh.trim());
+ const cleanStrings=a=>Array.isArray(a)?a.filter(x=>typeof x==='string'&&x.trim()):[];
+ const words=safeItems(amoAdminCompleteWordsV31133(),wordFields),sentenceMap=new Map();
+ for(const w of (Array.isArray(builtInSentences)?builtInSentences:[])){const k=normalize(w?.vi||'');if(k&&!sentenceMap.has(k))sentenceMap.set(k,{...w,custom:false});}
+ for(const w of (Array.isArray(customSentences)?customSentences:[])){const k=normalize(w?.vi||'');if(k)sentenceMap.set(k,{...w,custom:true});}
+ for(const [k,w] of sentenceMap)if(sentenceCategoryMap?.[k]!==undefined)w.category=sentenceCategoryMap[k];
+ const sentences=safeItems([...sentenceMap.values()],sentFields),onlyKeys=(input,valid)=>{const result={};if(!input||typeof input!=='object')return result;for(const [key,value] of Object.entries(input))if(valid.has(normalize(key))&&typeof value==='string')result[key]=value;return result;};
+ const validWords=new Set(words.map(w=>normalize(w.vi))),validSentences=new Set(sentences.map(w=>normalize(w.vi))),publicExamples={};
+ for(const [key,value] of Object.entries(examples||{})){const normalized=normalize(key);if(!validWords.has(normalized)||!value||typeof value!=='object'||Array.isArray(value))continue;const vi=typeof value.vi==='string'?value.vi.trim():'',zh=typeof value.zh==='string'?value.zh.trim():'';if(vi||zh)publicExamples[normalized]={...(vi?{vi}:{}),...(zh?{zh}:{})};}
+ const allRelations=normalizeRelatedRelations(relatedRelations||[]),publicRelations=allRelations.filter(rel=>validWords.has(normalize(rel.wordA))&&validWords.has(normalize(rel.wordB))),orphanRelations=allRelations.filter(rel=>!validWords.has(normalize(rel.wordA))||!validWords.has(normalize(rel.wordB))),pinyin=getBackupPinyin();
+ let publicHanViet=[];try{const live=window.AmoGrammarHanViet?.hanVietEntries?.();const rows=Array.isArray(live)?live:JSON.parse(localStorage.getItem('amo_han_viet_v1')||'[]');publicHanViet=(Array.isArray(rows)?rows:[]).filter(x=>x&&typeof x==='object'&&!Array.isArray(x)).map(entry=>({id:String(entry.id||''),han:String(entry.han||'').trim(),reading:String(entry.reading||'').trim(),meaning:String(entry.meaning||'').trim(),note:String(entry.note||'').trim(),createdAt:Number(entry.createdAt)||0,updatedAt:Number(entry.updatedAt)||0,words:Array.isArray(entry.words)?entry.words.filter(w=>w&&typeof w==='object'&&!Array.isArray(w)&&String(w.vi||'').trim()).map(w=>({vi:String(w.vi||'').trim(),zh:String(w.zh||'').trim(),pos:String(w.pos||'').trim(),category:String(w.category||'').trim(),exampleVi:String(w.exampleVi||'').trim(),exampleZh:String(w.exampleZh||'').trim()})):[]})).filter(e=>e.han||e.reading);}catch(_){publicHanViet=[];}
+ let publicGrammar=[];try{const rows=JSON.parse(localStorage.getItem('amo_custom_grammar_v1')||'[]');publicGrammar=Array.isArray(rows)?rows.filter(x=>x&&typeof x==='object'&&!Array.isArray(x)).map(x=>({...x})):[];}catch(_){publicGrammar=[];}
+ return {backupVersion:12,backupType:'public-dictionary',appName:'阿莫自学助手',allWordsSnapshot:words,allSentencesSnapshot:sentences,customWords:words,customSentences:sentences,examples:publicExamples,relatedRelations:publicRelations,customCategories:cleanStrings(customCategories),sentenceCategories:cleanStrings(sentenceCategories),wordCategoryMap:onlyKeys(wordCategoryMap,validWords),wordPosMap:onlyKeys(wordPosMap,validWords),sentenceCategoryMap:onlyKeys(sentenceCategoryMap,validSentences),customPinyin:{...pinyin},customGrammar:publicGrammar,hanVietEntries:publicHanViet,exportDiagnostics:{sourceBuiltInWords:(builtInWords||[]).length,sourceCustomWords:(customWords||[]).length,mergedWords:words.length,validRelations:publicRelations.length,skippedOrphanRelations:orphanRelations.length,hanVietRoots:publicHanViet.length,hanVietWords:publicHanViet.reduce((n,e)=>n+(e.words?.length||0),0),customGrammar:publicGrammar.length},exportTime:new Date().toISOString()};
+};
 const prevAdminRefreshV31133=amoAdminRefresh;amoAdminRefresh=function(){prevAdminRefreshV31133();if(!amoAdminAuthorized)return;const p=document.getElementById('amoAdminExportPreview');if(!p)return;const data=amoAdminPublicData(),audit=amoAdminExportAudit();const extra=`\n完整性审计：原始内置 ${audit.builtIn} · 自定义 ${audit.custom} · 去重后导出 ${data.customWords.length} · 常用搭配 ${audit.collocations} · 有效关联 ${data.relatedRelations.length}`+(audit.orphanRelations.length?` · ⚠ 跳过 ${audit.orphanRelations.length} 条孤立异常关系`:' · 关联完整');if(!p.textContent.includes('完整性审计：'))p.textContent+=extra;};
 
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){const el=document.getElementById('amoAIArticleGenerator');if(el&&!el.hidden)closeAIArticleGenerator();}});
@@ -20781,6 +20815,20 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){const el=document.g
 .amo-ai-study-queue-meta{margin-top:4px;font-size:11px;color:var(--muted)}.amo-ai-study-queue-example{margin-top:6px;font-size:12px;line-height:1.55}.amo-ai-study-queue-example .zh{color:var(--study-zh-color)}
 .amo-ai-study-unlisted{display:inline-flex;align-items:center;margin-left:6px;padding:2px 6px;border-radius:999px;border:1px solid color-mix(in srgb,var(--primary) 35%,var(--border));font-size:10px;font-weight:800;color:var(--primary-dark)}
 @media(max-width:760px){.amo-ai-preview-head-v134,.amo-ai-preview-row-v134{min-width:1010px!important}.amo-ai-study-shell{padding:13px;border-radius:13px}.amo-ai-study-head{align-items:center}.amo-ai-study-controls{align-items:stretch}.amo-ai-study-controls label{flex:1 1 145px;display:grid;gap:4px}.amo-ai-study-controls .select{width:100%}.amo-ai-study-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.amo-ai-study-actions .btn{min-width:0;width:100%}}
+
+/* V31.149: mobile quiz-control regrouping */
+@media(max-width:700px){
+  #quiz .quiz-history-top-control{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px!important;align-items:stretch!important;justify-content:stretch!important;margin-top:10px!important}
+  #quiz .quiz-history-top-control .quiz-history-toggle{min-width:0!important;width:100%!important;min-height:42px!important;padding:8px 10px!important;justify-content:center!important;white-space:normal!important;word-break:keep-all!important;overflow-wrap:normal!important;writing-mode:horizontal-tb!important;text-orientation:mixed!important;border:1px solid var(--border)!important;border-radius:12px!important;background:color-mix(in srgb,var(--card) 92%,transparent)!important}
+  #quiz .quiz-history-top-control .quiz-history-toggle span{white-space:normal!important;word-break:keep-all!important;writing-mode:horizontal-tb!important}
+  #quiz .quiz-history-top-control .quiz-infinite-toggle{grid-column:2}
+  #quiz #quizInfiniteStop{grid-column:1/-1;width:100%!important;min-height:40px!important}
+  #quiz .amo-special-quiz-launches{grid-column:1/-1;display:grid!important;grid-template-columns:1fr!important;gap:7px!important;width:100%!important;min-width:0!important}
+  #quiz .amo-special-quiz-launches .btn{width:100%!important;min-width:0!important;min-height:42px!important;padding:9px 12px!important;white-space:nowrap!important;word-break:keep-all!important;writing-mode:horizontal-tb!important;text-orientation:mixed!important}
+  #quiz .quiz-history-top-control .quiz-history-toggle:has(#quizHistoryToggle){grid-column:1/-1}
+  #quiz .quiz-history-top-control .quiz-round-picker{grid-column:1/-1!important;width:100%!important;display:grid!important;grid-template-columns:auto minmax(0,1fr)!important;gap:8px!important;align-items:center!important}
+  #quiz .quiz-history-top-control .quiz-round-dropdown,#quiz .quiz-history-top-control .quiz-round-trigger{width:100%!important;min-width:0!important}
+}
 
 /* V31.148: special quiz launch stack + complete AI study night theme */
 .amo-special-quiz-launches{display:flex;align-items:center;gap:6px;flex:0 0 auto}
