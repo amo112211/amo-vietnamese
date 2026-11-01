@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.146</title>
+<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.147</title>
 <meta name="theme-color" content="#f0f4f8" id="amo-browser-theme-color">
 
 
@@ -5997,7 +5997,7 @@ body select optgroup{
   document.body.classList.add(initial.glass==='off'?'amo-glass-off':initial.glass==='header'?'amo-glass-header':'amo-glass-all');
 })();
 </script>
-<!-- Build: V31.146 -->
+<!-- Build: V31.147 -->
 <!--
   阿莫 V30 兼容架构 / 扩展入口
   数据源：builtInWords/builtInSentences/vietnameseGrammar/chineseGrammar（原有内容未经改写）。
@@ -6012,7 +6012,7 @@ body select optgroup{
         <div class="logo">
             <div class="logo-icon">🇻🇳</div>
             <div>
-                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.146">V31.146</span></div>
+                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.147">V31.147</span></div>
                 <div class="logo-sub">中文母语者 · 零基础学习</div>
             </div>
         </div>
@@ -6100,7 +6100,7 @@ body select optgroup{
         <button type="button" class="amo-reset-effects" id="amoResetDrawerSettingsBtn" onclick="resetAmoDrawerSettings()">↺ 恢复默认抽屉动效</button>
       </div>
     </details>
-    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.146</strong></div>
+    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.147</strong></div>
 </section>
 </div>
 
@@ -14439,13 +14439,29 @@ function amoAdminPublicData(){
  }
  const publicRelations=normalizeRelatedRelations(relatedRelations).filter(rel=>validWords.has(normalize(rel.wordA))&&validWords.has(normalize(rel.wordB)));
  const pinyin=getBackupPinyin();
- // V31.122：公共 GitHub 词库只包含可共享学习内容，不包含任何个人学习状态。
- return {backupVersion:8,backupType:'public-dictionary',appName:'阿莫自学助手',
+ const publicHanViet=(()=>{
+   try{
+     const rows=JSON.parse(localStorage.getItem('amo_han_viet_v1')||'[]');
+     if(!Array.isArray(rows))return [];
+     return rows.filter(x=>x&&typeof x==='object'&&!Array.isArray(x)).map(entry=>({
+       id:String(entry.id||''),han:String(entry.han||'').trim(),reading:String(entry.reading||'').trim(),
+       meaning:String(entry.meaning||'').trim(),note:String(entry.note||'').trim(),
+       createdAt:Number(entry.createdAt)||0,updatedAt:Number(entry.updatedAt)||0,
+       words:Array.isArray(entry.words)?entry.words.filter(w=>w&&typeof w==='object'&&!Array.isArray(w)).map(w=>({
+         vi:String(w.vi||'').trim(),zh:String(w.zh||'').trim(),pos:String(w.pos||'').trim(),
+         category:String(w.category||'').trim(),exampleVi:String(w.exampleVi||'').trim(),exampleZh:String(w.exampleZh||'').trim()
+       })).filter(w=>w.vi):[]
+     })).filter(e=>e.han||e.reading);
+   }catch(_){return [];}
+ })();
+ const publicGrammar=(()=>{try{const rows=JSON.parse(localStorage.getItem('amo_custom_grammar_v1')||'[]');return Array.isArray(rows)?rows:[];}catch(_){return [];}})();
+ // V31.147：公共 GitHub 词库直接包含可共享汉越词/自定义语法，不依赖后置包装函数。
+ return {backupVersion:11,backupType:'public-dictionary',appName:'阿莫自学助手',
    allWordsSnapshot:words,allSentencesSnapshot:sentences,
    customWords:words,customSentences:sentences,examples:publicExamples,relatedRelations:publicRelations,
    customCategories:cleanStrings(customCategories),sentenceCategories:cleanStrings(sentenceCategories),
    wordCategoryMap:onlyKeys(wordCategoryMap,validWords),sentenceCategoryMap:onlyKeys(sentenceCategoryMap,validSentences),
-   customPinyin:{...pinyin},exportTime:new Date().toISOString()};
+   customPinyin:{...pinyin},customGrammar:publicGrammar,hanVietEntries:publicHanViet,exportTime:new Date().toISOString()};
 }
 function amoAdminRefresh(){
  const form=document.getElementById('amoAdminLoginForm');const panel=document.getElementById('amoAdminAuthed');
@@ -14453,9 +14469,9 @@ function amoAdminRefresh(){
  if(form.hidden!==amoAdminAuthorized)form.hidden=amoAdminAuthorized;
  if(panel.hidden===amoAdminAuthorized)panel.hidden=!amoAdminAuthorized;
  if(amoAdminAuthorized){const data=amoAdminPublicData();const preview=document.getElementById('amoAdminExportPreview');
- const vi=settings.uiLanguage==='vi';const collocationCount=data.customWords.reduce((sum,w)=>sum+(Array.isArray(w.collocations)?w.collocations.length:0),0);const text=vi?
- `Từ vựng: ${data.customWords.length} · Ví dụ: ${Object.keys(data.examples||{}).length} · Câu ngắn: ${data.customSentences.length} · Cụm từ: ${collocationCount} · Liên quan: ${(data.relatedRelations||[]).length} · Phiên âm: ${Object.keys(data.customPinyin).length}. Không xuất lịch sử học và cài đặt cá nhân.`:
- `词汇：${data.customWords.length} 条 · 例句词条：${Object.keys(data.examples||{}).length} 条 · 短句：${data.customSentences.length} 条 · 常用搭配：${collocationCount} 条 · 相关词关系：${(data.relatedRelations||[]).length} 条 · 自定义拼音：${Object.keys(data.customPinyin).length} 条。不导出学习记录和个人设置。`;
+ const vi=settings.uiLanguage==='vi';const collocationCount=data.customWords.reduce((sum,w)=>sum+(Array.isArray(w.collocations)?w.collocations.length:0),0);const hanVietWordCount=(data.hanVietEntries||[]).reduce((sum,e)=>sum+(Array.isArray(e.words)?e.words.length:0),0);const text=vi?
+ `Từ vựng: ${data.customWords.length} · Ví dụ: ${Object.keys(data.examples||{}).length} · Câu ngắn: ${data.customSentences.length} · Cụm từ: ${collocationCount} · Liên quan: ${(data.relatedRelations||[]).length} · Hán-Việt: ${(data.hanVietEntries||[]).length} gốc / ${hanVietWordCount} từ · Ngữ pháp tự tạo: ${(data.customGrammar||[]).length} · Phiên âm: ${Object.keys(data.customPinyin).length}. Không xuất lịch sử học và cài đặt cá nhân.`:
+ `词汇：${data.customWords.length} 条 · 例句词条：${Object.keys(data.examples||{}).length} 条 · 短句：${data.customSentences.length} 条 · 常用搭配：${collocationCount} 条 · 相关词关系：${(data.relatedRelations||[]).length} 条 · 汉越词：${(data.hanVietEntries||[]).length} 个字根 / ${hanVietWordCount} 个词族 · 自定义语法：${(data.customGrammar||[]).length} 条 · 自定义拼音：${Object.keys(data.customPinyin).length} 条。不导出学习记录和个人设置。`;
  if(preview.textContent!==text)preview.textContent=text;
  }
 }
@@ -14467,7 +14483,8 @@ async function amoAdminExport(){
   const payload=JSON.stringify(data,null,2);
   // Only these public keys are ever serialised; no credentials or settings are included.
   const collocationCount=data.customWords.reduce((sum,w)=>sum+(Array.isArray(w.collocations)?w.collocations.length:0),0);
-  if(!confirm(amoAdminText(`确认导出完整公共词库：${data.customWords.length} 条词汇、${Object.keys(data.examples||{}).length} 个例句词条、${data.customSentences.length} 条短句、${collocationCount} 条常用搭配、${(data.relatedRelations||[]).length} 条相关关系？请手动上传到 GitHub 并替换 cloud-dictionary.json。`,`Xuất kho công khai đầy đủ: ${data.customWords.length} từ, ${Object.keys(data.examples||{}).length} mục ví dụ, ${data.customSentences.length} câu ngắn, ${collocationCount} cụm từ và ${(data.relatedRelations||[]).length} quan hệ? Hãy thay cloud-dictionary.json trên GitHub.`)))return;
+  const hanVietWordCount=(data.hanVietEntries||[]).reduce((sum,e)=>sum+(Array.isArray(e.words)?e.words.length:0),0);
+  if(!confirm(amoAdminText(`确认导出完整公共词库：${data.customWords.length} 条词汇、${Object.keys(data.examples||{}).length} 个例句词条、${data.customSentences.length} 条短句、${collocationCount} 条常用搭配、${(data.relatedRelations||[]).length} 条相关关系、${(data.hanVietEntries||[]).length} 个汉越字根 / ${hanVietWordCount} 个词族、${(data.customGrammar||[]).length} 条自定义语法？请手动上传到 GitHub 并替换 cloud-dictionary.json。`,`Xuất kho công khai đầy đủ: ${data.customWords.length} từ, ${Object.keys(data.examples||{}).length} mục ví dụ, ${data.customSentences.length} câu ngắn, ${collocationCount} cụm từ, ${(data.relatedRelations||[]).length} quan hệ, ${(data.hanVietEntries||[]).length} gốc Hán-Việt / ${hanVietWordCount} từ và ${(data.customGrammar||[]).length} ngữ pháp tự tạo? Hãy thay cloud-dictionary.json trên GitHub.`)))return;
   const filename='cloud-dictionary.json';const blob=new Blob([payload],{type:'application/json'});
   if(navigator.share&&typeof File!=='undefined'){
    try{const file=new File([blob],filename,{type:'application/json'});
@@ -14851,7 +14868,7 @@ const AmoTextIO=(()=>{
 </script>
 
 <script id="amo-v3118-pos-version">
-window.AMO_BUILD_VERSION="V31.146";
+window.AMO_BUILD_VERSION="V31.147";
 </script>
 
 <script id="amo-v3126-enhancements">
@@ -15286,6 +15303,7 @@ document.addEventListener('DOMContentLoaded',()=>{initAmoSystemTheme();enhanceAm
 <script id="amo-v3131-update-history">
 (function(){
   const AMO_UPDATE_HISTORY = [
+{version:'V31.147',date:'2026-11-02',items:['修复管理员“导出公共词库”漏出汉越词：hanVietEntries 现在直接由公共导出主函数写入 JSON，不再依赖后置包装补丁。','公共导出完整保留汉越字根、汉越音、字义、备注、创建/更新时间以及词族的越南语、中文、词性、场景和中越例句；自定义语法也由主导出函数直接写入。','管理员导出预览与确认框新增汉越字根数、词族数和自定义语法数，导出前即可核对是否完整；公共词库 backupVersion 升至 11。','同步更新版本为V31.147。']},
 {version:'V31.146',date:'2026-11-02',items:['修复汉越词搜索结果排序：搜索时不再只按最近添加排序，改为先按匹配相关度排序，再以最近添加作为同相关度下的次级排序。','相关度优先级覆盖汉字/字根、汉越音、词族越南语、中文释义及场景等字段；精确命中优先于前缀命中，前缀命中优先于普通包含匹配。','未输入搜索词时继续保持最近新增优先；同步更新版本为V31.146。']},
 {version:'V31.145',date:'2026-11-02',items:['汉越词主标题排版微调：汉字/字根默认字号由28px降为26px，汉越音默认字号由18px升为20px，让字根与读音层级更清楚。','文字与显示的字体颜色设置完整应用到汉越词：汉字/中文释义/中文例句使用中文颜色；汉越音/词族越南语/越南语例句使用越南语颜色；词性、场景、备注等辅助信息使用说明文字颜色。','切换清新薄荷、柔和配色、明亮学习或自定义颜色时，汉越词页面同步即时更新；同步更新版本为V31.145。']},
 {version:'V31.144',date:'2026-11-02',items:['重做汉越词展开后的词族详情：取消拥挤横向多列表格，改为越南语+中文标题行、词性/场景辅助行、整宽中越例句和右侧词库状态/加入操作；手机端自动改为纵向单列。','汉越词新增严格重复提示：新增/编辑时分别检查重复字根与重复汉越音并阻止保存；同一条汉越词内部出现重复词族时明确列出重复词，不再静默处理；不同字根共享同一复合词仍允许。','全站静默提示 Toast 提升到最高显示优先级，确保在词汇详情、编辑弹窗、汉越词弹窗、AI窗口和下拉层之上都可见。','同步更新版本为V31.144。']},
@@ -21042,13 +21060,7 @@ window.startHanVietQuiz=function(mode){hvQuiz={mode,index:0,score:0,total:10,que
 function renderHVQuiz(feedback=''){const p=document.getElementById('hanVietQuizPanel');if(!p)return;if(hvQuiz.index>=hvQuiz.questions.length){p.innerHTML=`<div class="amo-hv-quiz-head"><strong>${hvQuiz.mode==='split'?'拆词练习':'汉越词答题'}完成</strong><span>${hvQuiz.score} / ${hvQuiz.total}</span></div><div class="amo-hv-question">${Math.round(hvQuiz.score/hvQuiz.total*100)}%</div><div class="amo-hv-modal-actions"><button class="btn" onclick="document.getElementById('hanVietQuizPanel').hidden=true">关闭</button><button class="btn btn-primary" onclick="startHanVietQuiz('${hvQuiz.mode}')">再来一轮</button></div>`;return}const q=hvQuiz.questions[hvQuiz.index];p.innerHTML=`<div class="amo-hv-quiz-head"><strong>${hvQuiz.mode==='split'?'拆词练习':'汉越词答题'}</strong><span>${hvQuiz.index+1} / ${hvQuiz.total} · ✅ ${hvQuiz.score}</span></div><div class="amo-hv-question">${escapeHTML(q.prompt)}</div><div class="amo-hv-question-sub">${escapeHTML(q.sub)}</div><div class="amo-hv-options">${q.options.map(o=>`<button class="btn" onclick="answerHanVietQuiz('${encodeURIComponent(o)}')">${escapeHTML(o)}</button>`).join('')}</div><div class="amo-hv-feedback ${feedback?'bad':''}">${escapeHTML(feedback)}</div>`}
 window.answerHanVietQuiz=function(encoded){const value=decodeURIComponent(encoded),q=hvQuiz.questions[hvQuiz.index];if(!q)return;if(value===q.answer){hvQuiz.score++;hvQuiz.index++;renderHVQuiz();}else renderHVQuiz('不对，再想一下')};
 
-// Admin export: append shareable grammar / Han-Viet data.
-if(typeof amoAdminPublicData==='function'){
- const prevAdminPublicDataV31137=amoAdminPublicData;
- amoAdminPublicData=function(){const data=prevAdminPublicDataV31137();data.backupVersion=Math.max(10,Number(data.backupVersion)||0);data.customGrammar=customGrammar();data.hanVietEntries=hanVietEntries();return data};
- const prevAdminRefreshV31137=amoAdminRefresh;
- amoAdminRefresh=function(){prevAdminRefreshV31137();if(!amoAdminAuthorized)return;const p=document.getElementById('amoAdminExportPreview');if(p&&!p.textContent.includes('自定义语法：'))p.textContent+=`\n自定义语法：${customGrammar().length} 条 · 汉越词字根：${hanVietEntries().length} 条`};
-}
+// V31.147：管理员公共导出已在主 amoAdminPublicData / amoAdminRefresh 中直接包含汉越词与自定义语法。
 
 const prevRefreshAfterBackupRestoreV31137=refreshAfterBackupRestore;
 refreshAfterBackupRestore=function(){prevRefreshAfterBackupRestoreV31137();if(currentPageId==='grammar')renderGrammar();if(currentPageId==='hanViet')renderHanViet()};
@@ -21150,7 +21162,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 </style>
 
 <style id="amo-v31145-hanviet-type-color">
-/* V31.146: Han-Viet typography + shared study color settings */
+/* V31.147: Han-Viet typography + shared study color settings */
 #hanViet .amo-hv-root{
   font-size:26px!important;
   color:var(--study-zh-color)!important;
