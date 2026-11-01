@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.147</title>
+<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.148</title>
 <meta name="theme-color" content="#f0f4f8" id="amo-browser-theme-color">
 
 
@@ -122,9 +122,8 @@
     var saved=JSON.parse(localStorage.getItem('vn_settings_v3')||'{}');
     if(saved&&typeof saved==='object'){
       // Deprecated eye mode -> normal in memory only; other saved data remain unchanged.
-      if(saved.autoSystemTheme===true && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) mode='night';
-      else if(saved.autoSystemTheme===true) mode='normal';
-      else if(saved.themeMode==='night')mode='night';
+      // V31.148: theme is manual-only; never follow system/time automatically.
+      if(saved.themeMode==='night')mode='night';
       else if(saved.themeMode==='wallpaper'&&typeof saved.amoWallpaperData==='string'&&saved.amoWallpaperData.startsWith('data:image/')){mode='wallpaper';image=saved.amoWallpaperData}
       if(saved.amoDisplay&&['off','header','all'].includes(saved.amoDisplay.glassMode))glass=saved.amoDisplay.glassMode;
       if(saved.amoDisplay&&saved.amoDisplay.globalGlassTransparency===true)globalGlass=true;
@@ -5997,7 +5996,7 @@ body select optgroup{
   document.body.classList.add(initial.glass==='off'?'amo-glass-off':initial.glass==='header'?'amo-glass-header':'amo-glass-all');
 })();
 </script>
-<!-- Build: V31.147 -->
+<!-- Build: V31.148 -->
 <!--
   阿莫 V30 兼容架构 / 扩展入口
   数据源：builtInWords/builtInSentences/vietnameseGrammar/chineseGrammar（原有内容未经改写）。
@@ -6012,7 +6011,7 @@ body select optgroup{
         <div class="logo">
             <div class="logo-icon">🇻🇳</div>
             <div>
-                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.147">V31.147</span></div>
+                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.148">V31.148</span></div>
                 <div class="logo-sub">中文母语者 · 零基础学习</div>
             </div>
         </div>
@@ -6082,7 +6081,6 @@ body select optgroup{
           <span class="amo-global-glass-state" id="amoGlobalGlassState">未开启</span>
         </button>
         <button type="button" class="amo-reset-effects" onclick="resetAmoEffectSettings()">↺ 恢复高级效果默认值</button>
-        <label class="amo-system-theme-row"><input type="checkbox" id="amoFollowSystemTheme" onchange="setAmoFollowSystemTheme(this.checked)"><span>夜间模式自动跟随系统设置</span></label>
       </div>
       <p class="amo-effect-note">效果仅改变卡片类界面的透明背景、模糊和边框，不修改当前其它显示参数、布局或功能；嵌套卡片会保留层级感，下拉菜单保持实底。关闭后恢复原有显示效果。</p>
     </details>
@@ -6100,7 +6098,7 @@ body select optgroup{
         <button type="button" class="amo-reset-effects" id="amoResetDrawerSettingsBtn" onclick="resetAmoDrawerSettings()">↺ 恢复默认抽屉动效</button>
       </div>
     </details>
-    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.147</strong></div>
+    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.148</strong></div>
 </section>
 </div>
 
@@ -14441,7 +14439,14 @@ function amoAdminPublicData(){
  const pinyin=getBackupPinyin();
  const publicHanViet=(()=>{
    try{
-     const rows=JSON.parse(localStorage.getItem('amo_han_viet_v1')||'[]');
+     let rows=[];
+     if(window.AmoGrammarHanViet && typeof window.AmoGrammarHanViet.hanVietEntries==='function'){
+       rows=window.AmoGrammarHanViet.hanVietEntries();
+     }
+     if(!Array.isArray(rows) || !rows.length){
+       const raw=JSON.parse(localStorage.getItem('amo_han_viet_v1')||'[]');
+       rows=Array.isArray(raw)?raw:[];
+     }
      if(!Array.isArray(rows))return [];
      return rows.filter(x=>x&&typeof x==='object'&&!Array.isArray(x)).map(entry=>({
        id:String(entry.id||''),han:String(entry.han||'').trim(),reading:String(entry.reading||'').trim(),
@@ -14455,7 +14460,7 @@ function amoAdminPublicData(){
    }catch(_){return [];}
  })();
  const publicGrammar=(()=>{try{const rows=JSON.parse(localStorage.getItem('amo_custom_grammar_v1')||'[]');return Array.isArray(rows)?rows:[];}catch(_){return [];}})();
- // V31.147：公共 GitHub 词库直接包含可共享汉越词/自定义语法，不依赖后置包装函数。
+ // V31.148：公共 GitHub 词库直接包含可共享汉越词/自定义语法，不依赖后置包装函数。
  return {backupVersion:11,backupType:'public-dictionary',appName:'阿莫自学助手',
    allWordsSnapshot:words,allSentencesSnapshot:sentences,
    customWords:words,customSentences:sentences,examples:publicExamples,relatedRelations:publicRelations,
@@ -14868,7 +14873,7 @@ const AmoTextIO=(()=>{
 </script>
 
 <script id="amo-v3118-pos-version">
-window.AMO_BUILD_VERSION="V31.147";
+window.AMO_BUILD_VERSION="V31.148";
 </script>
 
 <script id="amo-v3126-enhancements">
@@ -14887,21 +14892,19 @@ function resetAmoEffectSettings(){
 }
 let amoSystemThemeMedia=null;
 function applyAmoSystemThemePreference(){
-  if(!settings.autoSystemTheme)return;
-  const dark=!!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);
-  const next=dark?'night':'normal';
-  if(settings.themeMode!==next){settings.themeMode=next;saveJSON(KEY_SETTINGS,settings);applyDisplaySettings();}
+  // V31.148: automatic theme switching is disabled. Manual themeMode is authoritative.
+  return settings.themeMode;
 }
-function setAmoFollowSystemTheme(enabled){
-  settings.autoSystemTheme=!!enabled;saveJSON(KEY_SETTINGS,settings);
-  if(enabled)applyAmoSystemThemePreference();else applyDisplaySettings();
-  syncAmoSystemThemeControl();
+function setAmoFollowSystemTheme(){
+  settings.autoSystemTheme=false;
+  saveJSON(KEY_SETTINGS,settings);
+  applyDisplaySettings();
 }
-function syncAmoSystemThemeControl(){const el=document.getElementById('amoFollowSystemTheme');if(el)el.checked=!!settings.autoSystemTheme;}
+function syncAmoSystemThemeControl(){const el=document.getElementById('amoFollowSystemTheme');if(el)el.checked=false;}
 function initAmoSystemTheme(){
+  if(settings.autoSystemTheme!==false){settings.autoSystemTheme=false;saveJSON(KEY_SETTINGS,settings);}
   syncAmoSystemThemeControl();
-  if(window.matchMedia){amoSystemThemeMedia=window.matchMedia('(prefers-color-scheme: dark)');const fn=()=>applyAmoSystemThemePreference();if(amoSystemThemeMedia.addEventListener)amoSystemThemeMedia.addEventListener('change',fn);else if(amoSystemThemeMedia.addListener)amoSystemThemeMedia.addListener(fn);}
-  if(settings.autoSystemTheme)applyAmoSystemThemePreference();
+  applyDisplaySettings();
 }
 function enhanceAmoAccessibility(){
   document.querySelectorAll('button').forEach(btn=>{
@@ -15303,6 +15306,7 @@ document.addEventListener('DOMContentLoaded',()=>{initAmoSystemTheme();enhanceAm
 <script id="amo-v3131-update-history">
 (function(){
   const AMO_UPDATE_HISTORY = [
+{version:'V31.148',date:'2026-11-02',items:['修复管理员公共词库预览汉越词仍显示0：管理员导出优先复用汉越词页面正在使用的 hanVietEntries() 数据入口，并保留 localStorage 兜底，确保预览、确认框与实际导出数量一致。','手机答题顶部把“AI生词学习”和“汉越词答题”收进专用按钮组；手机端上下排列且文字保持横向显示，桌面端继续并排。','补齐AI生词学习夜间模式：学习面板、候选列表、控件、下拉框、状态文字统一使用夜间主题变量，修复手机夜间仍出现亮白面板。','夜间模式改为完全手动控制：移除自动跟随系统设置入口，启动与运行期间不再自动切换，始终以用户手动选择的普通/夜晚模式为准。','同步更新版本为V31.148。']},
 {version:'V31.147',date:'2026-11-02',items:['修复管理员“导出公共词库”漏出汉越词：hanVietEntries 现在直接由公共导出主函数写入 JSON，不再依赖后置包装补丁。','公共导出完整保留汉越字根、汉越音、字义、备注、创建/更新时间以及词族的越南语、中文、词性、场景和中越例句；自定义语法也由主导出函数直接写入。','管理员导出预览与确认框新增汉越字根数、词族数和自定义语法数，导出前即可核对是否完整；公共词库 backupVersion 升至 11。','同步更新版本为V31.147。']},
 {version:'V31.146',date:'2026-11-02',items:['修复汉越词搜索结果排序：搜索时不再只按最近添加排序，改为先按匹配相关度排序，再以最近添加作为同相关度下的次级排序。','相关度优先级覆盖汉字/字根、汉越音、词族越南语、中文释义及场景等字段；精确命中优先于前缀命中，前缀命中优先于普通包含匹配。','未输入搜索词时继续保持最近新增优先；同步更新版本为V31.146。']},
 {version:'V31.145',date:'2026-11-02',items:['汉越词主标题排版微调：汉字/字根默认字号由28px降为26px，汉越音默认字号由18px升为20px，让字根与读音层级更清楚。','文字与显示的字体颜色设置完整应用到汉越词：汉字/中文释义/中文例句使用中文颜色；汉越音/词族越南语/越南语例句使用越南语颜色；词性、场景、备注等辅助信息使用说明文字颜色。','切换清新薄荷、柔和配色、明亮学习或自定义颜色时，汉越词页面同步即时更新；同步更新版本为V31.145。']},
@@ -20777,6 +20781,20 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){const el=document.g
 .amo-ai-study-queue-meta{margin-top:4px;font-size:11px;color:var(--muted)}.amo-ai-study-queue-example{margin-top:6px;font-size:12px;line-height:1.55}.amo-ai-study-queue-example .zh{color:var(--study-zh-color)}
 .amo-ai-study-unlisted{display:inline-flex;align-items:center;margin-left:6px;padding:2px 6px;border-radius:999px;border:1px solid color-mix(in srgb,var(--primary) 35%,var(--border));font-size:10px;font-weight:800;color:var(--primary-dark)}
 @media(max-width:760px){.amo-ai-preview-head-v134,.amo-ai-preview-row-v134{min-width:1010px!important}.amo-ai-study-shell{padding:13px;border-radius:13px}.amo-ai-study-head{align-items:center}.amo-ai-study-controls{align-items:stretch}.amo-ai-study-controls label{flex:1 1 145px;display:grid;gap:4px}.amo-ai-study-controls .select{width:100%}.amo-ai-study-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.amo-ai-study-actions .btn{min-width:0;width:100%}}
+
+/* V31.148: special quiz launch stack + complete AI study night theme */
+.amo-special-quiz-launches{display:flex;align-items:center;gap:6px;flex:0 0 auto}
+.amo-special-quiz-launches .btn{white-space:nowrap;writing-mode:horizontal-tb!important;text-orientation:mixed!important}
+body.theme-night .amo-ai-study-shell{background:var(--card)!important;color:var(--text)!important;border-color:var(--border)!important;box-shadow:0 10px 30px rgba(0,0,0,.28)!important}
+body.theme-night .amo-ai-study-queue-item{background:color-mix(in srgb,var(--card) 94%,#000)!important;border-color:var(--border)!important;color:var(--text)!important}
+body.theme-night .amo-ai-study-controls :is(select,input,button),body.theme-night .amo-ai-study-head .btn{color:var(--text)!important}
+body.theme-night .amo-ai-study-controls select{background:var(--card)!important;border-color:var(--border)!important;color-scheme:dark!important}
+body.theme-night .amo-ai-study-stage,body.theme-night .amo-ai-study-unlisted{color:var(--primary)!important;border-color:color-mix(in srgb,var(--primary) 45%,var(--border))!important}
+body.theme-night .amo-ai-study-status,body.theme-night .amo-ai-study-stats,body.theme-night .amo-ai-study-head p,body.theme-night .amo-ai-study-queue-meta,body.theme-night .amo-ai-study-queue-head{color:var(--muted)!important}
+@media(max-width:700px){
+  .amo-special-quiz-launches{flex-direction:column;align-items:stretch;gap:6px;min-width:118px}
+  .amo-special-quiz-launches .btn{width:100%!important;min-width:118px!important;min-height:40px!important;padding:7px 10px!important;line-height:1.2!important}
+}
 </style>
 <script id="amo-v31134-learning">
 (()=>{
@@ -21060,7 +21078,7 @@ window.startHanVietQuiz=function(mode){hvQuiz={mode,index:0,score:0,total:10,que
 function renderHVQuiz(feedback=''){const p=document.getElementById('hanVietQuizPanel');if(!p)return;if(hvQuiz.index>=hvQuiz.questions.length){p.innerHTML=`<div class="amo-hv-quiz-head"><strong>${hvQuiz.mode==='split'?'拆词练习':'汉越词答题'}完成</strong><span>${hvQuiz.score} / ${hvQuiz.total}</span></div><div class="amo-hv-question">${Math.round(hvQuiz.score/hvQuiz.total*100)}%</div><div class="amo-hv-modal-actions"><button class="btn" onclick="document.getElementById('hanVietQuizPanel').hidden=true">关闭</button><button class="btn btn-primary" onclick="startHanVietQuiz('${hvQuiz.mode}')">再来一轮</button></div>`;return}const q=hvQuiz.questions[hvQuiz.index];p.innerHTML=`<div class="amo-hv-quiz-head"><strong>${hvQuiz.mode==='split'?'拆词练习':'汉越词答题'}</strong><span>${hvQuiz.index+1} / ${hvQuiz.total} · ✅ ${hvQuiz.score}</span></div><div class="amo-hv-question">${escapeHTML(q.prompt)}</div><div class="amo-hv-question-sub">${escapeHTML(q.sub)}</div><div class="amo-hv-options">${q.options.map(o=>`<button class="btn" onclick="answerHanVietQuiz('${encodeURIComponent(o)}')">${escapeHTML(o)}</button>`).join('')}</div><div class="amo-hv-feedback ${feedback?'bad':''}">${escapeHTML(feedback)}</div>`}
 window.answerHanVietQuiz=function(encoded){const value=decodeURIComponent(encoded),q=hvQuiz.questions[hvQuiz.index];if(!q)return;if(value===q.answer){hvQuiz.score++;hvQuiz.index++;renderHVQuiz();}else renderHVQuiz('不对，再想一下')};
 
-// V31.147：管理员公共导出已在主 amoAdminPublicData / amoAdminRefresh 中直接包含汉越词与自定义语法。
+// V31.148：管理员公共导出已在主 amoAdminPublicData / amoAdminRefresh 中直接包含汉越词与自定义语法。
 
 const prevRefreshAfterBackupRestoreV31137=refreshAfterBackupRestore;
 refreshAfterBackupRestore=function(){prevRefreshAfterBackupRestoreV31137();if(currentPageId==='grammar')renderGrammar();if(currentPageId==='hanViet')renderHanViet()};
@@ -21121,7 +21139,7 @@ function norm(v){return typeof normalize==='function'?normalize(v):String(v??'')
 function uniqBy(arr,keyFn){const seen=new Set();return arr.filter(x=>{const k=keyFn(x);if(!k||seen.has(k))return false;seen.add(k);return true})}
 function sample(arr,n){const copy=typeof shuffle==='function'?shuffle([...arr]):[...arr].sort(()=>Math.random()-.5);return copy.slice(0,Math.min(n,copy.length))}
 function ensurePanel(){let p=document.getElementById('amoMainHanVietQuiz');if(p)return p;p=document.createElement('section');p.id='amoMainHanVietQuiz';p.className='amo-main-hv-quiz card';p.hidden=true;p.innerHTML=`<div class="amo-main-hv-shell"><div class="amo-main-hv-head"><div><h3>🀄 汉越词答题</h3><p>独立于普通词汇答题。默认先练字根，再练当前字根对应的词族。</p></div><button class="btn btn-small" type="button" id="amoMainHVBack">返回普通答题</button></div><div class="amo-main-hv-controls"><label>学习顺序<select class="select" id="amoMainHVMode"><option value="sequence">先字根后词族</option><option value="root">只练字根</option><option value="family">只练词族</option></select></label><button class="btn btn-primary" type="button" id="amoMainHVStart">开始新一轮</button></div><div id="amoMainHVBody"></div></div>`;const layout=document.querySelector('#quiz .quiz-desktop-layout');layout?.parentNode?.insertBefore(p,layout);p.querySelector('#amoMainHVBack').addEventListener('click',closeMainHanVietQuiz);p.querySelector('#amoMainHVStart').addEventListener('click',startMainHanVietQuiz);return p}
-function installLaunch(){const row=document.querySelector('#quiz .quiz-history-top-control');if(!row||document.getElementById('amoMainHVLaunch'))return;const b=document.createElement('button');b.type='button';b.id='amoMainHVLaunch';b.className='btn btn-small';b.textContent='🀄 汉越词答题';b.addEventListener('click',openMainHanVietQuiz);const ai=row.querySelector('.amo-ai-study-launch');if(ai)ai.insertAdjacentElement('afterend',b);else row.appendChild(b)}
+function installLaunch(){const row=document.querySelector('#quiz .quiz-history-top-control');if(!row||document.getElementById('amoMainHVLaunch'))return;const b=document.createElement('button');b.type='button';b.id='amoMainHVLaunch';b.className='btn btn-small';b.textContent='🀄 汉越词答题';b.addEventListener('click',openMainHanVietQuiz);const ai=row.querySelector('.amo-ai-study-launch');let wrap=row.querySelector('.amo-special-quiz-launches');if(!wrap){wrap=document.createElement('div');wrap.className='amo-special-quiz-launches';if(ai){ai.parentNode.insertBefore(wrap,ai);wrap.appendChild(ai);}else row.appendChild(wrap);}wrap.appendChild(b)}
 function openMainHanVietQuiz(){const p=ensurePanel();document.getElementById('quiz')?.classList.add('amo-main-hv-quiz-active');const ai=document.getElementById('amoAIVocabStudy');if(ai)ai.hidden=true;p.hidden=false;renderIntro();p.scrollIntoView({block:'start',behavior:'smooth'})}
 function closeMainHanVietQuiz(){const p=ensurePanel();p.hidden=true;document.getElementById('quiz')?.classList.remove('amo-main-hv-quiz-active')}
 window.openMainHanVietQuiz=openMainHanVietQuiz;window.closeMainHanVietQuiz=closeMainHanVietQuiz;
@@ -21162,7 +21180,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 </style>
 
 <style id="amo-v31145-hanviet-type-color">
-/* V31.147: Han-Viet typography + shared study color settings */
+/* V31.148: Han-Viet typography + shared study color settings */
 #hanViet .amo-hv-root{
   font-size:26px!important;
   color:var(--study-zh-color)!important;
