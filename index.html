@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.154</title>
+<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.156</title>
 <meta name="theme-color" content="#f0f4f8" id="amo-browser-theme-color">
 
 
@@ -924,6 +924,9 @@ textarea:focus{
     font-size:15px !important;
     line-height:1.55
 }
+
+#quizResult .quiz-correct-example-pair + .quiz-correct-example-pair{margin-top:7px;}
+#quizResult .quiz-correct-example-pair .example-zh{margin-top:2px;}
 #quizResult .quiz-answer-status{
     font-size:20px;
     font-weight:900;
@@ -6021,7 +6024,7 @@ body select optgroup{
   document.body.classList.add(initial.glass==='off'?'amo-glass-off':initial.glass==='header'?'amo-glass-header':'amo-glass-all');
 })();
 </script>
-<!-- Build: V31.154 -->
+<!-- Build: V31.156 -->
 <!--
   阿莫 V30 兼容架构 / 扩展入口
   数据源：builtInWords/builtInSentences/vietnameseGrammar/chineseGrammar（原有内容未经改写）。
@@ -6036,7 +6039,7 @@ body select optgroup{
         <div class="logo">
             <div class="logo-icon">🇻🇳</div>
             <div>
-                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.154">V31.154</span></div>
+                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.156">V31.156</span></div>
                 <div class="logo-sub">中文母语者 · 零基础学习</div>
             </div>
         </div>
@@ -6123,7 +6126,7 @@ body select optgroup{
         <button type="button" class="amo-reset-effects" id="amoResetDrawerSettingsBtn" onclick="resetAmoDrawerSettings()">↺ 恢复默认抽屉动效</button>
       </div>
     </details>
-    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.154</strong></div>
+    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.156</strong></div>
 </section>
 </div>
 
@@ -7453,6 +7456,33 @@ function showToast(msg){
     toast.classList.add("show");
     clearTimeout(toast._timer);
     toast._timer = setTimeout(()=>toast.classList.remove("show"), 2000);
+}
+
+/* V31.156: save-path refresh scheduler. Avoid rebuilding hidden word/sentence pages on mobile. */
+const amoPostSaveRefreshState={words:false,sentences:false,categories:false,sentenceCategories:false,stats:false,wrong:false,raf:0,idle:0};
+function amoSchedulePostSaveRefresh(opts={}){
+    for(const key of ['words','sentences','categories','sentenceCategories','stats','wrong']){
+        if(opts[key]) amoPostSaveRefreshState[key]=true;
+    }
+    if(amoPostSaveRefreshState.raf)return;
+    amoPostSaveRefreshState.raf=requestAnimationFrame(()=>{
+        amoPostSaveRefreshState.raf=0;
+        const wordsVisible=currentPageId==='words'||document.getElementById('words')?.classList.contains('active');
+        const sentencesVisible=currentPageId==='sentences'||document.getElementById('sentences')?.classList.contains('active');
+        if(amoPostSaveRefreshState.words&&wordsVisible){amoPostSaveRefreshState.words=false;renderWords();amoPostSaveRefreshState.stats=false;}
+        else amoPostSaveRefreshState.words=false;
+        if(amoPostSaveRefreshState.sentences&&sentencesVisible){amoPostSaveRefreshState.sentences=false;renderSentences();}
+        else amoPostSaveRefreshState.sentences=false;
+        const deferred=()=>{
+            amoPostSaveRefreshState.idle=0;
+            if(amoPostSaveRefreshState.categories){amoPostSaveRefreshState.categories=false;renderCategoryControls();}
+            if(amoPostSaveRefreshState.sentenceCategories){amoPostSaveRefreshState.sentenceCategories=false;renderSentenceCategoryControls();}
+            if(amoPostSaveRefreshState.wrong){amoPostSaveRefreshState.wrong=false;renderWrong();}
+            if(amoPostSaveRefreshState.stats){amoPostSaveRefreshState.stats=false;updateStats();}
+        };
+        if(typeof requestIdleCallback==='function') amoPostSaveRefreshState.idle=requestIdleCallback(deferred,{timeout:500});
+        else amoPostSaveRefreshState.idle=setTimeout(deferred,32);
+    });
 }
 
 /* ====================== 数据状态 ====================== */
@@ -9259,7 +9289,7 @@ function addRelatedWordToVocabulary(action){
     if(allWords().some(w=>normalize(w.vi)===normalize(vi))){closeWordActionModal();focusVocabularyWord(vi);return;}
     const auto=AmoPOS.detect({vi,zh,examples:[],collocations:[],related:[]});
     const next={vi,zh,category:'',pos:auto.pos||'待确认',collocations:[],createdAt:Date.now(),custom:true};
-    customWords.push(next);saveJSON(KEY_WORDS,customWords);closeWordActionModal();renderCategoryControls();renderWords();updateStats();showToast('已添加到词库');focusVocabularyWord(vi);
+    customWords.push(next);saveJSON(KEY_WORDS,customWords);closeWordActionModal();showToast('已添加到词库');amoSchedulePostSaveRefresh({words:true,categories:true,stats:true});requestAnimationFrame(()=>focusVocabularyWord(vi));
 }
 
 
@@ -9855,9 +9885,8 @@ function saveSentenceEdit(action){
   }
   saveJSON(KEY_SENTENCES,customSentences);
   closeWordActionModal();
-  renderSentenceCategoryControls();
-  renderSentences();updateStats();
   showToast('短句已保存');
+  amoSchedulePostSaveRefresh({sentences:true,sentenceCategories:true,stats:true});
 }
 
 function deleteSentenceNow(vi){
@@ -10223,7 +10252,7 @@ async function batchAddWords(){
     let html='';if(added)html+=`<div style="margin-bottom:10px;color:var(--primary-dark);font-weight:700;">✅ 已新增 ${added} 个词汇</div>`;
     if(invalidLines.length)html+=`<div style="margin-bottom:10px;color:var(--danger);font-weight:700;">⚠️ ${invalidLines.length} 行格式无法识别，已跳过：${invalidLines.slice(0,3).map(escapeHTML).join('；')}</div>`;
     if(duplicates.length){html+=`<div style="padding:14px;border:1px solid #f0cf8b;background:#fff9ec;border-radius:12px;"><div style="font-weight:800;margin-bottom:8px;">⚠️ 发现 ${duplicates.length} 个已经存在的词汇</div><div style="color:var(--muted);font-size:13px;margin-bottom:10px;">当前没有覆盖原答案。确认后点击下面的按钮，才会用这次输入的答案覆盖之前的答案。</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;">`;duplicates.forEach(w=>{html+=`<span class="tag">${escapeHTML(w.vi)}：${escapeHTML(w.oldZh)} → ${escapeHTML(w.zh)}</span>`});html+=`</div><button class="btn btn-primary" type="button" onclick="overwriteExistingWords()">是，覆盖已经存在的答案</button><button class="btn" type="button" onclick="cancelWordOverwrite()">否，保留原答案</button></div>`;}else if(!added&&!invalidLines.length)html='<div style="color:var(--muted);">没有可添加的有效词汇。</div>';
-    resultEl.innerHTML=html;if(added>0&&!duplicates.length&&!invalidLines.length)textarea.value='';renderWords();renderCategoryControls();updateStats();showToast(duplicates.length?`新增 ${added} 个，发现 ${duplicates.length} 个重复词汇`:`成功新增 ${added} 个词汇`);
+    resultEl.innerHTML=html;if(added>0&&!duplicates.length&&!invalidLines.length)textarea.value='';showToast(duplicates.length?`新增 ${added} 个，发现 ${duplicates.length} 个重复词汇`:`成功新增 ${added} 个词汇`);amoSchedulePostSaveRefresh({words:true,categories:true,stats:true});
 }
 
 function overwriteExistingWords(){
@@ -10280,10 +10309,8 @@ function overwriteExistingWords(){
     document.getElementById("batchResult").innerHTML =
         `<div style="color:var(--primary-dark);font-weight:800;">✅ 已覆盖 ${count} 个已存在词汇的答案</div>`;
 
-    renderWords();
-    renderCategoryControls();
-    updateStats();
     showToast(`已覆盖 ${count} 个词汇`);
+    amoSchedulePostSaveRefresh({words:true,categories:true,stats:true});
 }
 
 function cancelWordOverwrite(){
@@ -10375,8 +10402,8 @@ function batchAddSentences(){
         (invalid?(settings.uiLanguage==="vi"?`；${invalid} dòng không nhận diện được hai ngôn ngữ`:`；${invalid} 行无法识别中越两种语言`):"");
     document.getElementById("sentenceBatchResult").textContent=msg;
     if(added>0 && !invalid)document.getElementById("batchSentences").value="";
-    renderSentences();
     showToast(msg);
+    amoSchedulePostSaveRefresh({sentences:true,sentenceCategories:true,stats:true});
 }
 
 function undoLastSentenceBatchAdd(){
@@ -11623,19 +11650,30 @@ function sentenceReadingAnswerRowHTML(lang,text,shownHTML){
     return `<div class="answered-answer-row"><span class="sentence-reading-study-answer" data-study-lang="${lang}">${shownHTML}</span>${speechAnswerButtonHTML(lang,text)}</div>`;
 }
 
+function quizStoredExamplePairs(item){
+    if(!item) return [];
+    const ex=examples[normalize(item.vi)]||{};
+    const viLines=String(ex.vi||"").split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+    const zhLines=String(ex.zh||"").split(/\r?\n/).map(x=>x.trim());
+    const rows=[];
+    viLines.forEach((line,i)=>{
+        let vi=line,embeddedZh="";
+        const m=line.match(/^([\s\S]+?)\s*[（(]([^()（）]*[\u3400-\u9fff][^()（）]*)[）)]\s*$/u);
+        if(m){vi=m[1].trim();embeddedZh=m[2].trim();}
+        rows.push({vi,zh:embeddedZh||zhLines[i]||""});
+    });
+    return rows;
+}
 function quizCorrectDetailsHTML(item){
     if(!item) return "";
     const isVi = settings.uiLanguage === "vi";
     const exampleTitle = isVi ? "Ví dụ" : "例句";
-    const ex = examples[normalize(item.vi)];
-    let html = `<div class="quiz-correct-details">`;
-    if(ex && String(ex.vi || "").trim()){
+    const rows=quizStoredExamplePairs(item);
+    let html = `<div class="quiz-correct-details${rows.length?'':' quiz-no-example'}">`;
+    if(rows.length){
         html += `<div class="quiz-correct-example"><strong>${exampleTitle}：</strong>`;
-        html += String(ex.vi).split(/\r?\n/).filter(line=>line.trim()).map(line=>`<div class="example-vi">${escapeHTML(line)}</div>`).join("");
+        html += rows.map(row=>`<div class="quiz-correct-example-pair"><div class="example-vi">${escapeHTML(row.vi)}</div>${row.zh?`<div class="example-zh">${escapeHTML(row.zh)}</div>`:''}</div>`).join("");
         html += `</div>`;
-    }
-    if(!ex || !String(ex.vi || "").trim()){
-        html=html.replace('class="quiz-correct-details"','class="quiz-correct-details quiz-no-example"');
     }
     return html + `</div>`;
 }
@@ -11653,10 +11691,10 @@ function setQuizInlineMeaning(item, show){
 }
 
 function quizExampleHTML(item){
-    const ex = examples[normalize(item.vi)];
-    if(!ex || !String(ex.vi || "").trim()) return "";
+    const rows=quizStoredExamplePairs(item);
+    if(!rows.length) return "";
     let html = `<div class="word-example" style="margin:14px auto 0;max-width:620px;text-align:left;"><div style="font-weight:800;color:var(--primary-dark);margin-bottom:7px;">📖 例句</div>`;
-    html+=String(ex.vi).split(/\r?\n/).filter(line=>line.trim()).map(line=>`<div class="example-vi">${escapeHTML(line)}</div>`).join("");
+    html+=rows.map(row=>`<div class="quiz-correct-example-pair"><div class="example-vi">${escapeHTML(row.vi)}</div>${row.zh?`<div class="example-zh">${escapeHTML(row.zh)}</div>`:''}</div>`).join("");
     return html + `</div>`;
 }
 
@@ -15069,7 +15107,7 @@ const AmoTextIO=(()=>{
 </script>
 
 <script id="amo-v3118-pos-version">
-window.AMO_BUILD_VERSION="V31.154";
+window.AMO_BUILD_VERSION="V31.156";
 </script>
 
 <script id="amo-v3126-enhancements">
@@ -15502,7 +15540,9 @@ document.addEventListener('DOMContentLoaded',()=>{initAmoSystemTheme();enhanceAm
 <script id="amo-v3131-update-history">
 (function(){
   const AMO_UPDATE_HISTORY = [
-{version:'V31.154',date:'2026-11-02',items:['修复V31.153移动端答题性能CSS误写在<style>标签外导致源码样式文字显示在页面顶部的问题；将该段样式重新放入独立style标签。','检查head区域未再发现同类CSS文本泄漏；保留V31.153的新题定位、滚动稳定和答题索引性能优化逻辑不变。','同步更新页面标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION和更新记录为V31.154。']},
+{version:'V31.156',date:'2026-11-04',items:['优化手机端新增词汇/短句保存性能：保存完成后不再同步重绘隐藏的词汇页和短句页，当前可见页面才按需刷新。','新增统一保存后刷新调度器：分类控件、短句分类和全局统计合并到下一帧/浏览器空闲时执行，减少大词库下连续 DOM 重建造成的主线程阻塞。','批量添加词汇、覆盖重复词、批量添加短句、短句编辑和关联词加入词库均接入轻量刷新路径；保存成功提示优先显示，次要统计随后更新。','保留 V31.155 中越例句显示修复及现有所有数据结构、导入导出、答题和移动端布局。']},
+{version:'V31.155',date:'2026-11-04',items:['修复普通答题回答正确后例句只显示越南语、不显示已有中文翻译的问题：答题结果现在同时读取 examples.vi 与 examples.zh 并按行配对显示。','兼容旧版“越南语例句（中文翻译）”嵌入格式与新版中越分栏格式，避免历史词汇例句中文丢失或重复显示。','统一答题例句展示入口，答对反馈与其它答题例句区域共用同一中越配对逻辑；词汇详情原有显示保持不变。','同步更新页面标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION和更新记录为V31.155。']},
+    {version:'V31.154',date:'2026-11-02',items:['修复V31.153移动端答题性能CSS误写在<style>标签外导致源码样式文字显示在页面顶部的问题；将该段样式重新放入独立style标签。','检查head区域未再发现同类CSS文本泄漏；保留V31.153的新题定位、滚动稳定和答题索引性能优化逻辑不变。','同步更新页面标题、顶部版本徽标、设置页版本、AMO_BUILD_VERSION和更新记录为V31.154。']},
 {version:'V31.153',date:'2026-11-02',items:['修复手机答题点击“开始 / 下一题”后题卡位置上下跳动：新题完成渲染后只测量一次底部操作区，并将“重置当前问题”稳定定位到屏幕底部安全区上方，效果接近用户指定截图；减少动态效果时自动改为无动画定位。','取消答题稳定模式对下一题定位的完全跳过，改为单次原生平滑滚动；关闭移动端答题卡浏览器滚动锚定，避免题目高度变化与浏览器自动锚定互相争抢造成二次跳动。','答题轮次建立词汇 key→词条 Map 索引，上一题、下一题和成绩单不再反复扫描完整词库；下一题移除一次重复的会话 localStorage 序列化写入，降低大词库下切题延迟。','移动端选择答案启用轻量内容可见性优化，减少屏幕外选项的绘制成本；保留原20题轮次、统计、题型、AI生词学习和汉越词答题逻辑。','同步更新版本为V31.153。']},
 {version:'V31.152',date:'2026-11-02',items:['修复电脑和手机点击“汉越词答题”无反应：主答题模块不再直接调用仅存在于汉越词模块内部作用域的 hanVietEntries()，统一通过 window.AmoGrammarHanViet.hanVietEntries() 读取，并提供 localStorage 兜底，解决点击后 ReferenceError。','AI生词学习与汉越词答题改为互斥模式，进入其中一个会自动关闭另一个，避免两个特殊答题面板状态叠加。','进入 AI生词学习或汉越词答题后，普通答题的轮次、历史、随机/一直答题以及重新答题控制整组隐藏；返回普通答题后自动恢复。','同步更新版本为V31.152。']},
 {version:'V31.151',date:'2026-11-02',items:['“已学词汇短句”统一更名为“已学词汇例句”，名称更准确，现有练习布局和判题逻辑保持不变。','已学词汇例句筛选新增“按答题轮次”，直接读取答题页已保存的第1轮、第2轮等轮次词汇；选择某轮后只练该轮词汇所带的完整中越例句。','轮次中没有例句或缺少中文翻译的词自动跳过；轮次筛选继续兼容上一题、随机题、本轮不重复、答题方向和来源词汇提示。','手机端沿用现有两列/单列自适应筛选布局，不增加额外工具栏行。','同步更新版本为V31.151。']},
