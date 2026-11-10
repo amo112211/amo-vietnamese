@@ -9170,12 +9170,27 @@ function renderWords(){
  if(pages>1){const prev=document.createElement('button'),next=document.createElement('button'),info=document.createElement('span'),form=document.createElement('form');
   prev.type=next.type='button';prev.className=next.className='btn btn-small';prev.textContent='上一页';next.textContent='下一页';
   prev.disabled=currentWordPage===1;next.disabled=currentWordPage===pages;
-  prev.onclick=()=>{currentWordPage--;renderWords();};next.onclick=()=>{currentWordPage++;renderWords();};
+  prev.onclick=()=>changeWordPageAndScroll(currentWordPage-1);next.onclick=()=>changeWordPageAndScroll(currentWordPage+1);
   info.textContent=`第 ${currentWordPage} / ${pages} 页`;info.style.alignSelf='center';form.className='page-jump-control';form.setAttribute('aria-label','跳转词汇页码');
   form.innerHTML=`<input class="input" id="wordJumpPage" type="number" inputmode="numeric" min="1" max="${pages}" step="1" value="${currentWordPage}" aria-label="词汇页码"><button type="submit" class="btn btn-small">确定</button>`;
   form.addEventListener('submit',jumpToWordPage);pager.append(prev,info,next,form);
  }
  updateStats();
+}
+/* V31.170: Match sentence pagination: render first, then reveal the first word below sticky controls. */
+function changeWordPageAndScroll(page){
+    currentWordPage=page;
+    renderWords();
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+        if(!document.getElementById('words')?.classList.contains('active'))return;
+        const first=document.querySelector('#wordList .amo-word-summary');
+        if(!first)return;
+        const header=document.querySelector('.header');
+        const toolbar=document.querySelector('#words > .toolbar');
+        const obstruction=Math.max(0,header?.getBoundingClientRect().bottom||0,toolbar?.getBoundingClientRect().bottom||0);
+        const y=Math.max(0,(window.scrollY||document.documentElement.scrollTop||0)+first.getBoundingClientRect().top-obstruction-12);
+        window.scrollTo({top:y,left:0,behavior:'auto'});
+    }));
 }
 function parsePageJump(input,totalPages){
     const raw=String(input?.value??"").trim();
@@ -9191,8 +9206,7 @@ function jumpToWordPage(event){
     const totalPages=Math.max(1,Number(pager?.dataset.totalPages)||1);
     const target=parsePageJump(input,totalPages);
     if(target===null){ showToast(`请输入 1 至 ${totalPages} 的页码`); input?.focus(); return; }
-    currentWordPage=target;
-    renderWords();
+    changeWordPageAndScroll(target);
 }
 function jumpToSentencePage(event){
     event.preventDefault();
@@ -9259,7 +9273,7 @@ function wordDetailFind(){return getRelationRuntimeCache().wordMap.get(coreVocab
 function wordDetailSpeech(text){return `<button type="button" class="amo-detail-speech" data-detail-speech="${escapeHTML(text)}" aria-label="播放越南语语音" title="播放语音">🔊</button>`;}
 function renderWordDetail(){
     const panel=document.getElementById('wordDetailContent'),word=wordDetailFind();if(!panel||!word)return;
-    const detailScroller=document.getElementById('wordDetailPanel');
+    const detailScroller=document.getElementById('wordDetailContent');
     const previousScrollTop=detailScroller?detailScroller.scrollTop:0;
     const L=settings.uiLanguage==='vi'?{examples:'Ví dụ',moreExamples:'Thêm ví dụ ↓',collapse:'Thu gọn ↑',pairs:'Cụm từ thường dùng',more:'Thêm ↓',related:'Từ liên quan',noneExamples:'Chưa có ví dụ',nonePairs:'Chưa có cụm từ',addPair:'＋ Thêm cụm từ',remember:'Ghi nhớ',remembered:'Đã nhớ',edit:'Sửa từ',del:'Xóa',category:'Phân loại',posMissing:'Chưa đặt từ loại',manageExamples:'Quản lý ví dụ',addRelated:'＋ Thêm từ liên quan',flow1:'Nhận biết nghĩa',flow2:'Hiểu ví dụ',flow3:'Mở rộng liên quan',flow4:'Dùng cụm từ'}:{examples:'例句',moreExamples:'更多例句 ↓',collapse:'收起 ↑',pairs:'🔗 常用搭配扩展',more:'更多 ↓',related:'相关词',noneExamples:'暂无例句',nonePairs:'暂无常用搭配',addPair:'＋ 添加扩展',remember:'标记已记住',remembered:'已记住',edit:'编辑词汇',del:'删除',category:'分类',posMissing:'词性未设置',manageExamples:'管理例句',addRelated:'＋ 添加关联词',flow1:'词义识别',flow2:'例句理解',flow3:'关联扩展',flow4:'搭配应用'};
     const tags=AmoWordView.positions(word),py=shouldShowChinesePinyin()?getChinesePinyin(word.zh):'';
@@ -9292,7 +9306,7 @@ function openWordDetail(vi){
     window.__amoWordDetailKey=normalize(word.vi);window.__amoWordDetailExamplesExpanded=false;window.__amoWordDetailPairsExpanded=false;window.__amoWordDetailRelatedExpanded=false;
     const overlay=document.getElementById('wordDetailOverlay');if(!overlay)return false;
     clearTimeout(amoWordDetailCloseTimer);amoWordDetailCloseToken++;overlay.classList.remove('is-closing');
-    renderWordDetail();overlay.hidden=false;overlay.setAttribute('aria-hidden','false');document.body.classList.add('amo-detail-open');
+    document.getElementById('wordDetailContent')?.scrollTo({top:0,left:0,behavior:'auto'});renderWordDetail();overlay.hidden=false;overlay.setAttribute('aria-hidden','false');document.body.classList.add('amo-detail-open');
     requestAnimationFrame(()=>document.querySelector('#wordDetailPanel .amo-detail-close')?.focus({preventScroll:true}));return true;
 }
 function closeWordDetail(){
@@ -17241,7 +17255,7 @@ body.amo-global-glass-transparent .header .nav{
    const p=info.panel;resetMotion(info,false);setDetentMeta(info,item.id);
    p.style.setProperty('height',item.px+'px','important');
    p.style.transform='translate3d(0,0,0)';
-   requestAnimationFrame(()=>p.style.removeProperty('transform'));
+   requestAnimationFrame(()=>{p.style.removeProperty('transform');if(info.kind==='edit')scheduleEditFieldVisibility()});
  }
  function killBackdrop(info){
    const targets=info.kind==='detail'?[info.overlay?.querySelector('.amo-word-detail-backdrop')]:[info.overlay];
@@ -17408,7 +17422,43 @@ body.amo-global-glass-transparent .header .nav{
  if(detailOverlay)obs.observe(detailOverlay,{attributes:true,attributeFilter:['hidden','class']});
  if(displayOverlay)obs.observe(displayOverlay,{attributes:true,attributeFilter:['hidden','class']});
  if(modal)obs.observe(modal,{attributes:true,attributeFilter:['class']});
- window.visualViewport?.addEventListener('resize',()=>{if(!drag)requestAnimationFrame(()=>{for(const kind of ['detail','edit','display']){const info=infoFor(kind);if(info)commitRest(info,info.panel.dataset.amoSheetDetent||'expanded')}})},{passive:true});
+ /* Keep the active vocabulary editor field visible above the persistent Save/Cancel dock.
+    The panel's existing visualViewport layout remains the sole keyboard geometry owner. */
+ let editFocusFrame=0,editFocusTimer=0;
+ function keepEditFieldVisible(){
+   const info=infoFor('edit'),field=document.activeElement;
+   if(!mobile()||drag||!info||!field?.matches?.('input,textarea,select,[contenteditable="true"]'))return;
+   const area=info.panel.querySelector('#wordActionBody'),actions=info.panel.querySelector('.modal-actions');
+   if(!area?.contains(field))return;
+   const vv=window.visualViewport,keyboardOpen=!!vv&&(window.innerHeight-vv.height-vv.offsetTop>120);
+   /* Very short detents cannot fit even one 44px field while a keyboard is open. */
+   if(keyboardOpen&&area.clientHeight<76){
+     const desired=Math.min(vv.height-8,Math.max(info.panel.getBoundingClientRect().height,Math.round(vv.height*.86)));
+     info.panel.style.setProperty('height',Math.max(100,desired)+'px','important');
+   }
+   const areaRect=area.getBoundingClientRect(),fieldRect=field.getBoundingClientRect();
+   const top=Math.max(areaRect.top+12,(vv?.offsetTop||0)+12);
+   const bottom=Math.min(areaRect.bottom-12,actions?.getBoundingClientRect().top-12??Infinity,(vv?(vv.offsetTop+vv.height):innerHeight)-12);
+   if(bottom<=top)return;
+   const delta=fieldRect.height>bottom-top?fieldRect.top-top:fieldRect.top<top?fieldRect.top-top:fieldRect.bottom>bottom?fieldRect.bottom-bottom:0;
+   if(Math.abs(delta)>2)area.scrollTop+=delta;
+ }
+ function scheduleEditFieldVisibility(){
+   if(editFocusFrame)cancelAnimationFrame(editFocusFrame);
+   editFocusFrame=requestAnimationFrame(()=>{editFocusFrame=requestAnimationFrame(()=>{editFocusFrame=0;keepEditFieldVisible()})});
+ }
+ document.addEventListener('focusin',e=>{
+   if(!modal?.classList.contains('amo-word-edit-sheet')||!modal.contains(e.target)||!e.target.matches?.('input,textarea,select,[contenteditable="true"]'))return;
+   scheduleEditFieldVisibility();clearTimeout(editFocusTimer);editFocusTimer=setTimeout(scheduleEditFieldVisibility,320);
+ },true);
+ document.addEventListener('input',e=>{
+   if(modal?.classList.contains('amo-word-edit-sheet')&&modal.contains(e.target)&&e.target.matches?.('input,textarea'))scheduleEditFieldVisibility();
+ },true);
+ window.visualViewport?.addEventListener('resize',()=>{if(!drag)requestAnimationFrame(()=>{
+   for(const kind of ['detail','edit','display']){const info=infoFor(kind);if(info)commitRest(info,info.panel.dataset.amoSheetDetent||'expanded')}
+   scheduleEditFieldVisibility();
+ })},{passive:true});
+ window.visualViewport?.addEventListener('scroll',scheduleEditFieldVisibility,{passive:true});
  window.addEventListener('resize',()=>{if(!drag)requestAnimationFrame(sync)},{passive:true});
 
  const rawCloseDetail=window.closeWordDetail,rawCloseEdit=window.closeWordActionModal,rawCloseDisplay=window.closeAmoDisplaySettings;
@@ -21646,6 +21696,705 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  body #sentenceReading>.toolbar :is(.sentence-reading-category-control,.sentence-reading-learned-filter)[hidden]{display:none!important}
 }
 @media(max-width:420px){body #sentenceReading>.toolbar :is(.sentence-reading-source-control,.sentence-reading-category-control,.sentence-reading-learned-filter,.sentence-reading-direction-control){flex-basis:100%!important;min-width:0!important}}
+
+/* Frontend Design · editorial learning workspace refinement.
+   Scoped visual-only rules: original DOM, content, controls and scripts retained. */
+:root {
+  --amo-design-max: 1220px;
+  --amo-design-line: rgba(32,68,65,.15);
+  --amo-design-soft-shadow: 0 4px 18px rgba(22,56,53,.055);
+  --amo-design-strong-shadow: 0 12px 28px rgba(22,56,53,.09);
+  --radius: 16px;
+  --primary:#087f72;
+  --primary-dark:#086e64;
+  --primary-light:rgba(8,127,114,.085);
+  --page-bg:#f4f6f3;
+  --text-primary:#172e2c;
+  --text-secondary:#4c6763;
+  --border-subtle:rgba(32,68,65,.13);
+  --border-normal:rgba(32,68,65,.22);
+  --solid-surface:#fff;
+  --popup-surface:#fff;
+  --popup-hover:#edf4f1;
+}
+/* Custom wallpaper and saved night palette continue to own their token values. */
+body.theme-night {
+  --amo-design-line:rgba(190,216,209,.17);
+  --amo-design-soft-shadow:0 5px 20px rgba(0,0,0,.13);
+  --amo-design-strong-shadow:0 12px 30px rgba(0,0,0,.22);
+}
+body.theme-wallpaper { --amo-design-line:var(--border-subtle); }
+body:not(.theme-night):not(.theme-wallpaper){--header-text:#173531;--header-subtext:#4b6964}
+body { -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+.main { max-width:var(--amo-design-max); margin-inline:auto; padding-inline:clamp(16px,3vw,36px); padding-block:clamp(22px,3vw,42px) 72px; }
+.header-inner, .header .nav { max-width:var(--amo-design-max); }
+/* Limit ornamentation to the active interaction rather than every glass surface. */
+.header::before,.header::after { opacity:.10; }
+.header { box-shadow:var(--amo-design-soft-shadow); border-radius:18px; }
+.header-inner { gap:16px; padding-inline:clamp(16px,2.5vw,30px); }
+.logo-title { letter-spacing:-.035em; line-height:1.25; }
+.logo-sub { letter-spacing:.025em; }
+.header .nav { gap:5px; border-color:var(--amo-design-line); box-shadow:none; }
+.header .nav button { font-weight:650; letter-spacing:0; box-shadow:none!important; }
+.header .nav button::after { display:none; }
+.header .nav button.active { border-color:color-mix(in srgb,var(--primary) 45%,transparent)!important; background:var(--primary-light)!important; color:var(--primary-dark)!important; box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--primary) 10%,transparent)!important; }
+body.theme-night .header .nav button.active { color:var(--primary-dark)!important; }
+/* Headings and landmarks are deliberately quieter than learning content. */
+.main :is(h1,h2,h3) { letter-spacing:-.025em; text-wrap:balance; }
+.main :is(p,.help,.word-example,.example-vi,.example-zh,.sentence-zh) { line-height:1.65; }
+.hero { padding:clamp(24px,4vw,46px); border-radius:20px; border-color:var(--amo-design-line); box-shadow:none; background:var(--card); }
+.hero h1 { font-size:clamp(27px,3.1vw,42px); line-height:1.18; margin-bottom:13px; }
+.hero p { max-width:66ch; }
+.card,.stat,.word-card,.sentence-card,.sentence-reading-card,.backup-card { border-radius:16px; }
+body:not(.amo-glass-all) :is(.card,.stat,.word-card,.sentence-card,.sentence-reading-card,.backup-card) { box-shadow:var(--amo-design-soft-shadow); }
+.card-padding,.backup-card { padding:clamp(18px,2.3vw,28px); }
+.stats { gap:clamp(10px,1.4vw,18px); margin-block:22px 28px; }
+.stat { padding:clamp(16px,2vw,25px); border-color:var(--amo-design-line); }
+.stat-title { font-size:13px; font-weight:600; }
+.stat-num { font-size:clamp(26px,2.8vw,36px); letter-spacing:-.045em; line-height:1.15; }
+.toolbar { column-gap:14px; row-gap:12px; margin-bottom:20px; }
+.toolbar-left,.toolbar-right { gap:9px; min-width:0; }
+.btn,.select,.search,.input,.display-toggle { border-radius:10px; min-height:40px; transition:border-color .18s ease,background-color .18s ease,box-shadow .18s ease; }
+.btn-primary { box-shadow:0 3px 10px rgba(8,127,114,.12); }
+:where(.btn,.search,.input,.select,textarea,button,select,summary):focus-visible { outline:3px solid color-mix(in srgb,var(--primary) 60%,transparent); outline-offset:2px; }
+/* Study cards: long bilingual text must remain readable rather than squeezed into three columns. */
+#words .word-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:clamp(12px,1.5vw,20px); }
+#words .word-card { padding:clamp(18px,2vw,25px); border-color:var(--amo-design-line); }
+#words .word-card:hover { transform:none; box-shadow:var(--amo-design-strong-shadow); }
+.word-vi { line-height:1.4; letter-spacing:-.012em; }
+.word-zh,.sentence-zh { line-height:1.65; }
+.word-example { border-radius:11px; margin-top:16px; padding:14px 16px; }
+.word-actions { row-gap:9px; }
+.sentence-grid { gap:clamp(12px,1.5vw,20px); }
+.sentence-card { padding:clamp(18px,2vw,25px); border-color:var(--amo-design-line); }
+.quiz-box { max-width:800px; }
+.quiz-question { padding:clamp(24px,3vw,42px); }
+.quiz-word { line-height:1.35; letter-spacing:-.018em; }
+.quiz-options { gap:12px; }
+.quiz-option { border-radius:12px; min-height:60px; }
+.modal-box,.amo-settings-sheet { overscroll-behavior:contain; }
+/* A focused compact reading rhythm with fewer collisions on mobile. */
+@media (max-width:900px){
+  .main { padding-inline:18px; }
+  #words .word-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media (max-width:700px){
+  .header { margin-inline:7px; border-radius:0 0 16px 16px; }
+  .header-inner { padding-inline:14px; gap:10px; }
+  .header .nav { gap:5px; }
+  .header .nav button { min-height:44px; padding-inline:13px; }
+  .main { padding:20px 14px calc(68px + env(safe-area-inset-bottom)); }
+  .hero { padding:23px 19px; margin-bottom:18px; }
+  .hero h1 { font-size:clamp(25px,6.5vw,34px); }
+  .stats { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+  .stat { padding:17px 15px; }
+  #words .word-grid,.sentence-grid { grid-template-columns:minmax(0,1fr); gap:12px; }
+  #words .word-card,.sentence-card { padding:18px 16px; }
+  .quiz-question { padding:25px 16px; }
+  .quiz-options { grid-template-columns:minmax(0,1fr); }
+  .toolbar { gap:10px; }
+  .toolbar-left,.toolbar-right { gap:7px; }
+  .modal-box { max-width:100%; }
+}
+@media (max-width:380px){
+  .logo-title { font-size:16px; }
+  .stats { gap:8px; }
+  .stat { padding:14px 12px; }
+  .stat-num { font-size:25px; }
+  .hero { padding:20px 16px; }
+}
+@media (prefers-reduced-motion:reduce){
+  :is(.word-card,.btn,.quiz-option,.header .nav button) { transition:none!important; }
+}
+
+/* V31.170 · Header and close-control visual correction (CSS only).
+   Keep the DOM, app events, theme switching and learning typography unchanged. */
+@media (min-width:701px) {
+  /* Prior progressive-scroll transforms translate the nav over the brand.
+     Retain a two-row header in both normal and scrolled states. */
+  body .header {
+    clip-path:none!important;
+    transform:none!important;
+    overflow:visible!important;
+  }
+  body .header .header-inner {
+    transform:none!important;
+    opacity:1!important;
+    max-height:none!important;
+    overflow:visible!important;
+    min-height:58px;
+    padding-top:12px!important;
+    padding-bottom:9px!important;
+  }
+  body .header .nav {
+    transform:none!important;
+    position:relative!important;
+    clear:both;
+    padding-top:5px!important;
+    padding-bottom:12px!important;
+    overflow-x:auto;
+    overflow-y:hidden;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+    scroll-padding-inline:12px;
+    gap:6px!important;
+  }
+  body .header .nav::-webkit-scrollbar { display:none; }
+  body .header .nav button {
+    flex-shrink:0;
+    min-height:38px!important;
+    padding:8px 13px!important;
+    font-size:13px!important;
+    line-height:1.35!important;
+    white-space:nowrap;
+    border-radius:10px;
+  }
+  body .header.is-compact .header-inner {
+    max-height:none!important;
+    padding-top:12px!important;
+    padding-bottom:9px!important;
+  }
+}
+/* Let the header own its content height, avoiding brand/first-tab collision. */
+body .header .logo { min-width:0; }
+body .header .logo-title { line-height:1.35; }
+body .header .logo-sub { line-height:1.4; }
+@media (max-width:700px) {
+  /* Keep the original mobile progressive navigation, but control its rhythm. */
+  body .header .nav button { border-radius:10px; white-space:nowrap; }
+  body .header .header-inner { min-width:0; }
+}
+/* Single close-button language across sheets, dialogs, detail cards and hints. */
+body :is(
+  .amo-settings-close,.amo-ai-close,.amo-ai-article-close,
+  .amo-detail-close,.amo-hv-close,.word-hint-close,
+  .amo-word-detail-panel .amo-detail-close,
+  .modal-box button[aria-label="关闭"],
+  .modal-box button[aria-label^="关闭"],
+  .amo-article-vocab-modal button[aria-label="关闭"]
+) {
+  appearance:none!important;
+  -webkit-appearance:none!important;
+  display:inline-grid!important;
+  place-items:center!important;
+  flex:0 0 36px!important;
+  width:36px!important;
+  height:36px!important;
+  min-width:36px!important;
+  min-height:36px!important;
+  margin:0!important;
+  padding:0!important;
+  border:1px solid color-mix(in srgb,var(--text) 15%,transparent)!important;
+  border-radius:11px!important;
+  background:color-mix(in srgb,var(--card,#fff) 90%,transparent)!important;
+  color:var(--text)!important;
+  box-shadow:none!important;
+  font-family:Arial,sans-serif!important;
+  font-size:21px!important;
+  font-weight:400!important;
+  line-height:1!important;
+  text-align:center!important;
+  text-decoration:none!important;
+  text-shadow:none!important;
+  cursor:pointer!important;
+  transition:background-color .16s,border-color .16s,color .16s!important;
+}
+body :is(
+  .amo-settings-close,.amo-ai-close,.amo-ai-article-close,
+  .amo-detail-close,.amo-hv-close,.word-hint-close,
+  .modal-box button[aria-label^="关闭"]
+):hover {
+  background:color-mix(in srgb,var(--primary) 8%,var(--card,#fff))!important;
+  border-color:color-mix(in srgb,var(--primary) 35%,transparent)!important;
+  color:var(--primary-dark)!important;
+}
+body :is(
+  .amo-settings-close,.amo-ai-close,.amo-ai-article-close,
+  .amo-detail-close,.amo-hv-close,.word-hint-close,
+  .modal-box button[aria-label^="关闭"]
+):focus-visible { outline:2px solid var(--primary)!important;outline-offset:3px!important; }
+/* Keep detail close placement rules; only normalize size and visual treatment. */
+@media (pointer:coarse){
+  body :is(.amo-settings-close,.amo-ai-close,.amo-ai-article-close,.amo-detail-close,.amo-hv-close,.word-hint-close){
+    width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;flex-basis:42px!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  body :is(.amo-settings-close,.amo-ai-close,.amo-ai-article-close,.amo-detail-close,.amo-hv-close,.word-hint-close){transition:none!important;}
+}
+
+/* =====================================================================
+   Impeccable audit -> Frontend Design polish | Direction A · Quiet Learning
+   V31.170: CSS-only overrides. Original HTML, scripts and copy stay intact.
+   The legacy theme/custom-colour controls remain authoritative.
+   ===================================================================== */
+:root {
+  --amo-a-paper: oklch(97.7% 0.008 155);
+  --amo-a-surface: oklch(99.5% 0.003 155);
+  --amo-a-ink: oklch(27% 0.027 170);
+  --amo-a-muted: oklch(44% 0.028 170);
+  --amo-a-soft: oklch(55% 0.022 170);
+  --amo-a-accent: oklch(47% 0.095 166);
+  --amo-a-accent-strong: oklch(37% 0.09 166);
+  --amo-a-line: oklch(88% 0.018 165);
+  --amo-a-hover: oklch(95.6% 0.018 165);
+  --amo-a-shadow: 0 3px 13px oklch(30% 0.025 170 / 0.045);
+  --amo-a-shadow-hover: 0 7px 22px oklch(30% 0.025 170 / 0.075);
+  --amo-a-ui-font: "Be Vietnam Pro", "Noto Sans CJK SC", "Noto Sans SC", "Noto Sans", sans-serif;
+  --amo-a-radius-sm: 9px;
+  --amo-a-radius-md: 14px;
+  --amo-a-radius-lg: 18px;
+}
+/* Do not overwrite night / wallpaper palette, or the user's active font-size tokens. */
+body:not(.theme-night):not(.theme-wallpaper) {
+  --bg: var(--amo-a-paper);
+  --page-bg: var(--amo-a-paper);
+  --card: var(--amo-a-surface);
+  --text: var(--amo-a-ink);
+  --text-primary: var(--amo-a-ink);
+  --text-secondary: var(--amo-a-muted);
+  --muted: var(--amo-a-muted);
+  --border: var(--amo-a-line);
+  --border-subtle: var(--amo-a-line);
+  --border-normal: var(--amo-a-line);
+  --primary: var(--amo-a-accent);
+  --primary-dark: var(--amo-a-accent-strong);
+  --primary-light: var(--amo-a-hover);
+  --solid-surface: var(--amo-a-surface);
+  --header-text: var(--amo-a-ink);
+  --header-subtext: var(--amo-a-muted);
+  --amo-design-line: var(--amo-a-line);
+  background: var(--amo-a-paper) !important;
+  color: var(--amo-a-ink);
+}
+body.theme-night {
+  --amo-a-ink: oklch(91% 0.015 160);
+  --amo-a-muted: oklch(77% 0.017 160);
+  --amo-a-soft: oklch(69% 0.016 160);
+  --amo-a-line: oklch(79% 0.02 155 / 0.23);
+  --amo-a-hover: oklch(72% 0.025 160 / 0.13);
+  --amo-a-shadow: 0 4px 15px oklch(3% 0 0 / 0.20);
+  --amo-a-shadow-hover: 0 9px 22px oklch(3% 0 0 / 0.27);
+}
+body.theme-wallpaper {
+  --amo-a-line: var(--border-normal);
+  --amo-a-ink: var(--text-primary);
+  --amo-a-muted: var(--text-secondary);
+  --amo-a-hover: color-mix(in srgb,var(--primary) 7%,transparent);
+}
+html { font-synthesis: none; }
+body, button, input, select, textarea, .btn, .nav button, .modal-box {
+  font-family: var(--amo-a-ui-font) !important;
+}
+body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+.main { max-width: 1260px; padding-inline:clamp(16px,2.8vw,32px); padding-block:clamp(20px,2.8vw,32px) 64px; }
+.main :is(h1,h2,h3) { letter-spacing:-0.022em; text-wrap:pretty; }
+.main h1 { font-size:clamp(26px,2.6vw,38px); line-height:1.22; }
+.main h2 { font-size:clamp(20px,1.9vw,27px); line-height:1.3; }
+.main h3 { font-size:clamp(17px,1.4vw,21px); line-height:1.35; }
+.main :is(p,.help) { line-height:1.65; }
+/* Maintainable, understated app header. No animated scroll transforms on desktop. */
+@media (min-width:701px) {
+  body .header { clip-path:none!important; transform:none!important; overflow:visible!important; }
+  body .header .header-inner {
+    transform:none!important; opacity:1!important; max-height:none!important;
+    min-height:64px; overflow:visible!important;
+    padding:13px clamp(16px,2.5vw,26px) 10px!important;
+  }
+  body .header .nav {
+    position:relative!important; transform:none!important;
+    padding:4px clamp(16px,2.5vw,26px) 12px!important;
+    margin-inline:auto!important; overflow-x:auto!important; overflow-y:hidden!important;
+    scroll-padding-inline:16px; scroll-snap-type:x proximity;
+    gap:6px!important;
+  }
+  body .header .nav button { min-height:38px!important; padding:8px 12px!important; font-size:13px!important; }
+}
+.header {
+  border-radius:var(--amo-a-radius-lg)!important;
+  box-shadow:var(--amo-a-shadow)!important;
+  border-color:var(--amo-a-line)!important;
+}
+.header::before,.header::after { opacity:0!important; box-shadow:none!important; background:none!important; }
+.header-inner,.header .nav { max-width:1260px; }
+.logo { min-width:0; }
+.logo-title { font-size:clamp(17px,1.5vw,21px); letter-spacing:-.025em; line-height:1.35; }
+.logo-sub { color:var(--amo-a-muted); line-height:1.45; }
+body .header .nav button {
+  border-radius:var(--amo-a-radius-sm)!important;
+  color:var(--text-primary,var(--text))!important;
+  background:transparent!important;
+  border:1px solid var(--amo-a-line)!important;
+  box-shadow:none!important; text-shadow:none!important;
+  font-weight:620!important; white-space:nowrap;
+  transition:background-color .18s ease,border-color .18s ease,color .18s ease!important;
+  transform:none!important; scroll-snap-align:start;
+}
+body .header .nav button:hover { background:var(--amo-a-hover)!important; border-color:var(--primary)!important; }
+body .header .nav button.active,
+body .header .nav button[aria-current="page"] {
+  background:var(--amo-a-hover)!important;
+  border-color:var(--primary)!important;
+  color:var(--primary-dark)!important;
+  box-shadow:inset 0 0 0 1px color-mix(in oklch,var(--primary) 12%,transparent)!important;
+}
+body .header .nav button::after { display:none!important; }
+/* Flat surfaces instead of repeated glass/shadow layers. */
+.card,.stat,.sentence-card,.sentence-reading-card,.backup-card,.quiz-option {
+  border-radius:var(--amo-a-radius-md);
+  box-shadow:var(--amo-a-shadow);
+}
+.hero { border-radius:var(--amo-a-radius-lg); box-shadow:none!important; padding:clamp(24px,3vw,40px); }
+.hero h1 { font-size:clamp(27px,3vw,40px); }
+.hero p { max-width:64ch; }
+.stats { gap:16px; margin-block:24px 32px; }
+.stat { padding:20px 24px; }
+.stat-num { font-size:clamp(26px,2.7vw,36px); }
+.main .toolbar { gap:12px 16px; margin-bottom:24px; }
+.toolbar-left,.toolbar-right { gap:8px 10px; min-width:0; }
+.toolbar :is(button,select,input) { max-width:100%; }
+.btn,.select,.search,.input,.display-toggle,.toolbar select,.toolbar button {
+  min-height:38px; border-radius:var(--amo-a-radius-sm);
+  transition:color .17s ease,border-color .17s ease,background-color .17s ease,box-shadow .17s ease!important;
+}
+.btn:hover,.toolbar button:hover { border-color:var(--primary); }
+.btn-primary { box-shadow:none!important; }
+.search:focus,.select:focus,.input:focus,.toolbar select:focus { border-color:var(--primary); }
+:where(button,a,input,textarea,select,[role="button"],[tabindex]):focus-visible {
+  outline:2px solid var(--primary)!important;
+  outline-offset:3px!important;
+  box-shadow:none!important;
+}
+/* Repair ACTUAL vocabulary list rendering: article.word-card.amo-word-summary.
+   Earlier polish targeted .word-card alone, leaving high-priority 3/4-column rules active. */
+body #words .word-grid {
+  display:grid!important;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr))!important;
+  align-items:stretch!important;
+  gap:16px!important;
+  min-width:0;
+  margin-bottom:24px;
+}
+body #words .amo-word-summary {
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  align-items:start!important;
+  height:auto!important;
+  min-height:108px!important;
+  max-height:none!important;
+  padding:16px 38px 16px 17px!important;
+  overflow:visible!important;
+  border-radius:var(--amo-a-radius-md)!important;
+  border:1px solid var(--amo-a-line)!important;
+  box-shadow:var(--amo-a-shadow)!important;
+  transform:none!important;
+  transition:border-color .18s ease,background-color .18s ease,box-shadow .18s ease!important;
+}
+body #words .amo-word-summary::before { display:none!important; }
+body #words .amo-word-summary:hover {
+  transform:none!important;
+  border-color:color-mix(in oklch,var(--primary) 42%,var(--amo-a-line))!important;
+  box-shadow:var(--amo-a-shadow-hover)!important;
+}
+body #words .amo-word-summary:focus-visible {
+  border-color:var(--primary)!important;
+  outline:2px solid var(--primary)!important;
+  outline-offset:2px!important;
+  box-shadow:none!important;
+}
+body #words .amo-word-summary .amo-summary-main {
+  display:grid!important;
+  width:100%!important;
+  min-width:0!important;
+  align-content:start!important;
+  gap:0!important;
+}
+body #words .amo-word-summary :is(.amo-summary-body,.amo-summary-body.has-related-preview,.amo-summary-body:not(.has-related-preview)) {
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  align-items:start!important;
+  gap:12px!important;
+  min-width:0!important;
+  width:100%!important;
+}
+body #words .amo-word-summary .amo-summary-text {
+  grid-column:1!important;
+  display:grid!important;
+  align-content:start!important;
+  gap:6px!important;
+  width:100%!important;
+  min-width:0!important;
+  overflow:visible!important;
+}
+body #words .amo-word-summary .amo-summary-topline {
+  display:flex!important; flex-wrap:wrap!important;
+  align-items:center!important; justify-content:flex-start!important;
+  column-gap:8px!important; row-gap:6px!important; min-width:0!important;
+}
+body #words .amo-word-summary .amo-summary-vi {
+  font-size:var(--amo-vi-px,clamp(18px,1.5vw,23px))!important;
+  line-height:1.37!important;
+  font-weight:780!important;
+  letter-spacing:-.015em;
+  overflow-wrap:anywhere!important;
+  white-space:normal!important;
+}
+body #words .amo-word-summary .amo-summary-zh {
+  line-height:1.6!important;
+  margin-top:0!important;
+  padding:0!important;
+  white-space:normal!important;
+  overflow:visible!important;
+  overflow-wrap:anywhere!important;
+  word-break:break-word!important;
+  text-overflow:clip!important;
+  display:block!important;
+  max-height:none!important;
+  opacity:1!important;
+}
+/* Only the default Mint preset has quiet Chinese text in the UNSELECTED list.
+   Users choosing a custom palette retain --study-zh-color unchanged. */
+body:not(.theme-night):not(.theme-wallpaper):has([data-amo-preset="mint"].active)
+  #words .amo-word-summary:not(.active):not([aria-selected="true"]) .amo-summary-zh {
+  color:var(--amo-a-muted)!important;
+}
+/* Match pinyin to the neutral default list state; custom palettes remain untouched. */
+body:not(.theme-night):not(.theme-wallpaper):has([data-amo-preset="mint"].active)
+  #words .amo-word-summary:not(.active):not([aria-selected="true"]) .amo-summary-py {
+  color:var(--amo-a-soft)!important;
+}
+/* The detail drawer needs a readable surface, not a gray transparent sheet. */
+body:not(.theme-night):not(.theme-wallpaper) .amo-word-detail-panel {
+  background:color-mix(in srgb,var(--glass-bg-strong) 16%,#fff 84%)!important;
+  border-color:var(--amo-a-line)!important;
+  box-shadow:0 15px 40px oklch(22% 0.02 165 / 0.14)!important;
+}
+body #words .amo-word-summary .amo-summary-py {
+  line-height:1.45!important; overflow-wrap:anywhere!important;
+}
+body #words .amo-word-summary .amo-summary-pos { align-items:center!important; gap:5px!important; }
+body #words .amo-word-summary .amo-summary-pos :is(.amo-pos-tag,.amo-category-tag) {
+  color:var(--amo-a-muted)!important;
+  border:1px solid var(--amo-a-line)!important;
+  border-radius:6px!important;
+  padding:2px 5px!important;
+  font-size:10px!important;
+  line-height:1.4!important;
+  white-space:normal!important;
+  background:transparent!important;
+  opacity:1!important;
+}
+body #words .amo-word-summary .amo-summary-related-preview {
+  grid-column:1!important;grid-row:auto!important;
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  align-self:start!important;
+  width:100%!important; max-width:none!important; min-width:0!important;
+  gap:8px 12px!important;
+  padding-top:12px!important; margin:0!important;
+  border-top:1px solid var(--amo-a-line)!important;
+}
+body #words .amo-word-summary .amo-summary-related-chip {
+  min-width:0!important; max-width:100%!important;
+  text-align:left!important; white-space:normal!important;
+  overflow:visible!important;
+  border:0!important; border-radius:6px!important;
+  padding:4px 5px!important;
+  background:transparent!important;
+  transition:background-color .16s ease!important;
+}
+body #words .amo-word-summary .amo-summary-related-chip:hover { background:var(--amo-a-hover)!important; }
+body #words .amo-word-summary .amo-summary-related-chip :is(b,small) {
+  white-space:normal!important;overflow:visible!important;
+  text-overflow:clip!important;overflow-wrap:anywhere!important;
+  line-height:1.45!important;
+}
+body #words .amo-word-summary .amo-summary-related-chip b { font-size:12px!important; }
+body #words .amo-word-summary .amo-summary-related-chip small { font-size:11px!important;color:var(--amo-a-muted)!important; }
+body #words .amo-word-summary .amo-summary-arrow {
+  position:absolute!important;right:13px!important;top:50%!important;
+  transform:translateY(-50%)!important;
+  color:var(--amo-a-soft)!important;font-size:23px!important;
+}
+/* Compact close actions: one shape, one hit-area, no emoji-like circular buttons. */
+body :is(.amo-settings-close,.amo-ai-close,.amo-ai-article-close,.amo-detail-close,.amo-hv-close,.word-hint-close,
+         .modal-box button[aria-label="关闭"],.modal-box button[aria-label^="关闭"],
+         .amo-article-vocab-modal button[aria-label="关闭"]) {
+  appearance:none!important; -webkit-appearance:none!important;
+  display:inline-grid!important; place-items:center!important;
+  width:38px!important; height:38px!important;
+  min-width:38px!important; min-height:38px!important;
+  flex:0 0 38px!important; padding:0!important; margin:0!important;
+  border:1px solid var(--amo-a-line)!important;
+  border-radius:10px!important;
+  background:var(--card,var(--amo-a-surface))!important;
+  color:var(--text-primary,var(--amo-a-ink))!important;
+  font-family:var(--amo-a-ui-font)!important;
+  font-size:21px!important;font-weight:450!important;line-height:1!important;
+  text-align:center!important;text-shadow:none!important;
+  box-shadow:none!important;transform:none!important;
+  transition:border-color .16s ease,background-color .16s ease,color .16s ease!important;
+}
+body :is(.amo-settings-close,.amo-ai-close,.amo-ai-article-close,.amo-detail-close,.amo-hv-close,.word-hint-close,
+         .modal-box button[aria-label^="关闭"]):hover {
+  background:var(--amo-a-hover)!important;
+  color:var(--primary-dark)!important;
+  border-color:var(--primary)!important;
+}
+/* The legacy study card left accent becomes an unobtrusive neutral inset. */
+#words .word-example,#articleReader .amo-article-zh:not([hidden]) {
+  border-left:0!important;
+  border-radius:var(--amo-a-radius-sm)!important;
+}
+/* Deliberate motion only on page entry; reduce motion means absolutely none. */
+@keyframes amo-a-fade-in {from {opacity:.3;transform:translateY(4px)} to {opacity:1;transform:none}}
+@media (prefers-reduced-motion:no-preference) {
+  .page.active > .hero {animation:amo-a-fade-in .18s ease-out both;}
+  #words.page.active .word-grid {animation:amo-a-fade-in .18s ease-out both;}
+}
+@media(max-width:900px) {
+  body #words .word-grid {gap:12px!important;}
+  .main {padding-inline:18px;}
+}
+@media(max-width:700px) {
+  .header {margin-inline:8px!important;border-radius:0 0 15px 15px!important;}
+  .header-inner {gap:10px;}
+  .header .nav {gap:5px!important;}
+  body .header .nav button {min-height:42px!important;padding-inline:12px!important;}
+  .main {padding:20px 14px calc(64px + env(safe-area-inset-bottom));}
+  .main .toolbar {gap:8px;margin-bottom:16px;}
+  body #words .word-grid {grid-template-columns:minmax(0,1fr)!important;gap:12px!important;}
+  body #words .amo-word-summary {min-height:0!important;padding:15px 37px 15px 15px!important;}
+  body #words .amo-word-summary .amo-summary-related-preview {gap:7px 9px!important;}
+  body #words .amo-word-summary .amo-summary-vi {line-height:1.35!important;}
+  .stats {grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+  .stat {padding:16px;}
+  body :is(.amo-settings-close,.amo-ai-close,.amo-ai-article-close,.amo-detail-close,.amo-hv-close,.word-hint-close) {
+    width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;flex-basis:42px!important;
+  }
+}
+@media(max-width:370px) {
+  body #words .amo-word-summary .amo-summary-related-preview {grid-template-columns:minmax(0,1fr)!important;}
+  .main {padding-inline:12px;}
+  .toolbar-left,.toolbar-right {gap:6px;}
+}
+@media(prefers-reduced-motion:reduce) {
+  .page.active > .hero,#words.page.active .word-grid {animation:none!important;}
+  body .header .nav button,body #words .amo-word-summary,
+  body :is(.amo-settings-close,.amo-ai-close,.amo-ai-article-close,.amo-detail-close,.amo-hv-close,.word-hint-close) {
+    transition:none!important;
+  }
+}
+
+
+/* V31.170 — Mobile vocabulary detail: one scroll owner, no shrinking text, a real anchored action dock.
+   The drag controller keeps its existing half/middle/expanded/full detents and inverse footer transform. */
+@media (max-width:700px){
+  body .amo-word-detail-panel{
+    display:flex!important;
+    flex-direction:column!important;
+    position:relative!important;
+    overflow:hidden!important;
+    padding:0!important;
+  }
+  body .amo-word-detail-panel #wordDetailContent{
+    display:block!important; /* The previous flex column shrank its header to ~13px at half height. */
+    position:static!important; /* Anchors the absolute action dock to the sheet, not this scroller. */
+    flex:1 1 auto!important;
+    min-height:0!important;
+    width:100%!important;
+    box-sizing:border-box!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    overscroll-behavior:contain!important;
+    -webkit-overflow-scrolling:touch!important;
+    padding:0 16px calc(88px + env(safe-area-inset-bottom))!important;
+    scroll-padding-bottom:calc(88px + env(safe-area-inset-bottom))!important;
+  }
+  body .amo-word-detail-panel #wordDetailContent>.amo-detail-head{
+    position:relative!important;
+    top:auto!important;
+    height:auto!important;
+    min-height:0!important;
+    margin:0!important;
+    padding:4px 52px 10px 4px!important;
+    overflow:visible!important;
+    background:transparent!important;
+    border:0!important;
+    box-shadow:none!important;
+    transform:none!important;
+  }
+  body .amo-word-detail-panel #wordDetailContent>.amo-detail-head .amo-detail-close{
+    top:3px!important;
+    right:0!important;
+  }
+  body .amo-word-detail-panel #wordDetailContent>.amo-detail-actions{
+    position:absolute!important;
+    inset:auto 0 0 0!important;
+    z-index:90!important;
+    display:flex!important;
+    justify-content:center!important;
+    align-items:center!important;
+    gap:12px!important;
+    flex-wrap:nowrap!important;
+    width:100%!important;
+    box-sizing:border-box!important;
+    margin:0!important;
+    padding:10px 16px calc(12px + env(safe-area-inset-bottom))!important;
+    border:0!important;
+    border-top:1px solid var(--border-subtle,var(--border))!important;
+    border-radius:0!important;
+    background:var(--solid-surface,#fff)!important;
+    box-shadow:none!important;
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+  }
+  /* The global glass selector uses :is() with an ID arm; beat its transparent footer override. */
+  body #wordDetailPanel #wordDetailContent>.amo-detail-actions{
+    background:var(--solid-surface,#fff)!important;
+  }
+  body .amo-word-detail-panel #wordDetailContent>.amo-detail-actions :is(.btn,.btn-danger){
+    flex:1 1 0!important;
+    width:auto!important;
+    min-width:0!important;
+    max-width:180px!important;
+    height:46px!important;
+    min-height:46px!important;
+    max-height:46px!important;
+    margin:0!important;
+    padding:8px 12px!important;
+    border-radius:12px!important;
+    font-size:14px!important;
+    font-weight:700!important;
+    line-height:1.25!important;
+  }
+  body.theme-night #wordDetailPanel #wordDetailContent>.amo-detail-actions .btn:not(.btn-danger){
+    color:var(--text-primary,#e7eeec)!important;
+    background:var(--control-bg,rgba(132,168,167,.12))!important;
+    border-color:var(--border-normal)!important;
+  }
+  body .amo-word-detail-panel #wordDetailContent>.amo-detail-actions .btn-danger{
+    flex:1 1 0!important;
+    width:auto!important;
+  }
+}
+
+
+/* V31.170 iPhone keyboard focus: scroll only the edit content, never the fixed action dock. */
+@media(max-width:700px){
+  #wordActionModal.amo-word-edit-sheet #wordActionBody{
+    scroll-padding-block:12px!important;
+    overflow-anchor:none!important;
+  }
+  #wordActionModal.amo-word-edit-sheet #wordActionBody :is(input,textarea,select){
+    scroll-margin-block:12px;
+  }
+  #wordActionModal.amo-word-edit-sheet .modal-actions{
+    flex-shrink:0!important;
+    position:relative!important;
+    z-index:2!important;
+  }
+}
 </style>
 </body>
 </html>
