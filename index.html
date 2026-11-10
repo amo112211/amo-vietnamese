@@ -17422,44 +17422,114 @@ body.amo-global-glass-transparent .header .nav{
  if(detailOverlay)obs.observe(detailOverlay,{attributes:true,attributeFilter:['hidden','class']});
  if(displayOverlay)obs.observe(displayOverlay,{attributes:true,attributeFilter:['hidden','class']});
  if(modal)obs.observe(modal,{attributes:true,attributeFilter:['class']});
- /* Keep the active vocabulary editor field visible above the persistent Save/Cancel dock.
-    The panel's existing visualViewport layout remains the sole keyboard geometry owner. */
- let editFocusFrame=0,editFocusTimer=0;
- function keepEditFieldVisible(){
-   const info=infoFor('edit'),field=document.activeElement;
-   if(!mobile()||drag||!info||!field?.matches?.('input,textarea,select,[contenteditable="true"]'))return;
-   const area=info.panel.querySelector('#wordActionBody'),actions=info.panel.querySelector('.modal-actions');
-   if(!area?.contains(field))return;
-   const vv=window.visualViewport,keyboardOpen=!!vv&&(window.innerHeight-vv.height-vv.offsetTop>120);
-   /* Very short detents cannot fit even one 44px field while a keyboard is open. */
-   if(keyboardOpen&&area.clientHeight<76){
-     const desired=Math.min(vv.height-8,Math.max(info.panel.getBoundingClientRect().height,Math.round(vv.height*.86)));
-     info.panel.style.setProperty('height',Math.max(100,desired)+'px','important');
+ /* iOS editor: position each newly focused field deliberately, not only when clipped.
+    The keyboard's viewport resize must not repeatedly reset the sheet detent mid-focus. */
+ let editFocusFrame=0,editFocusTimers=[],editPendingForce=false;
+ let editViewportFrame=0;
+ let editBaselineViewport=window.visualViewport?.height||window.innerHeight;
+ const editInputSelector='input,textarea,select,[contenteditable="true"]';
+ const activeEditField=()=>{
+   const field=document.activeElement,area=modal?.querySelector('#wordActionBody');
+   return area?.contains(field)&&field?.matches?.(editInputSelector)?field:null;
+ };
+ function editKeyboardOpen(){
+   const vv=window.visualViewport;
+   return !!vv&&(Math.max(editBaselineViewport,window.innerHeight||0)-vv.height>110 ||
+     (window.innerHeight-vv.offsetTop-vv.height>110));
+ }
+ function sizeFocusedEditSheet(){
+   const info=infoFor('edit');if(!info||drag)return;
+   const name=info.panel.dataset.amoSheetDetent||'expanded';
+   if(!activeEditField()||!editKeyboardOpen()){commitRest(info,name);return}
+   /* Preserve the detent name, but temporarily give editing 90% of the visible viewport. */
+   const vh=Math.max(180,Math.round(window.visualViewport?.height||innerHeight));
+   const natural=(stops().find(x=>x.id===name)||stops()[2]).px;
+   const h=Math.max(160,Math.min(vh-2,Math.max(natural,Math.round(vh*.90))));
+   info.panel.style.setProperty('height',h+'px','important');
+ }
+ function keepEditFieldVisible(mode='ensure'){
+   const info=infoFor('edit'),field=activeEditField();
+   if(!mobile()||drag||!info||!field)return;
+   if(editKeyboardOpen())sizeFocusedEditSheet();
+   const area=info.panel.querySelector('#wordActionBody');
+   const actions=info.panel.querySelector('.modal-actions');
+   if(!area)return;
+   /* Extra real scrolling distance lets the final example / collocation reach the reading position. */
+   area.style.setProperty('--amo-edit-focus-spacer',Math.max(110,Math.round(area.clientHeight*.7))+'px');
+   const vv=window.visualViewport,ar=area.getBoundingClientRect(),fr=field.getBoundingClientRect();
+   const top=Math.max(ar.top+12,(vv?.offsetTop||0)+12);
+   const bottom=Math.min(ar.bottom-12,actions?.getBoundingClientRect().top-12??Infinity,
+     (vv?vv.offsetTop+vv.height:innerHeight)-12);
+   const room=bottom-top;
+   if(room<36)return;
+   let delta=0;
+   if(mode==='force'){
+     const preferred=top+Math.min(56,Math.max(12,room*.28));
+     delta=fr.top-preferred;
+   }else if(fr.top<top){delta=fr.top-top}
+   else if(fr.bottom>bottom){delta=fr.height>room?fr.top-top:fr.bottom-bottom}
+   if(Math.abs(delta)>2){
+     area.scrollTop=Math.max(0,Math.min(area.scrollHeight-area.clientHeight,area.scrollTop+delta));
    }
-   const areaRect=area.getBoundingClientRect(),fieldRect=field.getBoundingClientRect();
-   const top=Math.max(areaRect.top+12,(vv?.offsetTop||0)+12);
-   const bottom=Math.min(areaRect.bottom-12,actions?.getBoundingClientRect().top-12??Infinity,(vv?(vv.offsetTop+vv.height):innerHeight)-12);
-   if(bottom<=top)return;
-   const delta=fieldRect.height>bottom-top?fieldRect.top-top:fieldRect.top<top?fieldRect.top-top:fieldRect.bottom>bottom?fieldRect.bottom-bottom:0;
-   if(Math.abs(delta)>2)area.scrollTop+=delta;
  }
- function scheduleEditFieldVisibility(){
+ function scheduleEditFieldVisibility(mode='ensure'){
+   if(mode==='force')editPendingForce=true;
    if(editFocusFrame)cancelAnimationFrame(editFocusFrame);
-   editFocusFrame=requestAnimationFrame(()=>{editFocusFrame=requestAnimationFrame(()=>{editFocusFrame=0;keepEditFieldVisible()})});
+   editFocusFrame=requestAnimationFrame(()=>{
+     editFocusFrame=requestAnimationFrame(()=>{
+       editFocusFrame=0;
+       const how=editPendingForce?'force':'ensure';editPendingForce=false;
+       keepEditFieldVisible(how);
+     });
+   });
  }
+ function clearEditFocusTimers(){editFocusTimers.forEach(clearTimeout);editFocusTimers=[]}
  document.addEventListener('focusin',e=>{
-   if(!modal?.classList.contains('amo-word-edit-sheet')||!modal.contains(e.target)||!e.target.matches?.('input,textarea,select,[contenteditable="true"]'))return;
-   scheduleEditFieldVisibility();clearTimeout(editFocusTimer);editFocusTimer=setTimeout(scheduleEditFieldVisibility,320);
+   if(!mobile()||!modal?.classList.contains('amo-word-edit-sheet')||
+      !modal.contains(e.target)||!e.target.matches?.(editInputSelector))return;
+   clearEditFocusTimers();
+   /* iOS keyboard animation can exceed 400ms; repeat the initial alignment while it settles. */
+   scheduleEditFieldVisibility('force');
+   for(const ms of [90,220,400,700]){
+     editFocusTimers.push(setTimeout(()=>{
+       if(document.activeElement===e.target)scheduleEditFieldVisibility('force');
+     },ms));
+   }
+ },true);
+ document.addEventListener('focusout',e=>{
+   if(!modal?.contains(e.target))return;
+   setTimeout(()=>{
+     if(activeEditField())return;
+     clearEditFocusTimers();
+     modal.querySelector('#wordActionBody')?.style.removeProperty('--amo-edit-focus-spacer');
+     if(infoFor('edit'))sizeFocusedEditSheet();
+   },80);
  },true);
  document.addEventListener('input',e=>{
-   if(modal?.classList.contains('amo-word-edit-sheet')&&modal.contains(e.target)&&e.target.matches?.('input,textarea'))scheduleEditFieldVisibility();
+   if(modal?.classList.contains('amo-word-edit-sheet')&&modal.contains(e.target)&&
+      e.target.matches?.('input,textarea'))scheduleEditFieldVisibility('ensure');
  },true);
- window.visualViewport?.addEventListener('resize',()=>{if(!drag)requestAnimationFrame(()=>{
-   for(const kind of ['detail','edit','display']){const info=infoFor(kind);if(info)commitRest(info,info.panel.dataset.amoSheetDetent||'expanded')}
-   scheduleEditFieldVisibility();
- })},{passive:true});
- window.visualViewport?.addEventListener('scroll',scheduleEditFieldVisibility,{passive:true});
- window.addEventListener('resize',()=>{if(!drag)requestAnimationFrame(sync)},{passive:true});
+ function refreshEditViewport(){
+   editViewportFrame=0;
+   if(drag)return;
+   for(const kind of ['detail','display']){
+     const info=infoFor(kind);
+     if(info)commitRest(info,info.panel.dataset.amoSheetDetent||'expanded');
+   }
+   if(infoFor('edit')){
+     sizeFocusedEditSheet();
+     scheduleEditFieldVisibility('force');
+   }else{
+     editBaselineViewport=window.visualViewport?.height||window.innerHeight;
+   }
+ }
+ function scheduleEditViewport(){
+   if(editViewportFrame)cancelAnimationFrame(editViewportFrame);
+   editViewportFrame=requestAnimationFrame(refreshEditViewport);
+ }
+ window.visualViewport?.addEventListener('resize',scheduleEditViewport,{passive:true});
+ window.visualViewport?.addEventListener('scroll',()=>scheduleEditFieldVisibility('ensure'),{passive:true});
+ window.addEventListener('resize',()=>{if(!drag){requestAnimationFrame(sync);scheduleEditViewport()}},{passive:true});
 
  const rawCloseDetail=window.closeWordDetail,rawCloseEdit=window.closeWordActionModal,rawCloseDisplay=window.closeAmoDisplaySettings;
  window.closeWordDetail=function(){const info=infoFor('detail');if(mobile()&&info){closeMotion(info);return}return rawCloseDetail?.apply(this,arguments)};
@@ -22380,10 +22450,15 @@ body :is(.amo-settings-close,.amo-ai-close,.amo-ai-article-close,.amo-detail-clo
 }
 
 
-/* V31.170 iPhone keyboard focus: scroll only the edit content, never the fixed action dock. */
+/* V31.170 iPhone focus positioning: allow the final editor rows to reach the reading zone. */
 @media(max-width:700px){
+  #wordActionModal.amo-word-edit-sheet .modal-box{
+    max-height:calc(var(--amo-vv-height,100dvh) - 2px)!important;
+  }
   #wordActionModal.amo-word-edit-sheet #wordActionBody{
+    padding-bottom:var(--amo-edit-focus-spacer,12px)!important;
     scroll-padding-block:12px!important;
+    scroll-behavior:auto!important;
     overflow-anchor:none!important;
   }
   #wordActionModal.amo-word-edit-sheet #wordActionBody :is(input,textarea,select){
