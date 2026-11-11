@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.170</title>
+<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.172</title>
 <meta name="theme-color" content="#f0f4f8" id="amo-browser-theme-color">
 
 
@@ -6034,7 +6034,7 @@ body.theme-night .amo-hv-modal-box .btn:not(.btn-primary){background:#304553!imp
   document.body.classList.add(initial.glass==='off'?'amo-glass-off':initial.glass==='header'?'amo-glass-header':'amo-glass-all');
 })();
 </script>
-<!-- Build: V31.170 -->
+<!-- Build: V31.172 -->
 <!--
   阿莫 V30 兼容架构 / 扩展入口
   数据源：builtInWords/builtInSentences/vietnameseGrammar/chineseGrammar（原有内容未经改写）。
@@ -6049,7 +6049,7 @@ body.theme-night .amo-hv-modal-box .btn:not(.btn-primary){background:#304553!imp
         <div class="logo">
             <div class="logo-icon">🇻🇳</div>
             <div>
-                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.170">V31.170</span></div>
+                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.172">V31.172</span></div>
                 <div class="logo-sub">中文母语者 · 零基础学习</div>
             </div>
         </div>
@@ -6136,7 +6136,7 @@ body.theme-night .amo-hv-modal-box .btn:not(.btn-primary){background:#304553!imp
         <button type="button" class="amo-reset-effects" id="amoResetDrawerSettingsBtn" onclick="resetAmoDrawerSettings()">↺ 恢复默认抽屉动效</button>
       </div>
     </details>
-    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.170</strong></div>
+    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.172</strong></div>
 </section>
 </div>
 
@@ -6259,6 +6259,8 @@ body.theme-night .amo-hv-modal-box .btn:not(.btn-primary){background:#304553!imp
         <input class="search" id="sentenceSearch" placeholder="搜索短句/中文">
         <input class="search" id="newSentenceCategoryName" style="max-width:220px;" placeholder="自定义短句分类">
         <button class="btn btn-small" onclick="addSentenceCategory()">增加分类</button>
+        <!-- V31.172 新增：只编辑已选短句分类名称，不修改短句正文。 -->
+        <button class="btn btn-small" type="button" id="renameSentenceCategoryBtn" onclick="openSentenceCategoryRename()">重命名分类</button>
         <button class="btn btn-small btn-danger" onclick="deleteSelectedSentenceCategory()">删除当前分类</button>
       </div>
     </div>
@@ -6624,6 +6626,8 @@ body.theme-night .amo-hv-modal-box .btn:not(.btn-primary){background:#304553!imp
         <div class="amo-ai-generate-row" aria-label="AI 词汇生成工具">
             <button class="btn amo-ai-generate-btn" type="button" onclick="openAIVocabGenerator('generate')">✨ AI生成词汇</button>
             <button class="btn amo-ai-generate-btn" type="button" onclick="openAIVocabGenerator('missing')">🧩 生成词库缺少的词</button>
+            <!-- V31.171 新增：中文 / 越南语自动识别词根扩词，沿用原 AI 模型与批量编辑流程。 -->
+            <button class="btn amo-ai-generate-btn amo-ai-root-trigger" type="button" onclick="openAIVocabGenerator('root')">✨ AI词根生词</button>
             <span class="amo-ai-generate-note">先预览、可编辑，再加入批量输入区；不会直接写入正式词库。</span>
         </div>
         <textarea id="batchWords" placeholder="quả chanh vàng=黄柠檬=名词=水果=Quả chanh vàng này rất thơm.
@@ -6650,6 +6654,11 @@ mưa lớn=大雨=名词=天气=Chiều nay có thể có mưa lớn."></textare
         </details>
         <div style="margin-bottom:8px;">
       <select class="select" id="batchSentenceCategory"><option value="">不指定分类</option></select>
+    </div>
+    <!-- V31.172 新增：AI 场景短句，独立于词汇例句/词根生成；先预览后写入原批量区。 -->
+    <div class="amo-ai-sentence-entry">
+      <button class="btn amo-ai-sentence-trigger" type="button" onclick="openAISceneSentenceGenerator()">✨ AI按场景生成短句</button>
+      <span>按场景生成地道越南语短句，勾选编辑后再加入批量输入区，不直接保存。</span>
     </div>
     <textarea id="batchSentences" placeholder="Xin chào, bạn khỏe không?=你好，你好吗？
 Bạn đang làm gì vậy?=你现在在做什么？
@@ -14183,6 +14192,8 @@ Object.assign(UI_ZH_VI,{"中文母语者 · 零基础学习":"Dành cho người
 
 /* V31.170: verified whole-label translations for batch, AI generator, quiz and Han-Viet. */
 Object.assign(UI_ZH_VI,{"默认场景分类：": "Danh mục ngữ cảnh mặc định:", "默认词性：": "Từ loại mặc định:", "自动判断（优先使用每行第三列）": "Tự xác định (ưu tiên cột thứ ba mỗi dòng)", "✨ AI生成词汇": "✨ AI tạo từ vựng", "🧩 生成词库缺少的词": "🧩 Tạo các từ còn thiếu trong kho", "先预览、可编辑，再加入批量输入区；不会直接写入正式词库。": "Xem trước và chỉnh sửa, sau đó thêm vào ô nhập hàng loạt; không ghi trực tiếp vào kho từ vựng.", "↶ 撤销上次添加": "↶ Hoàn tác lần thêm gần nhất", "撤销上次添加": "Hoàn tác lần thêm gần nhất", "AI生成词汇": "AI tạo từ vựng", "按场景与难度生成高频、实用的越南语词汇。": "Tạo từ vựng tiếng Việt thông dụng và thiết thực theo ngữ cảnh và độ khó.", "生成词库缺少的词": "Tạo từ còn thiếu trong kho", "分析指定场景现有词汇，优先补明显缺口。": "Phân tích từ vựng hiện có trong ngữ cảnh đã chọn và ưu tiên bổ sung những từ còn thiếu rõ rệt.", "场景分类": "Danh mục ngữ cảnh", "难度": "Độ khó", "数量": "Số lượng", "类型": "Loại", "地区": "Khu vực", "自动/不限定场景": "Tự động / Không giới hạn ngữ cảnh", "请选择要补齐的场景": "Chọn ngữ cảnh cần bổ sung", "单词 + 常用短语": "Từ đơn và cụm từ thông dụng", "开始生成": "Bắt đầu tạo", "全选": "Chọn tất cả", "加入批量输入区": "Thêm vào ô nhập hàng loạt", "生成模式不会把整个词库发送给 AI；返回结果会和本地词库比较，自动移除重复词。": "Chế độ tạo không gửi toàn bộ kho từ vựng cho AI; kết quả được đối chiếu với kho trên máy và tự động loại bỏ từ trùng.", "缺词模式会向 AI 发送当前场景最多约120个已有词的精简清单，并在返回后再次本地去重。": "Chế độ bổ sung gửi cho AI danh sách rút gọn tối đa khoảng 120 từ đã có trong ngữ cảnh hiện tại; kết quả sẽ được lọc trùng trên máy.", "生成结果会显示在这里。": "Kết quả tạo sẽ xuất hiện tại đây.", "批量格式预览：越南语=中文=词性=分类=越南语例句（中文翻译）": "Xem trước định dạng hàng loạt: Tiếng Việt = Tiếng Trung = Từ loại = Danh mục = Ví dụ tiếng Việt (bản dịch tiếng Trung)", "＋ 新增语法": "＋ Thêm ngữ pháp mới", "+ 新增语法": "+ Thêm ngữ pháp mới", "＋ 新建课文": "＋ Tạo bài đọc mới", "+ 新建课文": "+ Tạo bài đọc mới", "✨ AI生成文章": "✨ AI tạo bài đọc", "✅ 我已经会了": "✅ Tôi đã biết rồi", "🎲 随机题目": "🎲 Câu hỏi ngẫu nhiên", "🧠 我已经永久记住": "🧠 Tôi đã ghi nhớ lâu dài", "输入越南语": "Nhập tiếng Việt", "提交": "Nộp đáp án", "汉越词": "Từ Hán Việt", "🀄 汉越词": "🀄 Từ Hán Việt", "← 返回词汇": "← Quay lại từ vựng", "＋ 新增汉越词": "＋ Thêm từ Hán Việt", "+ 新增汉越词": "+ Thêm từ Hán Việt", "搜索汉字 / 汉越音 / 越南语...": "Tìm chữ Hán / âm Hán Việt / tiếng Việt...", "搜索汉字 / 汉越音 / 越南语…": "Tìm chữ Hán / âm Hán Việt / tiếng Việt...", "汉越词答题": "Luyện trả lời từ Hán Việt", "拆词练习": "Luyện tách và ghép từ", "展开": "Mở rộng", "✨ AI补充词族": "✨ AI bổ sung nhóm từ", "条": "mục", "第": "Trang", "页": "trang", "新增汉越词": "Thêm từ Hán Việt", "词汇：越南语=中文意思=类型=例句1=例句2（可继续增加例句）": "Từ vựng: Tiếng Việt = Nghĩa tiếng Trung = Loại = Ví dụ 1 = Ví dụ 2 (có thể thêm ví dụ)", "分类": "Danh mục", "高级": "Nâng cao", "中级": "Trung cấp", "简单": "Dễ", "选择场景后点击“开始生成”。": "Chọn ngữ cảnh rồi nhấn “Bắt đầu tạo”.", "提交回答": "Nộp câu trả lời", "随机题目": "Câu hỏi ngẫu nhiên", "我已经会了": "Tôi đã biết rồi", "请先在设置中启用 AI 并填写所选模型的 API Key": "Hãy bật AI trong Cài đặt và nhập khóa API của mô hình đã chọn."});
+/* V31.171 新增：中越双语词根模式界面词条，原有翻译器继续负责动态更新。 */
+Object.assign(UI_ZH_VI,{"✨ AI词根生词":"✨ AI tạo từ theo gốc","AI词根生词":"AI tạo từ theo gốc","输入中文或越南语词根":"Nhập gốc từ tiếng Trung hoặc tiếng Việt","自动识别语言：中文如「时」，越南语如「học」。":"Tự nhận diện ngôn ngữ: tiếng Trung như 时, tiếng Việt như học.","自动识别语言：中文按汉字扩词，越南语按完整词根扩词。":"Tự nhận diện: mở rộng theo chữ Hán hoặc gốc từ tiếng Việt.","已识别中文：只收录中文释义中包含该汉字/词组的词汇。":"Đã nhận diện tiếng Trung: chỉ nhận từ có chứa chữ/cụm chữ gốc trong nghĩa tiếng Trung.","已识别越南语：只收录越南语中包含完整词根/词组的搭配。":"Đã nhận diện tiếng Việt: chỉ nhận cụm từ có chứa gốc từ đầy đủ.","请仅输入中文或越南语，不要混合两种语言。":"Chỉ nhập một ngôn ngữ, không trộn tiếng Trung và tiếng Việt.","排除正式词库已有的越南语词条":"Loại từ tiếng Việt đã có trong kho chính","自动匹配各场景":"Tự chọn ngữ cảnh","按词根生成":"Tạo từ theo gốc","使用场景":"Ngữ cảnh sử dụng","删除":"Xóa","越南语":"Tiếng Việt","中文":"Tiếng Trung","第":"Mục","词根":"Gốc từ","当前 AI 未就绪，请先前往设置配置":"AI chưa sẵn sàng; hãy cấu hình trong Cài đặt","中文按汉字扩词，越南语按完整词根扩词；先确认再添加。":"Mở rộng theo chữ Hán hoặc gốc tiếng Việt; xem trước trước khi thêm.","中文输入要求中文词语包含原词根；越南语输入要求越南语搭配中包含原词根。生成后再次本地验证，可逐条编辑。":"Từ tiếng Trung phải chứa gốc chữ Hán; cụm từ tiếng Việt phải chứa gốc tiếng Việt. Kết quả được kiểm tra và sửa trước khi thêm."});
 const UI_ORIGINAL=new WeakMap();
 let UI_TRANSLATION_PATTERN=null,UI_TRANSLATION_KEYS=0;
 function translateUIString(s){
@@ -15254,7 +15265,7 @@ const AmoTextIO=(()=>{
 </script>
 
 <script id="amo-v3118-pos-version">
-window.AMO_BUILD_VERSION="V31.170";
+window.AMO_BUILD_VERSION="V31.172";
 </script>
 
 <script id="amo-v3126-enhancements">
@@ -15689,6 +15700,8 @@ document.addEventListener('DOMContentLoaded',()=>{initAmoSystemTheme();enhanceAm
 <script id="amo-v3131-update-history">
 (function(){
   const AMO_UPDATE_HISTORY = [
+    {version:'V31.172',date:'2026-11-11',items:['批量添加短句新增“AI按场景生成短句”：选择或自定义场景、数量、难度、地区及口语风格，通过当前 DeepSeek/Gemini/Groq 模型及原有备用机制分批生成自然中越双语短句。','生成结果支持逐句勾选、编辑、删除、单条重新生成、排除原短句库及本批重复、断点补充；人工确认后仅加入原有短句批量输入区，不自动保存。','实用短句分类新增“重命名分类”：同步更新分类列表、自定义短句、内置短句分类映射及阅读练习筛选状态，不修改短句原文。','AI短句生成器与分类编辑弹窗优化手机单列布局、输入框、可触达按钮、底部安全区及夜晚模式；保持词汇 AI 功能、原分类删除功能与旧数据键不变。']},
+    {version:'V31.171',date:'2026-11-11',items:['批量添加新增 AI 词根生词：自动识别中文 / 越南语，中文按汉字或中文词组扩词，越南语按完整词根或词组扩词；返回后本地严格筛选，不混入仅在翻译中相似的无关词。','沿用 DeepSeek、Gemini、Groq 现有模型选择、API Key 和备用 Groq 适配器；生成分批请求并提供词库去重开关，保留原 AI 生成及缺词补齐入口。','新增手机单列编辑卡片，支持勾选、删除及修改中越词义、词性、场景、双语例句；预览确认后仅加入批量输入区，不自动保存正式词库。']},
 {version:'V31.170',date:'2026-11-10',items:['Groq API Key 设置框改为只显示首尾部分字符，禁用界面复制、剪切及拖拽，并移除完整密钥显示按钮。','允许主动更换 Groq 密钥，切换模型及保存设置时保留原密钥；DeepSeek、Gemini 调用不变。','仅提供界面级隐藏，不属于加密；HTML 源码、浏览器存储和网络请求仍可能暴露密钥。']},
 {version:'V31.170',date:'2026-11-10',items:['补齐批量添加、AI 生成词汇、缺词补齐、语法、课文、答题与汉越词页面的越南语整句翻译。','保持完整字符串匹配，不启用逐词替换；保留词汇原文、学习数据和 AI 请求逻辑。']},
 {version:'V31.170',date:'2026-11-10',items:['修复越南语界面整句翻译：禁用逐词替换，避免生成中文与越南语混合文案。','补充顶部母语者·零基础、填空模式、阅读文章、批量添加和词汇详情提示的完整翻译。','保留词库原文、用户输入和 AI 接口逻辑；增加动态句式测试。']},
@@ -21158,6 +21171,49 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 .amo-ai-warning{margin:10px 0;padding:10px 12px;border:1px solid color-mix(in srgb,var(--danger) 45%,var(--border));border-radius:10px;background:color-mix(in srgb,var(--danger) 8%,transparent);color:var(--text);font-size:12px;line-height:1.55}.amo-ai-warning strong{color:var(--danger)}.amo-ai-format-wrap{margin-top:10px}.amo-ai-format-label{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px;color:var(--text-secondary,var(--muted));font-size:11px;font-weight:800}.amo-ai-format-preview{width:100%;min-height:92px;max-height:180px;resize:vertical;padding:9px 10px;border:1px solid var(--border);border-radius:10px;background:color-mix(in srgb,var(--surface,#fff) 92%,var(--text) 2%);color:var(--text);font:12px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre;overflow:auto}
 @media(max-width:760px){.amo-ai-modal{padding:7px;align-items:end}.amo-ai-modal-box{width:100%;max-height:91vh;border-radius:16px 16px 10px 10px;padding:14px}.amo-ai-config-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.amo-ai-config-grid .amo-ai-field:first-child{grid-column:1/-1}.amo-ai-preview{overflow-x:auto;padding-bottom:4px}.amo-ai-preview-head,.amo-ai-preview-row{min-width:820px}.amo-ai-generate-row{align-items:stretch}.amo-ai-generate-btn{flex:1 1 145px}.amo-ai-generate-note{flex-basis:100%}.amo-detail-ai-btn{grid-template-columns:auto 1fr auto}.amo-detail-ai-btn small{white-space:normal;line-height:1.3}}
 </style>
+
+<style id="amo-v31171-root-generator-style">
+/* V31.171 新增：词根模式不改变原两个 AI 生成器的布局或主题变量。 */
+.amo-ai-root-trigger{border-color:var(--primary)!important;color:var(--primary-dark)!important;font-weight:800!important}
+.amo-ai-root-tools[hidden]{display:none!important}
+.amo-ai-root-tools{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 16px;padding:12px;margin:0 0 12px;border:1px solid var(--border);border-radius:12px;background:var(--glass-bg-subtle,rgba(128,128,128,.05))}
+.amo-ai-root-label{grid-column:1/-1;display:grid;gap:6px;min-width:0;font-weight:800;font-size:14px}
+.amo-ai-root-label input{min-height:46px;font-size:16px;background:var(--solid-surface,var(--card));color:var(--text)}
+.amo-ai-root-hint{font-size:12px;line-height:1.5;color:var(--text-secondary,var(--muted))}.amo-ai-root-hint.error{color:var(--danger)}
+.amo-ai-root-dedupe{grid-column:1/-1;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:650;line-height:1.5;cursor:pointer}
+.amo-ai-root-dedupe input,.amo-ai-root-select input{width:18px;height:18px;accent-color:var(--primary);flex:none}
+.amo-ai-root-model{grid-column:1/-1;font-size:11px;line-height:1.5;color:var(--text-secondary,var(--muted));overflow-wrap:anywhere}
+.amo-ai-modal.is-root .amo-ai-preview{overflow:visible;display:grid;gap:10px}
+.amo-ai-modal.is-root .amo-ai-root-row{display:block!important;min-width:0!important;padding:12px!important;border:1px solid var(--border)!important;border-radius:13px;background:var(--glass-bg-subtle,rgba(128,128,128,.04))}
+.amo-ai-root-row-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px}
+.amo-ai-root-select{display:inline-flex;align-items:center;gap:7px;cursor:pointer;font-size:13px;font-weight:800}
+.amo-ai-modal.is-root .amo-ai-remove{font-size:12px!important;font-weight:700;padding:8px 10px;min-height:40px;min-width:48px}
+.amo-ai-root-row-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.amo-ai-root-edit{display:grid;gap:4px;min-width:0;font-size:12px;font-weight:750;color:var(--text-secondary,var(--muted))}
+.amo-ai-root-edit span{line-height:1.3}
+.amo-ai-modal.is-root .amo-ai-root-edit input,.amo-ai-modal.is-root .amo-ai-root-edit select,.amo-ai-modal.is-root .amo-ai-root-edit textarea{width:100%;min-width:0;min-height:42px;padding:9px 10px;border:1px solid var(--border);border-radius:9px;color:var(--text);background:var(--solid-surface,var(--card));font-size:15px;line-height:1.45;resize:vertical}
+.amo-ai-root-edit textarea{min-height:65px!important;max-height:180px}
+.amo-ai-root-full{grid-column:1/-1}
+.amo-ai-modal.is-root :is(input,textarea,select,button):focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+@media(max-width:760px){
+ .amo-ai-modal.is-root{padding:0!important;align-items:end!important}
+ .amo-ai-modal.is-root .amo-ai-modal-box{width:100%;max-height:calc(94dvh - env(safe-area-inset-bottom));border-radius:18px 18px 0 0;padding:14px 13px max(18px,env(safe-area-inset-bottom));overscroll-behavior:contain}
+ .amo-ai-modal.is-root .amo-ai-modal-head{position:sticky;top:-14px;z-index:5;padding:4px 0 10px;background:var(--solid-surface,var(--card));border-bottom:1px solid var(--border)}
+ .amo-ai-modal.is-root .amo-ai-config-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .amo-ai-modal.is-root .amo-ai-config-grid .amo-ai-field:first-child{grid-column:1/-1}
+ .amo-ai-modal.is-root .amo-ai-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .amo-ai-modal.is-root .amo-ai-actions .btn{width:100%;min-height:44px;white-space:normal;padding:9px 5px}
+ .amo-ai-modal.is-root .amo-ai-actions #amoAIGenInsert{grid-column:1/-1}
+ .amo-ai-modal.is-root .amo-ai-status{grid-column:1/-1;line-height:1.5}
+ .amo-ai-modal.is-root .amo-ai-preview{overflow:visible!important;padding:0}
+ .amo-ai-root-row-grid{grid-template-columns:1fr}
+ .amo-ai-root-full{grid-column:1}
+ .amo-ai-modal.is-root .amo-ai-root-row{min-width:0!important}
+ .amo-ai-modal.is-root .amo-ai-root-edit input,.amo-ai-modal.is-root .amo-ai-root-edit select,.amo-ai-modal.is-root .amo-ai-root-edit textarea{font-size:16px}
+}
+@media(prefers-reduced-motion:reduce){.amo-ai-modal.is-root *{scroll-behavior:auto!important;transition:none!important}}
+</style>
+
 <script id="amo-v31132-ai-tools">
 (()=>{
 'use strict';
@@ -21194,28 +21250,141 @@ async function aiJSON(system,user,{maxTokens=2200,timeout=65000}={}){
 }
 window.AmoAIService={ready:aiReady,json:aiJSON,config:aiCfg};
 function categoryOptions(selected=''){const cats=[...(typeof AMO_SCENE_CATEGORIES!=='undefined'?AMO_SCENE_CATEGORIES:[]),...(Array.isArray(customCategories)?customCategories:[])];const uniq=[];for(const c of cats){const v=String(c||'').trim();if(v&&!uniq.some(x=>normalize(x)===normalize(v)))uniq.push(v)}return uniq.map(c=>`<option value="${escapeHTML(c)}"${c===selected?' selected':''}>${escapeHTML(c)}</option>`).join('')}
-function ensureGeneratorModal(){let el=document.getElementById('amoAIVocabGenerator');if(el)return el;el=document.createElement('div');el.id='amoAIVocabGenerator';el.className='amo-ai-modal';el.hidden=true;el.innerHTML=`<div class="amo-ai-modal-backdrop" data-ai-gen-close></div><section class="amo-ai-modal-box" role="dialog" aria-modal="true" aria-labelledby="amoAIGenTitle"><header class="amo-ai-modal-head"><div><h3 id="amoAIGenTitle">✨ AI生成词汇</h3><p id="amoAIGenSub">按条件生成，先预览再加入批量输入区。</p></div><button class="amo-ai-close" type="button" data-ai-gen-close aria-label="关闭">×</button></header><div class="amo-ai-config-grid"><label class="amo-ai-field"><span>场景分类</span><select class="select" id="amoAIGenCategory"></select></label><label class="amo-ai-field"><span>难度</span><select class="select" id="amoAIGenDifficulty"><option value="easy">简单</option><option value="medium" selected>中级</option><option value="hard">高级</option><option value="mixed">混合</option></select></label><label class="amo-ai-field"><span>数量</span><select class="select" id="amoAIGenCount"><option>10</option><option selected>20</option><option>30</option><option>50</option></select></label><label class="amo-ai-field"><span>类型</span><select class="select" id="amoAIGenType"><option value="mixed" selected>单词 + 常用短语</option><option value="word">单词</option><option value="phrase">常用短语</option></select></label><label class="amo-ai-field"><span>地区</span><select class="select" id="amoAIGenRegion"><option value="common" selected>通用越南语</option><option value="south">南方常用</option><option value="north">北方常用</option></select></label></div><div class="amo-ai-mode-help" id="amoAIGenHelp"></div><div class="amo-ai-actions"><button class="btn btn-primary" type="button" id="amoAIGenRun">开始生成</button><button class="btn" type="button" id="amoAIGenSelectAll">全选</button><button class="btn" type="button" id="amoAIGenInsert">加入批量输入区</button><span class="amo-ai-status" id="amoAIGenStatus"></span></div><div class="amo-ai-preview" id="amoAIGenPreview"><div class="amo-ai-preview-empty">生成结果会显示在这里。</div></div><div class="amo-ai-format-wrap"><div class="amo-ai-format-label"><span>批量格式预览：越南语=中文=词性=分类=越南语例句（中文翻译）</span></div><textarea class="amo-ai-format-preview" id="amoAIGenTextPreview" readonly placeholder="mưa lớn=大雨=名词=天气=Chiều nay có thể có mưa lớn.（今天下午可能有大雨）"></textarea></div></section>`;document.body.append(el);
+function ensureGeneratorModal(){let el=document.getElementById('amoAIVocabGenerator');if(el)return el;el=document.createElement('div');el.id='amoAIVocabGenerator';el.className='amo-ai-modal';el.hidden=true;el.innerHTML=`<div class="amo-ai-modal-backdrop" data-ai-gen-close></div><section class="amo-ai-modal-box" role="dialog" aria-modal="true" aria-labelledby="amoAIGenTitle"><header class="amo-ai-modal-head"><div><h3 id="amoAIGenTitle">✨ AI生成词汇</h3><p id="amoAIGenSub">按条件生成，先预览再加入批量输入区。</p></div><button class="amo-ai-close" type="button" data-ai-gen-close aria-label="关闭">×</button></header><!-- V31.171 新增：自动检测中文/越南语词根（仅词根模式显示） -->
+<div id="amoAIRootTools" class="amo-ai-root-tools" hidden><label class="amo-ai-root-label" for="amoAIRootInput"><span>输入中文或越南语词根</span><input class="input" id="amoAIRootInput" type="text" maxlength="35" autocomplete="off" spellcheck="false" placeholder="例如：时、学习、học、thời gian" aria-describedby="amoAIRootHint"></label><div class="amo-ai-root-hint" id="amoAIRootHint" aria-live="polite">自动识别语言：中文按汉字扩词，越南语按完整词根扩词。</div><label class="amo-ai-root-dedupe"><input type="checkbox" id="amoAIRootDedupe" checked> 排除正式词库已有的越南语词条</label><div class="amo-ai-root-model" id="amoAIRootModel" aria-live="polite"></div></div><div class="amo-ai-config-grid"><label class="amo-ai-field"><span>场景分类</span><select class="select" id="amoAIGenCategory"></select></label><label class="amo-ai-field"><span>难度</span><select class="select" id="amoAIGenDifficulty"><option value="easy">简单</option><option value="medium" selected>中级</option><option value="hard">高级</option><option value="mixed">混合</option></select></label><label class="amo-ai-field"><span>数量</span><select class="select" id="amoAIGenCount"><option>10</option><option selected>20</option><option>30</option><option>50</option></select></label><label class="amo-ai-field"><span>类型</span><select class="select" id="amoAIGenType"><option value="mixed" selected>单词 + 常用短语</option><option value="word">单词</option><option value="phrase">常用短语</option></select></label><label class="amo-ai-field"><span>地区</span><select class="select" id="amoAIGenRegion"><option value="common" selected>通用越南语</option><option value="south">南方常用</option><option value="north">北方常用</option></select></label></div><div class="amo-ai-mode-help" id="amoAIGenHelp"></div><div class="amo-ai-actions"><button class="btn btn-primary" type="button" id="amoAIGenRun">开始生成</button><button class="btn" type="button" id="amoAIGenSelectAll">全选</button><button class="btn" type="button" id="amoAIGenInsert">加入批量输入区</button><span class="amo-ai-status" id="amoAIGenStatus"></span></div><div class="amo-ai-preview" id="amoAIGenPreview"><div class="amo-ai-preview-empty">生成结果会显示在这里。</div></div><div class="amo-ai-format-wrap"><div class="amo-ai-format-label"><span>批量格式预览：越南语=中文=词性=分类=越南语例句（中文翻译）</span></div><textarea class="amo-ai-format-preview" id="amoAIGenTextPreview" readonly placeholder="mưa lớn=大雨=名词=天气=Chiều nay có thể có mưa lớn.（今天下午可能有大雨）"></textarea></div></section>`;document.body.append(el);
  el.addEventListener('click',e=>{if(e.target.closest('[data-ai-gen-close]'))closeAIVocabGenerator();const rm=e.target.closest('.amo-ai-remove');if(rm){const i=Number(rm.dataset.index);generatorState.rows.splice(i,1);renderGeneratorPreview();}});
- document.getElementById('amoAIGenRun').addEventListener('click',runAIVocabGenerator);document.getElementById('amoAIGenSelectAll').addEventListener('click',()=>{el.querySelectorAll('.amo-ai-preview-row input[type="checkbox"]').forEach(x=>x.checked=true)});document.getElementById('amoAIGenInsert').addEventListener('click',insertGeneratedWordsToBatch);
+ document.getElementById('amoAIGenRun').addEventListener('click',runAIVocabGenerator);document.getElementById('amoAIRootInput').addEventListener('input',updateAIRootHint);document.getElementById('amoAIRootInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();runAIVocabGenerator();}});document.getElementById('amoAIGenSelectAll').addEventListener('click',()=>{generatorState.rows.forEach(r=>r.selected=true);renderGeneratorPreview()});document.getElementById('amoAIGenInsert').addEventListener('click',insertGeneratedWordsToBatch);
  return el;
 }
 function generatorStatus(msg,kind=''){const el=document.getElementById('amoAIGenStatus');if(!el)return;el.textContent=msg;el.className='amo-ai-status'+(kind?' '+kind:'')}
-window.openAIVocabGenerator=function(mode='generate'){generatorState={mode:mode==='missing'?'missing':'generate',rows:[]};const el=ensureGeneratorModal();const cat=document.getElementById('amoAIGenCategory');cat.innerHTML='<option value="">'+(generatorState.mode==='missing'?'请选择要补齐的场景':'自动/不限定场景')+'</option>'+categoryOptions();const current=document.getElementById('batchWordCategory')?.value||'';if(current&&[...cat.options].some(o=>o.value===current))cat.value=current;document.getElementById('amoAIGenTitle').textContent=generatorState.mode==='missing'?'🧩 生成词库缺少的词':'✨ AI生成词汇';document.getElementById('amoAIGenSub').textContent=generatorState.mode==='missing'?'分析指定场景现有词汇，优先补明显缺口。':'按场景与难度生成高频、实用的越南语词汇。';document.getElementById('amoAIGenHelp').textContent=generatorState.mode==='missing'?'缺词模式会向 AI 发送当前场景最多约120个已有词的精简清单，并在返回后再次本地去重。':'生成模式不会把整个词库发送给 AI；返回结果会和本地词库比较，自动移除重复词。';renderGeneratorPreview();generatorStatus(aiReady()?'':'请先在设置中启用 AI 并填写所选模型的 API Key',aiReady()?'':'error');el.hidden=false;document.body.style.overflow='hidden';setTimeout(()=>cat.focus(),0)};
-window.closeAIVocabGenerator=function(){const el=document.getElementById('amoAIVocabGenerator');if(el)el.hidden=true;document.body.style.overflow=''};
+/* V31.171 修复：只扩展原弹窗的第三种模式；其余生成/补缺模式保持不变。 */
+let rootGeneratorRequestId=0;
+window.openAIVocabGenerator=function(mode='generate'){
+ rootGeneratorRequestId++;
+ generatorState={mode:['generate','missing','root'].includes(mode)?mode:'generate',rows:[]};
+ const isRoot=generatorState.mode==='root',el=ensureGeneratorModal();
+ el.classList.toggle('is-root',isRoot);
+ const tools=document.getElementById('amoAIRootTools');tools.hidden=!isRoot;
+ const cat=document.getElementById('amoAIGenCategory');
+ cat.innerHTML='<option value="">'+(generatorState.mode==='missing'?'请选择要补齐的场景':isRoot?'自动匹配各场景':'自动/不限定场景')+'</option>'+categoryOptions();
+ const current=document.getElementById('batchWordCategory')?.value||'';
+ if(!isRoot&&current&&[...cat.options].some(o=>o.value===current))cat.value=current;
+ document.getElementById('amoAIGenTitle').textContent=isRoot?'✨ AI词根生词':generatorState.mode==='missing'?'🧩 生成词库缺少的词':'✨ AI生成词汇';
+ document.getElementById('amoAIGenSub').textContent=isRoot?'中文按汉字扩词，越南语按完整词根扩词；先确认再添加。':generatorState.mode==='missing'?'分析指定场景现有词汇，优先补明显缺口。':'按场景与难度生成高频、实用的越南语词汇。';
+ document.getElementById('amoAIGenHelp').textContent=isRoot?'中文输入要求中文词语包含原词根；越南语输入要求越南语搭配中包含原词根。生成后再次本地验证，可逐条编辑。':generatorState.mode==='missing'?'缺词模式会向 AI 发送当前场景最多约120个已有词的精简清单，并在返回后再次本地去重。':'生成模式不会把整个词库发送给 AI；返回结果会和本地词库比较，自动移除重复词。';
+ const run=document.getElementById('amoAIGenRun');run.disabled=false;run.textContent=isRoot?'按词根生成':'开始生成';
+ if(isRoot){document.getElementById('amoAIRootInput').value='';document.getElementById('amoAIRootDedupe').checked=true;document.getElementById('amoAIGenDifficulty').value='mixed';updateAIRootHint();}
+ renderGeneratorPreview();generatorStatus(aiReady()?'':'请先在设置中启用 AI 并填写所选模型的 API Key',aiReady()?'':'error');
+ el.hidden=false;document.body.style.overflow='hidden';setTimeout(()=>isRoot?document.getElementById('amoAIRootInput').focus():cat.focus(),0);
+};
+window.closeAIVocabGenerator=function(){rootGeneratorRequestId++;const el=document.getElementById('amoAIVocabGenerator');if(el)el.hidden=true;document.body.style.overflow=''};
 function getExistingKeys(){return new Set((typeof allWords==='function'?allWords():[]).map(w=>normalize(w.vi)))}
-function generatorContext(){return {category:document.getElementById('amoAIGenCategory')?.value||'',difficulty:document.getElementById('amoAIGenDifficulty')?.value||'medium',count:Math.min(50,Math.max(1,Number(document.getElementById('amoAIGenCount')?.value||20))),type:document.getElementById('amoAIGenType')?.value||'mixed',region:document.getElementById('amoAIGenRegion')?.value||'common'}}
+function generatorContext(){return {root:String(document.getElementById('amoAIRootInput')?.value||'').trim(),dedupe:document.getElementById('amoAIRootDedupe')?.checked!==false,category:document.getElementById('amoAIGenCategory')?.value||'',difficulty:document.getElementById('amoAIGenDifficulty')?.value||'medium',count:Math.min(50,Math.max(1,Number(document.getElementById('amoAIGenCount')?.value||20))),type:document.getElementById('amoAIGenType')?.value||'mixed',region:document.getElementById('amoAIGenRegion')?.value||'common'}}
 function normalizeGeneratedRow(row,ctx){const vi=String(row?.vi||'').trim(),zh=String(row?.zh||'').trim();if(!vi||!zh)return null;const examples=String(row?.example||row?.exampleVi||'').trim(),exampleZh=String(row?.exampleZh||row?.example_zh||row?.exampleChinese||'').trim();let pos=AmoPOS.normalize(row?.pos)||String(row?.pos||'').trim()||'待确认';if(!AmoPOS.valid(pos))pos='待确认';let category=String(row?.category||ctx.category||'').trim();if(!category&&typeof AmoSceneCategory!=='undefined')category=AmoSceneCategory.detect({vi,zh,examples:examples?[examples]:[],collocations:[],related:[]}).category||AmoSceneCategory.PENDING;return {selected:true,vi,zh,pos,category:category||'待确认分类',example:examples,exampleZh}}
-async function runAIVocabGenerator(){if(!aiReady()){generatorStatus('请先在设置中启用 AI 并填写所选模型的 API Key','error');return}const ctx=generatorContext();if(generatorState.mode==='missing'&&!ctx.category){generatorStatus('缺词模式必须先选择一个场景分类。','error');return}const btn=document.getElementById('amoAIGenRun');btn.disabled=true;generatorStatus('正在生成…');
+async function runAIVocabGenerator(){if(generatorState.mode==='root')return runAIRootVocabGenerator();if(!aiReady()){generatorStatus('请先在设置中启用 AI 并填写所选模型的 API Key','error');return}const ctx=generatorContext();if(generatorState.mode==='missing'&&!ctx.category){generatorStatus('缺词模式必须先选择一个场景分类。','error');return}const btn=document.getElementById('amoAIGenRun');btn.disabled=true;generatorStatus('正在生成…');
  try{const diff={easy:'简单高频、日常立即可用',medium:'中级常用、搭配价值高',hard:'高级但仍实用、避免冷僻词',mixed:'简单到高级合理混合'}[ctx.difficulty];const typ={mixed:'单词与常用短语混合',word:'以单词为主',phrase:'以常用短语/固定搭配为主'}[ctx.type];const reg={common:'通用越南语',south:'越南南方日常常用表达优先',north:'越南北方日常常用表达优先'}[ctx.region];let existing=[];if(generatorState.mode==='missing'){existing=(typeof allWords==='function'?allWords():[]).filter(w=>String(w.category||wordCategoryMap?.[normalize(w.vi)]||'')===ctx.category).slice(0,120).map(w=>({vi:w.vi,zh:w.zh}))}
  const allowed=(typeof AMO_SCENE_CATEGORIES!=='undefined'?AMO_SCENE_CATEGORIES:[]).join('、');const system=`你是越南语词汇课程设计师。为中文母语学习者生成真实、高频、自然、可学习的越南语词汇。必须只输出合法 JSON，格式 {"items":[{"vi":"...","zh":"...","pos":"名词","category":"...","example":"自然越南语例句","exampleZh":"对应中文翻译"}]}。pos 必须使用标准中文词性；category 优先使用这些场景：${allowed}。每条必须同时给出自然越南语例句和准确中文翻译；不要给冷僻词、专有名词或重复变体。`;
  const user=generatorState.mode==='missing'?`请为“${ctx.category}”场景补足当前词库明显缺少的核心词汇。目标 ${ctx.count} 条，难度：${diff}，形式：${typ}，地区：${reg}。以下是当前已有词（不要重复，并优先补明显缺口）：\n${JSON.stringify(existing)}`:`请生成 ${ctx.count} 条越南语词汇。场景：${ctx.category||'可在常用生活场景中合理分布'}；难度：${diff}；形式：${typ}；地区：${reg}。中文释义简洁准确，越南语例句自然口语化，并为每条例句提供准确中文翻译。`;
  const data=await aiJSON(system,user,{maxTokens:Math.max(1800,ctx.count*130)});const localKeys=getExistingKeys(),seen=new Set(),rows=[];for(const raw of Array.isArray(data?.items)?data.items:[]){const row=normalizeGeneratedRow(raw,ctx);if(!row)continue;const key=normalize(row.vi);if(!key||localKeys.has(key)||seen.has(key))continue;seen.add(key);rows.push(row);if(rows.length>=ctx.count)break}generatorState.rows=rows;renderGeneratorPreview();generatorStatus(rows.length?`已生成 ${rows.length} 条；已自动移除本地重复词。`:'没有得到可用的新词，请换一个场景或难度重试。',rows.length?'ok':'error')
  }catch(error){generatorStatus('生成失败：'+(error?.message||error),'error')}finally{btn.disabled=false}}
+/* V31.171 新增：两种语言的词根判定与确定性筛选；不依赖模型是否遵循提示。 */
+function aiRootLanguage(text){
+ const raw=String(text||'').normalize('NFC').trim();
+ if(!raw)return '';
+ // V31.171: 仅一种书写系统；组合音调符号也属于越南语合法输入。
+ if(/^[\p{Script=Han}\s]+$/u.test(raw))return 'zh';
+ if(/^[\p{Script=Latin}\p{M}\s\-’']+$/u.test(raw))return 'vi';
+ return 'mixed';
+}
+function aiVietnameseRootMatch(phrase,root){
+ const v=String(phrase||'').normalize('NFC').toLocaleLowerCase('vi-VN');
+ const key=String(root||'').normalize('NFC').toLocaleLowerCase('vi-VN').replace(/\s+/g,' ').trim();
+ if(!key)return false;
+ let at=0;
+ while((at=v.indexOf(key,at))!==-1){
+  const before=at?v.slice(0,at).slice(-1):'';
+  const after=v.slice(at+key.length,at+key.length+2);
+  if((!before||!/[\p{L}\p{N}]/u.test(before))&&(!after||!/^[\p{L}\p{N}]/u.test(after)))return true;
+  at+=key.length;
+ }
+ return false;
+}
+function aiRootMatches(row,root,lang){
+ return lang==='zh'?String(row.zh||'').normalize('NFC').includes(root.normalize('NFC')):lang==='vi'&&aiVietnameseRootMatch(row.vi,root);
+}
+function updateAIRootHint(){
+ const input=document.getElementById('amoAIRootInput'),hint=document.getElementById('amoAIRootHint'),model=document.getElementById('amoAIRootModel');
+ if(!input||!hint)return;
+ const lang=aiRootLanguage(input.value);
+ hint.textContent=lang==='zh'?'已识别中文：只收录中文释义中包含该汉字/词组的词汇。':lang==='vi'?'已识别越南语：只收录越南语中包含完整词根/词组的搭配。':lang==='mixed'?'请仅输入中文或越南语，不要混合两种语言。':'自动识别语言：中文如「时」，越南语如「học」。';
+ hint.classList.toggle('error',lang==='mixed');
+ if(model){const saved=aiCfg(),active=AmoDeepSeekPOS.effectiveConfig(saved);model.textContent=aiReady()?'当前 AI：'+active.model+(active.model!==saved.model?'（Groq 备用）':''):'当前 AI 未就绪，请先前往设置配置';}
+}
+async function runAIRootVocabGenerator(){
+ const ctx=generatorContext(),lang=aiRootLanguage(ctx.root),btn=document.getElementById('amoAIGenRun');
+ if(!ctx.root||ctx.root.length>35||!['zh','vi'].includes(lang)){generatorStatus('请输入一种语言的有效词根，例如「时」或「học」。','error');document.getElementById('amoAIRootInput')?.focus();return;}
+ if(!aiReady()){generatorStatus('请先在设置中启用 AI 并填写所选模型的 API Key','error');return;}
+ const myId=++rootGeneratorRequestId;
+ btn.disabled=true;generatorState.rows=[];renderGeneratorPreview();
+ const diff={easy:'简单高频',medium:'中级实用',hard:'高级但不生僻',mixed:'高频为主、简单中级高级混合'}[ctx.difficulty];
+ const typ={mixed:'常用词汇与固定搭配',word:'以词汇为主',phrase:'以常用短语为主'}[ctx.type];
+ const reg={common:'越南各地普遍理解的自然表达',south:'南方口语优先',north:'北方口语优先'}[ctx.region];
+ const allowed=(typeof AMO_SCENE_CATEGORIES!=='undefined'?AMO_SCENE_CATEGORIES:[]).join('、');
+ const matchRule=lang==='zh'?'中文释义 zh 必须明确包含给定中文原字或完整词组；越南语不得受汉越发音限制。':'越南语字段 vi 必须包含给定越南语词根作为完整单词或连续完整词组（可在开头、中间或末尾），不能只匹配其他单词内部的同一字母串；中文必须是对应准确释义。';
+ const system=`你是专业中越双语词汇编辑，熟悉越南母语者自然表达。任务是根据输入词根扩展现实中常用的搭配和词汇。${matchRule} 严禁为凑数编造不自然或生僻的组合。词性只用标准中文词性（如名词、动词、形容词、副词、固定短语、时间词等），场景尽可能使用：${allowed}。每条给出真实地道的越南语例句及对应准确中文翻译，不重复。只输出合法 JSON：{"items":[{"vi":"越南语","zh":"中文释义含目标根","pos":"词性","category":"场景","example":"完整自然的越南语例句","exampleZh":"准确中文翻译"}]}。`;
+ const seen=new Set(),existing=ctx.dedupe?getExistingKeys():new Set(),rows=[];
+ let lastError='',attempts=0,stagnant=0;
+ try{
+  // V31.171: 每轮最多约 14 条，避免不同供应商对长 JSON 的输出限制。
+  const maxAttempts=Math.ceil(ctx.count/11)+2;
+  while(rows.length<ctx.count&&attempts<maxAttempts&&stagnant<2){
+   if(myId!==rootGeneratorRequestId)return;
+   attempts++;
+   const want=Math.min(14,ctx.count-rows.length+3);
+   generatorStatus(`正在使用所选 AI 生成：第 ${attempts} 轮，已通过校验 ${rows.length}/${ctx.count} 条…`);
+   const prior=rows.slice(-36).map(r=>lang==='zh'?r.zh:r.vi);
+   const user=`词根：${JSON.stringify(ctx.root)}，语言：${lang==='zh'?'中文':'越南语'}。${matchRule} 请提供至多 ${want} 条互不重复、真实常用的候选词。难度：${diff}；类型：${typ}；地区：${reg}；${ctx.category?'限定场景：'+ctx.category:'场景根据词汇实际使用情况匹配'}。不要生成以下已经有的条目：${JSON.stringify(prior)}。必须完整给出 vi、zh、pos、category、example、exampleZh 六个字段；若合格候选不足可以少于指定数量。`;
+   let data;
+   try{data=await aiJSON(system,user,{maxTokens:Math.max(2500,want*215),timeout:75000});}
+   catch(error){lastError=String(error?.message||error);break;}
+   if(myId!==rootGeneratorRequestId)return;
+   const before=rows.length;
+   for(const raw of Array.isArray(data?.items)?data.items:[]){
+    const row=normalizeGeneratedRow(raw,ctx);
+    if(!row||!row.example||!row.exampleZh||!aiRootMatches(row,ctx.root,lang))continue;
+    const key=normalize(row.vi);
+    if(!key||seen.has(key)||existing.has(key))continue;
+    seen.add(key);rows.push(row);
+    if(rows.length>=ctx.count)break;
+   }
+   stagnant=rows.length===before?stagnant+1:0;
+   generatorState.rows=rows.slice();renderGeneratorPreview();
+  }
+  if(myId!==rootGeneratorRequestId)return;
+  const summary=rows.length?`已生成 ${rows.length}/${ctx.count} 条，通过词根校验${ctx.dedupe?'及正式词库去重':''}；可编辑后勾选加入批量输入区。`:'暂无符合词根的有效新词，可修改关键词或减少数量再试。';
+  generatorStatus(lastError?summary+' 最后一次请求未成功：'+lastError:summary,rows.length?'ok':'error');
+ }catch(error){if(myId===rootGeneratorRequestId)generatorStatus('生成失败：'+String(error?.message||error),'error')}
+ finally{if(myId===rootGeneratorRequestId)btn.disabled=false;}
+}
+/* V31.171 新增：手机用真正单列可编辑卡片，不再横向滚动 1010px 表格。 */
+function renderRootGeneratorPreview(){
+ const box=document.getElementById('amoAIGenPreview');if(!box)return;
+ if(!generatorState.rows.length){box.innerHTML='<div class="amo-ai-preview-empty">请输入词根并点击“按词根生成”，结果会显示在这里。</div>';updateGeneratorTextPreview();return;}
+ const opts=(typeof AMO_POS_STANDARD!=='undefined'?AMO_POS_STANDARD:['名词','动词','形容词','副词','固定短语']).map(p=>`<option value="${escapeHTML(p)}">${escapeHTML(p)}</option>`).join('');
+ box.innerHTML=generatorState.rows.map((r,i)=>`<section class="amo-ai-preview-row amo-ai-root-row" data-index="${i}" aria-label="生成词汇 ${i+1}"><div class="amo-ai-root-row-head"><label class="amo-ai-root-select"><input type="checkbox" ${r.selected?'checked':''} aria-label="选择 ${escapeHTML(r.vi)}"> <span>第 ${i+1} 条</span></label><button class="amo-ai-remove" type="button" data-index="${i}" aria-label="删除第 ${i+1} 条">删除</button></div><div class="amo-ai-root-row-grid"><label class="amo-ai-root-edit"><span>越南语</span><input data-f="vi" value="${escapeHTML(r.vi)}"></label><label class="amo-ai-root-edit"><span>中文</span><input data-f="zh" value="${escapeHTML(r.zh)}"></label><label class="amo-ai-root-edit"><span>词性</span><select data-f="pos">${opts}</select></label><label class="amo-ai-root-edit"><span>使用场景</span><input data-f="category" value="${escapeHTML(r.category)}"></label><label class="amo-ai-root-edit amo-ai-root-full"><span>越南语例句</span><textarea data-f="example" rows="2">${escapeHTML(r.example)}</textarea></label><label class="amo-ai-root-edit amo-ai-root-full"><span>中文例句</span><textarea data-f="exampleZh" rows="2">${escapeHTML(r.exampleZh||'')}</textarea></label></div></section>`).join('');
+ box.querySelectorAll('.amo-ai-root-row').forEach((el,i)=>{
+  const row=generatorState.rows[i],select=el.querySelector('select[data-f="pos"]');
+  if(select){if(![...select.options].some(o=>o.value===row.pos)){const o=document.createElement('option');o.value=row.pos;o.textContent=row.pos;select.append(o)}select.value=row.pos;}
+  el.querySelector('input[type="checkbox"]').addEventListener('change',e=>row.selected=e.target.checked);
+  el.querySelectorAll('[data-f]').forEach(inp=>inp.addEventListener('input',()=>{row[inp.dataset.f]=inp.value.trim();updateGeneratorTextPreview();}));
+ });
+ updateGeneratorTextPreview();
+}
 function formatGeneratedLine(r){const example=String(r.example||'').trim(),zh=String(r.exampleZh||'').trim(),paired=example+(zh?'（'+zh.replace(/^[(（]|[)）]$/g,'')+'）':'');return [r.vi,r.zh,r.pos,r.category,paired].map(v=>String(v||'').trim()).join('=')}
 function updateGeneratorTextPreview(){const ta=document.getElementById('amoAIGenTextPreview');if(ta)ta.value=generatorState.rows.filter(r=>r.vi&&r.zh).map(formatGeneratedLine).join('\n')}
-function renderGeneratorPreview(){const box=document.getElementById('amoAIGenPreview');if(!box)return;if(!generatorState.rows.length){box.innerHTML='<div class="amo-ai-preview-empty">生成结果会显示在这里。</div>';updateGeneratorTextPreview();return}const posOpts=(typeof AMO_POS_STANDARD!=='undefined'?AMO_POS_STANDARD:['名词','动词','形容词','副词','固定短语']).map(p=>`<option value="${escapeHTML(p)}">${escapeHTML(p)}</option>`).join('');box.innerHTML=`<div class="amo-ai-preview-head amo-ai-preview-head-v134"><span>选</span><span>越南语</span><span>中文</span><span>词性</span><span>分类</span><span>越南语例句</span><span>中文例句</span><span></span></div>`+generatorState.rows.map((r,i)=>`<div class="amo-ai-preview-row amo-ai-preview-row-v134" data-index="${i}"><input type="checkbox" ${r.selected?'checked':''} aria-label="选择 ${escapeHTML(r.vi)}"><input data-f="vi" value="${escapeHTML(r.vi)}"><input data-f="zh" value="${escapeHTML(r.zh)}"><select data-f="pos">${posOpts}</select><input data-f="category" value="${escapeHTML(r.category)}"><input data-f="example" value="${escapeHTML(r.example)}"><input data-f="exampleZh" value="${escapeHTML(r.exampleZh||'')}"><button class="amo-ai-remove" type="button" data-index="${i}" title="删除">×</button></div>`).join('');box.querySelectorAll('.amo-ai-preview-row').forEach((row,i)=>{const data=generatorState.rows[i];const sel=row.querySelector('select[data-f="pos"]');if(sel){if(![...sel.options].some(o=>o.value===data.pos)){const o=document.createElement('option');o.value=data.pos;o.textContent=data.pos;sel.append(o)}sel.value=data.pos}row.querySelector('input[type="checkbox"]').addEventListener('change',e=>data.selected=e.target.checked);row.querySelectorAll('[data-f]').forEach(inp=>inp.addEventListener('input',()=>{data[inp.dataset.f]=inp.value.trim();updateGeneratorTextPreview()}))});updateGeneratorTextPreview()}
+function renderGeneratorPreview(){if(generatorState.mode==='root')return renderRootGeneratorPreview();const box=document.getElementById('amoAIGenPreview');if(!box)return;if(!generatorState.rows.length){box.innerHTML='<div class="amo-ai-preview-empty">生成结果会显示在这里。</div>';updateGeneratorTextPreview();return}const posOpts=(typeof AMO_POS_STANDARD!=='undefined'?AMO_POS_STANDARD:['名词','动词','形容词','副词','固定短语']).map(p=>`<option value="${escapeHTML(p)}">${escapeHTML(p)}</option>`).join('');box.innerHTML=`<div class="amo-ai-preview-head amo-ai-preview-head-v134"><span>选</span><span>越南语</span><span>中文</span><span>词性</span><span>分类</span><span>越南语例句</span><span>中文例句</span><span></span></div>`+generatorState.rows.map((r,i)=>`<div class="amo-ai-preview-row amo-ai-preview-row-v134" data-index="${i}"><input type="checkbox" ${r.selected?'checked':''} aria-label="选择 ${escapeHTML(r.vi)}"><input data-f="vi" value="${escapeHTML(r.vi)}"><input data-f="zh" value="${escapeHTML(r.zh)}"><select data-f="pos">${posOpts}</select><input data-f="category" value="${escapeHTML(r.category)}"><input data-f="example" value="${escapeHTML(r.example)}"><input data-f="exampleZh" value="${escapeHTML(r.exampleZh||'')}"><button class="amo-ai-remove" type="button" data-index="${i}" title="删除">×</button></div>`).join('');box.querySelectorAll('.amo-ai-preview-row').forEach((row,i)=>{const data=generatorState.rows[i];const sel=row.querySelector('select[data-f="pos"]');if(sel){if(![...sel.options].some(o=>o.value===data.pos)){const o=document.createElement('option');o.value=data.pos;o.textContent=data.pos;sel.append(o)}sel.value=data.pos}row.querySelector('input[type="checkbox"]').addEventListener('change',e=>data.selected=e.target.checked);row.querySelectorAll('[data-f]').forEach(inp=>inp.addEventListener('input',()=>{data[inp.dataset.f]=inp.value.trim();updateGeneratorTextPreview()}))});updateGeneratorTextPreview()}
 function encodeBatchField(v){const s=String(v||'').trim();return /[=\n\r]/.test(s)?'"'+s.replace(/"/g,'“')+'"':s}
-function insertGeneratedWordsToBatch(){const rows=generatorState.rows.filter(r=>r.selected&&r.vi&&r.zh);if(!rows.length){generatorStatus('请至少选择一条词汇。','error');return}const area=document.getElementById('batchWords');if(!area)return;const current=String(area.value||'').trim(),keys=new Set(current.split(/\r?\n/).map(line=>normalize((typeof AmoTextIO!=='undefined'?AmoTextIO.parseFields(line):line.split('='))[0]||'')));const lines=[];for(const r of rows){if(keys.has(normalize(r.vi)))continue;lines.push(formatGeneratedLine(r));keys.add(normalize(r.vi))}area.value=[current,...lines].filter(Boolean).join('\n');generatorStatus(`已加入批量输入区 ${lines.length} 条${lines.length<rows.length?'，重复项已跳过':''}。`,'ok');area.dispatchEvent(new Event('input',{bubbles:true}));if(lines.length)showToast(`AI 词汇已加入批量输入区 ${lines.length} 条`)}
+function insertGeneratedWordsToBatch(){const rows=generatorState.rows.filter(r=>r.selected&&r.vi&&r.zh);if(generatorState.mode==='root'){const root=generatorContext().root,lang=aiRootLanguage(root);const invalid=rows.find(r=>!aiRootMatches(r,root,lang));if(invalid){generatorStatus('有选中词不再包含指定词根，请修正或取消勾选：'+invalid.vi,'error');return;}}if(!rows.length){generatorStatus('请至少选择一条词汇。','error');return}const area=document.getElementById('batchWords');if(!area)return;const current=String(area.value||'').trim(),keys=new Set(current.split(/\r?\n/).map(line=>normalize((typeof AmoTextIO!=='undefined'?AmoTextIO.parseFields(line):line.split('='))[0]||'')));const lines=[];for(const r of rows){if(keys.has(normalize(r.vi)))continue;lines.push(formatGeneratedLine(r));keys.add(normalize(r.vi))}area.value=[current,...lines].filter(Boolean).join('\n');generatorStatus(`已加入批量输入区 ${lines.length} 条${lines.length<rows.length?'，重复项已跳过':''}。`,'ok');area.dispatchEvent(new Event('input',{bubbles:true}));if(lines.length)showToast(`AI 词汇已加入批量输入区 ${lines.length} 条`)}
 function ensureAssistantModal(){let el=document.getElementById('amoAIWordAssistant');if(el)return el;el=document.createElement('div');el.id='amoAIWordAssistant';el.className='amo-ai-modal';el.hidden=true;el.innerHTML=`<div class="amo-ai-modal-backdrop" data-ai-as-close></div><section class="amo-ai-modal-box" role="dialog" aria-modal="true"><header class="amo-ai-modal-head"><div><h3 id="amoAIAssistantTitle">✨ AI词汇助手</h3><p id="amoAIAssistantSub"></p></div><button class="amo-ai-close" type="button" data-ai-as-close aria-label="关闭">×</button></header><div class="amo-ai-assistant-tabs"><button class="btn btn-small" data-ai-action="examples">生成例句</button><button class="btn btn-small" data-ai-action="collocations">常用搭配</button><button class="btn btn-small" data-ai-action="confusables">近义/易混</button><button class="btn btn-small" data-ai-action="meaning">检查释义</button><button class="btn btn-small" data-ai-action="natural">自然表达</button></div><div class="amo-ai-actions"><button class="btn btn-primary btn-small" type="button" id="amoAIAssistantRun">生成</button><button class="btn btn-small" type="button" id="amoAIAssistantRefresh">重新生成</button><span class="amo-ai-status" id="amoAIAssistantStatus"></span></div><div class="amo-ai-assistant-result" id="amoAIAssistantResult"><div class="amo-ai-preview-empty">选择一个功能开始。</div></div></section>`;document.body.append(el);el.addEventListener('click',e=>{if(e.target.closest('[data-ai-as-close]'))closeAIWordAssistant();const tab=e.target.closest('[data-ai-action]');if(tab){assistantState.action=tab.dataset.aiAction;assistantState.data=null;updateAssistantTabs();assistantStatus(aiReady()?'':'请先在设置中启用 AI 并填写所选模型的 API Key',aiReady()?'':'error');const result=document.getElementById('amoAIAssistantResult');if(result)result.innerHTML=aiReady()?'<div class="amo-ai-preview-empty">已选择功能，点击“生成”后才会请求 AI。</div>':'<div class="amo-ai-warning"><strong>AI辅助未开启</strong><br>请先到“设置 → AI 词性辅助”启用并填写 API Key，然后再回来点击生成。</div>'}});document.getElementById('amoAIAssistantRun').addEventListener('click',()=>loadAssistantAction(false));document.getElementById('amoAIAssistantRefresh').addEventListener('click',()=>loadAssistantAction(true));return el}
 function assistantStatus(msg,kind=''){const el=document.getElementById('amoAIAssistantStatus');if(el){el.textContent=msg;el.className='amo-ai-status'+(kind?' '+kind:'')}}
 function getAICache(){try{return JSON.parse(localStorage.getItem(AI_CACHE_KEY)||'{}')}catch(_){return {}}}function setAICache(cache){try{localStorage.setItem(AI_CACHE_KEY,JSON.stringify(cache))}catch(_){}}
@@ -22471,6 +22640,359 @@ body :is(.amo-settings-close,.amo-ai-close,.amo-ai-article-close,.amo-detail-clo
   }
 }
 </style>
+<!-- V31.172 新增：短句 AI 场景生成与分类名称编辑，复用原主题变量。 -->
+<style id="amo-v31172-scene-sentence-style">
+.amo-ai-sentence-entry{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:11px 0;margin:2px 0 10px;border-block:1px solid var(--border-subtle,var(--border))}
+.amo-ai-sentence-entry .amo-ai-sentence-trigger{min-height:42px;flex:none;border-color:var(--primary);font-weight:750}
+.amo-ai-sentence-entry>span{font-size:12px;line-height:1.5;color:var(--text-secondary,var(--muted));min-width:0;flex:1 1 220px}
+.amo-sentence-rename[open]{position:fixed;inset:0;margin:auto;width:min(430px,calc(100vw - 28px));max-height:calc(94dvh - env(safe-area-inset-bottom));border:1px solid var(--border-normal,var(--border));border-radius:17px;background:var(--solid-surface,#fff);color:var(--text);box-shadow:0 20px 60px rgba(0,0,0,.24);padding:20px;overflow:auto}
+.amo-sentence-rename::backdrop{background:rgba(8,21,25,.58);backdrop-filter:blur(4px)}
+.amo-sentence-rename h3{font-size:19px;margin:0 0 5px}
+.amo-sentence-rename p{font-size:13px;color:var(--text-secondary,var(--muted));line-height:1.5;margin:3px 0 13px}
+.amo-sentence-rename label{display:grid;gap:6px;font-size:13px;font-weight:700}
+.amo-sentence-rename input{width:100%;min-height:46px;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:11px 12px;font-size:16px}
+.amo-sentence-rename-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+.amo-sentence-rename-actions .btn{min-height:44px;min-width:80px}
+.amo-sentence-rename-message{font-size:12px;min-height:1.4em;color:var(--danger);margin-top:8px}
+.amo-ai-sentence-modal[hidden]{display:none!important}
+.amo-ai-sentence-modal{position:fixed;inset:0;z-index:12110;display:flex;align-items:center;justify-content:center;padding:12px}
+.amo-ai-sentence-mask{position:absolute;inset:0;background:rgba(11,24,32,.57);backdrop-filter:blur(4px)}
+.amo-ai-sentence-sheet{position:relative;z-index:1;width:min(890px,100%);max-height:min(90dvh,850px);min-height:0;display:flex;flex-direction:column;overflow:hidden;border:1px solid var(--border-normal,var(--border));border-radius:18px;background:var(--solid-surface,#fff);color:var(--text);box-shadow:0 24px 70px rgba(0,0,0,.22)}
+.amo-ai-sentence-head{flex:none;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:17px 20px 12px;border-bottom:1px solid var(--border-subtle,var(--border))}
+.amo-ai-sentence-head h3{margin:0;font-size:19px;line-height:1.35}
+.amo-ai-sentence-head p{margin:5px 0 0;color:var(--text-secondary,var(--muted));font-size:12px;line-height:1.5}
+.amo-ai-sentence-close{display:grid;place-items:center;flex:0 0 42px;width:42px;height:42px;border:1px solid var(--border);border-radius:10px;background:transparent;color:var(--text);font-size:23px;cursor:pointer}
+.amo-ai-sentence-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:16px 20px 20px;scroll-padding-block:12px 90px}
+.amo-ai-sentence-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.amo-ai-sentence-field{display:grid;gap:6px;min-width:0;color:var(--text);font-size:12px;font-weight:700}
+.amo-ai-sentence-field>input,.amo-ai-sentence-field>select,.amo-ai-sentence-field>textarea{width:100%;min-width:0;min-height:44px;border:1px solid var(--border);border-radius:10px;padding:9px 11px;background:var(--card);color:var(--text);font:inherit;font-size:15px;line-height:1.45}
+.amo-ai-sentence-field>textarea{resize:vertical;min-height:70px;font-size:16px}
+.amo-ai-sentence-field>input:focus-visible,.amo-ai-sentence-field>select:focus-visible,.amo-ai-sentence-field>textarea:focus-visible,.amo-ai-sentence-modal :is(button,input,textarea,select):focus-visible,.amo-sentence-rename :is(input,button):focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+.amo-ai-sentence-full{grid-column:1/-1}
+.amo-ai-sentence-custom[hidden]{display:none!important}
+.amo-ai-sentence-rule{display:flex;align-items:center;gap:8px;margin-top:12px;cursor:pointer;color:var(--text);font-size:13px;line-height:1.45}
+.amo-ai-sentence-rule input,.amo-ai-sentence-card-select input{width:18px;height:18px;flex:none;accent-color:var(--primary)}
+.amo-ai-sentence-model{font-size:12px;margin-top:9px;color:var(--text-secondary,var(--muted))}
+.amo-ai-sentence-progress{margin:11px 0 0;font-size:12px;line-height:1.45;color:var(--text-secondary,var(--muted));min-height:22px}
+.amo-ai-sentence-progress.error{color:var(--danger);font-weight:750}
+.amo-ai-sentence-progress.ok{color:var(--primary-dark);font-weight:750}
+.amo-ai-sentence-list-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:14px 0 10px;padding-top:11px;border-top:1px solid var(--border-subtle,var(--border));font-size:14px;font-weight:800}
+.amo-ai-sentence-mini-actions{display:flex;gap:6px;flex-wrap:wrap}
+.amo-ai-sentence-mini-actions .btn{min-height:34px;padding:5px 11px;font-size:12px}
+.amo-ai-sentence-results{display:grid;gap:10px}
+.amo-ai-sentence-empty{font-size:13px;line-height:1.6;padding:26px 15px;text-align:center;border:1px dashed var(--border-normal,var(--border));border-radius:12px;color:var(--text-secondary,var(--muted))}
+.amo-ai-sentence-card{border:1px solid var(--border-subtle,var(--border));border-radius:14px;padding:12px;background:var(--glass-bg-subtle,var(--card));min-width:0}
+.amo-ai-sentence-card-title{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.amo-ai-sentence-card-select{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:750;cursor:pointer}
+.amo-ai-sentence-card-tools{display:flex;gap:6px;flex-wrap:wrap}
+.amo-ai-sentence-card-tools .btn{min-height:36px;padding:6px 10px;font-size:12px}
+.amo-ai-sentence-card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.amo-ai-sentence-card .amo-ai-sentence-field>textarea{min-height:83px;max-height:220px;background:var(--solid-surface,#fff);font-size:15px}
+.amo-ai-sentence-footer{flex:none;display:flex;align-items:center;gap:10px;padding:11px 20px calc(11px + env(safe-area-inset-bottom));border-top:1px solid var(--border-subtle,var(--border));background:var(--solid-surface,#fff)}
+.amo-ai-sentence-footer .btn{min-height:44px;padding:10px 14px}
+.amo-ai-sentence-footer .amo-ai-sentence-insert{margin-left:auto}
+.amo-ai-sentence-footer button:disabled,.amo-ai-sentence-card button:disabled{opacity:.55;cursor:wait}
+.amo-ai-sentence-footer small{font-size:12px;color:var(--text-secondary,var(--muted));line-height:1.3}
+@media(max-width:700px){
+  #sentences .card>div:first-child{row-gap:10px}
+  #renameSentenceCategoryBtn{min-height:42px}
+  .amo-ai-sentence-entry{align-items:stretch}
+  .amo-ai-sentence-entry .amo-ai-sentence-trigger{width:100%;min-height:46px}
+  .amo-ai-sentence-entry>span{flex-basis:100%}
+  .amo-ai-sentence-modal{padding:0;align-items:flex-end}
+  .amo-ai-sentence-sheet{width:100%;max-height:calc(96dvh - env(safe-area-inset-bottom));border-radius:20px 20px 0 0;border-bottom:0}
+  .amo-ai-sentence-head{padding:13px 14px 10px}
+  .amo-ai-sentence-scroll{padding:12px 14px 14px}
+  .amo-ai-sentence-fields{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .amo-ai-sentence-fields .amo-ai-sentence-field:first-child{grid-column:1/-1}
+  .amo-ai-sentence-fields :is(input,select,textarea),.amo-ai-sentence-card-grid :is(input,textarea){font-size:16px}
+  .amo-ai-sentence-card-grid{grid-template-columns:minmax(0,1fr);gap:9px}
+  .amo-ai-sentence-card{padding:11px}
+  .amo-ai-sentence-card .amo-ai-sentence-field>textarea{min-height:64px}
+  .amo-ai-sentence-footer{padding:10px 14px calc(10px + env(safe-area-inset-bottom));display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+  .amo-ai-sentence-footer .btn{width:100%;margin:0!important;padding:10px 6px;white-space:normal;min-width:0}
+  .amo-ai-sentence-footer .amo-ai-sentence-insert{grid-column:1/-1;grid-row:1}
+  .amo-ai-sentence-footer small{grid-column:1/-1;grid-row:3;text-align:center}
+  .amo-sentence-rename[open]{padding:16px}
+  .amo-sentence-rename-actions .btn{flex:1;min-height:46px}
+}
+@media(max-width:360px){.amo-ai-sentence-fields{grid-template-columns:1fr}.amo-ai-sentence-fields .amo-ai-sentence-field:first-child{grid-column:1}.amo-ai-sentence-footer{grid-template-columns:1fr}.amo-ai-sentence-footer .amo-ai-sentence-insert{grid-column:1}}
+@media(prefers-reduced-motion:reduce){.amo-ai-sentence-modal *,.amo-sentence-rename *{transition:none!important;animation:none!important}}
+</style>
+
+<script id="amo-v31172-scene-sentence-feature">
+/* V31.172 新增：批量短句按场景 AI 生成、预览确认和短句分类同步重命名。 */
+(()=>{
+ 'use strict';
+ const $=id=>document.getElementById(id);
+ const tr=zh=>settings.uiLanguage==='vi'&&typeof translateUIString==='function'?translateUIString(zh):zh;
+ const normalizeName=value=>String(value||'').trim().replace(/\s+/g,' ');
+ const same=(a,b)=>normalize(a)===normalize(b);
+
+ // V31.172 修复：分类名称更改必须同时修复内置短句映射、已导入短句及练习筛选。
+ let renameSource='';
+ function ensureRenameDialog(){
+  let dlg=$('amoSentenceRenameDialog'); if(dlg)return dlg;
+  dlg=document.createElement('dialog');dlg.id='amoSentenceRenameDialog';dlg.className='amo-sentence-rename';
+  dlg.innerHTML=`<form method="dialog" id="amoSentenceRenameForm"><h3>${tr('重命名短句分类')}</h3><p id="amoSentenceRenameOld"></p><label for="amoSentenceRenameNew">${tr('新分类名称')}<input id="amoSentenceRenameNew" type="text" maxlength="40" required autocomplete="off"></label><div class="amo-sentence-rename-message" id="amoSentenceRenameError" role="alert"></div><div class="amo-sentence-rename-actions"><button class="btn" type="button" id="amoSentenceRenameCancel">${tr('取消')}</button><button class="btn btn-primary" type="submit">${tr('保存名称')}</button></div></form>`;
+  document.body.appendChild(dlg);
+  $('amoSentenceRenameCancel').addEventListener('click',()=>dlg.close());
+  dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close()});
+  $('amoSentenceRenameForm').addEventListener('submit',e=>{e.preventDefault();commitRename()});
+  return dlg;
+ }
+ window.openSentenceCategoryRename=function(){
+  const selected=$('sentenceCategoryFilter')?.value||'';
+  if(!selected){showToast(tr('请先选择要重命名的短句分类'));return;}
+  renameSource=selected;
+  const dlg=ensureRenameDialog();
+  $('amoSentenceRenameOld').textContent=tr('原分类：')+selected;
+  $('amoSentenceRenameNew').value=selected;
+  $('amoSentenceRenameError').textContent='';
+  if(!dlg.open)dlg.showModal();
+  $('amoSentenceRenameNew').focus(); $('amoSentenceRenameNew').select();
+ };
+ function commitRename(){
+  const oldName=renameSource,newName=normalizeName($('amoSentenceRenameNew').value);
+  const msg=$('amoSentenceRenameError');
+  if(!newName||newName.length>40||/[\r\n=]/.test(newName)){msg.textContent=tr('请输入不超过40个字符的有效分类名');return;}
+  if(same(oldName,newName)&&oldName===newName){$('amoSentenceRenameDialog').close();return;}
+  const existing=typeof getSentenceReadingCategories==='function'?getSentenceReadingCategories():sentenceCategories;
+  if(existing.some(c=>same(c,newName)&&!same(c,oldName))){msg.textContent=tr('该分类名称已存在');return;}
+  const affected=allSentences().filter(s=>same(sentenceCategoryOf(s),oldName));
+  const nextCategories=sentenceCategories.map(c=>same(c,oldName)?newName:c);
+  if(!nextCategories.some(c=>same(c,newName)))nextCategories.push(newName);
+  const nextMap={...sentenceCategoryMap};
+  Object.keys(nextMap).forEach(k=>{if(same(nextMap[k],oldName))nextMap[k]=newName});
+  // 内置短句不可直接修改：通过原有 key→category 覆盖映射实现改名。
+  affected.forEach(s=>{nextMap[sentenceKey(s)]=newName});
+  const nextCustom=customSentences.map(s=>same(s.category,oldName)?{...s,category:newName}:s);
+  const oldPractice=$('sentenceReadingCategory')?.value||settings.sentenceReadingCategory||'';
+  const oldBatch=$('batchSentenceCategory')?.value||'';
+  sentenceCategories=nextCategories;sentenceCategoryMap=nextMap;customSentences=nextCustom;
+  if(same(settings.sentenceReadingCategory,oldName))settings.sentenceReadingCategory=newName;
+  saveJSON(KEY_SENTENCE_CATEGORIES,sentenceCategories);
+  saveJSON(KEY_SENTENCE_CATEGORY_MAP,sentenceCategoryMap);
+  saveJSON(KEY_SENTENCES,customSentences);
+  saveJSON(KEY_SETTINGS,settings);
+  renderSentenceCategoryControls();
+  if($('sentenceCategoryFilter'))$('sentenceCategoryFilter').value=newName;
+  if($('batchSentenceCategory')&&same(oldBatch,oldName))$('batchSentenceCategory').value=newName;
+  if($('sentenceReadingCategory')&&(same(oldPractice,oldName)))$('sentenceReadingCategory').value=newName;
+  window.sentenceCurrentPage=1;
+  renderSentences();
+  $('amoSentenceRenameDialog').close();
+  showToast(tr('短句分类已重命名')+'：'+newName+'（'+affected.length+'）');
+ }
+
+ const scenePresets=['日常交流','餐饮','工作办公','恋爱感情','购物','交通出行','旅游','社交礼貌','医院就诊','家庭','学校','天气','娱乐休闲','自定义场景…'];
+ const values={easy:'简单高频口语、短句结构清楚',medium:'中级实用，自然句型',hard:'较高级但日常确实常用',mixed:'简单中级和较高级合理混合'};
+ const styles={natural:'自然口语',casual:'朋友聊天',polite:'礼貌正式',dialogue:'真实对话，有提问、回应、请求和回答等多样句型'};
+ const regions={common:'越南通用自然表达',south:'越南南部地道口语',north:'越南北部地道口语'};
+ let state={rows:[],running:false,epoch:0,scene:'',sceneSignature:''};
+ let originalBodyOverflow='';
+ function makeOption(value,label){const o=document.createElement('option');o.value=value;o.textContent=label;return o;}
+ function ensureSceneDialog(){
+  let modal=$('amoAISceneSentenceModal'); if(modal)return modal;
+  modal=document.createElement('div');modal.id='amoAISceneSentenceModal';modal.className='amo-ai-sentence-modal';modal.hidden=true;
+  modal.innerHTML=`<div class="amo-ai-sentence-mask" data-scene-close></div><section class="amo-ai-sentence-sheet" role="dialog" aria-modal="true" aria-labelledby="amoAISceneSentenceTitle"><header class="amo-ai-sentence-head"><div><h3 id="amoAISceneSentenceTitle">${tr('✨ AI按场景生成短句')}</h3><p>${tr('生成地道越南语短句，预览编辑后再加入批量输入区。')}</p></div><button type="button" class="amo-ai-sentence-close" data-scene-close aria-label="${tr('关闭')}">×</button></header><div class="amo-ai-sentence-scroll"><div class="amo-ai-sentence-fields"><label class="amo-ai-sentence-field"><span>${tr('短句场景')}</span><select id="amoAISceneCategory"></select></label><label class="amo-ai-sentence-field amo-ai-sentence-custom" id="amoAISceneCustomWrap" hidden><span>${tr('自定义场景')}</span><input type="text" id="amoAISceneCustom" maxlength="40" placeholder="${tr('例如：咖啡馆点餐、向老板请假')}"></label><label class="amo-ai-sentence-field"><span>${tr('生成数量')}</span><select id="amoAISceneCount"><option>10</option><option selected>20</option><option>30</option><option>50</option></select></label><label class="amo-ai-sentence-field"><span>${tr('难度等级')}</span><select id="amoAISceneDifficulty"><option value="easy">${tr('简单日常')}</option><option value="medium">${tr('中级实用')}</option><option value="hard">${tr('高级表达')}</option><option value="mixed" selected>${tr('混合（推荐）')}</option></select></label><label class="amo-ai-sentence-field"><span>${tr('越南语地区')}</span><select id="amoAISceneRegion"><option value="common">${tr('通用越南语')}</option><option value="south">${tr('南方口语')}</option><option value="north">${tr('北方口语')}</option></select></label><label class="amo-ai-sentence-field"><span>${tr('表达风格')}</span><select id="amoAISceneStyle"><option value="natural">${tr('自然口语')}</option><option value="casual">${tr('朋友聊天')}</option><option value="polite">${tr('礼貌正式')}</option><option value="dialogue">${tr('真实对话')}</option></select></label></div><label class="amo-ai-sentence-rule"><input type="checkbox" id="amoAISceneDedupe" checked><span>${tr('自动排除短句库已有的重复内容')}</span></label><div class="amo-ai-sentence-model" id="amoAISceneModel"></div><div class="amo-ai-sentence-progress" id="amoAISceneStatus" role="status" aria-live="polite"></div><div class="amo-ai-sentence-list-head"><span id="amoAISceneCountSummary">${tr('生成结果')}</span><div class="amo-ai-sentence-mini-actions"><button class="btn" id="amoAISceneSelectAll" type="button">${tr('全选')}</button><button class="btn" id="amoAISceneSelectNone" type="button">${tr('取消全选')}</button></div></div><div id="amoAIScenePreview" class="amo-ai-sentence-results"><div class="amo-ai-sentence-empty">${tr('选择场景后点击开始生成。')}</div></div></div><footer class="amo-ai-sentence-footer"><button class="btn btn-primary" id="amoAISceneRun" type="button">${tr('开始生成')}</button><button class="btn" type="button" data-scene-close>${tr('关闭')}</button><button class="btn btn-primary amo-ai-sentence-insert" id="amoAISceneInsert" type="button">${tr('加入批量输入区')}</button><small>${tr('加入后仍需手动点击“批量添加短句”保存。')}</small></footer></section>`;
+  document.body.appendChild(modal);
+  modal.addEventListener('click',e=>{
+   if(e.target.closest('[data-scene-close]')){closeScene();return;}
+   const button=e.target.closest('[data-scene-action]');
+   if(!button)return;
+   const index=Number(button.closest('[data-scene-index]')?.dataset.sceneIndex);
+   if(!Number.isInteger(index)||index<0||index>=state.rows.length)return;
+   if(button.dataset.sceneAction==='delete'){state.rows.splice(index,1);renderRows();}
+   if(button.dataset.sceneAction==='retry')regenerateOne(index);
+  });
+  modal.addEventListener('input',e=>{
+   const row=e.target.closest('[data-scene-index]');if(!row)return;
+   const i=Number(row.dataset.sceneIndex),field=e.target.dataset.sceneField;
+   if(!Number.isInteger(i)||!state.rows[i]||!['vi','zh'].includes(field))return;
+   state.rows[i][field]=e.target.value;
+  });
+  modal.addEventListener('change',e=>{
+   if(e.target.id==='amoAISceneCategory'){toggleCustomScene();return;}
+   if(e.target.matches('[data-scene-select]')){const i=Number(e.target.closest('[data-scene-index]')?.dataset.sceneIndex);if(state.rows[i])state.rows[i].selected=e.target.checked;updateCountSummary();}
+  });
+  $('amoAISceneRun').addEventListener('click',generateSceneSentences);
+  $('amoAISceneInsert').addEventListener('click',insertSceneSentences);
+  $('amoAISceneSelectAll').addEventListener('click',()=>{state.rows.forEach(r=>r.selected=true);renderRows()});
+  $('amoAISceneSelectNone').addEventListener('click',()=>{state.rows.forEach(r=>r.selected=false);renderRows()});
+  modal.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();closeScene()}});
+  return modal;
+ }
+ function updateSceneOptions(){
+  const sel=$('amoAISceneCategory'),old=sel.value||$('batchSentenceCategory')?.value||'餐饮';
+  const categoryNames=[...scenePresets.filter(x=>x!=='自定义场景…'),...sentenceCategories];
+  const unique=[];for(const name of categoryNames)if(name&&!unique.some(x=>same(x,name)))unique.push(name);
+  sel.replaceChildren(...unique.map(v=>makeOption(v,tr(v))),makeOption('__custom__',tr('自定义场景…')));
+  sel.value=[...sel.options].some(o=>o.value===old)?old:'餐饮';
+  toggleCustomScene();
+ }
+ function toggleCustomScene(){const custom=$('amoAISceneCategory')?.value==='__custom__';$('amoAISceneCustomWrap').hidden=!custom;if(custom)$('amoAISceneCustom')?.focus();}
+ function config(){
+  const raw=$('amoAISceneCategory')?.value||'餐饮';
+  const scene=normalizeName(raw==='__custom__'?$('amoAISceneCustom')?.value:raw);
+  return {scene,count:Math.min(50,Math.max(10,Number($('amoAISceneCount')?.value||20))),difficulty:$('amoAISceneDifficulty')?.value||'mixed',region:$('amoAISceneRegion')?.value||'common',style:$('amoAISceneStyle')?.value||'natural',dedupe:$('amoAISceneDedupe')?.checked!==false};
+ }
+ function signature(cfg){return JSON.stringify([cfg.scene,cfg.difficulty,cfg.region,cfg.style,cfg.dedupe]);}
+ function status(message,kind=''){
+  const el=$('amoAISceneStatus');if(!el)return;el.textContent=message;el.className='amo-ai-sentence-progress'+(kind?' '+kind:'');
+ }
+ function modelLabel(){
+  const cfg=window.AmoAIService?.config?.();if(!cfg){return tr('当前 AI 不可用');}
+  const actual=typeof AmoDeepSeekPOS!=='undefined'&&AmoDeepSeekPOS.effectiveConfig?AmoDeepSeekPOS.effectiveConfig(cfg):cfg;
+  return tr('当前模型：')+(actual.model||'—')+(actual.model!==cfg.model?'（'+tr('Groq 备用')+'）':'');
+ }
+ window.openAISceneSentenceGenerator=function(){
+  const modal=ensureSceneDialog();
+  if(state.running)return;
+  state={rows:[],running:false,epoch:state.epoch+1,scene:'',sceneSignature:''};
+  updateSceneOptions();setRunning(false);$('amoAISceneRun').textContent=tr('开始生成');renderRows();status(window.AmoAIService?.ready?.()?tr('按场景生成短句，确认后才会写入批量区。'):tr('请先在设置中启用 AI 并填写所选模型的 API Key'),window.AmoAIService?.ready?.()?'':'error');
+  $('amoAISceneModel').textContent=modelLabel();
+  originalBodyOverflow=document.body.style.overflow;document.body.style.overflow='hidden';modal.hidden=false;
+  $('amoAISceneCategory').focus({preventScroll:true});
+ };
+ function closeScene(){
+  state.epoch++;state.running=false;
+  // V31.172 修复：请求途中关闭并重新打开时，按钮状态立即恢复；旧响应因 epoch 变化不会写入。
+  setRunning(false);
+  const modal=$('amoAISceneSentenceModal');if(modal)modal.hidden=true;
+  document.body.style.overflow=originalBodyOverflow;
+ }
+ // V31.172 修复：重复短句忽略末尾标点差异，减少同一句只改句号后重复入库。
+ function sentenceDedupeKey(text){return normalize(String(text||'').normalize('NFC')).replace(/[.,!?;:，。！？…、；：'"“”‘’\s]+$/gu,'');}
+ function cleanPair(raw){
+  const vi=normalizeName(raw?.vi||raw?.vietnamese||'').replace(/=/g,'').replace(/[\r\n]+/g,' ');
+  const zh=normalizeName(raw?.zh||raw?.chinese||'').replace(/=/g,'').replace(/[\r\n]+/g,' ');
+  if(!vi||!zh||vi.length>240||zh.length>240)return null;
+  if(!recognizeBilingualSentence(vi,zh))return null;
+  if(vi.trim().split(/\s+/).length<2)return null;
+  return {selected:true,vi,zh};
+ }
+ function validRowsDedup(rows,cfg,used){
+  const existing=cfg.dedupe?new Set(allSentences().map(s=>sentenceDedupeKey(s.vi))):new Set();
+  const good=[];
+  for(const raw of rows){const row=cleanPair(raw);if(!row)continue;const key=sentenceDedupeKey(row.vi);if(used.has(key)||existing.has(key))continue;used.add(key);good.push(row)}
+  return good;
+ }
+ async function ask(cfg,requested,exclude=[]){
+  const system='你是越南本地生活场景对话教材编辑。只输出一个有效的JSON对象，格式：{"items":[{"vi":"自然越南语短句","zh":"准确中文翻译"}]}。不要Markdown，不解释。必须确保越南语确实是当地日常会说的话，中文自然准确，句子真实完整；多种交际功能均衡：请求、提问、回答、回应、拒绝、确认、礼貌道谢。不要机械重复模板或只替换一个名词；避免书面直译、过长段落、专名、政治和不必要的冒犯。';
+  const exclusion=exclude.slice(-40).map(x=>String(x||'').slice(0,130));
+  const user=`请为场景「${cfg.scene}」生成约${requested}条不同的中越双语日常交流短句。难度：${values[cfg.difficulty]||values.mixed}。地区：${regions[cfg.region]||regions.common}。表达风格：${styles[cfg.style]||styles.natural}。每条独立成句，口语自然，越南语与中文语义一一对应。尽量覆盖这个场景里不同的真实沟通意图。这些短句已出现，请不要重复：${JSON.stringify(exclusion)}。只返回items数组。`;
+  return await window.AmoAIService.json(system,user,{maxTokens:Math.max(1900,requested*210),timeout:85000});
+ }
+ function setRunning(value){state.running=value;const btn=$('amoAISceneRun');btn.disabled=value;const insert=$('amoAISceneInsert');insert.disabled=value;$('amoAISceneSelectAll').disabled=value;$('amoAISceneSelectNone').disabled=value;btn.textContent=tr(value?'生成中…':'继续生成 / 补齐');}
+ async function generateSceneSentences(){
+  if(state.running)return;
+  if(!window.AmoAIService?.ready?.()){status(tr('请先在设置中启用 AI 并填写所选模型的 API Key'),'error');return;}
+  const cfg=config();if(!cfg.scene){status(tr('请先输入或选择场景'),'error');return;}
+  if(cfg.scene.length>40||/[\r\n=]/.test(cfg.scene)){status(tr('场景名称不得超过40个字符或包含换行、等号'),'error');return;}
+  const sig=signature(cfg);
+  if(state.rows.length&&state.sceneSignature!==sig){if(!confirm(tr('场景或生成条件已改变，清除旧预览并重新生成吗？')))return;state.rows=[];}
+  if(state.rows.length>=cfg.count){status(tr('已达到本次设置的生成数量，如需继续请提高数量。'),'ok');return;}
+  state.scene=cfg.scene;state.sceneSignature=sig;
+  const runEpoch=++state.epoch;
+  setRunning(true);renderRows();
+  const used=new Set(state.rows.map(r=>sentenceDedupeKey(r.vi)));let failures=0;
+  try{
+   const maxCalls=Math.ceil(cfg.count/6)+2;
+   for(let call=0;call<maxCalls&&state.rows.length<cfg.count;call++){
+    if(runEpoch!==state.epoch)break;
+    status(`${tr('正在生成')} ${state.rows.length} / ${cfg.count} · ${tr('第')} ${call+1} ${tr('批')}`);
+    const need=Math.min(6,cfg.count-state.rows.length);
+    try{
+     const data=await ask(cfg,need,state.rows.map(r=>r.vi));
+     if(runEpoch!==state.epoch)break;
+     const raw=Array.isArray(data?.items)?data.items:[];
+     const fresh=validRowsDedup(raw,cfg,used);
+     state.rows.push(...fresh.slice(0,cfg.count-state.rows.length));
+     renderRows();
+     if(!fresh.length){failures++;if(failures>=2)break}else failures=0;
+    }catch(err){
+     if(runEpoch!==state.epoch)break;
+     status(tr('本批请求失败：')+(err?.message||String(err))+'。'+tr('已生成内容仍保留，可再次点击补齐。'),'error');
+     break;
+    }
+   }
+   if(runEpoch===state.epoch&&failures<2){
+    status(`${tr('已生成')} ${state.rows.length} / ${cfg.count} ${tr('句')}。${state.rows.length<cfg.count?tr('可点击补齐继续生成。'):tr('请检查编辑后加入批量输入区。')}`,'ok');
+   }else if(runEpoch===state.epoch&&failures>=2){status(tr('有效句子不足，请修改场景或难度后重试；已有内容已保留。'),'error');}
+  }finally{if(runEpoch===state.epoch){setRunning(false);renderRows();}}
+ }
+ function renderRows(){
+  const box=$('amoAIScenePreview');if(!box)return;box.replaceChildren();
+  if(!state.rows.length){const empty=document.createElement('div');empty.className='amo-ai-sentence-empty';empty.textContent=tr('选择场景后点击开始生成。');box.appendChild(empty);}
+  state.rows.forEach((r,i)=>{
+   const card=document.createElement('article');card.className='amo-ai-sentence-card';card.dataset.sceneIndex=String(i);
+   card.innerHTML=`<div class="amo-ai-sentence-card-title"><label class="amo-ai-sentence-card-select"><input type="checkbox" data-scene-select> <span>${tr('短句')} ${i+1}</span></label><div class="amo-ai-sentence-card-tools"><button class="btn" type="button" data-scene-action="retry">${tr('重新生成')}</button><button class="btn btn-danger" type="button" data-scene-action="delete">${tr('删除')}</button></div></div><div class="amo-ai-sentence-card-grid"><label class="amo-ai-sentence-field"><span>${tr('越南语短句')}</span><textarea rows="2" data-scene-field="vi"></textarea></label><label class="amo-ai-sentence-field"><span>${tr('中文翻译')}</span><textarea rows="2" data-scene-field="zh"></textarea></label></div>`;
+   card.querySelector('[data-scene-select]').checked=r.selected;
+   card.querySelector('[data-scene-field="vi"]').value=r.vi;
+   card.querySelector('[data-scene-field="zh"]').value=r.zh;
+   card.querySelector('[data-scene-action="retry"]').disabled=state.running;
+   box.appendChild(card);
+  });
+  updateCountSummary();
+ }
+ function updateCountSummary(){
+  const counter=$('amoAISceneCountSummary');if(counter)counter.textContent=tr('生成结果')+` · ${state.rows.length} ${tr('句')} · ${tr('已选')} ${state.rows.filter(r=>r.selected).length}`;
+ }
+ async function regenerateOne(index){
+  if(state.running||!state.rows[index])return;
+  if(!window.AmoAIService?.ready?.()){status(tr('请先在设置中启用 AI 并填写所选模型的 API Key'),'error');return;}
+  const cfg=config();if(!cfg.scene){status(tr('请选择场景'),'error');return;}
+  const runEpoch=++state.epoch;setRunning(true);renderRows();
+  status(`${tr('正在重新生成短句')} ${index+1}…`);
+  try{
+   const exclude=state.rows.filter((_,i)=>i!==index).map(r=>r.vi);
+   const data=await ask(cfg,1,exclude);
+   if(state.epoch!==runEpoch)return;
+   const used=new Set(exclude.map(sentenceDedupeKey));
+   const fresh=validRowsDedup(Array.isArray(data?.items)?data.items:[],cfg,used);
+   if(!fresh.length){status(tr('没有得到可用的新短句，原句未改变。'),'error');return;}
+   state.rows[index]={...fresh[0],selected:state.rows[index].selected};
+   renderRows();status(tr('单句已重新生成，原句未保存。'),'ok');
+  }catch(err){if(state.epoch===runEpoch)status(tr('重新生成失败：')+(err?.message||err),'error');}
+  finally{if(state.epoch===runEpoch){setRunning(false);renderRows();}}
+ }
+ function insertSceneSentences(){
+  if(state.running)return;
+  const cfg=config();const chosen=state.rows.filter(r=>r.selected);
+  if(!chosen.length){status(tr('请先勾选至少一条短句'),'error');return;}
+  if(state.sceneSignature!==signature(cfg)){status(tr('生成条件已更改，请先按当前条件重新生成，或恢复原条件。'),'error');return;}
+  const source=$('batchSentences');if(!source)return;
+  // V31.172 修复：在加入前再次按用户编辑后的文字验证和去重；编辑错误不带入原批量区。
+  const seen=new Set(),existing=cfg.dedupe?new Set(allSentences().map(s=>sentenceDedupeKey(s.vi))):new Set();
+  for(const line of source.value.split(/\r?\n/)){
+   const parts=line.split('=');const parsed=recognizeBilingualSentence(parts[0],parts[1]);if(parsed)seen.add(sentenceDedupeKey(parsed.vi));
+  }
+  const rows=[];let invalid=0,duplicated=0;
+  for(const r of chosen){
+   const valid=cleanPair(r);if(!valid){invalid++;continue;}
+   const key=sentenceDedupeKey(valid.vi);if(seen.has(key)||existing.has(key)){duplicated++;continue;}
+   seen.add(key);rows.push(valid.vi+'='+valid.zh);
+  }
+  if(!rows.length){status(`${tr('没有可以加入的短句')}（${tr('无效')} ${invalid}，${tr('重复')} ${duplicated}）`,'error');return;}
+  // V31.172：自定义 AI 场景必须先注册到原有短句分类，再选中原批量分类下拉。
+  if(!sentenceCategories.some(c=>same(c,cfg.scene))){sentenceCategories.push(cfg.scene);saveJSON(KEY_SENTENCE_CATEGORIES,sentenceCategories);renderSentenceCategoryControls();}
+  const select=$('batchSentenceCategory');if(select)select.value=sentenceCategories.find(c=>same(c,cfg.scene))||'';
+  source.value=(source.value.trimEnd()?(source.value.trimEnd()+'\n'):'')+rows.join('\n');
+  source.dispatchEvent(new Event('input',{bubbles:true}));
+  closeScene();
+  source.focus({preventScroll:true});source.scrollIntoView({block:'center',behavior:'auto'});
+  showToast(`${tr('已加入')} ${rows.length} ${tr('条短句')}；${tr('请手动保存')}${invalid||duplicated?` (${tr('跳过')} ${invalid+duplicated})`:''}`);
+ }
+
+ // V31.172：两种界面语言的文案均为完整短语，不翻译用户生成的短句。
+ if(typeof UI_ZH_VI!=='undefined')Object.assign(UI_ZH_VI,{
+  '重命名分类':'Đổi tên danh mục','重命名短句分类':'Đổi tên danh mục câu ngắn','新分类名称':'Tên danh mục mới','原分类：':'Danh mục cũ: ','保存名称':'Lưu tên','请先选择要重命名的短句分类':'Hãy chọn danh mục câu ngắn cần đổi tên','请输入不超过40个字符的有效分类名':'Hãy nhập tên hợp lệ không quá 40 ký tự','该分类名称已存在':'Tên danh mục đã tồn tại','短句分类已重命名':'Đã đổi tên danh mục câu ngắn',
+  '✨ AI按场景生成短句':'✨ AI tạo câu theo ngữ cảnh','按场景生成地道越南语短句，勾选编辑后再加入批量输入区，不直接保存。':'Tạo câu tiếng Việt tự nhiên theo ngữ cảnh, chọn và sửa trước khi đưa vào ô thêm hàng loạt.','生成地道越南语短句，预览编辑后再加入批量输入区。':'Tạo câu tiếng Việt tự nhiên, xem trước và sửa rồi thêm vào ô nhập hàng loạt.','短句场景':'Ngữ cảnh câu ngắn','自定义场景':'Ngữ cảnh tùy chỉnh','自定义场景…':'Ngữ cảnh tùy chỉnh…','例如：咖啡馆点餐、向老板请假':'Ví dụ: gọi món ở quán cà phê, xin nghỉ phép','生成数量':'Số lượng câu','难度等级':'Độ khó','越南语地区':'Vùng miền','表达风格':'Phong cách','简单日常':'Đơn giản','中级实用':'Trung cấp','高级表达':'Nâng cao','混合（推荐）':'Kết hợp (đề xuất)','通用越南语':'Tiếng Việt phổ thông','南方口语':'Khẩu ngữ miền Nam','北方口语':'Khẩu ngữ miền Bắc','自然口语':'Khẩu ngữ tự nhiên','朋友聊天':'Trò chuyện bạn bè','礼貌正式':'Lịch sự, trang trọng','真实对话':'Hội thoại thực tế','自动排除短句库已有的重复内容':'Tự loại bỏ câu trùng trong kho','当前模型：':'Mô hình hiện tại: ','Groq 备用':'Groq dự phòng','当前 AI 不可用':'AI hiện chưa khả dụng','取消全选':'Bỏ chọn tất cả','生成结果':'Kết quả tạo','越南语短句':'Câu tiếng Việt','中文翻译':'Bản dịch tiếng Trung','重新生成':'Tạo lại','加入批量输入区':'Thêm vào ô nhập hàng loạt','加入后仍需手动点击“批量添加短句”保存。':'Sau khi thêm, vẫn cần nhấn “Thêm câu ngắn hàng loạt” để lưu.','按场景生成短句，确认后才会写入批量区。':'Tạo câu theo ngữ cảnh, chỉ đưa vào ô nhập sau khi xác nhận.','请先输入或选择场景':'Hãy chọn hoặc nhập ngữ cảnh','场景名称不得超过40个字符或包含换行、等号':'Tên ngữ cảnh tối đa 40 ký tự, không chứa dấu = hay xuống dòng','场景或生成条件已改变，清除旧预览并重新生成吗？':'Ngữ cảnh hoặc tùy chọn đã thay đổi. Xóa bản xem trước cũ và tạo lại?','已达到本次设置的生成数量，如需继续请提高数量。':'Đã đạt số lượng đã chọn. Tăng số lượng để tiếp tục.','生成中…':'Đang tạo…','继续生成 / 补齐':'Tạo tiếp / Bổ sung','正在生成':'Đang tạo','第':'Lượt','批':'lô','本批请求失败：':'Lỗi tạo lô này: ','已生成内容仍保留，可再次点击补齐。':'Câu đã tạo vẫn được giữ. Nhấn bổ sung để thử lại.','已生成':'Đã tạo','句':'câu','可点击补齐继续生成。':'Có thể nhấn bổ sung để tạo tiếp.','请检查编辑后加入批量输入区。':'Kiểm tra và sửa trước khi thêm vào ô nhập hàng loạt.','有效句子不足，请修改场景或难度后重试；已有内容已保留。':'Không đủ câu hợp lệ, hãy đổi ngữ cảnh hoặc độ khó; các câu hiện có vẫn giữ lại.','选择场景后点击开始生成。':'Chọn ngữ cảnh rồi nhấn bắt đầu tạo.','已选':'Đã chọn','正在重新生成短句':'Đang tạo lại câu','没有得到可用的新短句，原句未改变。':'Không tạo được câu mới hợp lệ; câu cũ vẫn giữ nguyên.','单句已重新生成，原句未保存。':'Đã tạo lại một câu; chưa lưu.','重新生成失败：':'Không tạo lại được: ','请先勾选至少一条短句':'Hãy chọn ít nhất một câu','生成条件已更改，请先按当前条件重新生成，或恢复原条件。':'Tùy chọn đã đổi; hãy tạo lại hoặc khôi phục tùy chọn cũ.','没有可以加入的短句':'Không có câu nào có thể thêm','无效':'Không hợp lệ','重复':'Trùng','已加入':'Đã thêm','条短句':'câu ngắn','请手动保存':'Hãy lưu thủ công','跳过':'Bỏ qua'
+ });
+})();
+</script>
+
 </body>
 </html>
 
