@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.191</title>
+<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.192</title>
 <meta name="theme-color" content="#f4f6f8" id="amo-browser-theme-color">
 
 
@@ -6068,7 +6068,7 @@ body.theme-night .amo-hv-modal-box .btn:not(.btn-primary){background:#304553!imp
         <div class="logo">
             <div class="logo-icon">🇻🇳</div>
             <div>
-                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.191">V31.191</span></div>
+                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.192">V31.192</span></div>
                 <div class="logo-sub">中文母语者 · 零基础学习</div>
             </div>
         </div>
@@ -6156,7 +6156,31 @@ body.theme-night .amo-hv-modal-box .btn:not(.btn-primary){background:#304553!imp
         <button type="button" class="amo-reset-effects" id="amoResetDrawerSettingsBtn" onclick="resetAmoDrawerSettings()">↺ 恢复默认抽屉动效</button>
       </div>
     </details>
-    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.191</strong></div>
+
+    <!-- V31.192: 放在显示设置全部现有选项的底部，初始折叠。 -->
+    <details id="amo192CardSettings" class="amo-setting-group amo-advanced amo192-card-settings">
+      <summary>答题卡片设置 <span>高度、例句、按钮 · 可自定义</span></summary>
+      <p class="amo-setting-hint">设置会立即作用于答题页，并写入现有设置备份。普通和沉浸模式可分别调整卡片高度；例句始终在题目与选项之间。</p>
+      <div class="amo192-card-control-list">
+        <label class="amo192-card-control" for="amo192NormalHeight"><span>普通模式卡片高度</span><output id="amo192NormalHeightValue" for="amo192NormalHeight">84%</output><input id="amo192NormalHeight" type="range" min="65" max="105" step="1" value="84" data-amo192-key="normalHeight"></label>
+        <label class="amo192-card-control" for="amo192FocusHeight"><span>沉浸模式卡片高度</span><output id="amo192FocusHeightValue" for="amo192FocusHeight">94%</output><input id="amo192FocusHeight" type="range" min="75" max="100" step="1" value="94" data-amo192-key="focusHeight"></label>
+        <label class="amo192-card-control" for="amo192AnswerFont"><span>答题选项字体</span><output id="amo192AnswerFontValue" for="amo192AnswerFont">110%</output><input id="amo192AnswerFont" type="range" min="85" max="130" step="5" value="110" data-amo192-key="answerFont"></label>
+        <label class="amo192-card-control" for="amo192ExampleFont"><span>例句字体</span><output id="amo192ExampleFontValue" for="amo192ExampleFont">100%</output><input id="amo192ExampleFont" type="range" min="85" max="125" step="5" value="100" data-amo192-key="exampleFont"></label>
+        <label class="amo192-card-control" for="amo192ExampleGap"><span>例句间距</span><output id="amo192ExampleGapValue" for="amo192ExampleGap">50%</output><input id="amo192ExampleGap" type="range" min="25" max="125" step="5" value="50" data-amo192-key="exampleGap"></label>
+        <label class="amo192-card-control" for="amo192ButtonHeight"><span>开始／下一题按钮高度</span><output id="amo192ButtonHeightValue" for="amo192ButtonHeight">54px</output><input id="amo192ButtonHeight" type="range" min="48" max="68" step="2" value="54" data-amo192-key="buttonHeight"></label>
+        <label class="amo192-card-checkbox" for="amo192Compact"><input id="amo192Compact" type="checkbox" data-amo192-key="compact" checked><span>答题完成后缩小四个选项，为例句腾出空间</span></label>
+      </div>
+      <div class="amo192-mini-preview" id="amo192MiniPreview" aria-label="答题卡片排版实时预览">
+        <div class="amo192-mini-caption">布局预览 · 答题完成状态</div>
+        <div class="amo192-mini-head">尽情享受 <strong>tận hưởng</strong></div>
+        <div class="amo192-mini-examples"><b>例句：</b><div><span>Hãy tận hưởng kỳ nghỉ của bạn nhé.</span><small>请尽情享受你的假期吧。</small></div><div><span>Chúng tôi tận hưởng bữa tối cùng gia đình.</span><small>我们和家人一起享受晚餐。</small></div><div><span>Cô ấy đang tận hưởng cuộc sống ở đây.</span><small>她正在享受这里的生活。</small></div></div>
+        <div class="amo192-mini-options"><span>tận hưởng</span><span>biết làm sao</span><span>check-in</span><span>cũng được thôi</span></div>
+        <div class="amo192-mini-next">开始／下一题</div>
+      </div>
+      <p class="amo-setting-hint">卡片高度按屏幕高度计算，沉浸模式会扣除退出栏与安全距离。极小屏或长例句仍可在卡片内部滚动，不会裁掉内容或移动底部按钮。</p>
+      <button type="button" class="amo-reset-fonts" id="amo192ResetCard" aria-label="恢复答题卡片推荐设置">↺ 恢复答题卡片推荐设置</button>
+    </details>
+    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.192</strong></div>
 </section>
 </div>
 
@@ -15536,7 +15560,7 @@ const AmoTextIO=(()=>{
 
 
 <script id="amo-v3118-pos-version">
-window.AMO_BUILD_VERSION="V31.191";
+window.AMO_BUILD_VERSION="V31.192";
 </script>
 
 <script id="amo-v3126-enhancements">
@@ -15971,6 +15995,7 @@ document.addEventListener('DOMContentLoaded',()=>{initAmoSystemTheme();enhanceAm
 <script id="amo-v3131-update-history">
 (function(){
   const AMO_UPDATE_HISTORY = [
+    {version:'V31.192',date:'2026-11-23',items:['在文字与显示设置最底部新增默认折叠的答题卡片设置：普通/沉浸高度、答案与例句字体、例句间距、下一题按钮高度、答题完成后选项缩放；调整实时生效、自动保存，可一键恢复。','继续扩大普通和沉浸答题卡的可用空间，优先显示一至三条例句；例句标签左对齐，第一个例句在标签右侧起排，缩减不必要的间距。','保留 V31.191 主按钮定位、底部双按钮对齐、学习数据和判题规则，新增参数随原有设置备份导出。']},
     {version:'V31.191',date:'2026-11-22',items:['答题卡高度按设备增加约8%～12%，答题状态变化时保持稳定；大字号大间距选项便于作答，完成后自动缩小，例句区弹性显示一至三组双语例句。','各种题型统一开始／下一题按钮的高度与位置；答题后词汇详情与永久记住等宽等高并排，上一题与暂时跳过对齐。','消除输入题下一题后自动向下滚动：取消旧操作区定位滚动，并保持切题前页面位置与键盘失焦后的视口稳定。','保留V31.190原有AI双语词汇助手、24分类、短句、首页、全部判题规则和学习数据存储键。']},
     {version:'V31.190',date:'2026-11-22',items:['答题及短句练习设置栏正常滚动；答题卡统一高度、例句位置不变，内容独立滚动，操作按钮不再固定覆盖。','修复判题与切题时页面跳动；短句卡去掉裁切和多余留白，并修复答案后底部按钮显示。','词汇页面新增AI双向翻译：本地词库优先、中文越南语双向查询、词性、24大类场景、两组自然双语例句、校对入库、去重及本地查询缓存。','保留首页、24个分类、学习数据、全部原有判题规则和AI配置。']},
     {version:'V31.189',date:'2026-11-22',items:['答题卡题号与进度合并为独立横排；正确/错误统计移至“答对自动下一题”右侧，消除遮挡。','答题后收紧例句留白、选项字号与间距；加宽手机题卡，并将下一题按钮固定在安全区底部。','沉浸模式真正隐藏主导航和答题设置，保留可见退出入口及得分统计；不调整判题、词汇、分类和存储结构。']},
@@ -25300,6 +25325,205 @@ html body .app #quiz#quiz.amo-stable-quiz .quiz-question>.quiz-main-actions:not(
     page.addEventListener('click',snapActions,{capture:true});
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
+
+<style id="amo-v31192-card-css">
+/* V31.192 - only quiz card presentation; all grading and dataset code unchanged. */
+#amo192CardSettings>summary{cursor:pointer;list-style:none;min-height:42px;display:flex;gap:6px;align-items:center;justify-content:space-between;font-size:15px;font-weight:750;touch-action:manipulation}
+#amo192CardSettings>summary::-webkit-details-marker{display:none}
+#amo192CardSettings>summary::after{content:'⌄';color:var(--muted);font-size:16px}
+#amo192CardSettings[open]>summary::after{content:'⌃'}
+#amo192CardSettings>summary span{font-size:11px;font-weight:450;color:var(--muted);margin-left:auto}
+#amo192CardSettings .amo192-card-control-list{display:grid;gap:12px;padding:5px 0 9px}
+#amo192CardSettings .amo192-card-control{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px 9px;align-items:center;font-size:13px;font-weight:650}
+#amo192CardSettings .amo192-card-control output{font-size:12px;font-variant-numeric:tabular-nums;color:var(--primary-dark);min-width:42px;text-align:right}
+#amo192CardSettings .amo192-card-control input[type=range]{grid-column:1/-1;width:100%;accent-color:var(--primary);min-height:28px;margin:0;touch-action:pan-y}
+#amo192CardSettings .amo192-card-checkbox{display:flex;align-items:center;gap:8px;font-size:13px;line-height:1.5}
+#amo192CardSettings .amo192-card-checkbox input{min-width:19px;min-height:19px;accent-color:var(--primary)}
+#amo192CardSettings .amo192-mini-preview{--amo192-pr-font:1.1;--amo192-pr-example:1;--amo192-pr-gap:3px;--amo192-pr-button:54px;padding:12px 10px;margin:8px 0 10px;border:1px solid var(--border);border-radius:14px;background:var(--solid-surface,var(--card));color:var(--text)}
+#amo192CardSettings .amo192-mini-caption{font-size:11px;color:var(--muted);margin-bottom:7px}
+#amo192CardSettings .amo192-mini-head{text-align:center;font-size:17px;font-weight:850;line-height:1.5}
+#amo192CardSettings .amo192-mini-head strong{display:block;color:var(--study-vi-color,var(--primary));font-size:20px}
+#amo192CardSettings .amo192-mini-examples{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:6px;row-gap:var(--amo192-pr-gap);margin:9px 0 8px;align-items:start}
+#amo192CardSettings .amo192-mini-examples>b{grid-column:1;grid-row:1;white-space:nowrap;font-size:12px;color:var(--primary-dark)}
+#amo192CardSettings .amo192-mini-examples>div{grid-column:2;min-width:0;overflow-wrap:anywhere;font-size:calc(12px * var(--amo192-pr-example));line-height:1.42;color:var(--study-vi-color,var(--text))}
+#amo192CardSettings .amo192-mini-examples>div:first-of-type{grid-row:1}
+#amo192CardSettings .amo192-mini-examples small{display:block;margin-top:1px;font-size:.9em;color:var(--study-zh-color,var(--muted))}
+#amo192CardSettings .amo192-mini-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;margin:8px 0}
+#amo192CardSettings .amo192-mini-options span{border:1px solid var(--border);border-radius:9px;min-width:0;padding:7px 4px;text-align:center;font-size:calc(11px * var(--amo192-pr-font));font-weight:750;overflow-wrap:anywhere}
+#amo192CardSettings .amo192-mini-options span:first-child{border-color:var(--primary);background:var(--primary-light)}
+#amo192CardSettings .amo192-mini-next{min-height:var(--amo192-pr-button);display:grid;place-items:center;border-radius:10px;background:var(--primary);color:#fff;font-size:14px;font-weight:800}
+#amo192CardSettings .amo192-mini-preview.amo192-preview-no-compact .amo192-mini-options span{padding:12px 5px;font-size:calc(15px * var(--amo192-pr-font))}
+#amo192CardSettings .amo-reset-fonts{width:100%;min-height:40px}
+/* Both modes use a stable card footprint. CSS vars reflect sliders and survive question rerenders. */
+@media(max-width:700px){
+ html body .app #quiz#quiz.amo-stable-quiz:not(.amo-ai-study-active):not(.amo-main-hv-quiz-active) .quiz-desktop-layout>.quiz-box,
+ html body .app #quiz#quiz.amo-stable-quiz.quiz-fill-mode:not(.amo-ai-study-active):not(.amo-main-hv-quiz-active) .quiz-desktop-layout>.quiz-box,
+ html body .app #quiz#quiz.amo-stable-quiz.quiz-answer-complete:not(.amo-ai-study-active):not(.amo-main-hv-quiz-active) .quiz-desktop-layout>.quiz-box{
+  height:clamp(475px,var(--amo192-normal-height,84dvh),1000px)!important;
+  min-height:clamp(475px,var(--amo192-normal-height,84dvh),1000px)!important;
+  max-height:clamp(475px,var(--amo192-normal-height,84dvh),1000px)!important;
+ }
+}
+@media(min-width:701px){
+ html body .app #quiz#quiz.amo-stable-quiz:not(.amo-ai-study-active):not(.amo-main-hv-quiz-active) .quiz-desktop-layout>.quiz-box{
+  height:clamp(615px,var(--amo192-normal-height,84dvh),1150px)!important;
+  min-height:clamp(615px,var(--amo192-normal-height,84dvh),1150px)!important;
+  max-height:clamp(615px,var(--amo192-normal-height,84dvh),1150px)!important;
+ }
+}
+/* Focus uses extra available room but never grows beyond the screen minus its compact exit bar. */
+html body.amo189-immersive-on .app #quiz#quiz.amo-stable-quiz.amo188-immersive:not(.amo-ai-study-active):not(.amo-main-hv-quiz-active) .quiz-desktop-layout>.quiz-box{
+ height:min(max(390px,var(--amo192-focus-height,94dvh)),calc(100dvh - var(--amo192-focus-reserve,76px)))!important;
+ min-height:min(max(390px,var(--amo192-focus-height,94dvh)),calc(100dvh - var(--amo192-focus-reserve,76px)))!important;
+ max-height:min(max(390px,var(--amo192-focus-height,94dvh)),calc(100dvh - var(--amo192-focus-reserve,76px)))!important;
+}
+/* Let the expanded card space be used by the examples, not artificial padding. */
+html body .app #quiz#quiz.amo-stable-quiz:not(.amo-ai-study-active):not(.amo-main-hv-quiz-active) #quizResult.quiz-result{
+ flex:1 1 auto!important;min-height:0!important;overflow:hidden!important;
+}
+html body .app #quiz#quiz.amo-stable-quiz:not(.amo-ai-study-active):not(.amo-main-hv-quiz-active) #quizResult.quiz-result>.quiz-correct-details{
+ min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important;
+}
+/* First example shares the same top line as the left-aligned "例句：" label. */
+html body .app #quiz#quiz.amo-stable-quiz #quizResult .quiz-correct-example{
+ display:grid!important;grid-template-columns:max-content minmax(0,1fr)!important;
+ column-gap:6px!important;row-gap:var(--amo192-example-gap,3px)!important;
+ width:100%!important;max-width:none!important;text-align:left!important;
+ padding:4px 0 0!important;margin:3px 0 0!important;align-items:start!important;
+}
+html body .app #quiz#quiz.amo-stable-quiz #quizResult .quiz-correct-example>strong{
+ grid-column:1!important;grid-row:1!important;align-self:start!important;margin:0!important;padding:0!important;
+ white-space:nowrap!important;font-size:clamp(12px,3.3vw,15px)!important;line-height:1.38!important;
+}
+html body .app #quiz#quiz.amo-stable-quiz #quizResult .quiz-correct-example>.quiz-correct-example-pair{
+ grid-column:2!important;min-width:0!important;margin:0!important;padding:0!important;text-align:left!important;
+ height:auto!important;max-height:none!important;overflow:visible!important;
+}
+html body .app #quiz#quiz.amo-stable-quiz #quizResult .quiz-correct-example>.quiz-correct-example-pair:first-of-type{grid-row:1!important}
+html body .app #quiz#quiz.amo-stable-quiz #quizResult .quiz-correct-example>.quiz-correct-example-pair+.quiz-correct-example-pair{margin-top:0!important}
+html body .app #quiz#quiz.amo-stable-quiz #quizResult .quiz-correct-example-pair .example-vi,
+html body .app #quiz#quiz.amo-stable-quiz #quizResult .quiz-correct-example-pair .example-zh{
+ margin:0!important;padding:0!important;text-align:left!important;overflow-wrap:anywhere!important;
+ line-height:1.35!important;
+}
+html body .app #quiz#quiz.amo-stable-quiz #quizResult .quiz-correct-example-pair .example-vi{font-size:clamp(12px,calc(3.6vw * var(--amo192-example-scale,1)),calc(17px * var(--amo192-example-scale,1)))!important}
+html body .app #quiz#quiz.amo-stable-quiz #quizResult .quiz-correct-example-pair .example-zh{font-size:clamp(12px,calc(3.3vw * var(--amo192-example-scale,1)),calc(16px * var(--amo192-example-scale,1)))!important;margin-top:2px!important}
+/* Option text has a configurable pre-answer scale; post-answer defaults to compact. */
+html body .app #quiz#quiz.amo-stable-quiz:not(.quiz-answer-complete) #quizOptions button.quiz-option{
+ font-size:clamp(16px,calc(4.3vw * var(--amo192-answer-scale,1.1)),calc(19px * var(--amo192-answer-scale,1.1)))!important;
+}
+html body .app #quiz#quiz.amo-stable-quiz.quiz-answer-complete #quizOptions button.quiz-option{
+ font-size:clamp(12px,calc(3.5vw * var(--amo192-answer-scale,1.1)),calc(15px * var(--amo192-answer-scale,1.1)))!important;
+}
+html body .app #quiz#quiz.amo-stable-quiz.quiz-answer-complete.amo192-no-compact #quizOptions button.quiz-option{
+ min-height:54px!important;padding:9px 8px!important;
+ font-size:clamp(16px,calc(4.3vw * var(--amo192-answer-scale,1.1)),calc(19px * var(--amo192-answer-scale,1.1)))!important;
+ line-height:1.31!important;
+}
+html body .app #quiz#quiz.amo-stable-quiz.quiz-answer-complete.amo192-no-compact #quizOptions.quiz-options{row-gap:10px!important;column-gap:10px!important}
+/* Main next action height remains stable across modes and correct/incorrect states. */
+html body .app #quiz#quiz.amo-stable-quiz .quiz-main-actions .quiz-next-btn,
+html body .app #quiz#quiz.amo-stable-quiz.quiz-answer-complete:not(.quiz-batch-complete) .quiz-main-actions .quiz-next-btn{
+ height:var(--amo192-next-height,54px)!important;
+ min-height:var(--amo192-next-height,54px)!important;
+ max-height:var(--amo192-next-height,54px)!important;
+}
+@media(max-width:360px){
+ html body .app #quiz#quiz.amo-stable-quiz #quizResult .quiz-correct-example{column-gap:4px!important}
+ html body .app #quiz#quiz.amo-stable-quiz #quizResult .quiz-correct-example>strong{font-size:12px!important}
+}
+</style>
+
+<script id="amo-v31192-card-script">
+(function(){'use strict';
+ const DEFAULTS=Object.freeze({normalHeight:84,focusHeight:94,answerFont:110,exampleFont:100,exampleGap:50,buttonHeight:54,compact:true});
+ const RANGES={normalHeight:[65,105,1],focusHeight:[75,100,1],answerFont:[85,130,5],exampleFont:[85,125,5],exampleGap:[25,125,5],buttonHeight:[48,68,2]};
+ let state=null,writeTimer=null;
+ function validate(key,value){
+   if(key==='compact')return value!==false;
+   const range=RANGES[key];if(!range)return DEFAULTS[key];
+   const n=Number(value);if(!Number.isFinite(n))return DEFAULTS[key];
+   const [min,max,step]=range;return Math.max(min,Math.min(max,Math.round(n/step)*step));
+ }
+ function getSettings(){
+   const stored=settings.amoQuizCard192;
+   const obj=stored&&typeof stored==='object'&&!Array.isArray(stored)?stored:{};
+   return Object.fromEntries(Object.keys(DEFAULTS).map(k=>[k,validate(k,obj[k]===undefined?DEFAULTS[k]:obj[k])]));
+ }
+ function persist(){
+   if(writeTimer){clearTimeout(writeTimer);writeTimer=null;}
+   if(!state)return;
+   // Save only the new nested layout property in existing exported KEY_SETTINGS.
+   const previous=settings.amoQuizCard192;
+   settings.amoQuizCard192={...state};
+   try{saveJSON(KEY_SETTINGS,settings)}catch(e){settings.amoQuizCard192=previous;showToast('卡片设置未能保存，请检查本机存储空间');}
+ }
+ function schedulePersist(){if(writeTimer)clearTimeout(writeTimer);writeTimer=setTimeout(persist,130);}
+ function apply(){
+   if(!state)return;
+   const root=document.documentElement;
+   root.style.setProperty('--amo192-normal-height',state.normalHeight+'dvh');
+   root.style.setProperty('--amo192-focus-height',state.focusHeight+'dvh');
+   root.style.setProperty('--amo192-answer-scale',String(state.answerFont/100));
+   root.style.setProperty('--amo192-example-scale',String(state.exampleFont/100));
+   root.style.setProperty('--amo192-example-gap',(6*state.exampleGap/100).toFixed(1)+'px');
+   root.style.setProperty('--amo192-next-height',state.buttonHeight+'px');
+   const quiz=document.getElementById('quiz');quiz?.classList.toggle('amo192-no-compact',!state.compact);
+   const bar=quiz?.querySelector('.amo188-focus-bar');
+   // Account for the exit bar plus a little bottom safe margin in immersive mode.
+   const reserve=Math.max(68,Math.ceil((bar?.getBoundingClientRect().height||42)+24));
+   root.style.setProperty('--amo192-focus-reserve',reserve+'px');
+   const preview=document.getElementById('amo192MiniPreview');
+   if(preview){
+     preview.style.setProperty('--amo192-pr-font',String(state.answerFont/100));
+     preview.style.setProperty('--amo192-pr-example',String(state.exampleFont/100));
+     preview.style.setProperty('--amo192-pr-gap',(6*state.exampleGap/100).toFixed(1)+'px');
+     preview.style.setProperty('--amo192-pr-button',state.buttonHeight+'px');
+     preview.classList.toggle('amo192-preview-no-compact',!state.compact);
+   }
+ }
+ function syncInputs(){
+   const pane=document.getElementById('amo192CardSettings');if(!pane)return;
+   for(const input of pane.querySelectorAll('[data-amo192-key]')){
+     const key=input.dataset.amo192Key;if(!(key in DEFAULTS))continue;
+     if(input.type==='checkbox')input.checked=state[key];else input.value=state[key];
+     const output=pane.querySelector('#'+input.id+'Value');if(output)output.textContent=state[key]+(key==='buttonHeight'?'px':'%');
+   }
+ }
+ function init(){
+   const panel=document.getElementById('amo192CardSettings');if(!panel)return;
+   // Place it after other settings injected by older versions: always the final item.
+   const dialog=document.getElementById('amoDisplayDialog');if(dialog)dialog.appendChild(panel);
+   state=getSettings();syncInputs();apply();
+   // Each new opening starts collapsed. Users can expand it when needed.
+   const open=window.openAmoDisplaySettings;
+   if(typeof open==='function')window.openAmoDisplaySettings=function(...args){panel.open=false;return open.apply(this,args);};
+   document.getElementById('amo192CardSettings').addEventListener('input',e=>{
+     const input=e.target.closest('[data-amo192-key]');if(!input)return;
+     const key=input.dataset.amo192Key;
+     state[key]=validate(key,input.type==='checkbox'?input.checked:input.value);
+     syncInputs();apply();schedulePersist();
+   });
+   document.getElementById('amo192CardSettings').addEventListener('change',e=>{
+     if(e.target.matches('[data-amo192-key]'))persist();
+   });
+   document.getElementById('amo192ResetCard').addEventListener('click',()=>{
+     state={...DEFAULTS};syncInputs();apply();persist();showToast('答题卡片已恢复推荐设置');
+   });
+   // Ensure the new panel remains the last settings section and starts folded.
+   document.getElementById('amo192CardSettings').open=false;
+   window.addEventListener('pagehide',()=>{if(writeTimer)persist();});
+   let frame=0;
+   const reflow=()=>{if(frame)return;frame=requestAnimationFrame(()=>{frame=0;apply();})};
+   window.addEventListener('resize',reflow,{passive:true});
+   if(window.visualViewport)window.visualViewport.addEventListener('resize',reflow,{passive:true});
+   const quiz=document.getElementById('quiz');if(quiz)new MutationObserver(reflow).observe(quiz,{attributes:true,attributeFilter:['class']});
+   new MutationObserver(reflow).observe(document.body,{attributes:true,attributeFilter:['class']});
+   window.AmoQuizCardSettings192={get:()=>({...state}),reset:()=>{state={...DEFAULTS};syncInputs();apply();persist();}};
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
 </script>
 </body>
