@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.193</title>
+<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.195</title>
 <meta name="theme-color" content="#f4f6f8" id="amo-browser-theme-color">
 
 
@@ -6117,7 +6117,7 @@ body.amo194-background-locked{position:fixed!important;top:var(--amo194-lock-y,0
         <div class="logo">
             <div class="logo-icon">🇻🇳</div>
             <div>
-                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.194">V31.194</span></div>
+                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.195">V31.195</span></div>
                 <div class="logo-sub">中文母语者 · 零基础学习</div>
             </div>
         </div>
@@ -6241,7 +6241,7 @@ body.amo194-background-locked{position:fixed!important;top:var(--amo194-lock-y,0
       </div>
       <button type="button" class="amo-reset-fonts" id="amo194ResetDetail">↺ 恢复词汇详情推荐设置</button>
     </details>
-    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.194</strong></div>
+    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.195</strong></div>
 </section>
 </div>
 
@@ -6429,7 +6429,7 @@ body.amo194-background-locked{position:fixed!important;top:var(--amo194-lock-y,0
             <div class="speech-question-wrap"><div class="quiz-word" id="sentenceReadingQuestion">点击“下一题”开始</div>
             <button type="button" id="sentenceReadingSpeechBtn" class="mini-speech-btn question-speech-btn" onclick="playSentenceReadingQuestionSpeech(event)" aria-label="播放语音" title="播放语音">🔊</button></div>
             <div id="sentenceReadingAnswer" class="quiz-result"></div>
-            <div style="max-width:650px;margin:18px auto 0;">
+            <div id="amo195SentenceEntry" style="max-width:650px;margin:18px auto 0;">
                 <textarea id="sentenceReadingInput" class="search sentence-reading-input" rows="1"
                           style="width:100%;box-sizing:border-box;resize:none;overflow-y:hidden;min-height:44px;line-height:1.55;"
                           placeholder="在这里输入答案（标点符号不影响判断）"
@@ -6441,12 +6441,12 @@ body.amo194-background-locked{position:fixed!important;top:var(--amo194-lock-y,0
               </div>
             </div>
             <div style="margin-top:20px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
-                <button class="btn btn-primary" onclick="checkSentenceReadingAnswer()">提交回答</button>
+                <button type="button" class="btn btn-primary" id="amo195Submit" onclick="checkSentenceReadingAnswer()">提交回答</button>
                 <button class="btn" id="sentenceReadingShowAnswerBtn" onclick="showSentenceReadingAnswer()">显示答案</button>
                 <button class="btn" id="sentenceReadingPrevBtn" onclick="previousSentenceReading()">上一题</button>
-                <button class="btn btn-primary" onclick="nextSentenceReading()">下一题</button>
-                <button class="btn" onclick="rememberCurrentSentence()">✅ 我已经会了</button>
-                <button class="btn btn-danger" onclick="randomSentenceReading()">🎲 随机题目</button>
+                <button type="button" class="btn btn-primary" id="amo195Next" onclick="nextSentenceReading()">下一题 →</button>
+                <button type="button" class="btn" id="amo195Remember" onclick="rememberCurrentSentence()">✅ 我已经会了</button>
+                <button type="button" class="btn btn-danger" id="amo195Random" onclick="randomSentenceReading()">🎲 随机题目</button>
             </div>
         </div>
     </div>
@@ -13275,57 +13275,96 @@ function renderRememberedSentences(){
     </div>`).join("");
 }
 
-/* V31.174 · 练习短句：浏览器原生越南语语音转文字，自动填入旧输入框。 */
+/* V31.195 · Browser SpeechRecognition lifecycle for iPhone; no result discarded on normal STOP. */
 let amoSentenceRecognizer=null;
 let amoSentenceVoiceEpoch=0;
 let amoSentenceMicActive=false;
+let amo195VoiceState='idle',amo195VoiceTimer=null,amo195VoiceGrace=null;
+const AMO195_NO_RESULT_TIMEOUT=18000;
+function amo195ClearVoiceTimers(){clearTimeout(amo195VoiceTimer);clearTimeout(amo195VoiceGrace);amo195VoiceTimer=null;amo195VoiceGrace=null;}
 function amoSentenceVoiceUI(message='',active=false){
  const btn=document.getElementById('amoSentenceMicBtn'),label=document.getElementById('amoSentenceMicStatus');
- if(btn){btn.classList.toggle('is-recording',active);btn.setAttribute('aria-pressed',String(active));btn.textContent=active?'⏹️ 停止语音输入':'🎙️ 开始语音输入';}
+ const stopping=amo195VoiceState==='stopping';
+ if(btn){btn.classList.toggle('is-recording',active||stopping);btn.setAttribute('aria-pressed',String(active));btn.disabled=stopping||amo195VoiceState==='starting';btn.textContent=stopping?'正在获取识别文字…':active?'⏹️ 结束语音输入':'🎙️ 开始语音输入';}
  if(label&&message)label.textContent=message;
 }
+function amo195FinishVoice(epoch,notice){
+ if(epoch!==amoSentenceVoiceEpoch)return;
+ amo195ClearVoiceTimers();amoSentenceRecognizer=null;amoSentenceMicActive=false;amo195VoiceState='idle';amoSentenceVoiceEpoch++;
+ amoSentenceVoiceUI(notice||'识别结束，可检查文字后提交。',false);
+}
 function stopSentenceReadingVoice(silent=false){
- amoSentenceVoiceEpoch++;amoSentenceMicActive=false;
- const recognition=amoSentenceRecognizer;amoSentenceRecognizer=null;
- if(recognition){try{recognition.onresult=null;recognition.onerror=null;recognition.onend=null;recognition.abort();}catch(_){}}
- amoSentenceVoiceUI(silent?'点击麦克风，用越南语回答；识别后可修改文字。':'语音识别已停止。',false);
+ const recognition=amoSentenceRecognizer;
+ if(silent){ // Navigation, playback and cancellation deliberately discard the current session.
+   amoSentenceVoiceEpoch++;amo195ClearVoiceTimers();amoSentenceRecognizer=null;amoSentenceMicActive=false;amo195VoiceState='idle';
+   if(recognition){try{recognition.onresult=null;recognition.onerror=null;recognition.onend=null;recognition.abort();}catch(_){}}
+   amoSentenceVoiceUI('点击麦克风，用越南语回答；若无法识别，可用 iPhone 键盘听写。',false);
+   return;
+ }
+ if(!recognition||amo195VoiceState==='stopping'||amo195VoiceState==='idle')return;
+ amo195ClearVoiceTimers();amo195VoiceState='stopping';amoSentenceMicActive=false;
+ amoSentenceVoiceUI('正在结束识别，等待最后一段文字…',false);
+ try{recognition.stop();}catch(_){amo195FinishVoice(amoSentenceVoiceEpoch,'识别停止异常，请重试或用 iPhone 键盘听写。');return;}
+ const epoch=amoSentenceVoiceEpoch;
+ amo195VoiceGrace=setTimeout(()=>{
+   if(epoch!==amoSentenceVoiceEpoch||amo195VoiceState!=='stopping')return;
+   // Some WebKit builds never emit onend. Abort only after waiting for final result.
+   try{recognition.abort()}catch(_){}
+   amo195FinishVoice(epoch,'识别服务没有返回结束事件；可重试或用 iPhone 键盘听写。');
+ },4500);
 }
 function toggleSentenceReadingVoice(){
- if(amoSentenceMicActive){stopSentenceReadingVoice();return;}
- window.stopAmoStudySpeech?.();
+ if(amo195VoiceState==='stopping'||amo195VoiceState==='starting')return;
+ if(amoSentenceMicActive){stopSentenceReadingVoice(false);return;}
  if(document.getElementById('sentenceReadingMode')?.value!=='vi-vi'||!sentenceReadingCurrent){showToast('请先进入越南语朗读答题模式');return;}
- const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
- if(!SpeechRecognition){amoSentenceVoiceUI('当前浏览器不支持网页语音识别；请使用键盘或手机自带的语音听写。');return;}
+ const Recognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!Recognition){amoSentenceVoiceUI('此浏览器不支持网页识别，请点击输入框使用 iPhone 键盘听写。',false);return;}
+ window.stopAmoStudySpeech?.();
  stopSentenceReadingVoice(true);
- const epoch=amoSentenceVoiceEpoch,recognition=new SpeechRecognition();
- amoSentenceRecognizer=recognition;amoSentenceMicActive=true;
- recognition.lang='vi-VN';recognition.interimResults=true;recognition.continuous=false;recognition.maxAlternatives=1;
+ const epoch=amoSentenceVoiceEpoch,rec=new Recognition();
+ amoSentenceRecognizer=rec;amo195VoiceState='starting';amoSentenceMicActive=false;
+ rec.lang='vi-VN';rec.interimResults=true;rec.continuous=false;rec.maxAlternatives=1;
  const input=document.getElementById('sentenceReadingInput');
- const initial=String(input?.value||'').trim();
- let completed=false;
- amoSentenceVoiceUI('正在听越南语…说完后会自动填写，提交前可修改。',true);
- recognition.onresult=(event)=>{
-  if(epoch!==amoSentenceVoiceEpoch||document.getElementById('sentenceReadingMode')?.value!=='vi-vi')return;
-  let transcript='',isFinal=false;
-  for(let i=0;i<event.results.length;i++){const segment=event.results[i];transcript+=(segment?.[0]?.transcript||'')+' ';if(segment.isFinal)isFinal=true;}
-  transcript=transcript.trim();if(!transcript||!input)return;
-  input.value=[initial,transcript].filter(Boolean).join(initial?' ':'');
-  autoResizeSentenceReadingInput(input);
-  amoSentenceVoiceUI(isFinal?'识别完成，可以编辑后点击提交回答。':'正在识别越南语…',true);
-  if(isFinal)completed=true;
+ const before=String(input?.value||'').trim();
+ let gotResult=false,gotFinal=false,latestTranscript='';
+ const failNoResult=()=>{
+   if(epoch!==amoSentenceVoiceEpoch||gotResult||amo195VoiceState==='idle')return;
+   // Microphone indicator is NOT proof SpeechRecognition is returning text.
+   try{rec.abort()}catch(_){}
+   amo195FinishVoice(epoch,'麦克风已开启但长时间没有识别文字。请重试，或使用 iPhone 键盘麦克风听写。');
  };
- recognition.onerror=(event)=>{
-  if(epoch!==amoSentenceVoiceEpoch)return;
-  const reason=event.error==='not-allowed'||event.error==='service-not-allowed'?'麦克风权限被拒绝，请在浏览器设置中允许使用。':event.error==='no-speech'?'没有识别到语音，请重试。':event.error==='network'?'语音服务网络异常，请重试或手动输入。':'语音识别不可用：'+(event.error||'未知错误');
-  amoSentenceVoiceEpoch++;amoSentenceRecognizer=null;amoSentenceMicActive=false;amoSentenceVoiceUI(reason,false);
+ function armTimer(){clearTimeout(amo195VoiceTimer);amo195VoiceTimer=setTimeout(failNoResult,AMO195_NO_RESULT_TIMEOUT);}
+ rec.onstart=()=>{if(epoch!==amoSentenceVoiceEpoch)return;amo195VoiceState='listening';amoSentenceMicActive=true;amoSentenceVoiceUI('正在听越南语…说完可点“结束语音输入”。',true);armTimer();};
+ rec.onspeechstart=()=>{if(epoch===amoSentenceVoiceEpoch&&!gotResult)armTimer();};
+ rec.onresult=ev=>{
+   if(epoch!==amoSentenceVoiceEpoch||!input||document.getElementById('sentenceReadingMode')?.value!=='vi-vi')return;
+   let phrase='',final=false;
+   for(let i=0;i<ev.results.length;i++){
+     const r=ev.results[i];phrase+=(r?.[0]?.transcript||'')+' ';if(r?.isFinal)final=true;
+   }
+   phrase=phrase.trim();if(!phrase)return;
+   gotResult=true;gotFinal=gotFinal||final;latestTranscript=phrase;clearTimeout(amo195VoiceTimer);
+   // Do not continually append interim text; replace only recognition-owned suffix.
+   input.value=[before,phrase].filter(Boolean).join(before?' ':'');
+   autoResizeSentenceReadingInput(input);input.dispatchEvent(new Event('input',{bubbles:true}));
+   amoSentenceVoiceUI(final?'已收到越南语文字，可结束录音并编辑。':'已识别部分文字，继续说或结束录音。',amo195VoiceState==='listening');
  };
- recognition.onend=()=>{
-  if(epoch!==amoSentenceVoiceEpoch)return;
-  amoSentenceRecognizer=null;amoSentenceMicActive=false;amoSentenceVoiceEpoch++;
-  amoSentenceVoiceUI(completed?'识别完成，可以编辑后提交。':'识别结束，可再次点击麦克风。',false);
+ rec.onerror=ev=>{
+   if(epoch!==amoSentenceVoiceEpoch)return;
+   const msg=ev.error==='no-speech'?'没有检测到语音，请再试一次。':
+     ['not-allowed','service-not-allowed'].includes(ev.error)?'麦克风权限未授权，请检查 iPhone 浏览器设置。':
+     ev.error==='network'?'语音服务网络不可用，请改用键盘听写。':
+     ev.error==='aborted'&&amo195VoiceState==='stopping'?'识别已停止。':
+     '语音识别错误：'+(ev.error||'未知错误');
+   amo195FinishVoice(epoch,gotResult?'已有文字已保留；'+msg:msg);
  };
- try{recognition.start();}catch(error){stopSentenceReadingVoice(true);amoSentenceVoiceUI('无法启动麦克风：'+(error?.message||'请检查权限'));}
+ rec.onend=()=>{if(epoch!==amoSentenceVoiceEpoch)return;amo195FinishVoice(epoch,gotFinal?'识别完成，文字可编辑后提交。':gotResult?'已收到识别文字，可检查并提交。':'麦克风工作但没有返回文字，可重试或使用 iPhone 键盘听写。');};
+ amoSentenceVoiceUI('正在启动麦克风…',false);
+ // Permission prompting may cause async onstart; timer also covers a stuck start state.
+ armTimer();
+ try{rec.start();}catch(error){amo195FinishVoice(epoch,'无法启动语音识别：'+(error?.message||'请检查权限'));}
 }
+window.addEventListener('pagehide',()=>stopSentenceReadingVoice(true));
 /* ====================== 语法 ====================== */
 
 </script>
@@ -15623,7 +15662,7 @@ const AmoTextIO=(()=>{
 
 
 <script id="amo-v3118-pos-version">
-window.AMO_BUILD_VERSION="V31.194";
+window.AMO_BUILD_VERSION="V31.195";
 </script>
 
 <script id="amo-v3126-enhancements">
@@ -16058,6 +16097,7 @@ document.addEventListener('DOMContentLoaded',()=>{initAmoSystemTheme();enhanceAm
 <script id="amo-v3131-update-history">
 (function(){
   const AMO_UPDATE_HISTORY = [
+    {version:'V31.195',date:'2026-11-24',items:['短句练习全部五种答题方式按作答前与结果状态分别显示操作按钮，随机题目始终保留；答题后突出下一题，隐藏提交、输入和逐级提示。','回答后正确答案用更小、不同色的清晰卡片展示，取消重复的“显示答案”按钮与重复播放两遍功能。','语音识别正常结束改为 stop() 保留最终结果，防止重复启动和无结果卡死；输入编辑时避免不必要的滚动恢复。','继承 V31.194 的词库、AI、语法、24 个分类及判题、学习数据。']},
     {version:'V31.194',date:'2026-11-23',items:['语法及汉越编辑弹窗采用固定标题、独立滚动表单与独立底部操作栏，针对 iOS 可视键盘区域适配并锁定背景滚动。','词汇搜索缓存规范化的越南语/中文索引；词汇详情新增独立、默认折叠的阅读密度设置（例句字体、双语/组间距、分隔线、朗读按钮位置）。','AI词汇助手增强义项区分和生成结果去重，支持单条例句与搭配重新生成、编辑、人工确认后保存。','保持原有 24 类、词库数据和判题规则不变，开展移动端模拟与静态回归测试。']},
     {version:'V31.193',date:'2026-11-23',items:['在文字与显示设置最底部新增默认折叠的答题卡片设置：普通/沉浸高度、答案与例句字体、例句间距、下一题按钮高度、答题完成后选项缩放；调整实时生效、自动保存，可一键恢复。','继续扩大普通和沉浸答题卡的可用空间，优先显示一至三条例句；例句标签左对齐，第一个例句在标签右侧起排，缩减不必要的间距。','保留 V31.191 主按钮定位、底部双按钮对齐、学习数据和判题规则，新增参数随原有设置备份导出。']},
     {version:'V31.191',date:'2026-11-22',items:['答题卡高度按设备增加约8%～12%，答题状态变化时保持稳定；大字号大间距选项便于作答，完成后自动缩小，例句区弹性显示一至三组双语例句。','各种题型统一开始／下一题按钮的高度与位置；答题后词汇详情与永久记住等宽等高并排，上一题与暂时跳过对齐。','消除输入题下一题后自动向下滚动：取消旧操作区定位滚动，并保持切题前页面位置与键盘失焦后的视口稳定。','保留V31.190原有AI双语词汇助手、24分类、短句、首页、全部判题规则和学习数据存储键。']},
@@ -24660,7 +24700,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 </style>
 <script id="amo-v31188-learning-controller">
 (()=>{'use strict';const $=id=>document.getElementById(id),tr=(zh,vi)=>settings.uiLanguage==='vi'?vi:zh,el=(tag,cls='',text='')=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text)n.textContent=text;return n;},make=(zh,vi,fn,cls='btn btn-small')=>{const n=el('button',cls,tr(zh,vi));n.type='button';n.onclick=fn;return n;},active=id=>$(id)?.classList.contains('active');function store(){try{saveJSON(KEY_SETTINGS,settings);return true}catch(e){showToast(tr('设置暂未保存，请检查存储空间','Chưa lưu được cài đặt, hãy kiểm tra bộ nhớ'));return false}}
-Object.assign(UI_ZH_VI,{'短句排序（中文 → 越南语）':'Sắp xếp câu (Trung → Việt)','短句排序：按顺序选择词组':'Sắp xếp các cụm từ theo thứ tự','整理范围':'Phạm vi phân loại','全部词句':'Tất cả từ và câu','仅显示分类变化':'Chỉ hiện thay đổi nhóm','选择本页':'Chọn trang này','取消选择':'Bỏ chọn','批量移动（预览）':'Chuyển nhóm hàng loạt (xem trước)','人工锁定':'Đã khóa thủ công','锁定选中分类':'Khóa các nhóm đã chọn','解除选中锁定':'Bỏ khóa các nhóm đã chọn','锁定将随确认归并生效。':'Khóa có hiệu lực khi xác nhận phân loại.','置顶当前分类':'Ghim nhóm hiện tại','取消当前置顶':'Bỏ ghim nhóm hiện tại','保留原分类':'Giữ nhóm cũ','沉浸模式':'Chế độ tập trung','退出沉浸':'Thoát chế độ tập trung','暂时跳过':'Tạm bỏ qua','词汇详情':'Chi tiết từ vựng','答对自动下一题':'Tự chuyển sau khi đúng','本轮题数':'Số câu mỗi lượt','不限题数':'Không giới hạn','重新开始本轮':'Bắt đầu lại lượt','收藏短句':'Lưu câu yêu thích','仅收藏':'Chỉ câu yêu thích','慢速播放':'Đọc chậm','分段播放':'Đọc từng đoạn','重复播放两遍':'Đọc lại hai lần','跟读训练':'Luyện nói theo','下一步提示':'Gợi ý tiếp theo','清空排序':'Xóa thứ tự','本轮成绩':'Kết quả lượt này'});
+Object.assign(UI_ZH_VI,{'短句排序（中文 → 越南语）':'Sắp xếp câu (Trung → Việt)','短句排序：按顺序选择词组':'Sắp xếp các cụm từ theo thứ tự','整理范围':'Phạm vi phân loại','全部词句':'Tất cả từ và câu','仅显示分类变化':'Chỉ hiện thay đổi nhóm','选择本页':'Chọn trang này','取消选择':'Bỏ chọn','批量移动（预览）':'Chuyển nhóm hàng loạt (xem trước)','人工锁定':'Đã khóa thủ công','锁定选中分类':'Khóa các nhóm đã chọn','解除选中锁定':'Bỏ khóa các nhóm đã chọn','锁定将随确认归并生效。':'Khóa có hiệu lực khi xác nhận phân loại.','置顶当前分类':'Ghim nhóm hiện tại','取消当前置顶':'Bỏ ghim nhóm hiện tại','保留原分类':'Giữ nhóm cũ','沉浸模式':'Chế độ tập trung','退出沉浸':'Thoát chế độ tập trung','暂时跳过':'Tạm bỏ qua','词汇详情':'Chi tiết từ vựng','答对自动下一题':'Tự chuyển sau khi đúng','本轮题数':'Số câu mỗi lượt','不限题数':'Không giới hạn','重新开始本轮':'Bắt đầu lại lượt','收藏短句':'Lưu câu yêu thích','仅收藏':'Chỉ câu yêu thích','慢速播放':'Đọc chậm','分段播放':'Đọc từng đoạn','跟读训练':'Luyện nói theo','下一步提示':'Gợi ý tiếp theo','清空排序':'Xóa thứ tự','本轮成绩':'Kết quả lượt này'});
 // Classification preference only applies while the current stored category still agrees.
 function prefs(){let p=settings.amo188Categories;if(!p||typeof p!=='object'||Array.isArray(p))p=settings.amo188Categories={recent:[],pins:[],locks:{}};if(!Array.isArray(p.recent))p.recent=[];if(!Array.isArray(p.pins))p.pins=[];if(!p.locks||typeof p.locks!=='object')p.locks={};return p;}
 function lk(type,key){return type+':'+normalize(key)}
@@ -24702,13 +24742,13 @@ function hint(){if(!sentenceReadingCurrent||finished)return;const k=key();if(sta
 function updateHints(){if(!hintBox)return;const level=hints.get(key())||0;hintBox.hidden=!level||finished;hintBox.replaceChildren();if(!level||!sentenceReadingCurrent)return;const text=mode()==='vi'?sentenceReadingCurrent.zh:sentenceReadingCurrent.vi;const tokens=mode()==='vi'?[...text]:text.split(/\s+/);const sep=mode()==='vi'?'':' ';const one=tokens.slice(0,Math.max(1,Math.ceil(tokens.length/4))).join(sep);const skeleton=tokens.map((t,i)=>i===0||i===tokens.length-1?t:'…').join(sep);hintBox.append(el('strong','',tr('逐级提示','Gợi ý từng mức')),el('div','',level===1?one+' …':level===2?skeleton:text));}
 function syncSort(clear=false){if(!sortBox)return;const on=mode()==='sort'&&!!sentenceReadingCurrent&&!finished;sortBox.hidden=!on;sInput().hidden=on;if(!on)return;const k=key(),words=String(sentenceReadingCurrent.vi).trim().split(/\s+/).filter(Boolean);if(lastSortKey!==k||clear||sortTokens.length!==words.length){lastSortKey=k;sortTokens=words.map((t,i)=>({t,i}));for(let i=sortTokens.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[sortTokens[i],sortTokens[j]]=[sortTokens[j],sortTokens[i]];}sortOrder=[];if(!clear&&sInput().value){const used=new Set();for(const t of sInput().value.split(/\s+/)){const match=sortTokens.find(v=>v.t===t&&!used.has(v.i));if(match){sortOrder.push(match.i);used.add(match.i)}}}}
  const selected=el('div','amo188-sort-answer'),pool=el('div','amo188-sort-bank');const textById=i=>words[i];function update(){sInput().value=sortOrder.map(textById).join(' ');sInput().dispatchEvent(new Event('input',{bubbles:true}));syncSort();}if(!sortOrder.length)selected.append(el('span','',tr('点击下方词组组成句子','Chạm các từ bên dưới để ghép câu')));for(const i of sortOrder)selected.append(make(words[i],words[i],()=>{sortOrder=sortOrder.filter(x=>x!==i);update();}));for(const {t,i} of sortTokens){const b=make(t,t,()=>{sortOrder.push(i);update();});b.disabled=sortOrder.includes(i);pool.append(b);}sortBox.replaceChildren(selected,pool,make('清空排序','Xóa thứ tự',()=>{sortOrder=[];update();}));}
-function speakSentence(e,kind){if(!sentenceReadingCurrent)return;if(!settings.speechEnabled){showToast(tr('请先开启语音播放','Hãy bật đọc văn bản'));return;}stopSentenceReadingVoice(true);const t=sentenceReadingCurrent.vi;let text=t;if(kind==='segments'){const pieces=t.split(/(?<=[,;.!?，。！？])\s*/).filter(Boolean);text=pieces.length>1?pieces.join('/'):(t.match(/(?:\S+\s*){1,4}/g)||[t]).map(x=>x.trim()).join('/');}if(kind==='repeat')text=t+'/'+t;window.playDirectStudySpeech(e,'vi',text,false,null,kind==='slow'?{rate:0.75}:null);}
+function speakSentence(e,kind){if(!sentenceReadingCurrent)return;if(!settings.speechEnabled){showToast(tr('请先开启语音播放','Hãy bật đọc văn bản'));return;}stopSentenceReadingVoice(true);const t=sentenceReadingCurrent.vi;let text=t;if(kind==='segments'){const pieces=t.split(/(?<=[,;.!?，。！？])\s*/).filter(Boolean);text=pieces.length>1?pieces.join('/'):(t.match(/(?:\S+\s*){1,4}/g)||[t]).map(x=>x.trim()).join('/');}window.playDirectStudySpeech(e,'vi',text,false,null,kind==='slow'?{rate:0.75}:null);}
 function updateSentence(){if(!sTools)return;const current=sentenceReadingCurrent,k=key();if(current&&!finished)visitedKeys.add(k);favBtn.disabled=!current;favBtn.setAttribute('aria-pressed',String(favorites().has(k)));favBtn.textContent=favorites().has(k)?tr('★ 已收藏','★ Đã lưu'):tr('☆ 收藏短句','☆ Lưu câu');followBox.hidden=mode()!=='vi-vi'||!current||finished;roundProgress.hidden=!current;const total=targetCount(),arr=[...statsMap.values()],right=arr.filter(x=>x.correct&&!x.wrong&&!x.hinted).length;roundProgress.querySelector('span').textContent=tr(`本轮 ${visitedKeys.size}${total?'/'+total:''} 题 · 独立答对 ${right} · 错题 ${arr.filter(x=>x.wrong).length} · 使用提示 ${hints.size}`,`Lượt ${visitedKeys.size}${total?'/'+total:''} câu · Đúng độc lập ${right} · Sai ${arr.filter(x=>x.wrong).length} · Gợi ý ${hints.size}`);const progress=roundProgress.querySelector('progress');progress.hidden=!total;progress.max=total||1;progress.value=Math.min(total,visitedKeys.size);updateHints();if(finished)summary();}
 const basePool=getSentenceReadingPool;getSentenceReadingPool=function(){const rows=basePool.apply(this,arguments);if(settings.amo188OnlyFavorites===true){const f=favorites();return rows.filter(s=>f.has(sentenceKey(s)));}return rows;};
 const sr=renderSentenceReadingQuestion;renderSentenceReadingQuestion=function(clear=true){if(finished&&clear){finished=false;if(roundBox)roundBox.hidden=true;$('sentenceReading').classList.remove('amo188-round-done');}const out=sr.apply(this,arguments);updateSentence();syncSort(clear);return out;};
 const previousCheck=window.checkSentenceReadingAnswer;window.checkSentenceReadingAnswer=function(){if(finished)return;if(mode()==='sort'&&sortOrder.length!==sortTokens.length){showToast(tr('请先完成短句排序','Hãy sắp xếp đủ các từ trước'));return;}return previousCheck.apply(this,arguments);};
 window.Amo188Sentence={finite,visited:k=>visitedKeys.has(k),beforeNew,reset,snapshot,restore,stats,hint,hinted:k=>hints.has(k)};
-function attachSentence(){const p=$('sentenceReading'),toolbar=p.querySelector('.toolbar');sTools=el('div','amo188-sentence-options');const label=el('label','',''+tr('本轮题数','Số câu mỗi lượt')+' '),sel=el('select','select');for(const n of [0,5,10,20,50]){const o=el('option','',n?String(n):tr('不限题数','Không giới hạn'));o.value=String(n);sel.append(o);}sel.value=String(limit());sel.onchange=()=>{settings.amo188SentenceLimit=Number(sel.value);store();restartSentenceReading();};label.append(sel);const only=el('label'),cb=el('input');cb.type='checkbox';cb.checked=settings.amo188OnlyFavorites===true;cb.onchange=()=>{settings.amo188OnlyFavorites=cb.checked;store();restartSentenceReading();};only.append(cb,document.createTextNode(tr(' 仅收藏',' Chỉ câu yêu thích')));sTools.append(label,only,make('重新开始本轮','Bắt đầu lại lượt',()=>restartSentenceReading()));toolbar.append(sTools);roundProgress=el('div','amo188-progress-header');roundProgress.append(el('span'),el('progress'));$('sentenceReadingLabel').before(roundProgress);if($('amo184SentenceStats'))$('amo184SentenceStats').style.display='none';favBtn=make('☆ 收藏短句','☆ Lưu câu',toggleFav,'btn btn-small amo188-favorite');$('amo184SentenceTools')?.append(favBtn);hintBox=el('div','amo188-hint');hintBox.id='amo188Hints';hintBox.hidden=true;$('sentenceReadingAnswer').after(hintBox);sortBox=el('div');sortBox.id='amo188Sort';sortBox.hidden=true;sInput().before(sortBox);followBox=el('div','amo188-practice-actions');followBox.id='amo188Follow';followBox.hidden=true;followBox.append(el('span','',tr('跟读：先听后说（识别文字供对照）','Nghe rồi nói theo (chỉ đối chiếu văn bản)')),make('慢速播放','Đọc chậm',e=>speakSentence(e,'slow'),'btn btn-small amo184-speech'),make('分段播放','Đọc từng đoạn',e=>speakSentence(e,'segments'),'btn btn-small amo184-speech'),make('重复播放两遍','Đọc lại hai lần',e=>speakSentence(e,'repeat'),'btn btn-small amo184-speech'));$('amoSentenceMicControls').before(followBox);roundBox=el('div','amo188-round-result');roundBox.id='amo188RoundResult';roundBox.hidden=true;p.querySelector('.quiz-question').append(roundBox);const prev=$('sentenceReadingPrevBtn');prev.parentElement.classList.add('amo188-sentence-actions');updateSentence();syncSort();}
+function attachSentence(){const p=$('sentenceReading'),toolbar=p.querySelector('.toolbar');sTools=el('div','amo188-sentence-options');const label=el('label','',''+tr('本轮题数','Số câu mỗi lượt')+' '),sel=el('select','select');for(const n of [0,5,10,20,50]){const o=el('option','',n?String(n):tr('不限题数','Không giới hạn'));o.value=String(n);sel.append(o);}sel.value=String(limit());sel.onchange=()=>{settings.amo188SentenceLimit=Number(sel.value);store();restartSentenceReading();};label.append(sel);const only=el('label'),cb=el('input');cb.type='checkbox';cb.checked=settings.amo188OnlyFavorites===true;cb.onchange=()=>{settings.amo188OnlyFavorites=cb.checked;store();restartSentenceReading();};only.append(cb,document.createTextNode(tr(' 仅收藏',' Chỉ câu yêu thích')));sTools.append(label,only,make('重新开始本轮','Bắt đầu lại lượt',()=>restartSentenceReading()));toolbar.append(sTools);roundProgress=el('div','amo188-progress-header');roundProgress.append(el('span'),el('progress'));$('sentenceReadingLabel').before(roundProgress);if($('amo184SentenceStats'))$('amo184SentenceStats').style.display='none';favBtn=make('☆ 收藏短句','☆ Lưu câu',toggleFav,'btn btn-small amo188-favorite');$('amo184SentenceTools')?.append(favBtn);hintBox=el('div','amo188-hint');hintBox.id='amo188Hints';hintBox.hidden=true;$('sentenceReadingAnswer').after(hintBox);sortBox=el('div');sortBox.id='amo188Sort';sortBox.hidden=true;sInput().before(sortBox);followBox=el('div','amo188-practice-actions');followBox.id='amo188Follow';followBox.hidden=true;followBox.append(el('span','',tr('跟读：先听后说（识别文字供对照）','Nghe rồi nói theo (chỉ đối chiếu văn bản)')),make('慢速播放','Đọc chậm',e=>speakSentence(e,'slow'),'btn btn-small amo184-speech'),make('分段播放','Đọc từng đoạn',e=>speakSentence(e,'segments'),'btn btn-small amo184-speech'));$('amoSentenceMicControls').before(followBox);roundBox=el('div','amo188-round-result');roundBox.id='amo188RoundResult';roundBox.hidden=true;p.querySelector('.quiz-question').append(roundBox);const prev=$('sentenceReadingPrevBtn');prev.parentElement.classList.add('amo188-sentence-actions');updateSentence();syncSort();}
 const go=window.showPage;window.showPage=function(id){if(id!=='quiz')cancelAuto();const out=go.apply(this,arguments);if(id==='quiz')updateQuiz();if(id==='sentenceReading'){updateSentence();syncSort();}return out;};
 function init(){attachQuiz();attachSwipe();attachSentence();$('quizCategory')?.addEventListener('change',updateQuiz);let scheduled=false;new MutationObserver(()=>{if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;updateQuiz();});}).observe($('quizResult'),{childList:true,subtree:true});}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
@@ -25167,7 +25207,7 @@ function initStudy(){const quiz=$('quiz'),sentence=$('sentenceReading');if(!quiz
  const sentenceActions=$('sentenceReadingShowAnswerBtn')?.parentElement;if(sentenceActions)sentenceActions.classList.add('amo190-sentence-actions');
  let answerScrollToken=0;
  function bringSentenceActionsInView(){const seq=++answerScrollToken;requestAnimationFrame(()=>requestAnimationFrame(()=>{if(seq!==answerScrollToken||!sentence.classList.contains('active'))return;const actions=sentence.querySelector('.amo190-sentence-actions');if(!actions)return;const rect=actions.getBoundingClientRect(),vh=window.visualViewport?.height||window.innerHeight;const off=rect.bottom-(vh-12);if(off>6){const max=Math.max(0,document.documentElement.scrollHeight-vh-window.scrollY);window.scrollBy({top:Math.min(max,Math.min(off+5,320)),behavior:'auto'})}}))}
- const sentenceAnswer=$('sentenceReadingAnswer');if(sentenceAnswer){new MutationObserver(()=>{const answered=!!sentenceAnswer.textContent.trim();sentence.classList.toggle('amo190-sentence-answered',answered);if(answered)bringSentenceActionsInView()}).observe(sentenceAnswer,{childList:true,subtree:true})}
+ const sentenceAnswer=$('sentenceReadingAnswer');if(sentenceAnswer){new MutationObserver(()=>{const answered=!!sentenceAnswer.textContent.trim();sentence.classList.toggle('amo190-sentence-answered',answered);/* V31.195: never force scroll after sentence results */}).observe(sentenceAnswer,{childList:true,subtree:true})}
  const initialY=()=>window.scrollY||document.documentElement.scrollTop||0;
  quiz.addEventListener('click',e=>{if(!e.target.closest('#quizOptions button, #quizShowAnswerBtn, .quiz-submit-btn, .quiz-fill-submit-btn'))return;const previousY=initialY();const viewport=quiz.querySelector('#quizScrollContent');const contentY=viewport?.scrollTop||0;requestAnimationFrame(()=>requestAnimationFrame(()=>{if(quiz.classList.contains('active')){if(Math.abs(initialY()-previousY)>3)window.scrollTo({top:previousY,behavior:'instant'});if(viewport&&viewport.scrollTop!==contentY&&!e.target.closest('.quiz-option'))viewport.scrollTop=contentY}}))},{capture:true});
 }
@@ -25406,7 +25446,7 @@ html body .app #quiz#quiz.amo-stable-quiz .quiz-question>.quiz-main-actions:not(
     if(typeof prev==='function')window.goPreviousQuizBatchItem=function(...args){return preserveThrough(()=>prev.apply(this,args))};
     // Selection/full-word answers should not let browser scroll anchoring move the document.
     const snapActions=evt=>{
-      if(!visible()||!evt.target.closest('#quizOptions button,#quizOptions input,#quizShowAnswerBtn'))return;
+      if(!visible()||!evt.target.closest('#quizOptions button,#quizShowAnswerBtn'))return;
       const y=scrollY();const token=++seq;
       requestAnimationFrame(()=>{restore(y,token);requestAnimationFrame(()=>restore(y,token))});
     };
@@ -25645,5 +25685,87 @@ function apply(){const root=document.getElementById('wordDetailOverlay');if(!roo
 function save(){settings.amo194WordDetail={...pref};try{saveJSON(KEY_SETTINGS,settings)}catch(e){console.warn('词汇详情阅读设置未能保存',e);}}
 function init(){const pane=document.getElementById('amo194WordDetailSettings');if(!pane)return;pane.open=false;apply();pane.addEventListener('input',e=>{const key=e.target.dataset.amo194Pref;if(!key)return;pref=clean({...pref,[key]:e.target.value});apply();clearTimeout(timer);timer=setTimeout(save,140);});pane.addEventListener('change',e=>{const key=e.target.dataset.amo194Pref;if(key){pref=clean({...pref,[key]:e.target.value});apply();clearTimeout(timer);save();}});document.getElementById('amo194ResetDetail')?.addEventListener('click',()=>{pref={...defaults};apply();save();});document.addEventListener('click',e=>{if(e.target.closest('#amoDisplayOpen'))pane.open=false;});window.Amo194WordDetail={get:()=>({...pref}),reset:()=>{pref={...defaults};apply();save();}};}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
-})();</script></body>
+})();</script><style id="amo-v31195-sentence-states">
+/* V31.195 short sentence practice: focus on answering before grading, next action after grading. */
+#sentenceReading .amo195-sentence-actions{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important;align-items:stretch!important;margin:16px 0 4px!important;max-width:100%!important;padding:0!important}
+#sentenceReading .amo195-sentence-actions>.btn{display:flex;align-items:center;justify-content:center;width:100%!important;min-width:0!important;min-height:48px!important;border-radius:12px!important;font-size:clamp(14px,3.8vw,18px)!important;line-height:1.3!important;padding:10px 8px!important;white-space:normal!important}
+#sentenceReading.amo195-answering #amo195Next,#sentenceReading.amo195-answering #sentenceReadingPrevBtn,#sentenceReading.amo195-answering #amo195Remember{display:none!important}
+#sentenceReading.amo195-answering #amo195Submit{order:1;grid-column:1/-1;background:var(--primary)!important;color:#fff!important;min-height:56px!important;font-weight:800!important}
+#sentenceReading.amo195-answering #sentenceReadingShowAnswerBtn{order:2;grid-column:1}
+#sentenceReading.amo195-answering #amo195Random{order:3;grid-column:2}
+#sentenceReading.amo195-result #amo195Submit,#sentenceReading.amo195-result #sentenceReadingShowAnswerBtn,#sentenceReading.amo195-result #amo195SentenceEntry,#sentenceReading.amo195-result #amo188Hints,#sentenceReading.amo195-result #amo188Follow,#sentenceReading.amo195-result #amo188Sort,#sentenceReading.amo195-result #amoSentenceMicControls{display:none!important}
+#sentenceReading.amo195-result #amo195Next{display:flex!important;order:1;grid-column:1/-1;min-height:58px!important;font-size:clamp(19px,5vw,23px)!important;font-weight:850!important;background:var(--primary)!important;border-color:var(--primary)!important;color:#fff!important;box-shadow:0 4px 12px rgba(12,104,93,.16)}
+#sentenceReading.amo195-result #sentenceReadingPrevBtn{order:2;grid-column:1}
+#sentenceReading.amo195-result #amo195Random{order:3;grid-column:2}
+#sentenceReading.amo195-result #amo195Remember{order:4;grid-column:1/-1;min-height:48px!important;background:var(--solid-surface,var(--card))!important;border:1px solid var(--border)!important;color:var(--text)!important;font-weight:700!important}
+#sentenceReading.amo195-result #amo184SentenceTools>:not(.amo188-favorite){display:none!important}
+#sentenceReading.amo195-result #amo184SentenceTools{padding:2px 0!important;min-height:0!important;gap:4px!important;margin:2px 0!important}
+#sentenceReading.amo195-result #sentenceReadingAnswer{margin:9px 0 14px!important;padding:0!important;font-size:16px!important;line-height:1.5!important;overflow:visible!important;contain:none!important}
+#sentenceReading.amo195-result #sentenceReadingAnswer .amo195-answer-card{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;text-align:left;padding:12px 10px;border:1px solid var(--border);background:var(--control-bg,var(--solid-surface));border-radius:12px;margin:5px 0;min-width:0}
+#sentenceReading.amo195-result #sentenceReadingAnswer .amo195-answer-label{background:var(--primary-dark,var(--primary));color:white!important;border-radius:7px;padding:6px 8px;font-size:13px!important;font-weight:750;white-space:nowrap;flex:0 0 auto}
+#sentenceReading.amo195-result #sentenceReadingAnswer .answered-answer-row{display:flex!important;align-items:center!important;flex:1 1 190px!important;min-width:0;gap:8px!important;justify-content:space-between!important;margin:0!important;padding:0!important}
+#sentenceReading.amo195-result #sentenceReadingAnswer .sentence-reading-study-answer,#sentenceReading.amo195-result #sentenceReadingAnswer .sentence-reading-study-answer strong,#sentenceReading.amo195-result #sentenceReadingAnswer .sentence-reading-study-answer .known-word-hint{font-size:clamp(15px,3.8vw,19px)!important;line-height:1.5!important;letter-spacing:0!important;font-weight:600!important;color:var(--text-primary,var(--text))!important;text-align:left!important;overflow-wrap:anywhere}
+#sentenceReading.amo195-result #sentenceReadingAnswer .answer-speech-btn{flex:0 0 36px!important;min-width:36px!important;min-height:36px!important;font-size:19px!important;margin:0!important}
+#sentenceReading.amo195-result #sentenceReadingAnswer .amo195-result-status{display:block;font-size:clamp(16px,4.5vw,21px)!important;font-weight:800!important;margin:5px auto 10px!important;text-align:center}
+#sentenceReading.amo195-result #sentenceReadingAnswer .amo195-result-status.is-correct{color:#218657!important}
+#sentenceReading.amo195-result #sentenceReadingAnswer .amo195-result-status.is-wrong{color:#d25858!important}
+#sentenceReading.amo195-result #sentenceReadingAnswer .amo184-feedback{font-size:13px;line-height:1.5;margin-top:8px}
+#sentenceReading.amo195-result .quiz-word{margin:8px auto 10px!important}
+#sentenceReading.amo195-result .quiz-question{padding-bottom:15px!important}
+#sentenceReading #amo188Hints[hidden],#sentenceReading #amo195SentenceEntry[hidden]{display:none!important}
+@media(max-width:360px){#sentenceReading .amo195-sentence-actions{gap:6px!important}#sentenceReading .amo195-sentence-actions>.btn{font-size:13px!important}#sentenceReading.amo195-result #sentenceReadingAnswer .amo195-answer-card{gap:5px;padding:9px 7px}}
+#sentenceReading.amo195-result #sentenceReadingAnswer #sentenceReadingAnswer .sentence-reading-study-answer{color:var(--text)!important}
+html body .app #sentenceReading.amo195-result #sentenceReadingAnswer .answered-answer-row .sentence-reading-study-answer,
+html body .app #sentenceReading.amo195-result #sentenceReadingAnswer .answered-answer-row .sentence-reading-study-answer strong,
+html body .app #sentenceReading.amo195-result #sentenceReadingAnswer .answered-answer-row .sentence-reading-study-answer .known-word-hint,
+html body .app #sentenceReading.amo195-result #sentenceReadingAnswer .answered-answer-row .sentence-reading-study-answer [data-word]{color:var(--text)!important;text-decoration-color:var(--border)!important}
+</style>
+<script id="amo-v31195-sentence-controller">
+(function(){'use strict';
+ const $=id=>document.getElementById(id);
+ function install(){
+   const page=$('sentenceReading'),ans=$('sentenceReadingAnswer');if(!page||!ans||page.dataset.amo195Installed)return;
+   page.dataset.amo195Installed='true';
+   const actions=$('amo195Submit')?.parentElement;
+   if(actions)actions.classList.add('amo195-sentence-actions');
+   // Keep the original grading functions (V31.194) and statistics untouched.
+   function isComplete(){
+     if(!sentenceReadingCurrent)return false;
+     const text=ans.textContent||'';
+     return /回答正确|回答不正确|已显示答案|^答案：|^答案:|^Đáp án|Đúng|Sai/.test(text) || (!!sentenceReadingCurrent.__answerVisible && !!ans.querySelector('.answered-answer-row'));
+   }
+   function decorate(){
+     if(!page.classList.contains('amo195-result'))return;
+     const row=ans.querySelector('.answered-answer-row');
+     if(row&&!row.closest('.amo195-answer-card')){
+       const parent=row.parentElement;
+       const card=document.createElement('div');card.className='amo195-answer-card';
+       const tag=document.createElement('span');tag.className='amo195-answer-label';tag.textContent='正确答案';
+       // Preserve the actual answer DOM, speech handlers, ruby and diff markup.
+       parent.insertBefore(card,row);card.append(tag,row);
+       for(const n of [...parent.childNodes]) if(n.nodeType===Node.TEXT_NODE && /正确答案|答案：|答案:/.test(n.textContent||''))n.textContent='';
+     }
+     const first=ans.firstElementChild;
+     if(first&&first.tagName==='SPAN'&&!first.classList.contains('amo195-result-status')){
+       if(/回答正确|回答不正确/.test(first.textContent||'')){
+         first.classList.add('amo195-result-status');first.classList.add(/不正确/.test(first.textContent)?'is-wrong':'is-correct');
+       }
+     }
+   }
+   function sync(){
+     const done=isComplete();page.classList.toggle('amo195-result',done);page.classList.toggle('amo195-answering',!done);
+     if(done)decorate();
+   }
+   const observer=new MutationObserver(()=>sync());observer.observe(ans,{childList:true,subtree:true,characterData:true});
+   // A question re-render clears result; watch for question changes even if the same sentence is repeated.
+   const q=$('sentenceReadingQuestion');if(q)new MutationObserver(sync).observe(q,{childList:true,subtree:true,characterData:true});
+   sync();window.Amo195SentenceUI={sync,view:()=>page.classList.contains('amo195-result')?'result':'answering'};
+   // Never steal iPhone focus while the user edits or selects text.
+   page.addEventListener('focusin',ev=>{if(ev.target.matches('textarea,input:not([type="checkbox"])'))page.classList.add('amo195-editing');},true);
+   page.addEventListener('focusout',ev=>{if(ev.target.matches('textarea,input:not([type="checkbox"])'))page.classList.remove('amo195-editing');},true);
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
+})();
+</script>
+</body>
 </html>
