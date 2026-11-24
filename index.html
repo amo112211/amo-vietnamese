@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.195</title>
+<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.196</title>
 <meta name="theme-color" content="#f4f6f8" id="amo-browser-theme-color">
 
 
@@ -6117,7 +6117,7 @@ body.amo194-background-locked{position:fixed!important;top:var(--amo194-lock-y,0
         <div class="logo">
             <div class="logo-icon">🇻🇳</div>
             <div>
-                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.195">V31.195</span></div>
+                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.196">V31.196</span></div>
                 <div class="logo-sub">中文母语者 · 零基础学习</div>
             </div>
         </div>
@@ -6241,7 +6241,7 @@ body.amo194-background-locked{position:fixed!important;top:var(--amo194-lock-y,0
       </div>
       <button type="button" class="amo-reset-fonts" id="amo194ResetDetail">↺ 恢复词汇详情推荐设置</button>
     </details>
-    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.195</strong></div>
+    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.196</strong></div>
 </section>
 </div>
 
@@ -13275,7 +13275,7 @@ function renderRememberedSentences(){
     </div>`).join("");
 }
 
-/* V31.195 · Browser SpeechRecognition lifecycle for iPhone; no result discarded on normal STOP. */
+/* V31.196 · Browser SpeechRecognition lifecycle for iPhone; no result discarded on normal STOP. */
 let amoSentenceRecognizer=null;
 let amoSentenceVoiceEpoch=0;
 let amoSentenceMicActive=false;
@@ -15662,7 +15662,7 @@ const AmoTextIO=(()=>{
 
 
 <script id="amo-v3118-pos-version">
-window.AMO_BUILD_VERSION="V31.195";
+window.AMO_BUILD_VERSION="V31.196";
 </script>
 
 <script id="amo-v3126-enhancements">
@@ -16097,7 +16097,7 @@ document.addEventListener('DOMContentLoaded',()=>{initAmoSystemTheme();enhanceAm
 <script id="amo-v3131-update-history">
 (function(){
   const AMO_UPDATE_HISTORY = [
-    {version:'V31.195',date:'2026-11-24',items:['短句练习全部五种答题方式按作答前与结果状态分别显示操作按钮，随机题目始终保留；答题后突出下一题，隐藏提交、输入和逐级提示。','回答后正确答案用更小、不同色的清晰卡片展示，取消重复的“显示答案”按钮与重复播放两遍功能。','语音识别正常结束改为 stop() 保留最终结果，防止重复启动和无结果卡死；输入编辑时避免不必要的滚动恢复。','继承 V31.194 的词库、AI、语法、24 个分类及判题、学习数据。']},
+    {version:'V31.196',date:'2026-11-24',items:['短句练习全部五种答题方式按作答前与结果状态分别显示操作按钮，随机题目始终保留；答题后突出下一题，隐藏提交、输入和逐级提示。','回答后正确答案用更小、不同色的清晰卡片展示，取消重复的“显示答案”按钮与重复播放两遍功能。','语音识别正常结束改为 stop() 保留最终结果，防止重复启动和无结果卡死；输入编辑时避免不必要的滚动恢复。','继承 V31.194 的词库、AI、语法、24 个分类及判题、学习数据。']},
     {version:'V31.194',date:'2026-11-23',items:['语法及汉越编辑弹窗采用固定标题、独立滚动表单与独立底部操作栏，针对 iOS 可视键盘区域适配并锁定背景滚动。','词汇搜索缓存规范化的越南语/中文索引；词汇详情新增独立、默认折叠的阅读密度设置（例句字体、双语/组间距、分隔线、朗读按钮位置）。','AI词汇助手增强义项区分和生成结果去重，支持单条例句与搭配重新生成、编辑、人工确认后保存。','保持原有 24 类、词库数据和判题规则不变，开展移动端模拟与静态回归测试。']},
     {version:'V31.193',date:'2026-11-23',items:['在文字与显示设置最底部新增默认折叠的答题卡片设置：普通/沉浸高度、答案与例句字体、例句间距、下一题按钮高度、答题完成后选项缩放；调整实时生效、自动保存，可一键恢复。','继续扩大普通和沉浸答题卡的可用空间，优先显示一至三条例句；例句标签左对齐，第一个例句在标签右侧起排，缩减不必要的间距。','保留 V31.191 主按钮定位、底部双按钮对齐、学习数据和判题规则，新增参数随原有设置备份导出。']},
     {version:'V31.191',date:'2026-11-22',items:['答题卡高度按设备增加约8%～12%，答题状态变化时保持稳定；大字号大间距选项便于作答，完成后自动缩小，例句区弹性显示一至三组双语例句。','各种题型统一开始／下一题按钮的高度与位置；答题后词汇详情与永久记住等宽等高并排，上一题与暂时跳过对齐。','消除输入题下一题后自动向下滚动：取消旧操作区定位滚动，并保持切题前页面位置与键盘失焦后的视口稳定。','保留V31.190原有AI双语词汇助手、24分类、短句、首页、全部判题规则和学习数据存储键。']},
@@ -25207,7 +25207,7 @@ function initStudy(){const quiz=$('quiz'),sentence=$('sentenceReading');if(!quiz
  const sentenceActions=$('sentenceReadingShowAnswerBtn')?.parentElement;if(sentenceActions)sentenceActions.classList.add('amo190-sentence-actions');
  let answerScrollToken=0;
  function bringSentenceActionsInView(){const seq=++answerScrollToken;requestAnimationFrame(()=>requestAnimationFrame(()=>{if(seq!==answerScrollToken||!sentence.classList.contains('active'))return;const actions=sentence.querySelector('.amo190-sentence-actions');if(!actions)return;const rect=actions.getBoundingClientRect(),vh=window.visualViewport?.height||window.innerHeight;const off=rect.bottom-(vh-12);if(off>6){const max=Math.max(0,document.documentElement.scrollHeight-vh-window.scrollY);window.scrollBy({top:Math.min(max,Math.min(off+5,320)),behavior:'auto'})}}))}
- const sentenceAnswer=$('sentenceReadingAnswer');if(sentenceAnswer){new MutationObserver(()=>{const answered=!!sentenceAnswer.textContent.trim();sentence.classList.toggle('amo190-sentence-answered',answered);/* V31.195: never force scroll after sentence results */}).observe(sentenceAnswer,{childList:true,subtree:true})}
+ const sentenceAnswer=$('sentenceReadingAnswer');if(sentenceAnswer){new MutationObserver(()=>{const answered=!!sentenceAnswer.textContent.trim();sentence.classList.toggle('amo190-sentence-answered',answered);/* V31.196: never force scroll after sentence results */}).observe(sentenceAnswer,{childList:true,subtree:true})}
  const initialY=()=>window.scrollY||document.documentElement.scrollTop||0;
  quiz.addEventListener('click',e=>{if(!e.target.closest('#quizOptions button, #quizShowAnswerBtn, .quiz-submit-btn, .quiz-fill-submit-btn'))return;const previousY=initialY();const viewport=quiz.querySelector('#quizScrollContent');const contentY=viewport?.scrollTop||0;requestAnimationFrame(()=>requestAnimationFrame(()=>{if(quiz.classList.contains('active')){if(Math.abs(initialY()-previousY)>3)window.scrollTo({top:previousY,behavior:'instant'});if(viewport&&viewport.scrollTop!==contentY&&!e.target.closest('.quiz-option'))viewport.scrollTop=contentY}}))},{capture:true});
 }
@@ -25686,7 +25686,7 @@ function save(){settings.amo194WordDetail={...pref};try{saveJSON(KEY_SETTINGS,se
 function init(){const pane=document.getElementById('amo194WordDetailSettings');if(!pane)return;pane.open=false;apply();pane.addEventListener('input',e=>{const key=e.target.dataset.amo194Pref;if(!key)return;pref=clean({...pref,[key]:e.target.value});apply();clearTimeout(timer);timer=setTimeout(save,140);});pane.addEventListener('change',e=>{const key=e.target.dataset.amo194Pref;if(key){pref=clean({...pref,[key]:e.target.value});apply();clearTimeout(timer);save();}});document.getElementById('amo194ResetDetail')?.addEventListener('click',()=>{pref={...defaults};apply();save();});document.addEventListener('click',e=>{if(e.target.closest('#amoDisplayOpen'))pane.open=false;});window.Amo194WordDetail={get:()=>({...pref}),reset:()=>{pref={...defaults};apply();save();}};}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();</script><style id="amo-v31195-sentence-states">
-/* V31.195 short sentence practice: focus on answering before grading, next action after grading. */
+/* V31.196 short sentence practice: focus on answering before grading, next action after grading. */
 #sentenceReading .amo195-sentence-actions{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important;align-items:stretch!important;margin:16px 0 4px!important;max-width:100%!important;padding:0!important}
 #sentenceReading .amo195-sentence-actions>.btn{display:flex;align-items:center;justify-content:center;width:100%!important;min-width:0!important;min-height:48px!important;border-radius:12px!important;font-size:clamp(14px,3.8vw,18px)!important;line-height:1.3!important;padding:10px 8px!important;white-space:normal!important}
 #sentenceReading.amo195-answering #amo195Next,#sentenceReading.amo195-answering #sentenceReadingPrevBtn,#sentenceReading.amo195-answering #amo195Remember{display:none!important}
@@ -25765,6 +25765,161 @@ html body .app #sentenceReading.amo195-result #sentenceReadingAnswer .answered-a
    page.addEventListener('focusout',ev=>{if(ev.target.matches('textarea,input:not([type="checkbox"])'))page.classList.remove('amo195-editing');},true);
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
+})();
+</script>
+
+<style id="amo-v31196-sentence-layout">
+/* V31.196 — center question independently of its speaker control. */
+html body .app #sentenceReading .speech-question-wrap{
+  display:grid!important;
+  grid-template-columns:42px minmax(0,1fr) 42px!important;
+  column-gap:4px!important;
+  align-items:center!important;
+  justify-items:stretch!important;
+  width:100%!important;
+  box-sizing:border-box!important;
+}
+html body .app #sentenceReading .speech-question-wrap #sentenceReadingQuestion{
+  grid-column:2!important;
+  min-width:0!important;
+  width:100%!important;
+  max-width:100%!important;
+  margin:6px 0!important;
+  justify-self:center!important;
+  text-align:center!important;
+  text-wrap:balance;
+  overflow-wrap:anywhere;
+}
+html body .app #sentenceReading .speech-question-wrap #sentenceReadingSpeechBtn{
+  grid-column:3!important;
+  justify-self:center!important;
+  margin:0!important;
+  width:42px!important;
+  min-width:42px!important;
+  flex:none!important;
+}
+/* Keep the exercise card stable across answering/result states and anchor actions
+   at the bottom. Long answers are never clipped: min-height may expand as needed. */
+html body .app #sentenceReading .quiz-box > .quiz-question{
+  box-sizing:border-box!important;
+  display:flex!important;
+  flex-direction:column!important;
+  min-height:var(--amo196-sentence-baseline,clamp(480px,58dvh,660px))!important;
+  height:var(--amo196-sentence-baseline,auto)!important;
+  max-height:none!important;
+  overflow:visible!important;
+}
+html body .app #sentenceReading.amo195-result .quiz-question #sentenceReadingAnswer{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  overscroll-behavior:contain;
+}
+html body .app #sentenceReading .quiz-question > .amo195-sentence-actions{
+  flex:0 0 auto!important;
+  margin-top:auto!important;
+}
+/* Bilingual answer: keep the original answer and audio semantics and add the
+   existing Chinese translation immediately below, without a new Chinese label. */
+html body .app #sentenceReading.amo195-result #sentenceReadingAnswer .amo195-answer-card{
+  display:grid!important;
+  grid-template-columns:auto minmax(0,1fr)!important;
+  column-gap:10px!important;
+  row-gap:3px!important;
+  align-items:start!important;
+}
+html body .app #sentenceReading.amo195-result #sentenceReadingAnswer .amo195-answer-label{
+  grid-column:1!important;
+  grid-row:1 / span 2!important;
+  align-self:start!important;
+}
+html body .app #sentenceReading.amo195-result #sentenceReadingAnswer .answered-answer-row{
+  grid-column:2!important;
+  grid-row:1!important;
+  width:100%!important;
+  flex:initial!important;
+}
+html body .app #sentenceReading.amo195-result #sentenceReadingAnswer .amo196-chinese-meaning{
+  grid-column:2!important;
+  grid-row:2!important;
+  margin:1px 0 0!important;
+  padding:0!important;
+  font-size:clamp(14px,3.6vw,17px)!important;
+  line-height:1.48!important;
+  font-weight:400!important;
+  color:var(--text-secondary,var(--muted))!important;
+  text-align:left!important;
+  overflow-wrap:anywhere;
+}
+@media(max-width:360px){
+ html body .app #sentenceReading .speech-question-wrap{grid-template-columns:38px minmax(0,1fr) 38px!important;column-gap:1px!important}
+ html body .app #sentenceReading .speech-question-wrap #sentenceReadingSpeechBtn{width:38px!important;min-width:38px!important}
+ html body .app #sentenceReading.amo195-result #sentenceReadingAnswer .amo195-answer-card{column-gap:7px!important}
+}
+</style>
+
+<script id="amo-v31196-sentence-controller">
+(function(){'use strict';
+ const $=id=>document.getElementById(id);
+ function init(){
+   const page=$('sentenceReading'),ans=$('sentenceReadingAnswer'),q=$('sentenceReadingQuestion');
+   const card=page?.querySelector('.quiz-box > .quiz-question');
+   if(!page||!ans||!q||!card||page.dataset.amo196Installed)return;
+   page.dataset.amo196Installed='true';
+   let signature='',baseline=0,frame=0;
+   function questionKey(){
+     if(typeof sentenceReadingCurrent==='undefined'||!sentenceReadingCurrent)return '';
+     return [sentenceReadingCurrent.vi||'',sentenceReadingCurrent.zh||'',
+       $('sentenceReadingMode')?.value||'',
+       typeof sentenceReadingHistoryIndex==='number'?sentenceReadingHistoryIndex:''].join('\u241F');
+   }
+   function addMeaning(){
+     if(!page.classList.contains('amo195-result') ||
+        typeof sentenceReadingCurrent==='undefined'||!sentenceReadingCurrent)return;
+     const row=ans.querySelector('.amo195-answer-card > .answered-answer-row');
+     const holder=row?.parentElement;
+     if(!row||!holder||holder.querySelector('.amo196-chinese-meaning'))return;
+     // The main answer for Vietnamese→Chinese already IS Chinese. Only append
+     // translation when the correct-answer row contains Vietnamese.
+     if(row.querySelector('.sentence-reading-study-answer')?.dataset.studyLang!=='vi')return;
+     const zh=String(sentenceReadingCurrent.zh||'').trim();if(!zh)return;
+     const subtitle=document.createElement('div');subtitle.className='amo196-chinese-meaning';
+     subtitle.lang='zh-CN';subtitle.textContent=zh;holder.appendChild(subtitle);
+   }
+   function sync(){
+     frame=0;
+     const newKey=questionKey();
+     const answering=page.classList.contains('amo195-answering');
+     if(newKey!==signature){
+       signature=newKey;baseline=0;
+       card.style.removeProperty('--amo196-sentence-baseline');
+     }
+     if(answering&&newKey){
+       // Measure only when composing the question, never after the result
+       // hides inputs. This stops jumping between pre/post heights.
+       if(!baseline){
+         const natural=Math.ceil(card.scrollHeight);
+         const mode=$('sentenceReadingMode')?.value||'vi';
+         const minimum=mode==='sort'?714:mode==='vi-vi'?682:638;
+         const floor=Math.min(760,Math.max(minimum,Math.round(window.innerHeight*.70)));
+         baseline=Math.max(natural,floor);
+         card.style.setProperty('--amo196-sentence-baseline',baseline+'px');
+       }
+     }else if(newKey && baseline){card.style.setProperty('--amo196-sentence-baseline',baseline+'px');}
+     addMeaning();
+   }
+   function queue(){if(!frame)frame=requestAnimationFrame(sync);}
+   const obs=new MutationObserver(queue);
+   obs.observe(ans,{childList:true,subtree:true,characterData:true});
+   obs.observe(q,{childList:true,subtree:true,characterData:true});
+   obs.observe(page,{attributes:true,attributeFilter:['class']});
+   const mode=$('sentenceReadingMode');mode?.addEventListener('change',()=>{signature='';baseline=0;queue();});
+   window.addEventListener('resize',()=>{if(page.classList.contains('amo195-answering')){baseline=0;queue();}},{passive:true});
+   queue();
+   window.Amo196Sentence={refresh:queue,height:()=>baseline};
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
 </script>
 </body>
