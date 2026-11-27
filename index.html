@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.198</title>
+<title>&#x963F;&#x83AB;&#x81EA;&#x5B66;&#x52A9;&#x624B; V31.199</title>
 <meta name="theme-color" content="#f4f6f8" id="amo-browser-theme-color">
 
 
@@ -6117,7 +6117,7 @@ body.amo194-background-locked{position:fixed!important;top:var(--amo194-lock-y,0
         <div class="logo">
             <div class="logo-icon">🇻🇳</div>
             <div>
-                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.198">V31.198</span></div>
+                <div class="logo-title">阿莫自学助手 <span class="amo-version-badge" aria-label="Current version V31.199">V31.199</span></div>
                 <div class="logo-sub">中文母语者 · 零基础学习</div>
             </div>
         </div>
@@ -6241,7 +6241,7 @@ body.amo194-background-locked{position:fixed!important;top:var(--amo194-lock-y,0
       </div>
       <button type="button" class="amo-reset-fonts" id="amo194ResetDetail">↺ 恢复词汇详情推荐设置</button>
     </details>
-    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.198</strong></div>
+    <div class="amo-setting-hint" style="text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle,var(--border))">当前版本：<strong>V31.199</strong></div>
 </section>
 </div>
 
@@ -6289,8 +6289,8 @@ body.amo194-background-locked{position:fixed!important;top:var(--amo194-lock-y,0
             <details class="amo-pos-dropdown" id="amoPosDropdown">
                 <summary class="btn btn-small amo-pos-dropdown-trigger" aria-label="打开词性管理">词性管理 <span aria-hidden="true">⌄</span></summary>
                 <div class="amo-pos-dropdown-menu" role="menu">
-                    <button class="amo-pos-dropdown-item" type="button" role="menuitem" onclick="this.closest('details').removeAttribute('open');autoCheckMissingWordPOS(false)">检查词性 / 自动补全</button>
-                    <button class="amo-pos-dropdown-item" type="button" role="menuitem" onclick="this.closest('details').removeAttribute('open');autoCheckMissingWordPOS(true)">重新判断全部词性</button>
+                    <button class="amo-pos-dropdown-item" type="button" role="menuitem" onclick="this.closest('details').removeAttribute('open');window.Amo199Audit?.open('joint')">检查词性 / 自动补全（预览）</button>
+                    <button class="amo-pos-dropdown-item" type="button" role="menuitem" onclick="this.closest('details').removeAttribute('open');window.Amo199Audit?.open('joint')">重新判断全部词性（预览）</button>
                     <button class="amo-pos-dropdown-item" type="button" role="menuitem" onclick="this.closest('details').removeAttribute('open');autoFillMissingWordCategories()">自动场景分类</button>
                     <div class="amo-pos-dropdown-ai" id="amoPosAIState">DeepSeek AI：未启用</div>
                     <div class="amo-pos-dropdown-note">词性与场景分类均采用“本地规则优先 + DeepSeek 辅助”。场景分类只自动处理空分类、待确认和旧版自动分类；用户手工修正的其它分类不会被覆盖。</div>
@@ -6752,8 +6752,8 @@ mưa lớn=大雨=名词=天气=Chiều nay có thể có mưa lớn."></textare
         <div id="batchResult" style="margin-top:15px;" aria-live="polite"></div>
     </div>
     <div class="card card-padding amo-v175-management" style="margin-top:18px" id="amoV175ManageCard">
-      <h2 style="margin-top:0">📁 AI 分类管理</h2>
-      <p style="color:var(--muted);line-height:1.6">词汇与短句共用固定24大类，一键分析全部词库，预览确认后归并。支持暂停继续、分类备份及撤销。</p>
+      <h2 style="margin-top:0">📁 AI 分类与词性管理</h2>
+      <p style="color:var(--muted);line-height:1.6">检查现有24类中的错误归类和词性问题。先预览再确认，支持备份、撤销；不会自动新增分类。</p>
       <div style="display:flex;gap:9px;flex-wrap:wrap">
         <button class="btn btn-primary" type="button" onclick="window.AmoClassify182?.open()">✨ 一键整理全部词汇和短句</button><button class="btn" type="button" onclick="window.AmoV174?.open('word')">管理单词分类</button>
         <button class="btn" type="button" onclick="window.AmoV174?.open('sentence')">管理短句分类</button>
@@ -9848,7 +9848,7 @@ function createAmoEditableCategoryCombobox(value=''){
  const update=()=>{b.innerHTML=(settings.amoCategoryIcons===false?'':amo183Icon(input.value))+`<span>${escapeHTML(tr(input.value||'选择分类'))}</span><span aria-hidden="true">⌄</span>`;};input.addEventListener('change',update);update();root.append(input,b);
  b.addEventListener('click',()=>{const d=document.createElement('dialog');d.className='amo187-category-dialog';d.setAttribute('aria-label',tr('选择分类'));const h=document.createElement('div');h.className='amo187-cat-head';const title=document.createElement('strong');title.textContent=tr('选择分类');const close=document.createElement('button');close.type='button';close.className='btn';close.textContent='×';close.setAttribute('aria-label',tr('关闭'));close.onclick=()=>d.close();h.append(title,close);const q=document.createElement('input');q.type='search';q.className='input';q.placeholder=tr('搜索分类');q.autocomplete='off';q.setAttribute('aria-label',q.placeholder);const list=document.createElement('div');list.className='amo187-cat-list';const cats=[...new Set([...AmoCategories182.names,...(!AmoCategories182.active()?getAllCategories():[])])];if(input.value&&!cats.includes(input.value))cats.push(input.value);
  const choose=c=>{input.value=c;input.dispatchEvent(new Event('change',{bubbles:true}));d.close();};
- const render=()=>{const query=q.value.trim().toLowerCase();list.replaceChildren();for(const c of cats.filter(c=>c.toLowerCase().includes(query)||tr(c).toLowerCase().includes(query))){const opt=document.createElement('button');opt.type='button';opt.className='btn amo187-cat-option';opt.setAttribute('aria-pressed',String(c===input.value));opt.innerHTML=amo183Icon(c)+`<span>${escapeHTML(tr(c))}</span>`;let gesture=null;opt.addEventListener('pointerdown',e=>{gesture={x:e.clientX,y:e.clientY,t:performance.now(),id:e.pointerId};});opt.addEventListener('pointercancel',()=>gesture=null);opt.addEventListener('pointermove',e=>{if(gesture&&Math.hypot(e.clientX-gesture.x,e.clientY-gesture.y)>9)gesture=null});opt.addEventListener('click',e=>{if(e.detail===0||(gesture&&performance.now()-gesture.t<600&&Math.hypot(e.clientX-gesture.x,e.clientY-gesture.y)<10))choose(c);});list.append(opt);}if(!list.children.length){const n=document.createElement('p');n.textContent=tr('没有匹配的分类');list.append(n);}};q.oninput=render;q.onkeydown=e=>{if(e.key==='Enter'&&!e.isComposing&&list.querySelectorAll('button').length===1){e.preventDefault();list.querySelector('button').click();}};d.append(h,q,list);d.addEventListener('keydown',e=>{if(e.key==='Escape')e.stopPropagation();});document.body.append(d);render();d.addEventListener('close',()=>{d.remove();b.focus({preventScroll:true});});d.addEventListener('click',e=>{if(e.target===d){const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close();}});try{d.showModal();close.focus({preventScroll:true});}catch(e){d.remove();showToast(tr('无法打开分类选择'));}});return root;
+ const render=()=>{const query=q.value.trim().toLowerCase();list.replaceChildren();for(const c of cats.filter(c=>c.toLowerCase().includes(query)||tr(c).toLowerCase().includes(query))){const opt=document.createElement('button');opt.type='button';opt.className='btn amo187-cat-option';opt.setAttribute('aria-pressed',String(c===input.value));opt.innerHTML=amo183Icon(c)+`<span>${escapeHTML(tr(c))}</span>`;let gesture=null;opt.addEventListener('pointerdown',e=>{gesture={x:e.clientX,y:e.clientY,t:performance.now(),id:e.pointerId};});opt.addEventListener('pointercancel',()=>gesture=null);opt.addEventListener('pointermove',e=>{if(gesture&&Math.hypot(e.clientX-gesture.x,e.clientY-gesture.y)>9)gesture=null});opt.addEventListener('click',e=>{if(e.detail===0||(gesture&&performance.now()-gesture.t<600&&Math.hypot(e.clientX-gesture.x,e.clientY-gesture.y)<10))choose(c);});list.append(opt);}if(!list.children.length){const n=document.createElement('p');n.textContent=tr('没有匹配的分类');list.append(n);}};q.oninput=render;q.onkeydown=e=>{if(e.key==='Enter'&&!e.isComposing&&list.querySelectorAll('button').length===1){e.preventDefault();list.querySelector('button').click();}};d.append(h,q,list);d.addEventListener('keydown',e=>{if(e.key==='Escape')e.stopPropagation();});document.body.append(d);render();d.addEventListener('close',()=>{d.remove();if(performance.now()-(window.__amo199LastWordSearchGesture||0)>1000&&!document.activeElement?.matches('input,textarea,[contenteditable="true"]'))b.focus({preventScroll:true});});d.addEventListener('click',e=>{if(e.target===d){const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close();}});try{d.showModal();close.focus({preventScroll:true});}catch(e){d.remove();showToast(tr('无法打开分类选择'));}});return root;
 }
 function openWordEditModal(vi){
  const current=allWords().find(w=>normalize(w.vi)===normalize(vi));if(!current)return;
@@ -9862,7 +9862,7 @@ function openWordEditModal(vi){
       wrap.append(createAmoEditableCategoryCombobox(value||''));
    }else{
       const inp=document.createElement('input');inp.className='input';inp.id='amoEdit_'+id;inp.value=value||'';inp.autocomplete='off';wrap.append(inp);
-      if(id==='pos'){const actions=document.createElement('div');actions.className='amo-pos-edit-actions';const auto=document.createElement('button');auto.type='button';auto.className='btn btn-small';auto.textContent='自动判断词性';auto.addEventListener('click',autoDetectEditedWordPos);const note=document.createElement('span');note.id='amoEditPosDetectNote';note.className='amo-pos-detect-note';note.textContent='只更新词性输入框，保存前可手动修改';actions.append(auto,note);wrap.append(actions);}
+      if(id==='pos'){const actions=document.createElement('div');actions.className='amo-pos-edit-actions';const auto=document.createElement('button');auto.type='button';auto.className='btn btn-small';auto.textContent='✨ 自动判断词性和分类';auto.addEventListener('click',autoDetectEditedWordPos);const note=document.createElement('span');note.id='amoEditPosDetectNote';note.className='amo-pos-detect-note';note.textContent='先给出词性、分类建议，确认后才应用';actions.append(auto,note);wrap.append(actions);}
    }
    fields.append(wrap);
  }
@@ -9882,14 +9882,36 @@ function openWordEditModal(vi){
 }
 async function autoDetectEditedWordPos(){
  const vi=document.getElementById('amoEdit_vi')?.value.trim()||'',zh=document.getElementById('amoEdit_zh')?.value.trim()||'';
- const ex=Array.from(document.querySelectorAll('.amo-edit-list[data-kind="example"] .amo-edit-vi'),x=>x.value.trim()).filter(Boolean);
- const pairs=Array.from(document.querySelectorAll('.amo-edit-list[data-kind="pair"] .amo-edit-row'),row=>({vi:row.querySelector('.amo-edit-vi')?.value.trim()||'',zh:row.querySelector('.amo-edit-zh')?.value.trim()||''})).filter(x=>x.vi);
- let related=[];try{related=getRelatedEntriesForWord(vi);}catch(_){related=[];}
- const note=document.getElementById('amoEditPosDetectNote');if(note)note.textContent='正在判断…';
- const result=await AmoDeepSeekPOS.smartDetect({vi,zh,examples:ex,collocations:pairs,related});
- const input=document.getElementById('amoEdit_pos');if(input)input.value=result.pos||'待确认';
- if(note)note.textContent=(result.pos||'待确认')+' · '+(result.source==='ai'?'AI 辅助':(result.reasons?.length?result.reasons.join('、'):'本地规则'));
+ const note=document.getElementById('amoEditPosDetectNote');if(!vi||!zh){if(note)note.textContent='请先填写越南语及中文释义';return;}
+ const ex=[...document.querySelectorAll('.amo-edit-list[data-kind="example"] .amo-edit-row')].map(row=>({vi:row.querySelector('.amo-edit-vi')?.value.trim()||'',zh:row.querySelector('.amo-edit-zh')?.value.trim()||''})).filter(x=>x.vi);
+ const pairs=[...document.querySelectorAll('.amo-edit-list[data-kind="pair"] .amo-edit-row')].map(row=>({vi:row.querySelector('.amo-edit-vi')?.value.trim()||'',zh:row.querySelector('.amo-edit-zh')?.value.trim()||''})).filter(x=>x.vi);
+ const context={vi,zh,examples:ex.map(x=>x.vi+'（'+x.zh+'）'),collocations:pairs,related:[]};
+ const button=note?.parentElement?.querySelector('button');if(button)button.disabled=true;
+ if(note)note.textContent='正在综合词义、例句与搭配判断…';
+ const snapshot=vi+'\u0001'+zh;
+ try{
+  const pos=await AmoDeepSeekPOS.smartDetect(context);
+  let cat=AmoCategories182.refine({type:'word',...context,pos:pos.pos,old:document.getElementById('amoEdit_category')?.value||''},document.getElementById('amoEdit_category')?.value||'');
+  let category=AmoCategories182.names.includes(cat?.category)?cat.category:'';
+  let source='本地分类';
+  if((!category||cat?.uncertain)&&window.AmoAIService?.ready?.()){
+   try{const ai=await AmoSceneAI.classify([{id:'edit',input:context}]);const answer=ai.get('edit');if(AmoCategories182.names.includes(answer?.category)&&Number(answer.confidence)>=.78){category=answer.category;source='AI 辅助分类';}}catch(error){console.warn('编辑词汇分类 AI 暂不可用，保留本地建议',error);}
+  }
+  if(!category){const local=AmoSceneCategory.detect(context);category=AmoCategories182.names.includes(local.category)?local.category:'通用词汇';}
+  if((document.getElementById('amoEdit_vi')?.value.trim()||'')+'\u0001'+(document.getElementById('amoEdit_zh')?.value.trim()||'')!==snapshot){if(note)note.textContent='词汇已变化，请重新判断';return;}
+  const actions=note?.parentElement;if(!actions)return;
+  actions.querySelector('.amo199-edit-suggestion')?.remove();
+  const panel=document.createElement('div');panel.className='amo199-edit-suggestion';
+  const message=document.createElement('div');message.textContent='建议词性：'+(pos.pos||'待确认')+' ｜ 建议分类：'+category+'（'+(pos.source==='ai'?'AI 词性':'本地词性')+' / '+source+'）';
+  const accept=document.createElement('button');accept.type='button';accept.className='btn btn-small btn-primary';accept.textContent='采用两项建议';
+  const cancel=document.createElement('button');cancel.type='button';cancel.className='btn btn-small';cancel.textContent='保持原设置';
+  accept.onclick=()=>{const p=document.getElementById('amoEdit_pos'),c=document.getElementById('amoEdit_category');if(p&&pos.pos&&pos.pos!=='待确认')p.value=pos.pos;if(c&&category){c.value=category;c.dispatchEvent(new Event('change',{bubbles:true}));}note.textContent='已填入建议；点击“保存全部修改”才会写入词库';panel.remove();};
+  cancel.onclick=()=>{panel.remove();note.textContent='已保留原词性和分类';};panel.append(message,accept,cancel);actions.append(panel);
+  if(note)note.textContent='请核对建议，未经确认不会覆盖已有字段';
+ }catch(error){if(note)note.textContent='判断失败：'+(error?.message||error);}
+ finally{if(button)button.disabled=false;}
 }
+
 function refreshEditedWordViews(oldKey,newVi){
  const freshKey=normalize(newVi||oldKey);
  invalidateRelationRuntimeCache();
@@ -9914,7 +9936,7 @@ function saveWordFull(action){
  }
  if(vi.length>500||zh.length>1000||pos.length>150||category.length>150){showToast('词汇字段过长');return;}
  if(fresh!==old && [...builtInWords,...customWords].some(w=>normalize(w.vi)===fresh)){showToast('修改后的越南语主词汇已存在，请先处理重复词汇');return;}
- if(rawPos&&!pos){showToast('词性无法识别，请使用标准词性或点击“自动判断词性”');return;}
+ if(rawPos&&!pos){showToast('词性无法识别，请使用标准词性或点击“自动判断词性和分类”');return;}
  const read=kind=>Array.from(document.querySelectorAll(`.amo-edit-list[data-kind="${kind}"] .amo-edit-row`),row=>({vi:row.querySelector('.amo-edit-vi').value.trim(),zh:row.querySelector('.amo-edit-zh').value.trim()})).filter(x=>x.vi||x.zh);
  const ex=read('example'),pairs=read('pair');
  const previousPairs=AmoWordView.getPairs(allWords().find(w=>normalize(w.vi)===old)||{});
@@ -15713,7 +15735,7 @@ const AmoTextIO=(()=>{
 
 
 <script id="amo-v3118-pos-version">
-window.AMO_BUILD_VERSION="V31.198";
+window.AMO_BUILD_VERSION="V31.199";
 </script>
 
 <script id="amo-v3126-enhancements">
@@ -16148,6 +16170,7 @@ document.addEventListener('DOMContentLoaded',()=>{initAmoSystemTheme();enhanceAm
 <script id="amo-v3131-update-history">
 (function(){
   const AMO_UPDATE_HISTORY = [
+    {version:'V31.199',date:'2026-11-27',items:['词汇管理新增全词库分类与词性联合检查，现有24类全面扫描，支持候选预览、AI按需辅助、人工确认应用和撤销。','词性管理入口移入AI分类与词性管理区；词汇编辑中可同时判断词性与分类，必须确认才填写建议。','AI词汇助手优化自然高频例句生成，可按场景和难度设置偏好，支持历史例句批量质量扫描、单条评价、单条重生成、人工审核替换与撤销。','减少iPhone搜索输入框的延迟焦点争夺，保留原始词库、学习数据结构与判题规则。']},
     {version:'V31.198',date:'2026-11-24',items:['短句练习改用 iPhone 系统键盘听写入口：点击按钮聚焦原生输入框，由用户点击键盘麦克风开始听写，不再使用不稳定的网页 SpeechRecognition。','短句判题新增阿拉伯数字、中文数字和越南语数字等值识别（包括常用十位、百位、千位），保留非数字文字与越南语声调的严格判定。','语法分页新增首页按钮，紧邻末页；首页与末页按当前位置禁用、灰化，两个按钮采用紧凑样式。','保持学习数据、24 分类、词库和原有其他答题规则不变。']},
     {version:'V31.197',date:'2026-11-24',items:['语法分页新增末页按钮，并随语言和搜索结果更新末页；保留原分页、学习记录与语法练习。','短句练习结果页下一题与提交回答同高同宽；上一题、我已经会了、随机题目三按钮并排。','答题与短句练习加入独立智能字号与比例设置；长题按实际宽度缩小，超长内容保留完整。','答错时新增简明差异提示，保留原判题；优化编辑焦点、语音异常恢复及键盘视口适配。']},
     {version:'V31.196',date:'2026-11-24',items:['短句练习全部五种答题方式按作答前与结果状态分别显示操作按钮，随机题目始终保留；答题后突出下一题，隐藏提交、输入和逐级提示。','回答后正确答案用更小、不同色的清晰卡片展示，取消重复的“显示答案”按钮与重复播放两遍功能。','语音识别正常结束改为 stop() 保留最终结果，防止重复启动和无结果卡死；输入编辑时避免不必要的滚动恢复。','继承 V31.194 的词库、AI、语法、24 个分类及判题、学习数据。']},
@@ -21924,7 +21947,7 @@ window.closeAIWordAssistant=function(){const el=document.getElementById('amoAIWo
 function currentAssistantWord(){return (typeof allWords==='function'?allWords():[]).find(w=>normalize(w.vi)===assistantState.wordKey)||null}
 function updateAssistantTabs(){const el=document.getElementById('amoAIWordAssistant');if(!el)return;el.querySelectorAll('[data-ai-action]').forEach(b=>b.classList.toggle('is-active',b.dataset.aiAction===assistantState.action))}
 async function loadAssistantAction(force){const word=currentAssistantWord();if(!word)return;const action=assistantState.action,key=assistantCacheKey(word,action);if(assistantPending.has(key))return;const old=await getAssistantRecord(key);if(assistantPending.has(key)||!assistantVisible(key))return;if(!force&&old)return restoreAssistantTab();if(!aiReady())return assistantStatus('请先在设置中启用 AI 并填写所选模型的 API Key','error');assistantPending.set(key,true);assistantControls(old,true);assistantStatus('AI 正在分析…');const result=document.getElementById('amoAIAssistantResult');if(!old)result.textContent='AI 正在分析…';const ex=typeof AmoWordView!=='undefined'?AmoWordView.getExamples(word).slice(0,4):[],pairs=typeof AmoWordView!=='undefined'?AmoWordView.getPairs(word).slice(0,6):[],related=typeof getRelatedEntriesForWord==='function'?getRelatedEntriesForWord(word).slice(0,6):[];const ctx=JSON.stringify({vi:word.vi,zh:word.zh,pos:word.pos||'',category:word.category||'',examples:ex,collocations:pairs,related});
- try{let system='',user='',maxTokens=1800;switch(action){case'examples':system='你是越南语母语级教师。只输出合法 JSON：{"items":[{"vi":"自然越南语例句","zh":"准确中文翻译"}]}。生成3条不同场景、自然、常用、不过度书面的例句；严格匹配当前中文释义和语境，不要把同形词的不同意思混为一谈。';user='为这个词生成例句：'+ctx;break;case'collocations':system='你是越南语词汇搭配教师。只输出合法 JSON：{"items":[{"vi":"常用搭配","zh":"中文意思"}]}。给出5个真实高频、适合学习者掌握的搭配或固定组合，按自然度和实际使用频率优先排序。目标词可在搭配的开头、中间或末尾，不得强制放在第一个位置；不必为了位置多样性生造不自然表达。每条必须包含目标词或合理词形，不重复主词本身；避免同义重复，越南语和中文释义均不可为空。';user='为这个词生成常用搭配（目标词不限定位置）：'+ctx;break;case'confusables':system='你是越南语辨析教师。只输出合法 JSON：{"items":[{"vi":"近义或易混词","zh":"中文意思","note":"与主词的关键区别和典型使用场景"}]}。给出2到4个最值得辨析的词，避免无关词。';user='辨析这个词：'+ctx;break;case'meaning':system='你是越南语词典编辑。只输出合法 JSON：{"assessment":"准确/过窄/过宽/需要补充","suggestedZh":"建议中文释义","note":"简洁说明","senses":[{"meaning":"中文义项","pos":"词性","context":"典型场景","exampleVi":"示例越南语","exampleZh":"示例中文"}]}。优先确认当前已有词义，若该词确有多个常用义项，则按不同词性和语境清晰分开解释；不要把语义无关的义项混为同一条，也不必强行增加冷僻义项。';user='检查这个词的中文释义：'+ctx;break;default:system='你是越南语口语教师。只输出合法 JSON：{"summary":"这个词在自然越南语里的使用建议","items":[{"vi":"自然表达或典型结构","zh":"中文意思","note":"使用提示"}]}。重点说明口语自然度、常见结构、地区或语气差异（只有确实存在时才提）。';user='说明这个词怎样用得更自然：'+ctx;maxTokens=1900}
+ try{let system='',user='',maxTokens=1800;switch(action){case'examples':system='你是越南语母语级教师。只输出合法 JSON：{"items":[{"vi":"自然越南语例句","zh":"准确中文翻译"}]}。严格按当前中文义项生成3条不同、自然实用的越南语双语例句：第1条是最容易直接说出口的高频口语，第2条是真实场景可直接使用的表达，第3条展示常见搭配或拓展句型。语言应符合越南人真实用法，简洁不生造，不混淆同形词义；避免空泛、教条、罕见内容。每条越南语与中文翻译准确配对。按使用价值排序。';user='为这个词生成例句：'+ctx+'。'+(window.Amo199Examples?.prompt?.()||'');break;case'collocations':system='你是越南语词汇搭配教师。只输出合法 JSON：{"items":[{"vi":"常用搭配","zh":"中文意思"}]}。给出5个真实高频、适合学习者掌握的搭配或固定组合，按自然度和实际使用频率优先排序。目标词可在搭配的开头、中间或末尾，不得强制放在第一个位置；不必为了位置多样性生造不自然表达。每条必须包含目标词或合理词形，不重复主词本身；避免同义重复，越南语和中文释义均不可为空。';user='为这个词生成常用搭配（目标词不限定位置）：'+ctx;break;case'confusables':system='你是越南语辨析教师。只输出合法 JSON：{"items":[{"vi":"近义或易混词","zh":"中文意思","note":"与主词的关键区别和典型使用场景"}]}。给出2到4个最值得辨析的词，避免无关词。';user='辨析这个词：'+ctx;break;case'meaning':system='你是越南语词典编辑。只输出合法 JSON：{"assessment":"准确/过窄/过宽/需要补充","suggestedZh":"建议中文释义","note":"简洁说明","senses":[{"meaning":"中文义项","pos":"词性","context":"典型场景","exampleVi":"示例越南语","exampleZh":"示例中文"}]}。优先确认当前已有词义，若该词确有多个常用义项，则按不同词性和语境清晰分开解释；不要把语义无关的义项混为同一条，也不必强行增加冷僻义项。';user='检查这个词的中文释义：'+ctx;break;default:system='你是越南语口语教师。只输出合法 JSON：{"summary":"这个词在自然越南语里的使用建议","items":[{"vi":"自然表达或典型结构","zh":"中文意思","note":"使用提示"}]}。重点说明口语自然度、常见结构、地区或语气差异（只有确实存在时才提）。';user='说明这个词怎样用得更自然：'+ctx;maxTokens=1900}
  const data=await aiJSON(system,user,{maxTokens});if(!data||typeof data!=='object'||(action!=='meaning'&&(!Array.isArray(data.items)||!data.items.some(x=>x?.vi&&x?.zh))))throw Error('AI 返回内容不完整');if(action!=='meaning')data.items=amo194FilterAIItems(data.items,action);if(action!=='meaning'&&!data.items.length)throw Error('AI 返回的条目为空或重复，请重新生成');const persisted=await saveAssistantRecord(key,data);if(assistantVisible(key)){assistantState.data=data;assistantState.record=assistantMemory.get(key);renderAssistantResult();assistantStatus(persisted?'生成完成。':'生成完成，缓存仅保留在本次页面。','ok');}
  }catch(error){if(assistantVisible(key)){if(!old)result.textContent='请求失败，请再次点击生成。';assistantStatus('失败：'+(error?.message||error),'error');}}finally{assistantPending.delete(key);if(assistantVisible(key)){assistantControls(assistantMemory.get(key)||old,false);applyUILanguage(document.getElementById('amoAIWordAssistant'));}}}
 function amo194FilterAIItems(source,action){
@@ -21941,8 +21964,8 @@ async function amo194RegenerateOne(index,btn){
  btn.disabled=true;btn.textContent='生成中…';assistantStatus('正在单独重生成第 '+(index+1)+' 条…');
  assistantPending.set(key,true);
  try{
-   const system=action==='examples'?'你是越南语母语教师。只返回合法JSON：{"items":[{"vi":"越南语完整例句","zh":"准确中文翻译"}]}。生成恰好一条自然、高频、符合当前词义的例句，不能混淆其他义项。':'你是越南语母语搭配教师。只返回合法JSON：{"items":[{"vi":"越南语常用搭配","zh":"准确中文释义"}]}。生成恰好一条自然高频的搭配，目标词可以在前中后任意位置，不要生造表达。';
-   const user='当前词：'+JSON.stringify({vi:word.vi,zh:word.zh,pos:word.pos,category:word.category})+'；当前要替换：'+JSON.stringify(previous)+'；避免与这些已保留内容重复：'+JSON.stringify(blocked)+'；只重生成当前这一条。';
+   const system=action==='examples'?'你是越南语母语教师。只返回合法JSON：{"items":[{"vi":"越南语完整例句","zh":"准确中文翻译"}]}。生成恰好一条越南人会在真实场景使用的高频双语例句，句长适中，准确对应当前中文义项；避免空洞、不常用或生硬的表达，不混淆不同义项。':'你是越南语母语搭配教师。只返回合法JSON：{"items":[{"vi":"越南语常用搭配","zh":"准确中文释义"}]}。生成恰好一条自然高频的搭配，目标词可以在前中后任意位置，不要生造表达。';
+   const user='当前词：'+JSON.stringify({vi:word.vi,zh:word.zh,pos:word.pos,category:word.category})+'；当前要替换：'+JSON.stringify(previous)+'；避免与这些已保留内容重复：'+JSON.stringify(blocked)+'；只重生成当前这一条。'+(window.Amo199Examples?.prompt?.()||'');
    const data=await aiJSON(system,user,{maxTokens:800});const fresh=amo194FilterAIItems(data?.items,action)[0];
    if(!fresh)throw Error('AI 没有返回完整双语内容');if(blocked.some(v=>normalize(v)===normalize(fresh.vi)))throw Error('AI 返回了与现有内容重复的条目，请重试');
    if(!assistantVisible(key)||assistantState.data!==original)return;
@@ -25244,7 +25267,7 @@ async function request(){const query=trim($('wordSearch')?.value),lang=sourceLan
    const cache=loadCache().find(x=>eq(x.q)===eq(query)&&x.lang===lang);if(cache){payload=cache.data;msg('已使用本机缓存，不消耗新的 AI 请求。')}
    else{
      const system='你是专业中越双语词汇编辑，熟悉越南母语者真实口语。仅处理一个单词、常用词组或短语，必须精准翻译（不要翻译整段文章）。仅输出一个JSON对象，字段：vi(越南语), zh(中文), pos(标准中文词性), category(从提供的24类中唯一选择), examples(恰好两个对象，每个包含vi越南语自然例句与zh中文对应翻译)。两个例句必须地道、不同语境、短而实用。不要添加markdown或说明。';
-     const user=`源语言：${lang==='zh'?'中文':'越南语'}；待查询：${JSON.stringify(query)}。请返回精准译文、词性、场景和两个地道双语例句。词性只能选：${AMO_POS_STANDARD.filter(x=>x!=='待确认').join('、')}。分类只能选：${AmoCategories182.names.join('、')}。${lang==='zh'?'保持zh字段为输入中文，生成自然的越南语vi。':'保持vi字段为输入越南语，生成准确中文zh。'} 必须仅输出JSON对象。`;
+     const user=`源语言：${lang==='zh'?'中文':'越南语'}；待查询：${JSON.stringify(query)}。请返回精准译文、词性、场景和两个在真实生活或对应专业场景中可以直接使用的高频、自然双语例句；严格对应当前词义，不要生造句子，不要使用罕见空泛场景。词性只能选：${AMO_POS_STANDARD.filter(x=>x!=='待确认').join('、')}。分类只能选：${AmoCategories182.names.join('、')}。${lang==='zh'?'保持zh字段为输入中文，生成自然的越南语vi。':'保持vi字段为输入越南语，生成准确中文zh。'} 必须仅输出JSON对象。`;
      const raw=await window.AmoAIService.json(system,user,{maxTokens:1300,timeout:65000});payload=resultToWord(raw,query,lang);remember(query,lang,payload);
    }
    if(id!==activeRequest||eq($('wordSearch')?.value)!==eq(query))return;
@@ -26116,6 +26139,140 @@ html body .app #grammar :is(#amoV198GrammarFirst,#amoV197GrammarLast):disabled{o
 #sentenceReading #amoSentenceMicControls .amo-sentence-mic-btn{min-height:45px!important}
 #sentenceReading #amoSentenceMicStatus{font-size:12px;line-height:1.5}
 </style>
+
+<style id="amo-v31199-styles">
+/* V31.199 additive, mobile-first; the underlying word and study DOM is unchanged. */
+#amoPosDropdown.amo199-pos-relocated{display:block;width:100%;margin:8px 0}
+#amoV175ManageCard .amo-pos-dropdown-menu{position:static!important;max-width:none!important;width:100%;box-shadow:none!important;border:1px solid var(--border)!important;border-radius:12px!important;white-space:normal;z-index:auto}
+#amoV175ManageCard .amo-pos-dropdown-trigger{width:100%;text-align:left}
+.amo199-tools{margin-top:12px;border-top:1px solid var(--border);padding-top:12px}
+.amo199-actions{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;align-items:center}
+.amo199-actions .btn{min-height:40px}
+.amo199-note{font-size:12px;color:var(--muted);line-height:1.65;margin:6px 0}
+.amo199-overlay[hidden]{display:none!important}
+.amo199-overlay{position:fixed;inset:0;z-index:10850;background:rgba(16,32,35,.58);display:flex;justify-content:center;align-items:center;padding:10px;overscroll-behavior:contain}
+.amo199-dialog{width:min(780px,100%);max-height:min(92dvh,850px);overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border:1px solid var(--border);border-radius:16px;background:var(--solid-surface,var(--card,#fff));color:var(--text);padding:16px;box-shadow:0 12px 45px #0004}
+.amo199-head{display:flex;align-items:center;justify-content:space-between;gap:8px;position:sticky;top:-16px;z-index:1;background:var(--solid-surface,var(--card,#fff));padding:8px 0 10px}
+.amo199-head h3{margin:0;font-size:18px}
+.amo199-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.amo199-grid>label{display:grid;gap:5px;font-size:13px;font-weight:650}
+.amo199-grid :is(select,input){min-height:42px;max-width:100%;width:100%;font-size:16px}
+.amo199-card{padding:10px;margin:9px 0;border-radius:12px;border:1px solid var(--border);background:var(--card,var(--surface,#fff));line-height:1.6;overflow-wrap:anywhere}
+.amo199-card strong{font-size:15px}
+.amo199-card small,.amo199-card .amo199-muted{font-size:12px;color:var(--muted)}
+.amo199-card select{font-size:16px;min-height:38px;max-width:100%;width:100%}
+.amo199-card textarea{width:100%;font-size:16px;line-height:1.5;min-height:65px;resize:vertical}
+.amo199-card :is(button,input,select,textarea){touch-action:manipulation}
+.amo199-pager{display:flex;gap:8px;justify-content:space-between;align-items:center;margin:10px 0}
+.amo199-edit-suggestion{flex:0 0 100%;width:100%;display:flex;flex-wrap:wrap;gap:6px;border:1px solid var(--border);border-radius:10px;padding:9px;font-size:12px}
+.amo199-edit-suggestion>div{width:100%}
+#wordSearch{font-size:16px!important;-webkit-appearance:none;appearance:none;touch-action:manipulation}
+#words .toolbar-left{isolation:isolate}
+.amo199-bad{color:var(--danger,#c34e59)}
+@media(max-width:440px){.amo199-overlay{padding:5px}.amo199-dialog{padding:12px;max-height:94dvh}.amo199-head{top:-12px}.amo199-grid{grid-template-columns:1fr}.amo199-actions .btn{font-size:13px}.amo199-dialog .btn{min-height:40px}}
+</style>
+<script id="amo-v31199-quality">
+(()=>{'use strict';
+ const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),norm=s=>String(s||'').normalize('NFC').trim().toLocaleLowerCase('vi');
+ const PREF_KEY='amo_v31199_example_prefs',AUDIT_UNDO='amo_v31199_example_undo',JOINT_UNDO='amo_v31199_joint_undo';
+ const defaults={scene:'auto',level:'basic'},scenes={auto:'按词义与分类选择最常见的真实场景',daily:'日常生活与自然交流，常见、能直接说出口',work:'工作与商务沟通，自然专业而不生硬',travel:'购物、旅行、餐饮和住宿的真实服务场景'},levels={basic:'基础：句子尽量简短、便于跟读和记忆',normal:'标准：完整自然，兼顾常用句型',advanced:'进阶：可稍复杂但仍须真实高频'};
+ function prefs(){try{const data=(settings.amo199ExamplePrefs&&typeof settings.amo199ExamplePrefs==='object')?settings.amo199ExamplePrefs:JSON.parse(localStorage.getItem(PREF_KEY)||'{}');return {scene:scenes[data.scene]?data.scene:'auto',level:levels[data.level]?data.level:'basic'}}catch(_){return {...defaults}}}
+ function storePrefs(next){try{settings.amo199ExamplePrefs=next;saveJSON(KEY_SETTINGS,settings);}catch(e){console.warn('AI例句偏好暂未保存',e)}}
+ function prompt(){const p=prefs();return '生成偏好：'+scenes[p.scene]+'；'+levels[p.level]+'。先保证越南人实际使用频率，再追求变化；除非词义本身专业，不要人为编造书面或生僻表达。中文译文必须与越南语逐句对应。';}
+ window.Amo199Examples=Object.freeze({preferences:prefs,prompt});
+ // Add exact UI translations without changing learner-owned vocabulary content.
+ if(typeof UI_ZH_VI!=='undefined')Object.assign(UI_ZH_VI,{
+  'AI 分类与词性管理':'Quản lý danh mục và từ loại AI','全词库联合体检':'Kiểm tra toàn bộ từ loại và danh mục',
+  'AI 例句质量管理':'Quản lý chất lượng câu ví dụ AI','检查全部已有例句':'Kiểm tra toàn bộ câu ví dụ',
+  '预览审核后才保存':'Chỉ lưu sau khi xem và xác nhận','自动判断词性和分类':'Tự đề xuất từ loại và danh mục',
+  '实用场景':'Ngữ cảnh thực dụng','例句难度':'Độ khó câu ví dụ',
+  '应用选中建议':'Áp dụng đề xuất đã chọn','撤销上次联合修改':'Hoàn tác chỉnh sửa từ loại và danh mục',
+  'AI 评估本条例句':'AI đánh giá ví dụ này','AI 重新生成本条':'AI tạo lại ví dụ này'
+ });
+ function ui(el){try{window.applyUILanguage?.(el)}catch(_){}}
+ // Moving the original dropdown keeps all original handlers, history and POS settings intact.
+ function initManage(){const card=$('amoV175ManageCard'),old=$('amoPosDropdown');if(!card)return;
+  if(old&&!old.classList.contains('amo199-pos-relocated')){old.classList.add('amo199-pos-relocated');card.append(old);old.querySelector('summary').setAttribute('aria-label','词性管理');}
+  if(!$('amo199ManageExtra')){const tool=document.createElement('div');tool.className='amo199-tools';tool.id='amo199ManageExtra';tool.innerHTML=`<strong>全词库联合体检</strong><p class="amo199-note">检查所有 24 类、词性和不同义项。不会自动新增分类；扫描只生成建议，修改须逐条勾选并确认。原有“分类整理”和“词性管理”仍可分别使用。</p><div class="amo199-actions"><button type="button" class="btn btn-primary" id="amo199JointOpen">🧠 检查全部词汇</button><button type="button" class="btn" id="amo199JointUndo">↶ 撤销上次联合修改</button></div><strong>AI 例句质量管理</strong><p class="amo199-note">扫描现有双语例句，找出缺翻译、重复、过长或词义可能不匹配的问题。AI 评价及重生成按需调用，不会擅自替换。</p><div class="amo199-actions"><button class="btn" type="button" id="amo199ExampleOpen">✨ 检查全部已有例句</button><button class="btn" type="button" id="amo199ExampleUndo">↶ 撤销最近例句替换</button></div><div class="amo199-grid"><label>实用场景<select id="amo199Scene"><option value="auto">按词义与分类自动匹配</option><option value="daily">日常生活与自然交流</option><option value="work">工作与商务交流</option><option value="travel">旅行、购物、餐饮</option></select></label><label>例句难度<select id="amo199Level"><option value="basic">基础 · 简短易记</option><option value="normal">标准 · 自然完整</option><option value="advanced">进阶 · 常见搭配</option></select></label></div><p class="amo199-note" id="amo199PrefNote">切换偏好不会自动向 AI 发送请求；只影响以后主动生成的例句。</p>`;card.append(tool);
+   const p=prefs();$('amo199Scene').value=p.scene;$('amo199Level').value=p.level;
+   for(const id of ['amo199Scene','amo199Level'])$(id).onchange=()=>storePrefs({scene:$('amo199Scene').value,level:$('amo199Level').value});
+   $('amo199JointOpen').onclick=()=>openAudit('joint');$('amo199ExampleOpen').onclick=()=>openAudit('examples');$('amo199JointUndo').onclick=undoJoint;$('amo199ExampleUndo').onclick=undoExample;ui(tool);
+  }
+ }
+ // iPhone Safari: focus only in a direct user gesture; no delayed blur/refocus or scrolling.
+ function initSearch(){const search=$('wordSearch');if(!search||search.dataset.amo199Focus)return;search.dataset.amo199Focus='1';
+  search.setAttribute('enterkeyhint','search');search.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'&&document.activeElement!==search){try{search.focus({preventScroll:true})}catch(_){search.focus()}}},{passive:true});
+  search.addEventListener('click',()=>{if(document.activeElement!==search)search.focus({preventScroll:true})});
+  search.addEventListener('compositionstart',()=>search.dataset.amo199Composing='1');search.addEventListener('compositionend',()=>delete search.dataset.amo199Composing);
+  // A closing category dialog may restore focus to an old button. Preserve a newer intentional input focus.
+  let lastTouch=0;search.addEventListener('pointerdown',()=>{lastTouch=performance.now();window.__amo199LastWordSearchGesture=lastTouch},true);
+  document.addEventListener('focusin',e=>{if(e.target===search&&performance.now()-lastTouch<1200)search.dataset.amo199UserFocus='1';else if(e.target!==search)delete search.dataset.amo199UserFocus},true);
+ }
+ let kind='joint',records=[],page=0,selected=new Set(),scanning=false,stop=false,aiBusy=false,displayFilter='issues';const PAGE_SIZE=15;
+ function overlay(){let d=$('amo199Overlay');if(d)return d;d=document.createElement('div');d.id='amo199Overlay';d.className='amo199-overlay';d.hidden=true;d.innerHTML=`<section class="amo199-dialog" role="dialog" aria-modal="true" aria-labelledby="amo199DialogTitle"><div class="amo199-head"><h3 id="amo199DialogTitle">词库检查</h3><button type="button" class="btn btn-small" id="amo199Close">关闭</button></div><p class="amo199-note" id="amo199Sub"></p><div class="amo199-actions" id="amo199MainActions"></div><progress id="amo199Progress" max="1" value="0" style="width:100%"></progress><p class="amo199-note" id="amo199Status" role="status" aria-live="polite"></p><div class="amo199-actions"><label><input type="checkbox" id="amo199OnlyIssues" checked> 只看疑似问题</label><button type="button" class="btn btn-small" id="amo199SelectPage">勾选本页可修改项</button><button type="button" class="btn btn-small" id="amo199ClearSelect">取消全部勾选</button></div><div id="amo199List"></div><div class="amo199-pager"><button type="button" class="btn btn-small" id="amo199Prev">上一页</button><span id="amo199PageNo"></span><button type="button" class="btn btn-small" id="amo199Next">下一页</button></div></section>`;document.body.append(d);
+  $('amo199Close').onclick=closeAudit;$('amo199Prev').onclick=()=>{page--;draw()};$('amo199Next').onclick=()=>{page++;draw()};$('amo199OnlyIssues').onchange=()=>{page=0;draw()};$('amo199SelectPage').onclick=()=>{for(const r of pageRecords())if(r.issue&&!r.locked)selected.add(r.id);draw()};$('amo199ClearSelect').onclick=()=>{selected.clear();draw()};d.addEventListener('click',e=>{if(e.target===d)closeAudit()});return d;
+ }
+ function status(t){$('amo199Status').textContent=t}function progress(n,total){const bar=$('amo199Progress');bar.max=total||1;bar.value=n}
+ function closeAudit(){if(scanning||aiBusy){if(confirm('正在处理，确定暂停并关闭？')){stop=true;status('将在本批处理结束后停止，请再关闭。')}return;}$('amo199Overlay').hidden=true;}
+ function openAudit(type){kind=type;records=[];page=0;selected.clear();stop=false;overlay().hidden=false;$('amo199DialogTitle').textContent=type==='joint'?'24 类与词性联合检查':'AI 例句质量管理';$('amo199Sub').textContent=type==='joint'?'扫描全部现有词汇的分类和词性。默认筛出疑似问题；本地规则可能漏判，取消“只看疑似问题”后可逐页用 AI 复核任意词汇。AI 建议仍需你确认。':'先本地检查全部现有双语例句；AI 评价和重生成仅在你点击对应按钮后调用。';$('amo199OnlyIssues').checked=true;renderActions();progress(0,1);status('点击开始扫描，分析阶段不会修改学习数据。');draw();}
+ function renderActions(){const a=$('amo199MainActions');a.replaceChildren();const make=(id,label,fn,primary=false)=>{const b=document.createElement('button');b.id=id;b.type='button';b.className='btn'+(primary?' btn-primary':'');b.textContent=label;b.onclick=fn;a.append(b)};make('amo199Run',kind==='joint'?'开始检查全部词汇':'开始检查全部例句',scan,true);make('amo199Stop','暂停',()=>{stop=true;status('将在当前一批检查完成后暂停。')});if(kind==='joint'){make('amo199Enhance','AI 复核本页最多12条',enhanceJoint);make('amo199Apply','应用已勾选建议',applyJoint);}else make('amo199ExampleHint','单条可评估、重生成和审核替换',()=>status('请先扫描，然后在有问题的例句上点击“AI 评估”或“重新生成”。'));updateActionState();}
+ function updateActionState(){const btn=$('amo199Run');if(btn)btn.disabled=scanning||aiBusy;const pause=$('amo199Stop');if(pause)pause.disabled=!scanning;const en=$('amo199Enhance');if(en)en.disabled=scanning||aiBusy||!records.length;const ap=$('amo199Apply');if(ap)ap.disabled=scanning||aiBusy||!selected.size;}
+ function pageRecords(){const all=filtered();return all.slice(page*PAGE_SIZE,(page+1)*PAGE_SIZE)}
+ function filtered(){return $('amo199OnlyIssues')?.checked?records.filter(r=>r.issue):records}
+ function draw(){if(!$('amo199Overlay'))return;const list=$('amo199List');const rows=filtered(),pages=Math.max(1,Math.ceil(rows.length/PAGE_SIZE));page=Math.max(0,Math.min(page,pages-1));$('amo199PageNo').textContent=(page+1)+' / '+pages+' 页 · '+rows.length+' 条';$('amo199Prev').disabled=page===0;$('amo199Next').disabled=page>=pages-1;
+  list.replaceChildren();for(const r of pageRecords())list.append(kind==='joint'?jointRow(r):exampleRow(r));updateActionState();ui(list);
+ }
+ function jointRow(r){const el=document.createElement('article');el.className='amo199-card';const checked=selected.has(r.id);
+ el.innerHTML=`<label><input type="checkbox" class="amo199-check" ${checked?'checked':''} ${r.locked?'disabled':''}> <strong>${esc(r.vi)}</strong> <small>${esc(r.zh)}</small></label><div class="amo199-muted">当前：${esc(r.oldCat||'空')} · ${esc(r.oldPos||'未设置')} ｜ ${esc(r.reason)}</div><div class="amo199-grid"><label>建议分类<select class="amo199-cat">${AmoCategories182.names.map(n=>`<option value="${esc(n)}" ${n===r.cat?'selected':''}>${esc(n)}</option>`).join('')}</select></label><label>建议词性<select class="amo199-pos">${(typeof AMO_POS_STANDARD!=='undefined'?AMO_POS_STANDARD:['名词','动词','形容词','待确认']).map(n=>`<option value="${esc(n)}" ${n===r.pos?'selected':''}>${esc(n)}</option>`).join('')}</select></label></div>${r.locked?'<small>人工锁定：默认不修改</small>':''}`;
+ el.querySelector('.amo199-check').onchange=e=>{if(e.target.checked)selected.add(r.id);else selected.delete(r.id);updateActionState()};el.querySelector('.amo199-cat').onchange=e=>{r.cat=e.target.value;r.issue=true};el.querySelector('.amo199-pos').onchange=e=>{r.pos=e.target.value;r.issue=true};return el;
+ }
+ function exampleRow(r){const el=document.createElement('article');el.className='amo199-card';el.innerHTML=`<strong>${esc(r.word.vi)}</strong> <small>${esc(r.word.zh)} · 第${r.index+1}条</small><div class="amo199-muted">${esc(r.issue?r.reason:'暂未发现明显格式问题')}</div><label>越南语例句<textarea class="amo199-ex-vi" rows="2">${esc(r.next?.vi??r.item.vi)}</textarea></label><label>中文意思<textarea class="amo199-ex-zh" rows="2">${esc(r.next?.zh??r.item.zh)}</textarea></label><label class="amo199-muted">不实用的原因 <select class="amo199-feedback"><option value="">尚未选择</option><option value="表达不自然">表达不自然</option><option value="使用场景罕见">使用场景罕见</option><option value="句子过于复杂">句子过于复杂</option><option value="词义或中文翻译不准确">词义或中文翻译不准确</option></select></label><div class="amo199-actions"><button class="btn btn-small amo199-eval">AI 评估本条例句</button><button class="btn btn-small amo199-regen">AI 重新生成本条</button><button class="btn btn-small btn-primary amo199-save">审核后替换本条</button></div><small class="amo199-eval-note">没有自动替换；修改文本后仍需点击“审核后替换”。</small>`;
+ const vi=el.querySelector('.amo199-ex-vi'),zh=el.querySelector('.amo199-ex-zh'),note=el.querySelector('.amo199-eval-note');const remember=()=>{r.next={vi:vi.value,zh:zh.value}};vi.oninput=remember;zh.oninput=remember;
+ el.querySelector('.amo199-eval').onclick=async e=>{const b=e.currentTarget;b.disabled=true;note.textContent='正在评估…';try{const res=await requestJSON('你是一名严谨的越南语母语教师。只输出JSON：{"natural":true,"useful":true,"meaningMatched":true,"reason":"中文简短说明","improvement":"具体建议"}。判断该例句是否真实高频、自然、与词义一致、是否翻译准确；不要臆测成绝对事实。',JSON.stringify({word:r.word.vi,meaning:r.word.zh,exampleVi:vi.value,exampleZh:zh.value,reportedIssue:el.querySelector('.amo199-feedback')?.value||''}));note.textContent='AI 评价：'+String(res.reason||'无')+'。'+String(res.improvement||'');}catch(err){note.textContent='AI评估失败：'+err.message}finally{b.disabled=false}};
+ el.querySelector('.amo199-regen').onclick=async e=>{const b=e.currentTarget;b.disabled=true;note.textContent='正在重新生成当前一条…';try{const result=await requestJSON('你是越南语母语教师。只返回 JSON：{"items":[{"vi":"自然高频越南语完整例句","zh":"准确中文意思"}]}。仅生成一条，必须符合给定词义、自然且生活/专业场景实用，避免书面和空泛语句。'+prompt(),JSON.stringify({word:r.word.vi,meaning:r.word.zh,pos:r.word.pos,category:r.word.category,previous:r.item,reportedIssue:el.querySelector('.amo199-feedback')?.value||'',avoid:AmoWordView.getExamples(r.word).map(x=>x.vi)}));const cand=result.items?.[0];if(!cand?.vi||!cand?.zh||String(cand.vi).length>450||String(cand.zh).length>450)throw Error('返回内容不完整');if(AmoWordView.getExamples(r.word).some((x,i)=>i!==r.index&&norm(x.vi)===norm(cand.vi)))throw Error('与已有例句重复');vi.value=cand.vi;zh.value=cand.zh;remember();note.textContent='已生成候选；请检查后点击“审核后替换”，其他例句不变。';}catch(err){note.textContent='重新生成失败：'+err.message}finally{b.disabled=false}};
+ el.querySelector('.amo199-save').onclick=()=>applyExample(r,vi.value,zh.value,note);return el;
+ }
+ async function requestJSON(system,user){if(!window.AmoAIService?.ready?.())throw Error('请先在设置中启用 AI 和 API Key');return window.AmoAIService.json(system,user,{maxTokens:1200,timeout:45000});}
+ async function scan(){if(scanning||aiBusy)return;scanning=true;stop=false;records=[];selected.clear();page=0;updateActionState();try{
+  const words=allWords();let done=0;const seen=new Set();
+  for(const w of words){if(stop)break;const key=norm(w.vi);if(!key)continue;
+   if(kind==='joint'){
+    const input=typeof amoWordPosContext==='function'?amoWordPosContext(w):w,local=AmoPOS.detect(input),oldCat=w.category||'',oldPos=AmoPOS.normalize(w.pos)||'待确认';let catData;
+    try{catData=AmoCategories182.refine({type:'word',vi:w.vi,zh:w.zh,pos:oldPos,old:oldCat,examples:input.examples,collocations:input.collocations},oldCat)}catch(_){catData=AmoSceneCategory.detect(input)}
+    const cat=AmoCategories182.names.includes(catData?.category)?catData.category:(AmoCategories182.names.includes(oldCat)?oldCat:'通用词汇'),pos=AmoPOS.valid(local?.pos)?local.pos:oldPos;
+    const catMismatch=cat!==oldCat,posMismatch=pos!=='待确认'&&pos!==oldPos,uncertain=!!catData?.uncertain||Number(local?.confidence||0)<.68;
+    const locked=!!window.Amo188Class?.locked?.({type:'word',key,vi:w.vi,zh:w.zh,old:oldCat});
+    const reason=(catMismatch?'分类可能不匹配；':'')+(posMismatch?'词性可能需调整；':'')+(uncertain?'判断存在歧义，需人工确认；':'')+(locked?'用户锁定；':'')||'当前暂未发现明显问题';
+    records.push({id:key,vi:w.vi,zh:w.zh,oldCat,oldPos,cat,pos,locked,issue:catMismatch||posMismatch||oldPos==='待确认',reason,confidence:Number(local.confidence||0)});
+   }else{
+    const rows=AmoWordView.getExamples(w);const duplicate=new Set();rows.forEach((item,i)=>{const key2=norm(item.vi),issues=[];if(!item.zh)issues.push('缺少中文翻译');if(!item.vi)issues.push('缺少越南语');if(item.vi.length>150)issues.push('例句较长');if(item.zh.length>160)issues.push('中文翻译较长');if(duplicate.has(key2))issues.push('同词重复例句');duplicate.add(key2);if(w.vi&&!norm(item.vi).includes(norm(w.vi))&&norm(w.vi).length>=3)issues.push('目标词可能没有出现在句中');if(/\p{Script=Han}/u.test(item.vi))issues.push('越南语中混有汉字');
+     records.push({id:key+'#'+i,word:{vi:w.vi,zh:w.zh,pos:w.pos,category:w.category},index:i,item,issue:!!issues.length,reason:issues.join('；')||'未发现明显格式问题'});
+    });
+   }
+   done++;if(done%70===0){progress(done,words.length);status('扫描 '+done+'/'+words.length+' 个词；发现 '+records.filter(x=>x.issue).length+' 条需关注。');await new Promise(resolve=>setTimeout(resolve,0));}
+  }
+  progress(done,words.length);status((stop?'已暂停。':'本地扫描完成。')+' 共检查 '+done+' 个词，'+records.filter(x=>x.issue).length+' 条建议人工审核。'+(kind==='examples'?'“不自然”的判断需结合语境，AI评价只供参考。':'所有分类都从现有24类中选择；若想进一步查漏，可取消“只看疑似问题”逐页 AI 复核。'));draw();
+ }catch(err){status('扫描失败：'+err.message);console.error(err)}finally{scanning=false;updateActionState()}}
+ async function enhanceJoint(){if(aiBusy||scanning||kind!=='joint')return;const targets=pageRecords().filter(r=>!r.locked).slice(0,12);if(!targets.length)return status('当前页面没有可复核的词汇。');if(!window.AmoAIService?.ready?.())return status('请先配置 AI；本地检查仍可正常使用。');aiBusy=true;updateActionState();status('AI 正在检查本页 '+targets.length+' 条词汇…');try{const result=await requestJSON('你是越南语母语词典编辑，只输出JSON：{"items":[{"id":"原id","category":"24类之一","pos":"标准词性","confidence":0.85,"reason":"简短中文理由"}]}。按越南语、当前中文义项及例句判断，不要仅看关键词；同形多义要匹配当前义项，保留用户的明确分类。分类只能从：'+AmoCategories182.names.join('、')+'；词性只能从：'+AMO_POS_STANDARD.join('、')+'。证据不足请低置信度，不允许新增分类。',JSON.stringify(targets.map(r=>({id:r.id,vi:r.vi,zh:r.zh,oldCategory:r.oldCat,oldPos:r.oldPos}))));let changed=0;for(const x of result.items||[]){const r=targets.find(t=>t.id===x.id);if(!r||Number(x.confidence)<.72)continue;if(AmoCategories182.names.includes(x.category))r.cat=x.category;if(AmoPOS.valid(x.pos))r.pos=x.pos;r.reason='AI 建议（需人工确认）：'+String(x.reason||'')+'；'+r.reason;r.issue=true;changed++;}status('AI 给出了 '+changed+' 条候选，请逐条确认；尚未修改正式词库。');draw();}catch(err){status('AI辅助失败：'+err.message+'；原有本地结果保留。')}finally{aiBusy=false;updateActionState()}}
+ function applyJoint(){if(!selected.size||scanning||aiBusy)return;const changes=records.filter(r=>selected.has(r.id)&&!r.locked&&(r.cat!==r.oldCat||r.pos!==r.oldPos));if(!changes.length)return status('没有可应用的变化。');if(!confirm('确认修改 '+changes.length+' 个词汇的分类和词性？将只更新这两个字段，其他学习数据不变。'))return;
+  const newWords=customWords.map(w=>({...w})),idx=new Map(newWords.map((w,i)=>[norm(w.vi),i])),newCats={...wordCategoryMap},newPos={...wordPosMap};const backup=[];
+  for(const r of changes){const i=idx.get(r.id),w=i===undefined?null:newWords[i],nextCat=AmoCategories182.names.includes(r.cat)?r.cat:r.oldCat,nextPos=AmoPOS.valid(r.pos)?r.pos:r.oldPos;backup.push({id:r.id,oldCat:r.oldCat,oldPos:r.oldPos,newCat:nextCat,newPos:nextPos,custom:i!==undefined});newCats[r.id]=nextCat;if(w){w.category=nextCat;w.pos=nextPos||w.pos;}else if(nextPos&&nextPos!=='待确认')newPos[r.id]=nextPos;}
+  try{localStorage.setItem(JOINT_UNDO,JSON.stringify({at:Date.now(),rows:backup}));AmoCore.storage.commit([[KEY_WORDS,newWords],[KEY_WORD_CATEGORY_MAP,newCats],[KEY_WORD_POS_MAP,newPos]]);customWords=newWords;wordCategoryMap=newCats;wordPosMap=newPos;for(const r of changes){r.oldCat=r.cat;r.oldPos=r.pos;selected.delete(r.id);r.issue=false;}renderCategoryControls();renderWords();updateStats();status('已保存 '+changes.length+' 条分类/词性变更；可从管理页撤销。');draw();}catch(err){status('应用失败：'+err.message+'。请查看备份。')}
+ }
+ function undoJoint(){let snap;try{snap=JSON.parse(localStorage.getItem(JOINT_UNDO)||'null')}catch(_){ }if(!snap?.rows?.length)return showToast('没有可撤销的联合修改');if(!confirm('撤销最近一次联合修改？若这些词之后已被手动修改，会跳过它们。'))return;const words=customWords.map(w=>({...w})),ids=new Map(words.map((w,i)=>[norm(w.vi),i])),cats={...wordCategoryMap},pos={...wordPosMap};let restored=0;
+  for(const row of snap.rows){const current=allWords().find(x=>norm(x.vi)===row.id);if(!current||current.category!==row.newCat||AmoPOS.normalize(current.pos)!==AmoPOS.normalize(row.newPos))continue;const i=ids.get(row.id);cats[row.id]=row.oldCat;if(i!==undefined){words[i].category=row.oldCat;words[i].pos=row.oldPos;}else{if(row.oldPos&&row.oldPos!=='待确认')pos[row.id]=row.oldPos;else delete pos[row.id];}restored++;}
+  try{AmoCore.storage.commit([[KEY_WORDS,words],[KEY_WORD_CATEGORY_MAP,cats],[KEY_WORD_POS_MAP,pos]]);customWords=words;wordCategoryMap=cats;wordPosMap=pos;localStorage.removeItem(JOINT_UNDO);renderCategoryControls();renderWords();updateStats();showToast('已恢复 '+restored+' 条；最近人工修改的词已跳过。')}catch(err){showToast('撤销失败：'+err.message)}
+ }
+ function applyExample(r,vi,zh,note){vi=String(vi||'').trim();zh=String(zh||'').trim();if(!vi||!zh||vi.length>450||zh.length>450||/\p{Script=Han}/u.test(vi))return note.textContent='请补全合法双语例句（各不超过450字），越南语中不能有汉字';const key=norm(r.word.vi),word=allWords().find(w=>norm(w.vi)===key);if(!word)return note.textContent='词汇不存在';const originals=AmoWordView.getExamples(word),prior=originals[r.index];if(!prior||prior.vi!==r.item.vi||prior.zh!==r.item.zh)return note.textContent='词库内容已变更，请重新扫描，未执行覆盖';if(originals.some((x,i)=>i!==r.index&&norm(x.vi)===norm(vi)))return note.textContent='这条例句已经存在';if(!confirm('只替换「'+r.word.vi+'」的第 '+(r.index+1)+' 条例句？其它例句保持不变。'))return;
+ const old=Object.prototype.hasOwnProperty.call(examples,key)?JSON.parse(JSON.stringify(examples[key])):null;const nextRows=originals.map((x,i)=>i===r.index?{vi,zh}:x),newEntry={...(examples[key]||{}),vi:nextRows.map(x=>x.vi+'（'+x.zh+'）').join('\n'),zh:nextRows.map(x=>x.zh).join('\n')};
+ const out={...examples,[key]:newEntry};try{localStorage.setItem(AUDIT_UNDO,JSON.stringify({key,old,next:newEntry,at:Date.now()}));saveJSON(KEY_EXAMPLES,out);examples=out;r.item={vi,zh};r.next=null;r.issue=false;note.textContent='本条例句已更新；其它例句未更改。';invalidateRelationRuntimeCache?.();renderWords();if(window.__amoWordDetailKey===key)renderWordDetail();}catch(err){note.textContent='保存失败：'+err.message}
+ }
+ function undoExample(){let snap;try{snap=JSON.parse(localStorage.getItem(AUDIT_UNDO)||'null')}catch(_){ }if(!snap?.key)return showToast('没有可撤销的例句替换');if(JSON.stringify(examples[snap.key]||null)!==JSON.stringify(snap.next))return showToast('例句之后已被修改，为保护新内容不能自动撤销');if(!confirm('恢复最近替换的那一条例句吗？'))return;const next={...examples};if(snap.old===null)delete next[snap.key];else next[snap.key]=snap.old;try{saveJSON(KEY_EXAMPLES,next);examples=next;localStorage.removeItem(AUDIT_UNDO);renderWords();if(window.__amoWordDetailKey===snap.key)renderWordDetail();showToast('已恢复原例句')}catch(e){showToast('撤销失败：'+e.message)} }
+ function init(){initManage();initSearch()}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+ window.Amo199Audit={open:openAudit,close:closeAudit,preferences:prefs};
+})();
+</script>
 
 </body>
 </html>
